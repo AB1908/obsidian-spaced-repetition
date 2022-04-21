@@ -53,7 +53,9 @@ export class StatsModal extends Modal {
         this.titleEl.setText(`${t("STATS_TITLE")} `);
         this.titleEl.innerHTML += (
             <select id="chartPeriod">
-                <option value="month" selected>{t("MONTH")}</option>
+                <option value="month" selected>
+                    {t("MONTH")}
+                </option>
                 <option value="quarter">{t("QUARTER")}</option>
                 <option value="year">{t("YEAR")}</option>
                 <option value="lifetime">{t("LIFETIME")}</option>
@@ -288,7 +290,7 @@ function createStatsChart(
     });
 
     if (shouldFilter) {
-        const chartPeriodEl = document.getElementById("chartPeriod");
+        const chartPeriodEl = document.getElementById("chartPeriod") as HTMLSelectElement;
         chartPeriodEl.addEventListener("click", () => {
             let filteredLabels, filteredData;
             const chartPeriod = chartPeriodEl.value;
