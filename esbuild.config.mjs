@@ -25,5 +25,6 @@ esbuild.build({
     sourcemap: "inline",
     sourcesContent: !prod,
     treeShaking: true,
-    outfile: "build/main.js",
+    // outfile: "build/main.js",
+    outfile: "/media/data/plugin-testing/Plugin Testing/.obsidian/plugins/obsidian-spaced-repetition/main.js",
 }).catch(() => process.exit(1));
