@@ -53,6 +53,12 @@ export default {
     FOLDERS_TO_IGNORE: "Игнорируемые папки",
     FOLDERS_TO_IGNORE_DESC: "Ведите пути папок разделенные enter'ом пример: Templates Meta/Scripts",
     FLASHCARDS: "Карточки",
+    FLASHCARD_EASY_LABEL: "Easy Button Text",
+    FLASHCARD_GOOD_LABEL: "Good Button Text",
+    FLASHCARD_HARD_LABEL: "Hard Button Text",
+    FLASHCARD_EASY_DESC: 'Customize the label for the "Easy" Button',
+    FLASHCARD_GOOD_DESC: 'Customize the label for the "Good" Button',
+    FLASHCARD_HARD_DESC: 'Customize the label for the "Hard" Button',
     FLASHCARD_TAGS: "Тэги карточек",
     FLASHCARD_TAGS_DESC:
         "Ведите тэги разделенные enter'ом или пробелом пример: #flashcards #deck2 #deck3.",
@@ -76,6 +82,8 @@ export default {
     DISABLE_CLOZE_CARDS: "Выключить карты с пропусками(пример: [...])?",
     CONVERT_HIGHLIGHTS_TO_CLOZES: "Конвертировать ==выделенный текст== в пропуски(пример: [...])?",
     CONVERT_BOLD_TEXT_TO_CLOZES: "Конвертировать **жирный текст** в пропуски(пример: [...])?",
+    CONVERT_CURLY_BRACKETS_TO_CLOZES:
+        "Конвертировать {{фигурные скобки}} в пропуски(пример: [...])?",
     INLINE_CARDS_SEPARATOR: "Разделитель для внутристрочных карточек",
     FIX_SEPARATORS_MANUALLY_WARNING:
         "Внимание! после изменения этого вам придётся вручную редактировать уже существующие карточки",

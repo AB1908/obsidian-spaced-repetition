@@ -50,6 +50,12 @@ export default {
     FOLDERS_TO_IGNORE_DESC:
         "Zadejte cesty ke složkám oddělené odřádkováním napříkad. Šablony Meta/Scripts",
     FLASHCARDS: "Kartičky",
+    FLASHCARD_EASY_LABEL: "Easy Button Text",
+    FLASHCARD_GOOD_LABEL: "Good Button Text",
+    FLASHCARD_HARD_LABEL: "Hard Button Text",
+    FLASHCARD_EASY_DESC: 'Customize the label for the "Easy" Button',
+    FLASHCARD_GOOD_DESC: 'Customize the label for the "Good" Button',
+    FLASHCARD_HARD_DESC: 'Customize the label for the "Hard" Button',
     FLASHCARD_TAGS: "Tag pro kartičky",
     FLASHCARD_TAGS_DESC:
         "Zadete tagy oodělené mezerou nebo odřádkováním například. #kartičky #balíčke2 #balíček3.",
@@ -74,6 +80,7 @@ export default {
     DISABLE_CLOZE_CARDS: "Vypnout cloze kartičky?",
     CONVERT_HIGHLIGHTS_TO_CLOZES: "Převést ==zvýraznění== na clozes?",
     CONVERT_BOLD_TEXT_TO_CLOZES: "Převést **tučný text** na clozes?",
+    CONVERT_CURLY_BRACKETS_TO_CLOZES: "Převést {{složené závorky}} na clozes?",
     INLINE_CARDS_SEPARATOR: "Oddělovač pro inline kartičky",
     FIX_SEPARATORS_MANUALLY_WARNING:
         "Pozor. Jakmile toto změníte, budete muset ručně upravit všechny existující kartičky.",
