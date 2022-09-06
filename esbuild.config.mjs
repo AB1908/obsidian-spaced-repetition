@@ -25,6 +25,7 @@ esbuild
         sourcemap: "inline",
         sourcesContent: !prod,
         treeShaking: true,
-        outfile: "build/main.js",
+        outfile:
+            "D:\\plugin-testing\\Plugin Testing\\.obsidian\\plugins\\obsidian-spaced-repetition\\main.js",
     })
     .catch(() => process.exit(1));

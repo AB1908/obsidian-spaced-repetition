@@ -1,6 +1,6 @@
 import { Notice, PluginSettingTab, Setting, App, Platform } from "obsidian";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
-import h from "vhtml";
+import React from "react";
 
 import type SRPlugin from "src/main";
 import { t } from "src/lang/helpers";
