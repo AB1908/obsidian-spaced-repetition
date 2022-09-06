@@ -1,3 +1,5 @@
+//  import 'react-devtools';
+// require('react-devtools');
 import {
     Notice,
     Plugin,
@@ -780,82 +782,22 @@ export default class SRPlugin extends Plugin {
                 ? getCardContext(lineNo, headings)
                 : "";
             const siblings: Card[] = [];
-            for (let i = 0; i < siblingMatches.length; i++) {
-                const front: string = siblingMatches[i][0].trim(),
-                    back: string = siblingMatches[i][1].trim();
-
-                const cardObj: Card = {
-                    isDue: i < scheduling.length,
-                    note,
-                    lineNo,
-                    front,
-                    back,
-                    cardText,
-                    context,
-                    cardType,
-                    siblingIdx: i,
-                    siblings,
-                };
-
-                // card scheduled
-                if (ignoreStats) {
-                    this.cardStats.newCount++;
-                    cardObj.isDue = true;
-                    this.deckTree.insertFlashcard([...deckPath], cardObj);
-                } else if (i < scheduling.length) {
-                    const dueUnix: number = window
-                        .moment(scheduling[i][1], ["YYYY-MM-DD", "DD-MM-YYYY"])
-                        .valueOf();
-                    const nDays: number = Math.ceil((dueUnix - now) / (24 * 3600 * 1000));
-                    if (!Object.prototype.hasOwnProperty.call(this.dueDatesFlashcards, nDays)) {
-                        this.dueDatesFlashcards[nDays] = 0;
-                    }
-                    this.dueDatesFlashcards[nDays]++;
-
-                    const interval: number = parseInt(scheduling[i][2]),
-                        ease: number = parseInt(scheduling[i][3]);
-                    if (!Object.prototype.hasOwnProperty.call(this.cardStats.intervals, interval)) {
-                        this.cardStats.intervals[interval] = 0;
-                    }
-                    this.cardStats.intervals[interval]++;
-                    if (!Object.prototype.hasOwnProperty.call(this.cardStats.eases, ease)) {
-                        this.cardStats.eases[ease] = 0;
-                    }
-                    this.cardStats.eases[ease]++;
-                    totalNoteEase += ease;
-                    scheduledCount++;
-
-                    if (interval >= 32) {
-                        this.cardStats.matureCount++;
-                    } else {
-                        this.cardStats.youngCount++;
-                    }
-
-                    if (this.data.buryList.includes(cardTextHash)) {
-                        this.deckTree.countFlashcard([...deckPath]);
-                        continue;
-                    }
-
-                    if (dueUnix <= now) {
-                        cardObj.interval = interval;
-                        cardObj.ease = ease;
-                        cardObj.delayBeforeReview = now - dueUnix;
-                        this.deckTree.insertFlashcard([...deckPath], cardObj);
-                    } else {
-                        this.deckTree.countFlashcard([...deckPath]);
-                        continue;
-                    }
-                } else {
-                    this.cardStats.newCount++;
-                    if (this.data.buryList.includes(cyrb53(cardText))) {
-                        this.deckTree.countFlashcard([...deckPath]);
-                        continue;
-                    }
-                    this.deckTree.insertFlashcard([...deckPath], cardObj);
-                }
-
-                siblings.push(cardObj);
-            }
+            ({ totalNoteEase, scheduledCount } = this.createCards(
+                siblingMatches,
+                scheduling,
+                note,
+                lineNo,
+                cardText,
+                context,
+                cardType,
+                siblings,
+                ignoreStats,
+                deckPath,
+                now,
+                totalNoteEase,
+                scheduledCount,
+                cardTextHash
+            ));
         }
 
         if (fileChanged) {
@@ -875,6 +817,101 @@ export default class SRPlugin extends Plugin {
         }
 
         return 0;
+    }
+
+    private createCards(
+        siblingMatches: [string, string][],
+        scheduling: RegExpMatchArray[],
+        note: TFile,
+        lineNo: number,
+        cardText: string,
+        context: string,
+        cardType: CardType,
+        siblings: Card[],
+        ignoreStats: boolean,
+        deckPath: string[],
+        now: number,
+        totalNoteEase: number,
+        scheduledCount: number,
+        cardTextHash: string
+    ) {
+        for (let i = 0; i < siblingMatches.length; i++) {
+            const front: string = siblingMatches[i][0].trim(),
+                back: string = siblingMatches[i][1].trim();
+
+            const cardObj: Card = {
+                isDue: i < scheduling.length,
+                note,
+                lineNo,
+                front,
+                back,
+                cardText,
+                context,
+                cardType,
+                siblingIdx: i,
+                siblings,
+            };
+
+            // card scheduled
+            if (ignoreStats) {
+                this.cardStats.newCount++;
+                cardObj.isDue = true;
+                this.deckTree.insertFlashcard([...deckPath], cardObj);
+            } else if (i < scheduling.length) {
+                const dueUnix: number = window
+                    .moment(scheduling[i][1], ["YYYY-MM-DD", "DD-MM-YYYY"])
+                    .valueOf();
+                const nDays: number = Math.ceil((dueUnix - now) / (24 * 3600 * 1000));
+                if (!Object.prototype.hasOwnProperty.call(this.dueDatesFlashcards, nDays)) {
+                    this.dueDatesFlashcards[nDays] = 0;
+                }
+                this.dueDatesFlashcards[nDays]++;
+
+                const interval: number = parseInt(scheduling[i][2]),
+                    ease: number = parseInt(scheduling[i][3]);
+                if (!Object.prototype.hasOwnProperty.call(this.cardStats.intervals, interval)) {
+                    this.cardStats.intervals[interval] = 0;
+                }
+                this.cardStats.intervals[interval]++;
+                if (!Object.prototype.hasOwnProperty.call(this.cardStats.eases, ease)) {
+                    this.cardStats.eases[ease] = 0;
+                }
+                this.cardStats.eases[ease]++;
+                totalNoteEase += ease;
+                scheduledCount++;
+
+                if (interval >= 32) {
+                    this.cardStats.matureCount++;
+                } else {
+                    this.cardStats.youngCount++;
+                }
+
+                if (this.data.buryList.includes(cardTextHash)) {
+                    this.deckTree.countFlashcard([...deckPath]);
+                    continue;
+                }
+
+                if (dueUnix <= now) {
+                    cardObj.interval = interval;
+                    cardObj.ease = ease;
+                    cardObj.delayBeforeReview = now - dueUnix;
+                    this.deckTree.insertFlashcard([...deckPath], cardObj);
+                } else {
+                    this.deckTree.countFlashcard([...deckPath]);
+                    continue;
+                }
+            } else {
+                this.cardStats.newCount++;
+                if (this.data.buryList.includes(cyrb53(cardText))) {
+                    this.deckTree.countFlashcard([...deckPath]);
+                    continue;
+                }
+                this.deckTree.insertFlashcard([...deckPath], cardObj);
+            }
+
+            siblings.push(cardObj);
+        }
+        return { totalNoteEase, scheduledCount };
     }
 
     async loadPluginData(): Promise<void> {
