@@ -23,14 +23,7 @@ import {
 } from "src/constants";
 import { escapeRegexString, cyrb53 } from "src/utils";
 import { t } from "src/lang/helpers";
-import { ModalContainer } from "./ui/modalContent";
-import {
-    Flashcard,
-    FlashcardAnswer,
-    FlashcardCloze,
-    FlashcardClozeAnswer,
-    FlashcardQuestion,
-} from "./ui/flashcard";
+import { ModalContainer, ModalContent } from "./ui/modalContent";
 // import { Deck } from "./ui/deckList";
 
 export enum FlashcardModalMode {
@@ -60,6 +53,8 @@ export class FlashcardModal extends Modal {
     public ignoreStats: boolean;
     private contentRoot: Root;
     titleRoot: any;
+    modalRoot: Root;
+    containerRoot: Root;
 
     constructor(app: App, plugin: SRPlugin, ignoreStats = false) {
         super(app);
@@ -70,12 +65,12 @@ export class FlashcardModal extends Modal {
         if (Platform.isMobile) {
             this.contentEl.style.display = "block";
         }
-        this.modalEl.style.height = this.plugin.data.settings.flashcardHeightPercentage + "%";
-        this.modalEl.style.width = this.plugin.data.settings.flashcardWidthPercentage + "%";
+        // this.modalEl.style.height = this.plugin.data.settings.flashcardHeightPercentage + "%";
+        // this.modalEl.style.width = this.plugin.data.settings.flashcardWidthPercentage + "%";
 
-        this.contentEl.style.position = "relative";
-        this.contentEl.style.height = "92%";
-        this.contentEl.addClass("sr-modal-content");
+        // this.contentEl.style.position = "relative";
+        // this.contentEl.style.height = "92%";
+        // this.contentEl.addClass("sr-modal-content");
 
         // document.body.onkeydown = (e) => {
         //     if (this.mode !== FlashcardModalMode.DecksList) {
@@ -107,33 +102,32 @@ export class FlashcardModal extends Modal {
     }
 
     onOpen(): void {
-        this.titleRoot = createRoot(this.titleEl);
-        this.contentRoot = createRoot(this.contentEl);
-        this.contentRoot.render(
+        // this.titleRoot = createRoot(this.titleEl);
+        // this.contentRoot = createRoot(this.contentEl);
+        // console.log(this.modalEl);
+        // this.modalRoot = createRoot(this.modalEl)
+        this.containerRoot = createRoot(this.containerEl);
+        this.containerRoot.render(
             <>
                 <ModalContainer
-                    subdecksArray={this.plugin.deckTree.subdecks}
-                    deckName={this.plugin.deckTree.subdecks[0].deckName}
+                    handleCloseButtonClick={() => this.close()}
+                    processReview={async (response: ReviewResponse, card: Card) =>
+                        await this.processReview(response, card)
+                    }
+                    data={this.plugin.data}
                 />
             </>
         );
-        this.titleRoot.render(
-            <AllDecks deck={this.plugin.deckTree} localizedModalTitle={t("DECKS")} />
-        );
         // this.titleRoot.render(
-        //     <>
-        //     Flashcards: {"7"}
-        //     </>
-        // )
-        // this.contentRoot = createRoot(this.contentEl);
-        // this.contentRoot.render(
-        //     <Flashcard />
-        // )
+        //     <AllDecks deck={this.plugin.deckTree} localizedModalTitle={t("DECKS")} />
+        // );
     }
 
     onClose(): void {
-        this.contentRoot.unmount();
-        this.titleRoot.unmount();
+        // this.contentRoot.unmount();
+        // this.titleRoot.unmount();
+        // this.modalRoot.unmount();
+        this.containerRoot.unmount();
     }
 
     decksList(): void {
@@ -198,84 +192,84 @@ export class FlashcardModal extends Modal {
             this.currentDeck.nextCard(this);
         });
 
-        this.resetLinkView = this.contentEl.createDiv("sr-link");
-        this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
-        this.resetLinkView.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Reset);
-        });
-        this.resetLinkView.style.float = "right";
+        // this.resetLinkView = this.contentEl.createDiv("sr-link");
+        // this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
+        // this.resetLinkView.addEventListener("click", () => {
+        //     this.processReview(ReviewResponse.Reset);
+        // });
+        // this.resetLinkView.style.float = "right";
 
-        if (this.plugin.data.settings.showContextInCards) {
-            this.contextView = this.contentEl.createDiv();
-            this.contextView.setAttribute("id", "sr-context");
-        }
+        // if (this.plugin.data.settings.showContextInCards) {
+        //     this.contextView = this.contentEl.createDiv();
+        //     this.contextView.setAttribute("id", "sr-context");
+        // }
 
-        this.flashcardView = this.contentEl.createDiv("div");
-        this.flashcardView.setAttribute("id", "sr-flashcard-view");
+        // this.flashcardView = this.contentEl.createDiv("div");
+        // this.flashcardView.setAttribute("id", "sr-flashcard-view");
 
-        this.responseDiv = this.contentEl.createDiv("sr-response");
+        // this.responseDiv = this.contentEl.createDiv("sr-response");
 
-        this.answerBtn = this.contentEl.createDiv();
-        this.answerBtn.setAttribute("id", "sr-show-answer");
-        this.answerBtn.setText(t("SHOW_ANSWER"));
-        this.answerBtn.addEventListener("click", () => {
-            this.showAnswer();
-        });
+        // this.answerBtn = this.contentEl.createDiv();
+        // this.answerBtn.setAttribute("id", "sr-show-answer");
+        // this.answerBtn.setText(t("SHOW_ANSWER"));
+        // this.answerBtn.addEventListener("click", () => {
+        //     this.showAnswer();
+        // });
 
-        if (this.ignoreStats) {
-            this.goodBtn.style.display = "none";
+        // if (this.ignoreStats) {
+        //     this.goodBtn.style.display = "none";
 
-            this.responseDiv.addClass("sr-ignorestats-response");
-            this.easyBtn.addClass("sr-ignorestats-btn");
-            this.hardBtn.addClass("sr-ignorestats-btn");
-        }
+        //     this.responseDiv.addClass("sr-ignorestats-response");
+        //     this.easyBtn.addClass("sr-ignorestats-btn");
+        //     this.hardBtn.addClass("sr-ignorestats-btn");
+        // }
     }
 
-    showAnswer(): void {
-        this.mode = FlashcardModalMode.Back;
+    // showAnswer(): void {
+    //     this.mode = FlashcardModalMode.Back;
 
-        this.answerBtn.style.display = "none";
-        this.responseDiv.style.display = "grid";
+    //     this.answerBtn.style.display = "none";
+    //     this.responseDiv.style.display = "grid";
 
-        if (this.currentCard.isDue) {
-            this.resetLinkView.style.display = "inline-block";
-        }
+    //     if (this.currentCard.isDue) {
+    //         this.resetLinkView.style.display = "inline-block";
+    //     }
 
-        if (this.currentCard.cardType !== CardType.Cloze) {
-            const hr: HTMLElement = document.createElement("hr");
-            hr.setAttribute("id", "sr-hr-card-divide");
-            this.flashcardView.appendChild(hr);
-        } else {
-            this.flashcardView.innerHTML = "";
-        }
+    //     if (this.currentCard.cardType !== CardType.Cloze) {
+    //         const hr: HTMLElement = document.createElement("hr");
+    //         hr.setAttribute("id", "sr-hr-card-divide");
+    //         this.flashcardView.appendChild(hr);
+    //     } else {
+    //         this.flashcardView.innerHTML = "";
+    //     }
 
-        this.renderMarkdownWrapper(this.currentCard.back, this.flashcardView);
-    }
+    //     this.renderMarkdownWrapper(this.currentCard.back, this.flashcardView);
+    // }
 
-    async processReview(response: ReviewResponse): Promise<void> {
+    async processReview(response: ReviewResponse, currentCard: Card): Promise<void> {
         if (this.ignoreStats) {
             if (response == ReviewResponse.Easy) {
-                this.currentDeck.deleteFlashcardAtIndex(
-                    this.currentCardIdx,
-                    this.currentCard.isDue
-                );
+                // this.currentDeck.deleteFlashcardAtIndex(
+                //     this.currentCardIdx,
+                //     this.currentCard.isDue
+                // );
             }
-            this.currentDeck.nextCard(this);
+            // this.currentDeck.nextCard(this);
             return;
         }
 
         let interval: number, ease: number, due;
 
-        this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
+        // this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
         if (response !== ReviewResponse.Reset) {
             let schedObj: Record<string, number>;
             // scheduled card
-            if (this.currentCard.isDue) {
+            if (currentCard.isDue) {
                 schedObj = schedule(
                     response,
-                    this.currentCard.interval,
-                    this.currentCard.ease,
-                    this.currentCard.delayBeforeReview,
+                    currentCard.interval,
+                    currentCard.ease,
+                    currentCard.delayBeforeReview,
                     this.plugin.data.settings,
                     this.plugin.dueDatesFlashcards
                 );
@@ -284,10 +278,10 @@ export class FlashcardModal extends Modal {
                 if (
                     Object.prototype.hasOwnProperty.call(
                         this.plugin.easeByPath,
-                        this.currentCard.note.path
+                        currentCard.note.path
                     )
                 ) {
-                    initial_ease = Math.round(this.plugin.easeByPath[this.currentCard.note.path]);
+                    initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
                 }
 
                 schedObj = schedule(
@@ -306,74 +300,74 @@ export class FlashcardModal extends Modal {
             ease = schedObj.ease;
             due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
         } else {
-            due = this.resetFlashcard(due);
+            // due = this.resetFlashcard(due);
             return;
         }
 
         const dueString: string = due.format("YYYY-MM-DD");
 
-        let fileText: string = await this.app.vault.read(this.currentCard.note);
-        const replacementRegex = new RegExp(escapeRegexString(this.currentCard.cardText), "gm");
+        let fileText: string = await this.app.vault.read(currentCard.note);
+        const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
 
         let sep: string = this.plugin.data.settings.cardCommentOnSameLine ? " " : "\n";
         // Override separator if last block is a codeblock
-        if (this.currentCard.cardText.endsWith("```") && sep !== "\n") {
+        if (currentCard.cardText.endsWith("```") && sep !== "\n") {
             sep = "\n";
         }
 
         // check if we're adding scheduling information to the flashcard
         // for the first time
-        if (this.currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
-            this.currentCard.cardText =
-                this.currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
+        if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
+            currentCard.cardText =
+                currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
         } else {
             let scheduling: RegExpMatchArray[] = [
-                ...this.currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+                ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
             ];
             if (scheduling.length === 0) {
-                scheduling = [...this.currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+                scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
             }
 
             const currCardSched: string[] = ["0", dueString, interval.toString(), ease.toString()];
-            if (this.currentCard.isDue) {
-                scheduling[this.currentCard.siblingIdx] = currCardSched;
+            if (currentCard.isDue) {
+                scheduling[currentCard.siblingIdx] = currCardSched;
             } else {
                 scheduling.push(currCardSched);
             }
 
-            this.currentCard.cardText = this.currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
-            this.currentCard.cardText += "<!--SR:";
+            currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
+            currentCard.cardText += "<!--SR:";
             for (let i = 0; i < scheduling.length; i++) {
-                this.currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+                currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
             }
-            this.currentCard.cardText += "-->";
+            currentCard.cardText += "-->";
         }
 
-        fileText = fileText.replace(replacementRegex, () => this.currentCard.cardText);
-        for (const sibling of this.currentCard.siblings) {
-            sibling.cardText = this.currentCard.cardText;
+        fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
+        for (const sibling of currentCard.siblings) {
+            sibling.cardText = currentCard.cardText;
         }
         if (this.plugin.data.settings.burySiblingCards) {
             this.burySiblingCards(true);
         }
 
-        await this.app.vault.modify(this.currentCard.note, fileText);
-        this.currentDeck.nextCard(this);
+        await this.app.vault.modify(currentCard.note, fileText);
+        // this.currentDeck.nextCard(this);
     }
 
-    private resetFlashcard(due: any) {
-        this.currentCard.interval = 1.0;
-        this.currentCard.ease = this.plugin.data.settings.baseEase;
-        if (this.currentCard.isDue) {
-            this.currentDeck.dueFlashcards.push(this.currentCard);
-        } else {
-            this.currentDeck.newFlashcards.push(this.currentCard);
-        }
-        due = window.moment(Date.now());
-        new Notice(t("CARD_PROGRESS_RESET"));
-        this.currentDeck.nextCard(this);
-        return due;
-    }
+    // private resetFlashcard(due: any) {
+    //     this.currentCard.interval = 1.0;
+    //     this.currentCard.ease = this.plugin.data.settings.baseEase;
+    //     if (this.currentCard.isDue) {
+    //         this.currentDeck.dueFlashcards.push(this.currentCard);
+    //     } else {
+    //         this.currentDeck.newFlashcards.push(this.currentCard);
+    //     }
+    //     due = window.moment(Date.now());
+    //     new Notice(t("CARD_PROGRESS_RESET"));
+    //     this.currentDeck.nextCard(this);
+    //     return due;
+    // }
 
     async burySiblingCards(tillNextDay: boolean): Promise<void> {
         if (tillNextDay) {
@@ -548,6 +542,7 @@ export class Deck {
     public totalFlashcards = 0; // counts those in subdecks too
     public subdecks: Deck[];
     public parent: Deck | null;
+    public reviewComplete: boolean;
 
     constructor(deckName: string, parent: Deck | null) {
         this.deckName = deckName;
@@ -558,6 +553,7 @@ export class Deck {
         this.totalFlashcards = 0;
         this.subdecks = [];
         this.parent = parent;
+        this.reviewComplete = false;
     }
 
     createDeck(deckPath: string[]): void {

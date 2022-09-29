@@ -1,7 +1,6 @@
-import { timeStamp } from "console";
 import React, { Component, ReactNode } from "react";
 import { Deck, Deck as DeckObj } from "src/flashcard-modal";
-import { ReviewResponse } from "src/scheduling";
+import { PluginData } from "src/main";
 import { AllCardCounts } from "./deckList";
 
 interface CollapsibleState {
@@ -16,7 +15,9 @@ export interface DeckModalProps {
     deckName: string;
     subdecksArray: DeckObj[];
     handleClick?: Function;
-    question?: string;
+    // question: string;
+    // processReview: Function;
+    // data: PluginData;
 }
 
 interface SubDeckProps {
@@ -31,6 +32,7 @@ class InnerTreeItem extends Component<SubDeckProps> {
             <div
                 className="tree-item-inner"
                 onClick={() => {
+                    console.log("innertreeitem", this.props.deck);
                     this.props.startReviewingDeck(this.props.deck);
                 }}
             >
@@ -174,18 +176,9 @@ class DeckTreeEntry extends Component<SubDeckProps> {
     }
 }
 
-export class DeckTree extends Component<DeckModalProps> {
-    render(): ReactNode {
-        const listItems = this.props.subdecksArray.map((deck, i) => (
-            <DeckTreeEntry
-                key={i}
-                deck={deck}
-                startReviewingDeck={(d: Deck) => this.props.handleClick(d)}
-                // children={
-                //     (func?: Function) => <InnerTreeItem deck={deck} startReviewingDeck={this.props.handleClick} />
-                // }
-            />
-        ));
-        return <>{listItems}</>;
-    }
+export function DeckTree(props: DeckModalProps) {
+    const listItems = props.subdecksArray.map((deck: Deck, i: number) => (
+        <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.handleClick(d)} />
+    ));
+    return <>{listItems}</>;
 }
