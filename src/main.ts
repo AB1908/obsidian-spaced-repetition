@@ -28,7 +28,7 @@ import { t } from "src/lang/helpers";
 import { parse } from "src/parser";
 import { appIcon } from "src/icons/appicon";
 
-interface PluginData {
+export interface PluginData {
     settings: SRSettings;
     buryDate: string;
     // hashes of card texts
@@ -87,14 +87,14 @@ export default class SRPlugin extends Plugin {
         this.statusBar.setAttribute("aria-label-position", "top");
         this.statusBar.addEventListener("click", async () => {
             if (!this.syncLock) {
-                await this.sync();
+                // await this.sync();
                 this.reviewNextNoteModal();
             }
         });
 
         this.addRibbonIcon("SpacedRepIcon", t("REVIEW_CARDS"), async () => {
             if (!this.syncLock) {
-                await this.sync();
+                // await this.sync();
                 new FlashcardModal(this.app, this).open();
             }
         });
@@ -141,7 +141,7 @@ export default class SRPlugin extends Plugin {
             name: t("OPEN_NOTE_FOR_REVIEW"),
             callback: async () => {
                 if (!this.syncLock) {
-                    await this.sync();
+                    // await this.sync();
                     this.reviewNextNoteModal();
                 }
             },
@@ -185,7 +185,7 @@ export default class SRPlugin extends Plugin {
             name: t("REVIEW_ALL_CARDS"),
             callback: async () => {
                 if (!this.syncLock) {
-                    await this.sync();
+                    // await this.sync();
                     new FlashcardModal(this.app, this).open();
                 }
             },
@@ -224,7 +224,7 @@ export default class SRPlugin extends Plugin {
             name: t("VIEW_STATS"),
             callback: async () => {
                 if (!this.syncLock) {
-                    await this.sync();
+                    // await this.sync();
                     new StatsModal(this.app, this).open();
                 }
             },
@@ -236,7 +236,7 @@ export default class SRPlugin extends Plugin {
             this.initView();
             setTimeout(async () => {
                 if (!this.syncLock) {
-                    await this.sync();
+                    // await this.sync();
                 }
             }, 2000);
         });
@@ -246,182 +246,182 @@ export default class SRPlugin extends Plugin {
         this.app.workspace.getLeavesOfType(REVIEW_QUEUE_VIEW_TYPE).forEach((leaf) => leaf.detach());
     }
 
-    async sync(): Promise<void> {
-        if (this.syncLock) {
-            return;
-        }
-        this.syncLock = true;
+    // async sync(): Promise<void> {
+    //     if (this.syncLock) {
+    //         return;
+    //     }
+    //     this.syncLock = true;
 
-        // reset notes stuff
-        graph.reset();
-        this.easeByPath = {};
-        this.incomingLinks = {};
-        this.pageranks = {};
-        this.dueNotesCount = 0;
-        this.dueDatesNotes = {};
-        this.reviewDecks = {};
+    //     // reset notes stuff
+    //     graph.reset();
+    //     this.easeByPath = {};
+    //     this.incomingLinks = {};
+    //     this.pageranks = {};
+    //     this.dueNotesCount = 0;
+    //     this.dueDatesNotes = {};
+    //     this.reviewDecks = {};
 
-        // reset flashcards stuff
-        this.deckTree = new Deck("root", null);
-        this.dueDatesFlashcards = {};
-        this.cardStats = {
-            eases: {},
-            intervals: {},
-            newCount: 0,
-            youngCount: 0,
-            matureCount: 0,
-        };
+    //     // reset flashcards stuff
+    //     this.deckTree = new Deck("root", null);
+    //     this.dueDatesFlashcards = {};
+    //     this.cardStats = {
+    //         eases: {},
+    //         intervals: {},
+    //         newCount: 0,
+    //         youngCount: 0,
+    //         matureCount: 0,
+    //     };
 
-        const now = window.moment(Date.now());
-        const todayDate: string = now.format("YYYY-MM-DD");
-        // clear bury list if we've changed dates
-        if (todayDate !== this.data.buryDate) {
-            this.data.buryDate = todayDate;
-            this.data.buryList = [];
-        }
+    //     const now = window.moment(Date.now());
+    //     const todayDate: string = now.format("YYYY-MM-DD");
+    //     // clear bury list if we've changed dates
+    //     if (todayDate !== this.data.buryDate) {
+    //         this.data.buryDate = todayDate;
+    //         this.data.buryList = [];
+    //     }
 
-        const notes: TFile[] = this.app.vault.getMarkdownFiles();
-        for (const note of notes) {
-            if (
-                this.data.settings.noteFoldersToIgnore.some((folder) =>
-                    note.path.startsWith(folder)
-                )
-            ) {
-                continue;
-            }
+    //     const notes: TFile[] = this.app.vault.getMarkdownFiles();
+    //     for (const note of notes) {
+    //         if (
+    //             this.data.settings.noteFoldersToIgnore.some((folder) =>
+    //                 note.path.startsWith(folder)
+    //             )
+    //         ) {
+    //             continue;
+    //         }
 
-            if (this.incomingLinks[note.path] === undefined) {
-                this.incomingLinks[note.path] = [];
-            }
+    //         if (this.incomingLinks[note.path] === undefined) {
+    //             this.incomingLinks[note.path] = [];
+    //         }
 
-            const links = this.app.metadataCache.resolvedLinks[note.path] || {};
-            for (const targetPath in links) {
-                if (this.incomingLinks[targetPath] === undefined)
-                    this.incomingLinks[targetPath] = [];
+    //         const links = this.app.metadataCache.resolvedLinks[note.path] || {};
+    //         for (const targetPath in links) {
+    //             if (this.incomingLinks[targetPath] === undefined)
+    //                 this.incomingLinks[targetPath] = [];
 
-                // markdown files only
-                if (targetPath.split(".").pop().toLowerCase() === "md") {
-                    this.incomingLinks[targetPath].push({
-                        sourcePath: note.path,
-                        linkCount: links[targetPath],
-                    });
+    //             // markdown files only
+    //             if (targetPath.split(".").pop().toLowerCase() === "md") {
+    //                 this.incomingLinks[targetPath].push({
+    //                     sourcePath: note.path,
+    //                     linkCount: links[targetPath],
+    //                 });
 
-                    graph.link(note.path, targetPath, links[targetPath]);
-                }
-            }
+    //                 graph.link(note.path, targetPath, links[targetPath]);
+    //             }
+    //         }
 
-            const deckPath: string[] = this.findDeckPath(note);
-            if (deckPath.length !== 0) {
-                const flashcardsInNoteAvgEase: number = await this.findFlashcardsInNote(
-                    note,
-                    deckPath
-                );
+    //         const deckPath: string[] = this.findDeckPath(note);
+    //         if (deckPath.length !== 0) {
+    //             const flashcardsInNoteAvgEase: number = await this.findFlashcardsInNote(
+    //                 note,
+    //                 deckPath
+    //             );
 
-                if (flashcardsInNoteAvgEase > 0) {
-                    this.easeByPath[note.path] = flashcardsInNoteAvgEase;
-                }
-            }
+    //             if (flashcardsInNoteAvgEase > 0) {
+    //                 this.easeByPath[note.path] = flashcardsInNoteAvgEase;
+    //             }
+    //         }
 
-            const fileCachedData = this.app.metadataCache.getFileCache(note) || {};
+    //         const fileCachedData = this.app.metadataCache.getFileCache(note) || {};
 
-            const frontmatter: FrontMatterCache | Record<string, unknown> =
-                fileCachedData.frontmatter || {};
-            const tags = getAllTags(fileCachedData) || [];
+    //         const frontmatter: FrontMatterCache | Record<string, unknown> =
+    //             fileCachedData.frontmatter || {};
+    //         const tags = getAllTags(fileCachedData) || [];
 
-            let shouldIgnore = true;
-            const matchedNoteTags = [];
+    //         let shouldIgnore = true;
+    //         const matchedNoteTags = [];
 
-            for (const tagToReview of this.data.settings.tagsToReview) {
-                if (tags.some((tag) => tag === tagToReview || tag.startsWith(tagToReview + "/"))) {
-                    if (!Object.prototype.hasOwnProperty.call(this.reviewDecks, tagToReview)) {
-                        this.reviewDecks[tagToReview] = new ReviewDeck(tagToReview);
-                    }
-                    matchedNoteTags.push(tagToReview);
-                    shouldIgnore = false;
-                    break;
-                }
-            }
-            if (shouldIgnore) {
-                continue;
-            }
+    //         for (const tagToReview of this.data.settings.tagsToReview) {
+    //             if (tags.some((tag) => tag === tagToReview || tag.startsWith(tagToReview + "/"))) {
+    //                 if (!Object.prototype.hasOwnProperty.call(this.reviewDecks, tagToReview)) {
+    //                     this.reviewDecks[tagToReview] = new ReviewDeck(tagToReview);
+    //                 }
+    //                 matchedNoteTags.push(tagToReview);
+    //                 shouldIgnore = false;
+    //                 break;
+    //             }
+    //         }
+    //         if (shouldIgnore) {
+    //             continue;
+    //         }
 
-            // file has no scheduling information
-            if (
-                !(
-                    Object.prototype.hasOwnProperty.call(frontmatter, "sr-due") &&
-                    Object.prototype.hasOwnProperty.call(frontmatter, "sr-interval") &&
-                    Object.prototype.hasOwnProperty.call(frontmatter, "sr-ease")
-                )
-            ) {
-                for (const matchedNoteTag of matchedNoteTags) {
-                    this.reviewDecks[matchedNoteTag].newNotes.push(note);
-                }
-                continue;
-            }
+    //         // file has no scheduling information
+    //         if (
+    //             !(
+    //                 Object.prototype.hasOwnProperty.call(frontmatter, "sr-due") &&
+    //                 Object.prototype.hasOwnProperty.call(frontmatter, "sr-interval") &&
+    //                 Object.prototype.hasOwnProperty.call(frontmatter, "sr-ease")
+    //             )
+    //         ) {
+    //             for (const matchedNoteTag of matchedNoteTags) {
+    //                 this.reviewDecks[matchedNoteTag].newNotes.push(note);
+    //             }
+    //             continue;
+    //         }
 
-            const dueUnix: number = window
-                .moment(frontmatter["sr-due"], ["YYYY-MM-DD", "DD-MM-YYYY", "ddd MMM DD YYYY"])
-                .valueOf();
+    //         const dueUnix: number = window
+    //             .moment(frontmatter["sr-due"], ["YYYY-MM-DD", "DD-MM-YYYY", "ddd MMM DD YYYY"])
+    //             .valueOf();
 
-            for (const matchedNoteTag of matchedNoteTags) {
-                this.reviewDecks[matchedNoteTag].scheduledNotes.push({ note, dueUnix });
-                if (dueUnix <= now.valueOf()) {
-                    this.reviewDecks[matchedNoteTag].dueNotesCount++;
-                }
-            }
+    //         for (const matchedNoteTag of matchedNoteTags) {
+    //             this.reviewDecks[matchedNoteTag].scheduledNotes.push({ note, dueUnix });
+    //             if (dueUnix <= now.valueOf()) {
+    //                 this.reviewDecks[matchedNoteTag].dueNotesCount++;
+    //             }
+    //         }
 
-            if (Object.prototype.hasOwnProperty.call(this.easeByPath, note.path)) {
-                this.easeByPath[note.path] =
-                    (this.easeByPath[note.path] + frontmatter["sr-ease"]) / 2;
-            } else {
-                this.easeByPath[note.path] = frontmatter["sr-ease"];
-            }
+    //         if (Object.prototype.hasOwnProperty.call(this.easeByPath, note.path)) {
+    //             this.easeByPath[note.path] =
+    //                 (this.easeByPath[note.path] + frontmatter["sr-ease"]) / 2;
+    //         } else {
+    //             this.easeByPath[note.path] = frontmatter["sr-ease"];
+    //         }
 
-            if (dueUnix <= now.valueOf()) {
-                this.dueNotesCount++;
-            }
+    //         if (dueUnix <= now.valueOf()) {
+    //             this.dueNotesCount++;
+    //         }
 
-            const nDays: number = Math.ceil((dueUnix - now.valueOf()) / (24 * 3600 * 1000));
-            if (!Object.prototype.hasOwnProperty.call(this.dueDatesNotes, nDays)) {
-                this.dueDatesNotes[nDays] = 0;
-            }
-            this.dueDatesNotes[nDays]++;
-        }
+    //         const nDays: number = Math.ceil((dueUnix - now.valueOf()) / (24 * 3600 * 1000));
+    //         if (!Object.prototype.hasOwnProperty.call(this.dueDatesNotes, nDays)) {
+    //             this.dueDatesNotes[nDays] = 0;
+    //         }
+    //         this.dueDatesNotes[nDays]++;
+    //     }
 
-        graph.rank(0.85, 0.000001, (node: string, rank: number) => {
-            this.pageranks[node] = rank * 10000;
-        });
+    //     graph.rank(0.85, 0.000001, (node: string, rank: number) => {
+    //         this.pageranks[node] = rank * 10000;
+    //     });
 
-        // sort the deck names
-        this.deckTree.sortSubdecksList();
-        if (this.data.settings.showDebugMessages) {
-            console.log(`SR: ${t("EASES")}`, this.easeByPath);
-            console.log(`SR: ${t("DECKS")}`, this.deckTree);
-        }
+    //     // sort the deck names
+    //     this.deckTree.sortSubdecksList();
+    //     if (this.data.settings.showDebugMessages) {
+    //         console.log(`SR: ${t("EASES")}`, this.easeByPath);
+    //         console.log(`SR: ${t("DECKS")}`, this.deckTree);
+    //     }
 
-        for (const deckKey in this.reviewDecks) {
-            this.reviewDecks[deckKey].sortNotes(this.pageranks);
-        }
+    //     for (const deckKey in this.reviewDecks) {
+    //         this.reviewDecks[deckKey].sortNotes(this.pageranks);
+    //     }
 
-        if (this.data.settings.showDebugMessages) {
-            console.log(
-                "SR: " +
-                    t("SYNC_TIME_TAKEN", {
-                        t: Date.now() - now.valueOf(),
-                    })
-            );
-        }
+    //     if (this.data.settings.showDebugMessages) {
+    //         console.log(
+    //             "SR: " +
+    //                 t("SYNC_TIME_TAKEN", {
+    //                     t: Date.now() - now.valueOf(),
+    //                 })
+    //         );
+    //     }
 
-        this.statusBar.setText(
-            t("STATUS_BAR", {
-                dueNotesCount: this.dueNotesCount,
-                dueFlashcardsCount: this.deckTree.dueFlashcardsCount,
-            })
-        );
-        this.reviewQueueView.redraw();
+    //     this.statusBar.setText(
+    //         t("STATUS_BAR", {
+    //             dueNotesCount: this.dueNotesCount,
+    //             dueFlashcardsCount: this.deckTree.dueFlashcardsCount,
+    //         })
+    //     );
+    //     this.reviewQueueView.redraw();
 
-        this.syncLock = false;
-    }
+    //     this.syncLock = false;
+    // }
 
     async saveReviewResponse(note: TFile, response: ReviewResponse): Promise<void> {
         const fileCachedData = this.app.metadataCache.getFileCache(note) || {};
@@ -556,7 +556,7 @@ export default class SRPlugin extends Plugin {
 
         new Notice(t("RESPONSE_RECEIVED"));
 
-        await this.sync();
+        // await this.sync();
         if (this.data.settings.autoNextNote) {
             this.reviewNextNote(this.lastSelectedReviewDeck);
         }
