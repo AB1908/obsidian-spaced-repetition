@@ -1,16 +1,9 @@
-import { MarkdownRenderer, TFile } from "obsidian";
-import React, { Component, ReactNode, useEffect, useRef, useState } from "react";
+import { MarkdownRenderer } from "obsidian";
+import React, { useEffect, useRef, useState, ReactNode, MutableRefObject } from "react";
 import { Deck } from "src/flashcard-modal";
 import { Card, ReviewResponse } from "src/scheduling";
 import { EditLaterButton, ResetButton, ResponseButtonsDiv, ShowAnswerButton } from "./buttons";
 import { ModalStates } from "./modalContent";
-
-interface FlashcardState {
-    isQuestion: boolean;
-    deck: Deck;
-    flashcardIndex: number;
-    subdeckArray: Deck[];
-}
 
 export interface FlashcardButtons extends ContentProps {
     responseButtonsHandler: Function;
@@ -23,8 +16,8 @@ interface ContentProps extends Props {
 }
 
 interface Props {
-    children?: React.ReactNode;
-    viewRef?: React.MutableRefObject<HTMLDivElement>;
+    children?: ReactNode;
+    viewRef?: MutableRefObject<HTMLDivElement>;
 }
 
 interface FlashcardProps {
@@ -54,42 +47,10 @@ function FlashcardHeader({ isQuestion }: { isQuestion: boolean }) {
 function ActualFlashcard(props: FlashcardButtons) {
     const viewRef = useRef(null);
 
-    // async function renderMarkdownWrapper(
-    //     markdownString: string,
-    //     containerEl: HTMLElement,
-    //     recursiveDepth = 0
-    // ): Promise<void> {
-    //     if (recursiveDepth > 4) return;
-
-    //     MarkdownRenderer.renderMarkdown(
-    //         markdownString,
-    //         containerEl,
-    //         props.card.note.path,
-    //         this.plugin
-    //     );
-
-    //     // containerEl.findAll(".internal-embed").forEach((el) => {
-    //     //     const link = this.parseLink(el.getAttribute("src"));
-
-    //     //     // file does not exist, display dead link
-    //     //     if (!link.target) {
-    //     //         el.innerText = link.text;
-    //     //     } else if (link.target instanceof TFile) {
-    //     //         if (link.target.extension !== "md") {
-    //     //             this.embedMediaFile(el, link.target);
-    //     //         } else {
-    //     //             el.innerText = "";
-    //     //             this.renderTransclude(el, link, recursiveDepth);
-    //     //         }
-    //     //     }
-    //     // });
-    // }
-
     return (
         <>
             <FlashcardHeader isQuestion={props.isQuestion} />
             <FlashcardView
-            // viewRef={viewRef}
             >
                 <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
             </FlashcardView>
@@ -140,10 +101,6 @@ function FlashcardBody(props: ContentProps) {
 
     useEffect(() => {
         if (!props.isQuestion) renderMarkdownWrapper(props.card.back, props.viewRef.current);
-
-        // return () => {
-
-        // }
     }, [props.isQuestion]);
 
     return (
@@ -155,44 +112,24 @@ function FlashcardBody(props: ContentProps) {
                     <hr id="sr-hr-card-divide" />
                     {/* Answer */}
                     {/* <Text>{props.card?.back}</Text> */}
-                    {}
+                    { }
                 </div>
             )}
         </>
     );
 }
 
-// function ClozeQuestionText() {
-//     return (
-//         <p>
-//             new <span style={{ color: "#2196f3" }}>[...]</span>
-//         </p>
-//     );
-// }
-
-// function ClozeAnswerText() {
-//     return (
-//         <p>
-//             new <span style={{ color: "#2196f3" }}>things</span>
-//         </p>
-//     );
-// }
-
 export function Flashcard(props: FlashcardProps) {
     const [isQuestion, setIsQuestion] = useState(true);
     const [flashcardIndex, setFlashcardIndex] = useState(0);
-    // const [deck, setDeck] = useState(props.deck);
-    const deck = props.deck;
+    const deck: Deck = props.deck;
     const flashcardList = useRef(generateFlashcardList(deck));
-    // const []
-    console.log("Inside flashacrd", props);
 
     function handleShowAnswerButton() {
         setIsQuestion(false);
     }
 
     function generateFlashcardList(deck: Deck) {
-        console.log("generateFlashcardList: top", deck);
         let currentDeck = deck;
         let stack: Deck[] = [];
         let flashcards: Card[] = [];
@@ -216,8 +153,6 @@ export function Flashcard(props: FlashcardProps) {
             setFlashcardIndex(flashcardIndex + 1);
             setIsQuestion(true);
         } else {
-            console.log("out of cards");
-            // setDeck(null);
             props.changeModalStatus(ModalStates.deckNotInReview);
         }
     }
@@ -242,37 +177,4 @@ function FlashcardView(props: Props) {
             {props.children}
         </div>
     );
-}
-
-//     this.renderMarkdownWrapper(this.currentCard.back, this.flashcardView);
-
-async function renderMarkdownWrapper(
-    markdownString: string,
-    containerEl: HTMLElement,
-    recursiveDepth = 0
-): Promise<void> {
-    if (recursiveDepth > 4) return;
-
-    MarkdownRenderer.renderMarkdown(
-        markdownString,
-        containerEl,
-        this.currentCard.note.path,
-        this.plugin
-    );
-
-    // containerEl.findAll(".internal-embed").forEach((el) => {
-    //     const link = this.parseLink(el.getAttribute("src"));
-
-    //     // file does not exist, display dead link
-    //     if (!link.target) {
-    //         el.innerText = link.text;
-    //     } else if (link.target instanceof TFile) {
-    //         if (link.target.extension !== "md") {
-    //             this.embedMediaFile(el, link.target);
-    //         } else {
-    //             el.innerText = "";
-    //             this.renderTransclude(el, link, recursiveDepth);
-    //         }
-    //     }
-    // });
 }

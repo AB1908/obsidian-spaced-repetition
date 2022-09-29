@@ -1,6 +1,5 @@
 import React, { Component, ReactNode } from "react";
 import { Deck, Deck as DeckObj } from "src/flashcard-modal";
-import { PluginData } from "src/main";
 import { AllCardCounts } from "./deckList";
 
 interface CollapsibleState {
@@ -15,9 +14,6 @@ export interface DeckModalProps {
     deckName: string;
     subdecksArray: DeckObj[];
     handleClick?: Function;
-    // question: string;
-    // processReview: Function;
-    // data: PluginData;
 }
 
 interface SubDeckProps {
@@ -32,7 +28,6 @@ class InnerTreeItem extends Component<SubDeckProps> {
             <div
                 className="tree-item-inner"
                 onClick={() => {
-                    console.log("innertreeitem", this.props.deck);
                     this.props.startReviewingDeck(this.props.deck);
                 }}
             >
@@ -105,10 +100,6 @@ class CollapsibleDeckTreeEntry extends Component<SubDeckProps, CollapsibleState>
                         <InnerTreeItem
                             deck={this.props.deck}
                             startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                            // children={
-                            //     // (func: Function) => <InnerTreeItem deck={this.props.deck} startReviewingDeck={func} />
-                            //     () => this.props.children()
-                            // }
                         />
                         <AllCardCounts deck={this.props.deck} />
                     </summary>
@@ -116,10 +107,6 @@ class CollapsibleDeckTreeEntry extends Component<SubDeckProps, CollapsibleState>
                         <DeckTree
                             subdecksArray={this.props.deck.subdecks}
                             deckName={this.props.deck.deckName}
-                            // children={
-                            //     // (func: Function) => <InnerTreeItem deck={this.props.deck} startReviewingDeck={func} />
-                            //     () => this.props.children()
-                            // }
                             handleClick={(d: Deck) => this.props.startReviewingDeck(d)}
                         />
                     </div>
@@ -138,10 +125,6 @@ class NonCollapsibleDeckTreeEntry extends Component<SubDeckProps> {
                         <InnerTreeItem
                             deck={this.props.deck}
                             startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                            // children={
-                            //     // (func: Function) => <InnerTreeItem deck={this.props.deck} startReviewingDeck={func} />
-                            //     () => this.props.children()
-                            // }
                         />
                         <AllCardCounts deck={this.props.deck} />
                     </div>
@@ -158,10 +141,6 @@ class DeckTreeEntry extends Component<SubDeckProps> {
                 <CollapsibleDeckTreeEntry
                     deck={this.props.deck}
                     startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                    // children={
-                    //     // (func: Function) => <InnerTreeItem deck={this.props.deck} startReviewingDeck={func} />
-                    //     () => this.props.children()
-                    // }
                 />
             );
         } else {
