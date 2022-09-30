@@ -39,7 +39,7 @@ export class FlashcardModal extends Modal {
     public checkDeck: Deck;
     public mode: FlashcardModalMode;
     public ignoreStats: boolean;
-    private modalRoot: Root;
+    private modalElReactRoot: Root;
 
     constructor(app: App, plugin: SRPlugin, ignoreStats = false) {
         super(app);
@@ -87,9 +87,8 @@ export class FlashcardModal extends Modal {
     }
 
     onOpen(): void {
-        this.modalRoot = createRoot(this.modalEl)
-        console.log(this.modalEl)
-        this.modalRoot.render(
+        this.modalElReactRoot = createRoot(this.modalEl)
+        this.modalElReactRoot.render(
             <>
                  <ModalElement
                      handleCloseButtonClick={() => this.close()}
@@ -103,7 +102,7 @@ export class FlashcardModal extends Modal {
     }
 
     onClose(): void {
-        this.modalRoot.unmount();
+        this.modalElReactRoot.unmount();
     }
 
     // setupCardsView(): void {
@@ -123,27 +122,6 @@ export class FlashcardModal extends Modal {
     //     if (this.plugin.data.settings.showFileNameInFileLink) {
     //         this.fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
     //     }
-    //     this.fileLinkView.addEventListener("click", async () => {
-    //         const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
-    //         if (this.plugin.app.workspace.getActiveFile() === null)
-    //             await activeLeaf.openFile(this.currentCard.note);
-    //         else {
-    //             const newLeaf = this.plugin.app.workspace.createLeafBySplit(
-    //                 activeLeaf,
-    //                 "vertical",
-    //                 false
-    //             );
-    //             await newLeaf.openFile(this.currentCard.note, { active: true });
-    //         }
-    //         const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-    //         activeView.editor.setCursor({
-    //             line: this.currentCard.lineNo,
-    //             ch: 0,
-    //         });
-    //         this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
-    //         this.burySiblingCards(false);
-    //         this.currentDeck.nextCard(this);
-    //     });
     // }
 
     async processReview(response: ReviewResponse, currentCard: Card): Promise<void> {
@@ -228,7 +206,7 @@ export class FlashcardModal extends Modal {
                 scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
             }
 
-            const currCardSched: string[] = ["0", dueString, interval.toString(), ease.toString()];
+            const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
             if (currentCard.isDue) {
                 scheduling[currentCard.siblingIdx] = currCardSched;
             } else {

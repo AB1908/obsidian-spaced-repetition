@@ -1,5 +1,4 @@
 import { Notice, PluginSettingTab, Setting, App, Platform } from "obsidian";
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
 import React from "react";
 
 import type SRPlugin from "src/main";
@@ -101,7 +100,7 @@ export class SRSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
-        containerEl.createDiv().innerHTML = <h2>{t("SETTINGS_HEADER")}</h2>;
+        containerEl.createEl('h2', { text: `${t("SETTINGS_HEADER")}` });
 
         containerEl.createDiv().innerHTML = t("CHECK_WIKI", {
             wiki_url: "https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki",
@@ -124,7 +123,7 @@ export class SRSettingTab extends PluginSettingTab {
                     })
             );
 
-        containerEl.createDiv().innerHTML = <h3>{t("FLASHCARDS")}</h3>;
+        containerEl.createEl('h3', { text: `${t("FLASHCARDS")}` })//.innerHTML = `<h3>${t("FLASHCARDS")}</h3>`;
 
         new Setting(containerEl)
             .setName(t("FLASHCARD_TAGS"))
@@ -238,41 +237,49 @@ export class SRSettingTab extends PluginSettingTab {
                     });
             });
 
-        new Setting(containerEl).setName(t("FILENAME_OR_OPEN_FILE")).addToggle((toggle) =>
-            toggle
-                .setValue(this.plugin.data.settings.showFileNameInFileLink)
-                .onChange(async (value) => {
-                    this.plugin.data.settings.showFileNameInFileLink = value;
-                    await this.plugin.savePluginData();
-                })
-        );
+        new Setting(containerEl)
+            .setName(t("FILENAME_OR_OPEN_FILE"))
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.data.settings.showFileNameInFileLink)
+                    .onChange(async (value) => {
+                        this.plugin.data.settings.showFileNameInFileLink = value;
+                        await this.plugin.savePluginData();
+                    })
+            );
 
-        new Setting(containerEl).setName(t("RANDOMIZE_CARD_ORDER")).addToggle((toggle) =>
-            toggle
-                .setValue(this.plugin.data.settings.randomizeCardOrder)
-                .onChange(async (value) => {
-                    this.plugin.data.settings.randomizeCardOrder = value;
-                    await this.plugin.savePluginData();
-                })
-        );
+        new Setting(containerEl)
+            .setName(t("RANDOMIZE_CARD_ORDER"))
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.data.settings.randomizeCardOrder)
+                    .onChange(async (value) => {
+                        this.plugin.data.settings.randomizeCardOrder = value;
+                        await this.plugin.savePluginData();
+                    })
+            );
 
-        new Setting(containerEl).setName(t("CONVERT_HIGHLIGHTS_TO_CLOZES")).addToggle((toggle) =>
-            toggle
-                .setValue(this.plugin.data.settings.convertHighlightsToClozes)
-                .onChange(async (value) => {
-                    this.plugin.data.settings.convertHighlightsToClozes = value;
-                    await this.plugin.savePluginData();
-                })
-        );
+        new Setting(containerEl)
+            .setName(t("CONVERT_HIGHLIGHTS_TO_CLOZES"))
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.data.settings.convertHighlightsToClozes)
+                    .onChange(async (value) => {
+                        this.plugin.data.settings.convertHighlightsToClozes = value;
+                        await this.plugin.savePluginData();
+                    })
+            );
 
-        new Setting(containerEl).setName(t("CONVERT_BOLD_TEXT_TO_CLOZES")).addToggle((toggle) =>
-            toggle
-                .setValue(this.plugin.data.settings.convertBoldTextToClozes)
-                .onChange(async (value) => {
-                    this.plugin.data.settings.convertBoldTextToClozes = value;
-                    await this.plugin.savePluginData();
-                })
-        );
+        new Setting(containerEl)
+            .setName(t("CONVERT_BOLD_TEXT_TO_CLOZES"))
+            .addToggle((toggle) =>
+                toggle
+                    .setValue(this.plugin.data.settings.convertBoldTextToClozes)
+                    .onChange(async (value) => {
+                        this.plugin.data.settings.convertBoldTextToClozes = value;
+                        await this.plugin.savePluginData();
+                    })
+            );
 
         new Setting(containerEl)
             .setName(t("CONVERT_CURLY_BRACKETS_TO_CLOZES"))
@@ -454,7 +461,7 @@ export class SRSettingTab extends PluginSettingTab {
                     });
             });
 
-        containerEl.createDiv().innerHTML = <h3>{t("NOTES")}</h3>;
+        containerEl.createEl('h3', { text: `${t("NOTES")}` });
 
         new Setting(containerEl)
             .setName(t("TAGS_TO_REVIEW"))
@@ -538,7 +545,7 @@ export class SRSettingTab extends PluginSettingTab {
                     });
             });
 
-        containerEl.createDiv().innerHTML = <h3>{t("ALGORITHM")}</h3>;
+        containerEl.createEl('h3', { text: `${t("ALGORITHM")}` });
         containerEl.createDiv().innerHTML = t("CHECK_ALGORITHM_WIKI", {
             algo_url:
                 "https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Spaced-Repetition-Algorithm",
@@ -701,12 +708,14 @@ export class SRSettingTab extends PluginSettingTab {
                     });
             });
 
-        containerEl.createDiv().innerHTML = <h3>{t("LOGGING")}</h3>;
-        new Setting(containerEl).setName(t("DISPLAY_DEBUG_INFO")).addToggle((toggle) =>
-            toggle.setValue(this.plugin.data.settings.showDebugMessages).onChange(async (value) => {
-                this.plugin.data.settings.showDebugMessages = value;
-                await this.plugin.savePluginData();
-            })
-        );
+        containerEl.createEl('h3', { text: `${t("LOGGING")}` });
+        new Setting(containerEl)
+            .setName(t("DISPLAY_DEBUG_INFO"))
+            .addToggle((toggle) =>
+                toggle.setValue(this.plugin.data.settings.showDebugMessages).onChange(async (value) => {
+                    this.plugin.data.settings.showDebugMessages = value;
+                    await this.plugin.savePluginData();
+                })
+            );
     }
 }
