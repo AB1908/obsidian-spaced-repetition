@@ -1,80 +1,50 @@
 import { t } from "src/lang/helpers";
 import React, { useEffect, useRef, useState } from "react";
 import { sync } from "src/DeckBuilder";
-import { Deck } from "src/flashcard-modal";
+import { Deck } from "src/Deck";
 import { PluginData } from "src/main";
 import { Card, ReviewResponse } from "src/scheduling";
-import { DeckTree } from "./deck";
-import { AllDecks } from "./deckList";
+import { DeckTreeView as DeckTreeView } from "./deck";
+import { AllDecks } from "./card-counts";
 import { Flashcard } from "./flashcard";
 
 interface ModalContainerProps {
     deckTree: Deck;
-    handleClick: Function;
-    processReview: Function;
+    startReviewingDeck: Function;
+    processFlashcardAnswer: Function;
     currentDeck: Deck;
     isDeckInReview: ModalStates;
     changeModalState: Function;
 }
 
-export function ModalContent(props: ModalContainerProps) {
-    if (props.isDeckInReview == ModalStates.deckInReview) {
-        // TODO: Fix
-        return (
-            <Flashcard
-                deck={props.currentDeck}
-                processReview={async (a: ReviewResponse, b: Card) =>
-                    await props.processReview(a, b)
-                }
-                changeModalStatus={(a: ModalStates) => props.changeModalState(a)}
-            />
-        );
-    } else if (props.deckTree && props.isDeckInReview == ModalStates.deckNotInReview) {
-        return (
-            <DeckTree
-                subdecksArray={props.deckTree.subdecks}
-                deckName={props.deckTree.deckName}
-                handleClick={(deck: Deck) => props.handleClick(deck)}
-            />
-        );
-    } else {
-        return <></>;
-    }
-}
-
 interface ContainerProps {
     handleCloseButtonClick: Function;
-    processReview: Function;
-    data: PluginData;
+    processFlashcardAnswer: Function;
+    pluginData: PluginData;
 }
 
 export enum ModalStates {
-    deckInReview,
-    deckNotInReview,
+    DECK_IN_REVIEW,
+    DECK_NOT_IN_REVIEW,
 }
 
 export function ModalElement(props: ContainerProps) {
     const deckTree = useRef(new Deck("root", null));
     const [ignoreStats, setIgnoreStats] = useState(false);
-    const [modalState, setModalState] = useState(ModalStates.deckNotInReview);
+    const [modalState, setModalState] = useState(ModalStates.DECK_NOT_IN_REVIEW);
     const deckBeingReviewed = useRef(null);
     const [syncLock, setSyncLock] = useState(false);
 
     useEffect(() => {
         const syncDeck = async () => {
-            if (modalState == ModalStates.deckNotInReview)
-                deckTree.current = await sync(syncLock, setSyncLock, deckTree.current, props.data);
+            if (modalState == ModalStates.DECK_NOT_IN_REVIEW)
+                deckTree.current = await sync(syncLock, setSyncLock, deckTree.current, props.pluginData);
         }
         syncDeck();
-    }
-        , [modalState]);
-
-    console.log("inside modalEl", deckTree)
+    }, [modalState]);
 
     return (
         <>
-            {/* <div className="modal-bg" style={{ opacity: 0.85 }}></div> */}
-            {/* <div className="modal" style={{ height: "80%", width: "40%" }}> */}
             <div
                 className="modal-close-button"
                 onClick={() => props.handleCloseButtonClick()}
@@ -90,14 +60,14 @@ export function ModalElement(props: ContainerProps) {
                 style={{ position: "relative", height: "92%" }}
             >
                 <ModalContent
-                    handleClick={(deck: Deck) => {
+                    startReviewingDeck={(deck: Deck) => {
                         if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0)
-                            setModalState(ModalStates.deckInReview);
+                            setModalState(ModalStates.DECK_IN_REVIEW);
                         deckBeingReviewed.current = deck;
                     }}
                     changeModalState={(state: ModalStates) => setModalState(state)}
-                    processReview={async (response: ReviewResponse, card: Card) =>
-                        await props.processReview(response, card)
+                    processFlashcardAnswer={async (response: ReviewResponse, card: Card) =>
+                        await props.processFlashcardAnswer(response, card)
                     }
                     currentDeck={deckBeingReviewed.current}
                     isDeckInReview={modalState}
@@ -106,4 +76,29 @@ export function ModalElement(props: ContainerProps) {
             </div>
         </>
     );
+}
+
+export function ModalContent(props: ModalContainerProps) {
+    if (props.isDeckInReview == ModalStates.DECK_IN_REVIEW) {
+        // TODO: Fix
+        return (
+            <Flashcard
+                deck={props.currentDeck}
+                processReview={async (a: ReviewResponse, b: Card) =>
+                    await props.processFlashcardAnswer(a, b)
+                }
+                changeModalStatus={(a: ModalStates) => props.changeModalState(a)}
+            />
+        );
+    } else if (props.deckTree && props.isDeckInReview == ModalStates.DECK_NOT_IN_REVIEW) {
+        return (
+            <DeckTreeView
+                subdecksArray={props.deckTree.subdecks}
+                deckName={props.deckTree.deckName}
+                startReviewingDeck={(deck: Deck) => props.startReviewingDeck(deck)}
+            />
+        );
+    } else {
+        return <></>;
+    }
 }
