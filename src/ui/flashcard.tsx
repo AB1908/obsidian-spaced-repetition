@@ -1,12 +1,12 @@
 import { MarkdownRenderer } from "obsidian";
 import React, { useEffect, useRef, useState, ReactNode, MutableRefObject } from "react";
-import { Deck } from "src/flashcard-modal";
+import { Deck } from "src/Deck";
 import { Card, ReviewResponse } from "src/scheduling";
 import { EditLaterButton, ResetButton, ResponseButtonsDiv, ShowAnswerButton } from "./buttons";
-import { ModalStates } from "./modalContent";
+import { ModalStates } from "./modal";
 
 export interface FlashcardButtons extends ContentProps {
-    responseButtonsHandler: Function;
+    handleFlashcardResponse: Function;
     showAnswerButtonsHandler: Function;
 }
 
@@ -31,6 +31,7 @@ function Text(props: Props) {
 }
 
 function FlashcardContextHeader() {
+    // TODO: add actual content
     return <div id="sr-context"></div>;
 }
 
@@ -44,22 +45,21 @@ function FlashcardHeader({ isQuestion }: { isQuestion: boolean }) {
     );
 }
 
-function ActualFlashcard(props: FlashcardButtons) {
+function FlashcardContent(props: FlashcardButtons) {
     const viewRef = useRef(null);
 
     return (
         <>
             <FlashcardHeader isQuestion={props.isQuestion} />
-            <FlashcardView
-            >
+            <div id="sr-flashcard-view" ref={props.viewRef}>
                 <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
-            </FlashcardView>
+            </div>
             {props.isQuestion ? (
-                <ShowAnswerButton handleClick={() => props.showAnswerButtonsHandler()} />
+                <ShowAnswerButton handleFlashcardResponse={() => props.showAnswerButtonsHandler()} />
             ) : (
                 <ResponseButtonsDiv
-                    handleClick={(clickedResponse: ReviewResponse) =>
-                        props.responseButtonsHandler(clickedResponse)
+                    handleFlashcardResponse={(clickedResponse: ReviewResponse) =>
+                        props.handleFlashcardResponse(clickedResponse)
                     }
                 />
             )}
@@ -148,33 +148,26 @@ export function Flashcard(props: FlashcardProps) {
     }
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
+        // todo: move to useefect?
         await props.processReview(clickedResponse, flashcardList.current[flashcardIndex]);
         if (flashcardIndex + 1 < flashcardList.current.length) {
             setFlashcardIndex(flashcardIndex + 1);
             setIsQuestion(true);
         } else {
-            props.changeModalStatus(ModalStates.deckNotInReview);
+            props.changeModalStatus(ModalStates.DECK_NOT_IN_REVIEW);
         }
     }
 
     return (
         <>
-            <ActualFlashcard
+            <FlashcardContent
                 card={flashcardList.current[flashcardIndex]}
                 isQuestion={isQuestion}
-                responseButtonsHandler={(clickedResponse: ReviewResponse) =>
+                handleFlashcardResponse={(clickedResponse: ReviewResponse) =>
                     handleResponseButtons(clickedResponse)
                 }
                 showAnswerButtonsHandler={() => handleShowAnswerButton()}
             />
         </>
-    );
-}
-
-function FlashcardView(props: Props) {
-    return (
-        <div id="sr-flashcard-view" ref={props.viewRef}>
-            {props.children}
-        </div>
     );
 }

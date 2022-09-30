@@ -1,23 +1,20 @@
-import React, { Component, ReactNode, useEffect } from "react";
-import { MULTI_SCHEDULING_EXTRACTOR, LEGACY_SCHEDULING_EXTRACTOR } from "src/constants";
-import { Deck, FlashcardModal } from "src/flashcard-modal";
-import { Card, ReviewResponse, schedule } from "src/scheduling";
-import { escapeRegexString } from "src/utils";
+import React from "react";
+import { ReviewResponse } from "src/scheduling";
 
 export interface ButtonProps {
-    handleClick: Function;
+    handleFlashcardResponse: Function;
 }
 
 function AllButtons(props: ButtonProps) {
     return (
         <>
-            <button id="sr-hard-btn" onClick={() => props.handleClick(ReviewResponse.Hard)}>
+            <button id="sr-hard-btn" onClick={() => props.handleFlashcardResponse(ReviewResponse.Hard)}>
                 Hard - {"1 day(s)"}
             </button>
-            <button id="sr-good-btn" onClick={() => props.handleClick(ReviewResponse.Good)}>
+            <button id="sr-good-btn" onClick={() => props.handleFlashcardResponse(ReviewResponse.Good)}>
                 Good - {"2.5 day(s)"}
             </button>
-            <button id="sr-easy-btn" onClick={() => props.handleClick(ReviewResponse.Easy)}>
+            <button id="sr-easy-btn" onClick={() => props.handleFlashcardResponse(ReviewResponse.Easy)}>
                 Easy - {"3.5 day(s)"}
             </button>
         </>
@@ -41,7 +38,7 @@ export function ShowAnswerButton(props: ButtonProps) {
         <button
             id="sr-show-answer"
             style={{ display: "initial" }}
-            onClick={() => props.handleClick()}
+            onClick={() => props.handleFlashcardResponse()}
         >
             Show Answer
         </button>
@@ -51,7 +48,7 @@ export function ShowAnswerButton(props: ButtonProps) {
 export function ResponseButtonsDiv(props: ButtonProps) {
     return (
         <div className="sr-response" style={{ display: "grid" }}>
-            <AllButtons handleClick={props.handleClick} />
+            <AllButtons handleFlashcardResponse={props.handleFlashcardResponse} />
         </div>
     );
 }

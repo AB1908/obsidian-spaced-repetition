@@ -1,11 +1,9 @@
-import * as React from "react";
-import SRPlugin from "src/main";
+import React from "react";
 import { t } from "src/lang/helpers";
-import { Deck as DeckObj } from "src/flashcard-modal";
-import { CardType } from "src/scheduling";
+import { Deck } from "src/Deck";
 
 interface Props {
-    deck: DeckObj;
+    deck: Deck;
     localizedModalTitle: string;
 }
 
@@ -34,7 +32,7 @@ export class CardCount extends React.Component<CardCountProps> {
 }
 
 interface AllCountsProps {
-    deck: DeckObj;
+    deck: Deck;
 }
 
 export class AllCardCounts extends React.Component<AllCountsProps> {

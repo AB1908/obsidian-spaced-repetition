@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
-import { Deck, Deck as DeckObj } from "src/flashcard-modal";
-import { AllCardCounts } from "./deckList";
+import { Deck, Deck as DeckObj } from "src/Deck";
+import { AllCardCounts } from "./card-counts";
 
 interface CollapsibleState {
     isDeckTreeOpen: boolean;
@@ -13,28 +13,23 @@ interface StateChanger extends CollapsibleState {
 export interface DeckModalProps {
     deckName: string;
     subdecksArray: DeckObj[];
-    handleClick?: Function;
+    startReviewingDeck?: Function;
 }
 
 interface SubDeckProps {
     deck: DeckObj;
     startReviewingDeck?: Function;
-    children?: Function;
 }
 
-class InnerTreeItem extends Component<SubDeckProps> {
-    render(): ReactNode {
-        return (
-            <div
-                className="tree-item-inner"
-                onClick={() => {
-                    this.props.startReviewingDeck(this.props.deck);
-                }}
-            >
-                {this.props.deck.deckName}
-            </div>
-        );
-    }
+function InnerTreeItem(props: SubDeckProps) {
+    return (
+        <div
+            className="tree-item-inner"
+            onClick={() => { props.startReviewingDeck(props.deck); }}
+        >
+            {props.deck.deckName}
+        </div>
+    );
 }
 
 class CollapseIcon extends Component<StateChanger> {
@@ -89,7 +84,6 @@ class CollapsibleDeckTreeEntry extends Component<SubDeckProps, CollapsibleState>
                         className="tree-item-self tag-pane-tag is-clickable"
                         onClick={(e) => e.preventDefault()}
                     >
-                        {" "}
                         {/* tree-item-self*/}
                         <CollapseIcon
                             {...this.state}
@@ -104,10 +98,10 @@ class CollapsibleDeckTreeEntry extends Component<SubDeckProps, CollapsibleState>
                         <AllCardCounts deck={this.props.deck} />
                     </summary>
                     <div className="tree-item-children">
-                        <DeckTree
+                        <DeckTreeView
                             subdecksArray={this.props.deck.subdecks}
                             deckName={this.props.deck.deckName}
-                            handleClick={(d: Deck) => this.props.startReviewingDeck(d)}
+                            startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
                         />
                     </div>
                 </details>
@@ -148,16 +142,15 @@ class DeckTreeEntry extends Component<SubDeckProps> {
                 <NonCollapsibleDeckTreeEntry
                     deck={this.props.deck}
                     startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                    children={() => this.props.children()}
                 />
             );
         }
     }
 }
 
-export function DeckTree(props: DeckModalProps) {
+export function DeckTreeView(props: DeckModalProps) {
     const listItems = props.subdecksArray.map((deck: Deck, i: number) => (
-        <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.handleClick(d)} />
+        <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)} />
     ));
     return <>{listItems}</>;
 }

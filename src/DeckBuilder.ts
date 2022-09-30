@@ -1,6 +1,6 @@
 import { TFile, FrontMatterCache, getAllTags, HeadingCache } from "obsidian";
 import { MULTI_SCHEDULING_EXTRACTOR, LEGACY_SCHEDULING_EXTRACTOR } from "./constants";
-import { Deck } from "./flashcard-modal";
+import { Deck } from "./Deck";
 import { t } from "./lang/helpers";
 import { PluginData, LinkStat } from "./main";
 import { parse } from "./parser";
