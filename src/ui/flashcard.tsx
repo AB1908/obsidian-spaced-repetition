@@ -1,9 +1,12 @@
+import { MULTI_SCHEDULING_EXTRACTOR, LEGACY_SCHEDULING_EXTRACTOR } from "src/constants";
+import { Card, ReviewResponse, schedule } from "src/scheduling";
+import { escapeRegexString } from "src/utils";
 import { MarkdownRenderer } from "obsidian";
 import React, { useEffect, useRef, useState, ReactNode, MutableRefObject } from "react";
 import { Deck } from "src/Deck";
-import { Card, ReviewResponse } from "src/scheduling";
 import { EditLaterButton, ResetButton, ResponseButtonsDiv, ShowAnswerButton } from "./buttons";
-import { ModalStates } from "./modal";
+import { AdditionalProps, ModalStates } from "./modal";
+import { PluginData } from "src/main";
 
 export interface FlashcardButtons extends ContentProps {
     handleFlashcardResponse: Function;
@@ -22,8 +25,8 @@ interface Props {
 
 interface FlashcardProps {
     deck: Deck;
-    processReview: Function;
     changeModalStatus: Function;
+    additionalProps: AdditionalProps;
 }
 
 function Text(props: Props) {
@@ -119,7 +122,7 @@ function FlashcardBody(props: ContentProps) {
     );
 }
 
-export function Flashcard(props: FlashcardProps) {
+export function FlashcardView(props: FlashcardProps) {
     const [isQuestion, setIsQuestion] = useState(true);
     const [flashcardIndex, setFlashcardIndex] = useState(0);
     const deck: Deck = props.deck;
@@ -149,7 +152,7 @@ export function Flashcard(props: FlashcardProps) {
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
         // todo: move to useefect?
-        await props.processReview(clickedResponse, flashcardList.current[flashcardIndex]);
+        await processReview(clickedResponse, flashcardList.current[flashcardIndex], props.additionalProps.pluginData, props.additionalProps.dueDatesFlashcards, props.additionalProps.easeByPath);
         if (flashcardIndex + 1 < flashcardList.current.length) {
             setFlashcardIndex(flashcardIndex + 1);
             setIsQuestion(true);
@@ -170,4 +173,107 @@ export function Flashcard(props: FlashcardProps) {
             />
         </>
     );
+}
+
+async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
+    if (this.ignoreStats) {
+        if (response == ReviewResponse.Easy) {
+        }
+        return;
+    }
+
+    let interval: number, ease: number, due;
+
+    if (response !== ReviewResponse.Reset) {
+        let schedObj: Record<string, number>;
+        // scheduled card
+        if (currentCard.isDue) {
+            schedObj = schedule(
+                response,
+                currentCard.interval,
+                currentCard.ease,
+                currentCard.delayBeforeReview,
+                data.settings,
+                dueDatesFlashcards
+            );
+        } else {
+            let initial_ease: number = data.settings.baseEase;
+            if (
+                Object.prototype.hasOwnProperty.call(
+                    easeByPath,
+                    currentCard.note.path
+                )
+            ) {
+                initial_ease = Math.round(easeByPath[currentCard.note.path]);
+            }
+
+            schedObj = schedule(
+                response,
+                1.0,
+                initial_ease,
+                0,
+                data.settings,
+                dueDatesFlashcards
+            );
+            interval = schedObj.interval;
+            ease = schedObj.ease;
+        }
+
+        interval = schedObj.interval;
+        ease = schedObj.ease;
+        due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
+    } else {
+        // due = this.resetFlashcard(due);
+        return;
+    }
+
+    const dueString: string = due.format("YYYY-MM-DD");
+
+    let fileText: string = await this.app.vault.read(currentCard.note);
+    const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
+
+    let sep: string = data.settings.cardCommentOnSameLine ? " " : "\n";
+    // Override separator if last block is a codeblock
+    if (currentCard.cardText.endsWith("```") && sep !== "\n") {
+        sep = "\n";
+    }
+
+    // check if we're adding scheduling information to the flashcard
+    // for the first time
+    if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
+        currentCard.cardText =
+            currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
+    } else {
+        let scheduling: RegExpMatchArray[] = [
+            ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+        ];
+        if (scheduling.length === 0) {
+            scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+        }
+
+        const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
+        if (currentCard.isDue) {
+            scheduling[currentCard.siblingIdx] = currCardSched;
+        } else {
+            scheduling.push(currCardSched);
+        }
+
+        currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
+        currentCard.cardText += "<!--SR:";
+        for (let i = 0; i < scheduling.length; i++) {
+            currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+        }
+        currentCard.cardText += "-->";
+    }
+
+    fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
+    for (const sibling of currentCard.siblings) {
+        sibling.cardText = currentCard.cardText;
+    }
+    if (data.settings.burySiblingCards) {
+        // this.burySiblingCards(true);
+    }
+
+    await this.app.vault.modify(currentCard.note, fileText);
+    // this.currentDeck.nextCard(this);
 }
