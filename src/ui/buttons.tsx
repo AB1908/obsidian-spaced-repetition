@@ -5,6 +5,7 @@ export interface ButtonProps {
     handleFlashcardResponse: Function;
 }
 
+
 function AllButtons(props: ButtonProps) {
     return (
         <>
