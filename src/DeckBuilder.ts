@@ -12,23 +12,10 @@ import { cyrb53, escapeRegexString } from "./utils";
 
 export async function sync(syncLock: boolean, setSyncLock: Function, deckTree: Deck, data: PluginData): Promise<Deck> {
     let incomingLinks: Record<string, LinkStat[]> = {};
-    // let data: PluginData = props.data;
-    // let dueDatesNotes: Record<number, number> = {}; // Record<# of days in future, due count>
-    let dueNotesCount = 0;
     let reviewDecks: { [deckKey: string]: ReviewDeck } = {};
     let pageranks: Record<string, number> = {};
     let dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
-    // deckTree = new Deck("root", null);
     let easeByPath: Record<string, number> = {};
-    // let cardStats: Stats;
-
-    // cardStats = {
-    //     eases: {},
-    //     intervals: {},
-    //     newCount: 0,
-    //     youngCount: 0,
-    //     matureCount: 0,
-    // };
 
     if (syncLock) {
         return;
@@ -117,41 +104,41 @@ export async function sync(syncLock: boolean, setSyncLock: Function, deckTree: D
         }
 
         // file has no scheduling information
-        if (
-            !(
-                Object.prototype.hasOwnProperty.call(frontmatter, "sr-due") &&
-                Object.prototype.hasOwnProperty.call(frontmatter, "sr-interval") &&
-                Object.prototype.hasOwnProperty.call(frontmatter, "sr-ease")
-            )
-        ) {
-            for (const matchedNoteTag of matchedNoteTags) {
-                reviewDecks[matchedNoteTag].newNotes.push(note);
-            }
-            continue;
-        }
+        // if (
+        //     !(
+        //         Object.prototype.hasOwnProperty.call(frontmatter, "sr-due") &&
+        //         Object.prototype.hasOwnProperty.call(frontmatter, "sr-interval") &&
+        //         Object.prototype.hasOwnProperty.call(frontmatter, "sr-ease")
+        //     )
+        // ) {
+        //     for (const matchedNoteTag of matchedNoteTags) {
+        //         reviewDecks[matchedNoteTag].newNotes.push(note);
+        //     }
+        //     continue;
+        // }
 
-        const dueUnix: number = window
-            .moment(frontmatter["sr-due"], ["YYYY-MM-DD", "DD-MM-YYYY", "ddd MMM DD YYYY"])
-            .valueOf();
+        // const dueUnix: number = window
+        //     .moment(frontmatter["sr-due"], ["YYYY-MM-DD", "DD-MM-YYYY", "ddd MMM DD YYYY"])
+        //     .valueOf();
 
-        for (const matchedNoteTag of matchedNoteTags) {
-            reviewDecks[matchedNoteTag].scheduledNotes.push({ note, dueUnix });
-            if (dueUnix <= now.valueOf()) {
-                reviewDecks[matchedNoteTag].dueNotesCount++;
-            }
-        }
+        // for (const matchedNoteTag of matchedNoteTags) {
+        //     reviewDecks[matchedNoteTag].scheduledNotes.push({ note, dueUnix });
+        //     if (dueUnix <= now.valueOf()) {
+        //         reviewDecks[matchedNoteTag].dueNotesCount++;
+        //     }
+        // }
 
-        if (Object.prototype.hasOwnProperty.call(easeByPath, note.path)) {
-            easeByPath[note.path] = (easeByPath[note.path] + frontmatter["sr-ease"]) / 2;
-        } else {
-            easeByPath[note.path] = frontmatter["sr-ease"];
-        }
+        // if (Object.prototype.hasOwnProperty.call(easeByPath, note.path)) {
+        //     easeByPath[note.path] = (easeByPath[note.path] + frontmatter["sr-ease"]) / 2;
+        // } else {
+        //     easeByPath[note.path] = frontmatter["sr-ease"];
+        // }
 
-        if (dueUnix <= now.valueOf()) {
-            dueNotesCount++;
-        }
+        // if (dueUnix <= now.valueOf()) {
+        //     dueNotesCount++;
+        // }
 
-        const nDays: number = Math.ceil((dueUnix - now.valueOf()) / (24 * 3600 * 1000));
+        // const nDays: number = Math.ceil((dueUnix - now.valueOf()) / (24 * 3600 * 1000));
         // if (!Object.prototype.hasOwnProperty.call(dueDatesNotes, nDays)) {
         // dueDatesNotes[nDays] = 0;
         // }
@@ -335,6 +322,7 @@ async function findFlashcardsInNote(
         }
 
         let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
+        console.log(scheduling);
         if (scheduling.length === 0)
             scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
 

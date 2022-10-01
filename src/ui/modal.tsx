@@ -3,24 +3,28 @@ import React, { useEffect, useRef, useState } from "react";
 import { sync } from "src/DeckBuilder";
 import { Deck } from "src/Deck";
 import { PluginData } from "src/main";
-import { Card, ReviewResponse } from "src/scheduling";
 import { DeckTreeView as DeckTreeView } from "./deck";
 import { AllDecks } from "./card-counts";
-import { Flashcard } from "./flashcard";
+import { FlashcardView } from "./flashcard";
 
 interface ModalContainerProps {
     deckTree: Deck;
     startReviewingDeck: Function;
-    processFlashcardAnswer: Function;
     currentDeck: Deck;
     isDeckInReview: ModalStates;
     changeModalState: Function;
+    additionalProps: AdditionalProps;
 }
 
 interface ContainerProps {
     handleCloseButtonClick: Function;
-    processFlashcardAnswer: Function;
+    additionalProps: AdditionalProps;
+}
+
+export interface AdditionalProps {
     pluginData: PluginData;
+    dueDatesFlashcards: Record<number, number>;
+    easeByPath: Record<string, number>
 }
 
 export enum ModalStates {
@@ -38,7 +42,7 @@ export function ModalElement(props: ContainerProps) {
     useEffect(() => {
         const syncDeck = async () => {
             if (modalState == ModalStates.DECK_NOT_IN_REVIEW)
-                deckTree.current = await sync(syncLock, setSyncLock, deckTree.current, props.pluginData);
+                deckTree.current = await sync(syncLock, setSyncLock, deckTree.current, props.additionalProps.pluginData);
         }
         syncDeck();
     }, [modalState]);
@@ -66,12 +70,10 @@ export function ModalElement(props: ContainerProps) {
                         deckBeingReviewed.current = deck;
                     }}
                     changeModalState={(state: ModalStates) => setModalState(state)}
-                    processFlashcardAnswer={async (response: ReviewResponse, card: Card) =>
-                        await props.processFlashcardAnswer(response, card)
-                    }
                     currentDeck={deckBeingReviewed.current}
                     isDeckInReview={modalState}
                     deckTree={deckTree.current}
+                    additionalProps={props.additionalProps}
                 />
             </div>
         </>
@@ -82,12 +84,10 @@ export function ModalContent(props: ModalContainerProps) {
     if (props.isDeckInReview == ModalStates.DECK_IN_REVIEW) {
         // TODO: Fix
         return (
-            <Flashcard
+            <FlashcardView
                 deck={props.currentDeck}
-                processReview={async (a: ReviewResponse, b: Card) =>
-                    await props.processFlashcardAnswer(a, b)
-                }
                 changeModalStatus={(a: ModalStates) => props.changeModalState(a)}
+                additionalProps={props.additionalProps}
             />
         );
     } else if (props.deckTree && props.isDeckInReview == ModalStates.DECK_NOT_IN_REVIEW) {
