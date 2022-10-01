@@ -1,18 +1,13 @@
+import React from "react";
 import {
-    App, Modal, Platform,
-    TFile
+    App, Modal, Platform
 } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
-import React from "react";
 
-import {
-    AUDIO_FORMATS, IMAGE_FORMATS, LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR, VIDEO_FORMATS
-} from "src/constants";
 import type SRPlugin from "src/main";
-import { Card, ReviewResponse, schedule } from "src/scheduling";
-import { cyrb53, escapeRegexString } from "src/utils";
-import { ModalElement } from "./ui/modal";
+import { Card } from "src/scheduling";
 import { Deck } from "./Deck";
+import { ModalElement } from "./ui/modal";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -90,13 +85,16 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
-                 <ModalElement
-                     handleCloseButtonClick={() => this.close()}
-                     processFlashcardAnswer={async (response: ReviewResponse, card: Card) =>
-                         await this.processReview(response, card)
-                     }
-                     pluginData={this.plugin.data}
-                 />
+                <ModalElement
+                    handleCloseButtonClick={() => this.close()}
+                    additionalProps={
+                        {
+                            pluginData: this.plugin.data,
+                            dueDatesFlashcards: this.plugin.dueDatesFlashcards,
+                            easeByPath: this.plugin.easeByPath
+                        }
+                    }
+                />
             </>
         )
     }
@@ -124,114 +122,6 @@ export class FlashcardModal extends Modal {
     //     }
     // }
 
-    async processReview(response: ReviewResponse, currentCard: Card): Promise<void> {
-        if (this.ignoreStats) {
-            if (response == ReviewResponse.Easy) {
-                // this.currentDeck.deleteFlashcardAtIndex(
-                //     this.currentCardIdx,
-                //     this.currentCard.isDue
-                // );
-            }
-            // this.currentDeck.nextCard(this);
-            return;
-        }
-
-        let interval: number, ease: number, due;
-
-        // this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
-        if (response !== ReviewResponse.Reset) {
-            let schedObj: Record<string, number>;
-            // scheduled card
-            if (currentCard.isDue) {
-                schedObj = schedule(
-                    response,
-                    currentCard.interval,
-                    currentCard.ease,
-                    currentCard.delayBeforeReview,
-                    this.plugin.data.settings,
-                    this.plugin.dueDatesFlashcards
-                );
-            } else {
-                let initial_ease: number = this.plugin.data.settings.baseEase;
-                if (
-                    Object.prototype.hasOwnProperty.call(
-                        this.plugin.easeByPath,
-                        currentCard.note.path
-                    )
-                ) {
-                    initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
-                }
-
-                schedObj = schedule(
-                    response,
-                    1.0,
-                    initial_ease,
-                    0,
-                    this.plugin.data.settings,
-                    this.plugin.dueDatesFlashcards
-                );
-                interval = schedObj.interval;
-                ease = schedObj.ease;
-            }
-
-            interval = schedObj.interval;
-            ease = schedObj.ease;
-            due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
-        } else {
-            // due = this.resetFlashcard(due);
-            return;
-        }
-
-        const dueString: string = due.format("YYYY-MM-DD");
-
-        let fileText: string = await this.app.vault.read(currentCard.note);
-        const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
-
-        let sep: string = this.plugin.data.settings.cardCommentOnSameLine ? " " : "\n";
-        // Override separator if last block is a codeblock
-        if (currentCard.cardText.endsWith("```") && sep !== "\n") {
-            sep = "\n";
-        }
-
-        // check if we're adding scheduling information to the flashcard
-        // for the first time
-        if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
-            currentCard.cardText =
-                currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
-        } else {
-            let scheduling: RegExpMatchArray[] = [
-                ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
-            ];
-            if (scheduling.length === 0) {
-                scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
-            }
-
-            const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
-            if (currentCard.isDue) {
-                scheduling[currentCard.siblingIdx] = currCardSched;
-            } else {
-                scheduling.push(currCardSched);
-            }
-
-            currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
-            currentCard.cardText += "<!--SR:";
-            for (let i = 0; i < scheduling.length; i++) {
-                currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
-            }
-            currentCard.cardText += "-->";
-        }
-
-        fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
-        for (const sibling of currentCard.siblings) {
-            sibling.cardText = currentCard.cardText;
-        }
-        if (this.plugin.data.settings.burySiblingCards) {
-            // this.burySiblingCards(true);
-        }
-
-        await this.app.vault.modify(currentCard.note, fileText);
-        // this.currentDeck.nextCard(this);
-    }
 
     // private resetFlashcard(due: any) {
     //     this.currentCard.interval = 1.0;
@@ -271,72 +161,72 @@ export class FlashcardModal extends Modal {
     //     }
     // }
 
-    parseLink(src: string) {
-        const linkComponentsRegex =
-            /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
-        const matched = typeof src === "string" && src.match(linkComponentsRegex);
-        const file = matched.groups.file || this.currentCard.note.path;
-        const target = this.plugin.app.metadataCache.getFirstLinkpathDest(
-            file,
-            this.currentCard.note.path
-        );
-        // move lookup upstream? ^^^
-        return {
-            text: matched[0],
-            file: matched.groups.file,
-            heading: matched.groups.heading,
-            blockId: matched.groups.blockId,
-            target: target,
-        };
-    }
+    // parseLink(src: string) {
+    //     const linkComponentsRegex =
+    //         /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
+    //     const matched = typeof src === "string" && src.match(linkComponentsRegex);
+    //     const file = matched.groups.file || this.currentCard.note.path;
+    //     const target = this.plugin.app.metadataCache.getFirstLinkpathDest(
+    //         file,
+    //         this.currentCard.note.path
+    //     );
+    //     // move lookup upstream? ^^^
+    //     return {
+    //         text: matched[0],
+    //         file: matched.groups.file,
+    //         heading: matched.groups.heading,
+    //         blockId: matched.groups.blockId,
+    //         target: target,
+    //     };
+    // }
 
-    embedMediaFile(el: HTMLElement, target: TFile) {
-        el.innerText = "";
-        if (IMAGE_FORMATS.includes(target.extension)) {
-            el.createEl(
-                "img",
-                {
-                    attr: {
-                        src: this.plugin.app.vault.getResourcePath(target),
-                    },
-                },
-                (img) => {
-                    if (el.hasAttribute("width"))
-                        img.setAttribute("width", el.getAttribute("width"));
-                    else img.setAttribute("width", "100%");
-                    if (el.hasAttribute("alt")) img.setAttribute("alt", el.getAttribute("alt"));
-                    el.addEventListener(
-                        "click",
-                        (ev) =>
-                        ((ev.target as HTMLElement).style.minWidth =
-                            (ev.target as HTMLElement).style.minWidth === "100%"
-                                ? null
-                                : "100%")
-                    );
-                }
-            );
-            el.addClasses(["image-embed", "is-loaded"]);
-        } else if (
-            AUDIO_FORMATS.includes(target.extension) ||
-            VIDEO_FORMATS.includes(target.extension)
-        ) {
-            el.createEl(
-                AUDIO_FORMATS.includes(target.extension) ? "audio" : "video",
-                {
-                    attr: {
-                        controls: "",
-                        src: this.plugin.app.vault.getResourcePath(target),
-                    },
-                },
-                (audio) => {
-                    if (el.hasAttribute("alt")) audio.setAttribute("alt", el.getAttribute("alt"));
-                }
-            );
-            el.addClasses(["media-embed", "is-loaded"]);
-        } else {
-            el.innerText = target.path;
-        }
-    }
+    // embedMediaFile(el: HTMLElement, target: TFile) {
+    //     el.innerText = "";
+    //     if (IMAGE_FORMATS.includes(target.extension)) {
+    //         el.createEl(
+    //             "img",
+    //             {
+    //                 attr: {
+    //                     src: this.plugin.app.vault.getResourcePath(target),
+    //                 },
+    //             },
+    //             (img) => {
+    //                 if (el.hasAttribute("width"))
+    //                     img.setAttribute("width", el.getAttribute("width"));
+    //                 else img.setAttribute("width", "100%");
+    //                 if (el.hasAttribute("alt")) img.setAttribute("alt", el.getAttribute("alt"));
+    //                 el.addEventListener(
+    //                     "click",
+    //                     (ev) =>
+    //                     ((ev.target as HTMLElement).style.minWidth =
+    //                         (ev.target as HTMLElement).style.minWidth === "100%"
+    //                             ? null
+    //                             : "100%")
+    //                 );
+    //             }
+    //         );
+    //         el.addClasses(["image-embed", "is-loaded"]);
+    //     } else if (
+    //         AUDIO_FORMATS.includes(target.extension) ||
+    //         VIDEO_FORMATS.includes(target.extension)
+    //     ) {
+    //         el.createEl(
+    //             AUDIO_FORMATS.includes(target.extension) ? "audio" : "video",
+    //             {
+    //                 attr: {
+    //                     controls: "",
+    //                     src: this.plugin.app.vault.getResourcePath(target),
+    //                 },
+    //             },
+    //             (audio) => {
+    //                 if (el.hasAttribute("alt")) audio.setAttribute("alt", el.getAttribute("alt"));
+    //             }
+    //         );
+    //         el.addClasses(["media-embed", "is-loaded"]);
+    //     } else {
+    //         el.innerText = target.path;
+    //     }
+    // }
 
     // async renderTransclude(
     //     el: HTMLElement,
