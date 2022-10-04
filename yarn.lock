@@ -285,14 +285,14 @@
   "version" "0.2.3"
 
 "@codemirror/state@^6.0.0":
-  "integrity" "sha512-2s+aXsxmAwnR3Rd+JDHPG/1lw0YsA9PEwl7Re88gHJHGfxyfEzKBmsN4rr53RyPIR4lzbbhJX0DCq0WlqlBIRw=="
-  "resolved" "https://registry.npmjs.org/@codemirror/state/-/state-6.1.1.tgz"
-  "version" "6.1.1"
+  "integrity" "sha512-Mxff85Hp5va+zuj+H748KbubXjrinX/k28lj43H14T2D0+4kuvEFIEIO7hCEcvBT8ubZyIelt9yGOjj2MWOEQA=="
+  "resolved" "https://registry.npmjs.org/@codemirror/state/-/state-6.1.2.tgz"
+  "version" "6.1.2"
 
 "@codemirror/view@^6.0.0":
-  "integrity" "sha512-r1svbtAj2Lp/86F3yy1TfDAOAtJRGLINLSEqByETyUaGo1EnLS+P+bbGCVHV62z46BzZYm16noDid69+4bzn0g=="
-  "resolved" "https://registry.npmjs.org/@codemirror/view/-/view-6.2.1.tgz"
-  "version" "6.2.1"
+  "integrity" "sha512-jMN9OGKmzRPJ+kksfMrB5e/A9heQncirHsz8XNBpgEbYONCk5tWHMKVWKTNwznkUGD5mnigXI1i5YIcWpscSPg=="
+  "resolved" "https://registry.npmjs.org/@codemirror/view/-/view-6.3.0.tgz"
+  "version" "6.3.0"
   dependencies:
     "@codemirror/state" "^6.0.0"
     "style-mod" "^4.0.0"
@@ -738,10 +738,10 @@
   dependencies:
     "@types/react" "*"
 
-"@types/react@*", "@types/react@^18.0.17":
-  "integrity" "sha512-38ETy4tL+rn4uQQi7mB81G7V1g0u2ryquNmsVIOKUAEIDK+3CUjZ6rSRpdvS99dNBnkLFL83qfmtLacGOTIhwQ=="
-  "resolved" "https://registry.npmjs.org/@types/react/-/react-18.0.17.tgz"
-  "version" "18.0.17"
+"@types/react@*", "@types/react@^18.0.21":
+  "integrity" "sha512-7QUCOxvFgnD5Jk8ZKlUAhVcRj7GuJRjnjjiY/IUBWKgOlnvDvTMLD4RTF7NPyVmbRhNrbomZiOepg7M/2Kj1mA=="
+  "resolved" "https://registry.npmjs.org/@types/react/-/react-18.0.21.tgz"
+  "version" "18.0.21"
   dependencies:
     "@types/prop-types" "*"
     "@types/scheduler" "*"
@@ -1378,9 +1378,9 @@
     "cssom" "~0.3.6"
 
 "csstype@^3.0.2":
-  "integrity" "sha512-uX1KG+x9h5hIJsaKR9xHUeUraxf8IODOwq9JLNPq6BwB04a/xgpq3rcx47l5BZu5zBPlgD342tdke3Hom/nJRA=="
-  "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.1.0.tgz"
-  "version" "3.1.0"
+  "integrity" "sha512-DJR/VvkAvSZW9bTouZue2sSxDwdTN92uHjqeKVm+0dAqdfNykRzQ95tay8aXMBAAPpUiq4Qcug2L7neoRh2Egw=="
+  "resolved" "https://registry.npmjs.org/csstype/-/csstype-3.1.1.tgz"
+  "version" "3.1.1"
 
 "data-urls@^2.0.0":
   "integrity" "sha512-X5eWTSXO/BJmpdIKCRuKUgSCgAN0OwliVK3yPKbwIWU1Tdw5BRajxlzMidvh+gwko9AfQ9zIj52pzF91Q3YAvQ=="
@@ -1564,11 +1564,6 @@
 "esbuild-linux-64@0.13.15":
   "integrity" "sha512-eCKzkNSLywNeQTRBxJRQ0jxRCl2YWdMB3+PkWFo2BBQYC5mISLIVIjThNtn6HUNqua1pnvgP5xX0nHbZbPj5oA=="
   "resolved" "https://registry.npmjs.org/esbuild-linux-64/-/esbuild-linux-64-0.13.15.tgz"
-  "version" "0.13.15"
-
-"esbuild-windows-64@0.13.15":
-  "integrity" "sha512-9aMsPRGDWCd3bGjUIKG/ZOJPKsiztlxl/Q3C1XDswO6eNX/Jtwu4M+jb6YDH9hRSUflQWX0XKAfWzgy5Wk54JQ=="
-  "resolved" "https://registry.npmjs.org/esbuild-windows-64/-/esbuild-windows-64-0.13.15.tgz"
   "version" "0.13.15"
 
 "esbuild@~0.13.0":
@@ -1927,9 +1922,9 @@
   "version" "2.0.5"
 
 "get-intrinsic@^1.1.1":
-  "integrity" "sha512-Jfm3OyCxHh9DJyc28qGk+JmfkpO41A4XkneDSujN9MDXrm4oDKdHvndhZ2dN94+ERNfkYJWDclW6k2L/ZGHjXA=="
-  "resolved" "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.2.tgz"
-  "version" "1.1.2"
+  "integrity" "sha512-QJVz1Tj7MS099PevUG5jvnt9tSkXN8K14dxQlikJuPt4uD9hHAHjLyLBiLR5zELelBdD9QNRAXZzsJx0WaDL9A=="
+  "resolved" "https://registry.npmjs.org/get-intrinsic/-/get-intrinsic-1.1.3.tgz"
+  "version" "1.1.3"
   dependencies:
     "function-bind" "^1.1.1"
     "has" "^1.0.3"
@@ -3433,24 +3428,24 @@
     "minimist" "^1.2.0"
     "strip-json-comments" "~2.0.1"
 
-"react-devtools-core@4.25.0":
-  "integrity" "sha512-iewRrnu0ZnmfL+jJayKphXj04CFh6i3ezVnpCtcnZbTPSQgN09XqHAzXbKbqNDl7aTg9QLNkQRP6M3DvdrinWA=="
-  "resolved" "https://registry.npmjs.org/react-devtools-core/-/react-devtools-core-4.25.0.tgz"
-  "version" "4.25.0"
+"react-devtools-core@4.26.0":
+  "integrity" "sha512-OO0Q+vXtHYCXvRQ6elLiOUph3MjsCpuYktGTLnBpizYm46f8tAPuJKihGkwsceitHSJNpzNIjJaYHgX96CyTUQ=="
+  "resolved" "https://registry.npmjs.org/react-devtools-core/-/react-devtools-core-4.26.0.tgz"
+  "version" "4.26.0"
   dependencies:
     "shell-quote" "^1.6.1"
     "ws" "^7"
 
 "react-devtools@^4.25.0":
-  "integrity" "sha512-b6BEjWP0BOF1umqKDAVeSi4sm+crIQJ9WlwPTAxT4T73mKYMqFOr4nf5JwnQK0Vt2U/+kKlLSQqrTKPa2feq+Q=="
-  "resolved" "https://registry.npmjs.org/react-devtools/-/react-devtools-4.25.0.tgz"
-  "version" "4.25.0"
+  "integrity" "sha512-4HH1175pV+F8oqVQHwu4lNlXYF23wTZk1jx8E6nYh2RlTehMUY7lLwyv7wgcSWhDjbmGKzVfJ2P/0qaHn+22/g=="
+  "resolved" "https://registry.npmjs.org/react-devtools/-/react-devtools-4.26.0.tgz"
+  "version" "4.26.0"
   dependencies:
     "cross-spawn" "^5.0.1"
     "electron" "^11.1.0"
     "ip" "^1.1.4"
     "minimist" "^1.2.3"
-    "react-devtools-core" "4.25.0"
+    "react-devtools-core" "4.26.0"
     "update-notifier" "^2.1.0"
 
 "react-dom@^18.2.0":
