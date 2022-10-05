@@ -4,7 +4,7 @@ import { escapeRegexString } from "src/utils";
 import { MarkdownRenderer } from "obsidian";
 import React, { useEffect, useRef, useState, ReactNode, MutableRefObject } from "react";
 import { Deck } from "src/Deck";
-import { EditLaterButton, ResetButton, ResponseButtonsDiv, ShowAnswerButton } from "./buttons";
+import { EditLaterButton, ResetButton, ResponseButtonsDiv, ShowAnswerButton } from "../components/buttons";
 import { AdditionalProps, ModalStates } from "./modal";
 import { PluginData } from "src/main";
 
@@ -33,17 +33,17 @@ function Text(props: Props) {
     return <p>{props.children}</p>;
 }
 
-function FlashcardContextHeader() {
+function FlashcardContextHeader({ text }: { text: string }) {
     // TODO: add actual content
-    return <div id="sr-context"></div>;
+    return <div id="sr-context">{text}</div>;
 }
 
-function FlashcardHeader({ isQuestion }: { isQuestion: boolean }) {
+function FlashcardHeader({ isQuestion, contextText }: { isQuestion: boolean, contextText: string }) {
     return (
         <>
             <EditLaterButton />
             {!isQuestion && <ResetButton />}
-            <FlashcardContextHeader />
+            <FlashcardContextHeader text={contextText} />
         </>
     );
 }
@@ -53,7 +53,7 @@ function FlashcardContent(props: FlashcardButtons) {
 
     return (
         <>
-            <FlashcardHeader isQuestion={props.isQuestion} />
+            <FlashcardHeader isQuestion={props.isQuestion} contextText={props.card.context} />
             <div id="sr-flashcard-view" ref={props.viewRef}>
                 <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
             </div>
@@ -130,24 +130,6 @@ export function FlashcardView(props: FlashcardProps) {
 
     function handleShowAnswerButton() {
         setIsQuestion(false);
-    }
-
-    function generateFlashcardList(deck: Deck) {
-        let currentDeck = deck;
-        let stack: Deck[] = [];
-        let flashcards: Card[] = [];
-        while (stack || currentDeck) {
-            flashcards.push(...currentDeck.newFlashcards);
-            flashcards.push(...currentDeck.dueFlashcards);
-            if (currentDeck.subdecks.length) {
-                stack.push(...currentDeck.subdecks);
-            }
-            currentDeck = stack.pop();
-            if (!currentDeck) {
-                break;
-            }
-        }
-        return flashcards;
     }
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
@@ -275,5 +257,22 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
     }
 
     await this.app.vault.modify(currentCard.note, fileText);
-    // this.currentDeck.nextCard(this);
+}
+
+function generateFlashcardList(deck: Deck) {
+    let currentDeck = deck;
+    let stack: Deck[] = [];
+    let flashcards: Card[] = [];
+    while (stack || currentDeck) {
+        flashcards.push(...currentDeck.newFlashcards);
+        flashcards.push(...currentDeck.dueFlashcards);
+        if (currentDeck.subdecks.length) {
+            stack.push(...currentDeck.subdecks);
+        }
+        currentDeck = stack.pop();
+        if (!currentDeck) {
+            break;
+        }
+    }
+    return flashcards;
 }
