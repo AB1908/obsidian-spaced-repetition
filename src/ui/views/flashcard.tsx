@@ -7,6 +7,7 @@ import { Deck } from "src/Deck";
 import { EditLaterButton, ResetButton, ResponseButtonsDiv, ShowAnswerButton } from "../components/buttons";
 import { AdditionalProps, ModalStates } from "./modal";
 import { PluginData } from "src/main";
+import { FlashcardEditModal } from "./edit-modal";
 
 export interface FlashcardButtons extends ContentProps {
     handleFlashcardResponse: Function;
@@ -29,19 +30,15 @@ interface FlashcardProps {
     additionalProps: AdditionalProps;
 }
 
-function Text(props: Props) {
-    return <p>{props.children}</p>;
-}
-
 function FlashcardContextHeader({ text }: { text: string }) {
     // TODO: add actual content
     return <div id="sr-context">{text}</div>;
 }
 
-function FlashcardHeader({ isQuestion, contextText }: { isQuestion: boolean, contextText: string }) {
+function FlashcardHeader({ isQuestion, contextText, editLaterHandler }: { isQuestion: boolean, contextText: string, editLaterHandler: Function }) {
     return (
         <>
-            <EditLaterButton />
+            <EditLaterButton editLaterHandler={editLaterHandler}/>
             {!isQuestion && <ResetButton />}
             <FlashcardContextHeader text={contextText} />
         </>
@@ -53,7 +50,7 @@ function FlashcardContent(props: FlashcardButtons) {
 
     return (
         <>
-            <FlashcardHeader isQuestion={props.isQuestion} contextText={props.card.context} />
+            <FlashcardHeader isQuestion={props.isQuestion} contextText={props.card.context} editLaterHandler={()=>edit(props.card)}/>
             <div id="sr-flashcard-view" ref={props.viewRef}>
                 <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
             </div>
@@ -109,7 +106,7 @@ function FlashcardBody(props: ContentProps) {
     return (
         <>
             {/* Question */}
-            <Text>{props.card?.front}</Text>
+            <p>{props.card?.front}</p>
             {!props.isQuestion && (
                 <div id="markdown-child" ref={props.viewRef}>
                     <hr id="sr-hr-card-divide" />
@@ -276,3 +273,32 @@ function generateFlashcardList(deck: Deck) {
     }
     return flashcards;
 }
+
+    async function modifyCardText(originalText: string, replacementText: string) {
+        if (!replacementText) return;
+        if (replacementText == originalText) return;
+        let fileText: string = await this.app.vault.read(this.currentCard.note);
+        const originalTextRegex = new RegExp(escapeRegexString(originalText), "gm");
+        fileText = fileText.replace(originalTextRegex, replacementText);
+        await this.app.vault.modify(this.currentCard.note, fileText);
+        this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
+        this.burySiblingCards(false);
+        this.currentDeck.nextCard(this);
+    }
+
+    async function edit(currentCard: Card) {
+        let textPromptArr = currentCard.cardText.split("\n");
+        let textPrompt = "";
+        if (textPromptArr[textPromptArr.length - 1].startsWith("<!--SR:")) {
+            textPrompt = textPromptArr.slice(0, -1).join("\n");
+        } else {
+            textPrompt = currentCard.cardText;
+        }
+
+        let editModal = FlashcardEditModal.Prompt(this.app, this.plugin, textPrompt);
+        editModal
+            .then(async (modifiedCardText) => {
+                modifyCardText(textPrompt, modifiedCardText);
+            })
+            .catch((reason) => console.log(reason));
+    }

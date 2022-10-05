@@ -22,8 +22,8 @@ function AllButtons(props: ButtonProps) {
     );
 }
 
-export function EditLaterButton() {
-    return <div className="sr-link">Edit Later</div>;
+export function EditLaterButton({editLaterHandler}: {editLaterHandler: Function}) {
+    return <div className="sr-link" onClick={()=>editLaterHandler()}>Edit Later</div>;
 }
 
 export function ResetButton() {
