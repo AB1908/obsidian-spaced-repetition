@@ -10,7 +10,8 @@ import { SRSettings } from "./settings";
 import { Stats } from "./stats-modal";
 import { cyrb53, escapeRegexString } from "./utils";
 
-export async function sync(syncLock: boolean, setSyncLock: Function, deckTree: Deck, data: PluginData): Promise<Deck> {
+//TODO: Also include decks that don't have due flashcards
+export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
     let incomingLinks: Record<string, LinkStat[]> = {};
     let reviewDecks: { [deckKey: string]: ReviewDeck } = {};
     let pageranks: Record<string, number> = {};
@@ -21,7 +22,7 @@ export async function sync(syncLock: boolean, setSyncLock: Function, deckTree: D
         return;
     }
     setSyncLock(true);
-    deckTree = new Deck("root", null);
+    const deckTree = new Deck("root", null);
 
     const cardStats = {
         eases: {},
@@ -178,7 +179,6 @@ export async function sync(syncLock: boolean, setSyncLock: Function, deckTree: D
     // reviewQueueView.redraw();
 
     setSyncLock(false);
-    console.log("sync finished", deckTree);
     return deckTree;
 }
 

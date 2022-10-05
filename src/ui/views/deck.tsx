@@ -1,6 +1,6 @@
 import React, { Component, ReactNode } from "react";
-import { Deck, Deck as DeckObj } from "src/Deck";
-import { AllCardCounts } from "./card-counts";
+import { Deck } from "src/Deck";
+import { AllCardCounts } from "../components/card-counts";
 
 interface CollapsibleState {
     isDeckTreeOpen: boolean;
@@ -12,12 +12,12 @@ interface StateChanger extends CollapsibleState {
 
 export interface DeckModalProps {
     deckName: string;
-    subdecksArray: DeckObj[];
+    subdecksArray: Deck[];
     startReviewingDeck?: Function;
 }
 
 interface SubDeckProps {
-    deck: DeckObj;
+    deck: Deck;
     startReviewingDeck?: Function;
 }
 
