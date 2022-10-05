@@ -4,7 +4,7 @@ import { sync } from "src/DeckBuilder";
 import { Deck } from "src/Deck";
 import { PluginData } from "src/main";
 import { DeckTreeView as DeckTreeView } from "./deck";
-import { AllDecks } from "./card-counts";
+import { AllDecks } from "../components/card-counts";
 import { FlashcardView } from "./flashcard";
 
 interface ModalContainerProps {
@@ -42,7 +42,7 @@ export function ModalElement(props: ContainerProps) {
     useEffect(() => {
         const syncDeck = async () => {
             if (modalState == ModalStates.DECK_NOT_IN_REVIEW)
-                deckTree.current = await sync(syncLock, setSyncLock, deckTree.current, props.additionalProps.pluginData);
+                deckTree.current = await sync(syncLock, setSyncLock, props.additionalProps.pluginData);
         }
         syncDeck();
     }, [modalState]);
@@ -54,10 +54,13 @@ export function ModalElement(props: ContainerProps) {
                 onClick={() => props.handleCloseButtonClick()}
             />
             <div className="modal-title">
-                <AllDecks
-                    deck={deckTree.current}
-                    localizedModalTitle={t("DECKS")}
-                />
+                {modalState == ModalStates.DECK_NOT_IN_REVIEW &&
+                    <AllDecks
+                        deck={deckTree.current}
+                        localizedModalTitle={t("DECKS")}
+                    />
+                }
+                {modalState == ModalStates.DECK_IN_REVIEW && ("Flashcards")}
             </div>
             <div
                 className="modal-content sr-modal-content"
