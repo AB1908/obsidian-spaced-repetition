@@ -37,7 +37,7 @@ class CollapseIcon extends Component<StateChanger> {
         super(props);
     }
 
-    render(): React.ReactNode {
+    render(): ReactNode {
         return (
             <div
                 className="tree-item-icon collapse-icon"
@@ -69,7 +69,7 @@ class CollapsibleDeckTreeEntry extends Component<SubDeckProps, CollapsibleState>
         };
     }
 
-    handleTriangleClick(e: React.MouseEvent): void {
+    handleTriangleClick(e: MouseEvent): void {
         e.preventDefault();
         this.setState(() => {
             return { isDeckTreeOpen: !this.state.isDeckTreeOpen };
