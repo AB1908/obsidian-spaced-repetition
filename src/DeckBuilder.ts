@@ -4,7 +4,6 @@ import { Deck } from "./Deck";
 import { t } from "./lang/helpers";
 import { PluginData, LinkStat } from "./main";
 import { parse } from "./parser";
-import { ReviewDeck } from "./review-deck";
 import { CardType, Card } from "./scheduling";
 import { SRSettings } from "./settings";
 import { Stats } from "./stats-modal";
@@ -13,7 +12,7 @@ import { cyrb53, escapeRegexString } from "./utils";
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
     let incomingLinks: Record<string, LinkStat[]> = {};
-    let reviewDecks: { [deckKey: string]: ReviewDeck } = {};
+    // let reviewDecks: { [deckKey: string]: ReviewDeck } = {};
     let pageranks: Record<string, number> = {};
     let dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
     let easeByPath: Record<string, number> = {};
@@ -92,9 +91,9 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
 
         for (const tagToReview of data.settings.tagsToReview) {
             if (tags.some((tag) => tag === tagToReview || tag.startsWith(tagToReview + "/"))) {
-                if (!Object.prototype.hasOwnProperty.call(reviewDecks, tagToReview)) {
-                    reviewDecks[tagToReview] = new ReviewDeck(tagToReview);
-                }
+                // if (!Object.prototype.hasOwnProperty.call(reviewDecks, tagToReview)) {
+                    // reviewDecks[tagToReview] = new ReviewDeck(tagToReview);
+                // }
                 matchedNoteTags.push(tagToReview);
                 shouldIgnore = false;
                 break;
@@ -157,9 +156,9 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
         console.log(`SR: ${t("DECKS")}`, deckTree);
     }
 
-    for (const deckKey in reviewDecks) {
-        reviewDecks[deckKey].sortNotes(pageranks);
-    }
+    // for (const deckKey in reviewDecks) {
+    //     reviewDecks[deckKey].sortNotes(pageranks);
+    // }
 
     if (data.settings.showDebugMessages) {
         console.log(

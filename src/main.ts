@@ -4,11 +4,10 @@ import {
     Plugin, TFile
 } from "obsidian";
 
-import { FlashcardModal } from "src/flashcard-modal";
+import { FlashcardModal } from "src/ui/modals/flashcard-modal";
 import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
-import { REVIEW_QUEUE_VIEW_TYPE } from "src/sidebar";
 import { StatsModal } from "src/stats-modal";
 
 export interface PluginData {
@@ -40,19 +39,8 @@ export interface LinkStat {
 
 export default class SRPlugin extends Plugin {
     public data: PluginData;
-    // public syncLock = false;
-
-    // public reviewDecks: { [deckKey: string]: ReviewDeck } = {};
-    // public lastSelectedReviewDeck: string;
-
-    // public newNotes: TFile[] = [];
-    // public scheduledNotes: SchedNote[] = [];
     public easeByPath: Record<string, number> = {};
-    // public dueDatesNotes: Record<number, number> = {}; // Record<# of days in future, due count>
-
-    // public deckTree: Deck = new Deck("root", null);
     public dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
-    // public cardStats: Stats;
 
     async onload(): Promise<void> {
         await this.loadPluginData();
@@ -153,13 +141,13 @@ export default class SRPlugin extends Plugin {
     }
 
     initView(): void {
-        if (this.app.workspace.getLeavesOfType(REVIEW_QUEUE_VIEW_TYPE).length) {
-            return;
-        }
+        // if (this.app.workspace.getLeavesOfType(REVIEW_QUEUE_VIEW_TYPE).length) {
+        //     return;
+        // }
 
-        this.app.workspace.getRightLeaf(false).setViewState({
-            type: REVIEW_QUEUE_VIEW_TYPE,
-            active: true,
-        });
+        // this.app.workspace.getRightLeaf(false).setViewState({
+        //     type: REVIEW_QUEUE_VIEW_TYPE,
+        //     active: true,
+        // });
     }
 }

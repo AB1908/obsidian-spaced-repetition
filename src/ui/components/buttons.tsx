@@ -5,25 +5,8 @@ export interface ButtonProps {
     handleFlashcardResponse: Function;
 }
 
-
-function AllButtons(props: ButtonProps) {
-    return (
-        <>
-            <button id="sr-hard-btn" onClick={() => props.handleFlashcardResponse(ReviewResponse.Hard)}>
-                Hard - {"1 day(s)"}
-            </button>
-            <button id="sr-good-btn" onClick={() => props.handleFlashcardResponse(ReviewResponse.Good)}>
-                Good - {"2.5 day(s)"}
-            </button>
-            <button id="sr-easy-btn" onClick={() => props.handleFlashcardResponse(ReviewResponse.Easy)}>
-                Easy - {"3.5 day(s)"}
-            </button>
-        </>
-    );
-}
-
-export function EditLaterButton({editLaterHandler}: {editLaterHandler: Function}) {
-    return <div className="sr-link" onClick={()=>editLaterHandler()}>Edit Later</div>;
+export function EditLaterButton({ editLaterHandler }: { editLaterHandler: Function }) {
+    return <div className="sr-link" onClick={() => editLaterHandler()}>Edit Later</div>;
 }
 
 export function ResetButton() {
@@ -46,10 +29,18 @@ export function ShowAnswerButton(props: ButtonProps) {
     );
 }
 
+function Button({ text, id, responseHandler }) {
+    return (<button id={id} onClick={() => responseHandler()}>
+        {text}
+    </button>)
+}
+
 export function ResponseButtonsDiv(props: ButtonProps) {
     return (
         <div className="sr-response" style={{ display: "grid" }}>
-            <AllButtons handleFlashcardResponse={props.handleFlashcardResponse} />
+            <Button text={`Hard - 1 day(s)`} id="sr-hard-btn" responseHandler={()=>props.handleFlashcardResponse(ReviewResponse.Hard)} />
+            <Button text={`Good - 1 day(s)`} id="sr-good-btn" responseHandler={()=>props.handleFlashcardResponse(ReviewResponse.Good)} />
+            <Button text={`Easy - 1 day(s)`} id="sr-easy-btn" responseHandler={()=>props.handleFlashcardResponse(ReviewResponse.Easy)} />
         </div>
     );
 }
