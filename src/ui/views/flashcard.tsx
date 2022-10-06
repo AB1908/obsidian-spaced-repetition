@@ -12,6 +12,7 @@ import { FlashcardEditModal } from "./edit-modal";
 export interface FlashcardButtons extends ContentProps {
     handleFlashcardResponse: Function;
     showAnswerButtonsHandler: Function;
+    flashcardEditLater: Function;
 }
 
 interface ContentProps extends Props {
@@ -38,7 +39,7 @@ function FlashcardContextHeader({ text }: { text: string }) {
 function FlashcardHeader({ isQuestion, contextText, editLaterHandler }: { isQuestion: boolean, contextText: string, editLaterHandler: Function }) {
     return (
         <>
-            <EditLaterButton editLaterHandler={editLaterHandler}/>
+            <EditLaterButton editLaterHandler={editLaterHandler} />
             {!isQuestion && <ResetButton />}
             <FlashcardContextHeader text={contextText} />
         </>
@@ -50,7 +51,7 @@ function FlashcardContent(props: FlashcardButtons) {
 
     return (
         <>
-            <FlashcardHeader isQuestion={props.isQuestion} contextText={props.card.context} editLaterHandler={()=>edit(props.card)}/>
+            <FlashcardHeader isQuestion={props.isQuestion} contextText={props.card.context} editLaterHandler={() => props.flashcardEditLater()} />
             <div id="sr-flashcard-view" ref={props.viewRef}>
                 <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
             </div>
@@ -129,9 +130,31 @@ export function FlashcardView(props: FlashcardProps) {
         setIsQuestion(false);
     }
 
+    async function edit(currentCard: Card) {
+        let textPromptArr = currentCard.cardText.split("\n");
+        let textPrompt = "";
+        if (textPromptArr[textPromptArr.length - 1].startsWith("<!--SR:")) {
+            textPrompt = textPromptArr.slice(0, -1).join("\n");
+        } else {
+            textPrompt = currentCard.cardText;
+        }
+
+        let editModal = FlashcardEditModal.Prompt(this.app, this.plugin, textPrompt);
+        editModal
+            .then(async (modifiedCardText) => {
+                modifyCardText(currentCard, textPrompt, modifiedCardText);
+                moveToNextFlashcard();
+            })
+            .catch((reason) => console.log(reason));
+    }
+
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
         // todo: move to useefect?
         await processReview(clickedResponse, flashcardList.current[flashcardIndex], props.additionalProps.pluginData, props.additionalProps.dueDatesFlashcards, props.additionalProps.easeByPath);
+        moveToNextFlashcard();
+    }
+
+    function moveToNextFlashcard() {
         if (flashcardIndex + 1 < flashcardList.current.length) {
             setFlashcardIndex(flashcardIndex + 1);
             setIsQuestion(true);
@@ -149,6 +172,7 @@ export function FlashcardView(props: FlashcardProps) {
                     handleResponseButtons(clickedResponse)
                 }
                 showAnswerButtonsHandler={() => handleShowAnswerButton()}
+                flashcardEditLater={() => edit(flashcardList.current[flashcardIndex])}
             />
         </>
     );
@@ -274,31 +298,14 @@ function generateFlashcardList(deck: Deck) {
     return flashcards;
 }
 
-    async function modifyCardText(originalText: string, replacementText: string) {
-        if (!replacementText) return;
-        if (replacementText == originalText) return;
-        let fileText: string = await this.app.vault.read(this.currentCard.note);
-        const originalTextRegex = new RegExp(escapeRegexString(originalText), "gm");
-        fileText = fileText.replace(originalTextRegex, replacementText);
-        await this.app.vault.modify(this.currentCard.note, fileText);
-        this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
-        this.burySiblingCards(false);
-        this.currentDeck.nextCard(this);
-    }
-
-    async function edit(currentCard: Card) {
-        let textPromptArr = currentCard.cardText.split("\n");
-        let textPrompt = "";
-        if (textPromptArr[textPromptArr.length - 1].startsWith("<!--SR:")) {
-            textPrompt = textPromptArr.slice(0, -1).join("\n");
-        } else {
-            textPrompt = currentCard.cardText;
-        }
-
-        let editModal = FlashcardEditModal.Prompt(this.app, this.plugin, textPrompt);
-        editModal
-            .then(async (modifiedCardText) => {
-                modifyCardText(textPrompt, modifiedCardText);
-            })
-            .catch((reason) => console.log(reason));
-    }
+async function modifyCardText(currentCard: Card, originalText: string, replacementText: string) {
+    if (!replacementText) return;
+    if (replacementText == originalText) return;
+    let fileText: string = await this.app.vault.read(currentCard.note);
+    const originalTextRegex = new RegExp(escapeRegexString(originalText), "gm");
+    fileText = fileText.replace(originalTextRegex, replacementText);
+    await this.app.vault.modify(currentCard.note, fileText);
+    // currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
+    // this.burySiblingCards(false);
+    // this.currentDeck.nextCard(this);
+}
