@@ -305,7 +305,4 @@ async function modifyCardText(currentCard: Card, originalText: string, replaceme
     const originalTextRegex = new RegExp(escapeRegexString(originalText), "gm");
     fileText = fileText.replace(originalTextRegex, replacementText);
     await this.app.vault.modify(currentCard.note, fileText);
-    // currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
-    // this.burySiblingCards(false);
-    // this.currentDeck.nextCard(this);
 }
