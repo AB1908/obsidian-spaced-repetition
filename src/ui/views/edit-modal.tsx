@@ -1,7 +1,6 @@
-import { App, ButtonComponent, Modal, TextAreaComponent } from "obsidian";
+import { App, Modal, TextAreaComponent } from "obsidian";
 import SRPlugin from "src/main";
 import React from "react";
-import { render } from "react-dom";
 import { createRoot } from "react-dom/client";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
@@ -48,7 +47,8 @@ export class FlashcardEditModal extends Modal {
                     <textarea spellCheck="false"
                         style={{ width: "100%" }}
                         defaultValue={this.modalText}
-                        onKeyDown={(e) => this.submitEnterCallback(e)}
+                        // TODO: Fix this weird casting
+                        onKeyDown={(e) => this.submitEnterCallback(e as unknown as KeyboardEvent)}
                         onChange={(event) => { this.input = event.target.value; }}
                     />
                     <div
@@ -59,10 +59,10 @@ export class FlashcardEditModal extends Modal {
                             marginTop: "1rem"
                         }}
                     >
-                        <button className="mod-cta" style={{ marginRight: 0 }} onClick={(e) => this.submitClickCallback(e as unknown as MouseEvent)}>
+                        <button className="mod-cta" style={{ marginRight: 0 }} onClick={(e) => this.submitClickCallback()}>
                             Ok
                         </button>
-                        <button onClick={(e) => this.cancelClickCallback(e as unknown as MouseEvent)}>Cancel</button>
+                        <button onClick={(e) => this.cancelClickCallback()}>Cancel</button>
                     </div>
                 </div>
             // </div>
@@ -109,20 +109,20 @@ export class FlashcardEditModal extends Modal {
     //     return textComponent;
     // }
 
-    private submitClickCallback = (evt) => this.submit(evt.target.value);
-    private cancelClickCallback = (evt) => this.cancel();
+    private submitClickCallback = () => {
+        this.submit();
+    }
+    private cancelClickCallback = () => this.cancel();
 
     private submitEnterCallback = (evt: KeyboardEvent) => {
         if ((evt.ctrlKey || evt.metaKey) && evt.key === "Enter") {
             evt.preventDefault();
-            this.submit(evt.target.value);
+            this.submit();
         }
     };
 
-    private submit(submittedText: string) {
+    private submit() {
         this.didSubmit = true;
-        this.input = submittedText;
-
         this.close();
     }
 
