@@ -6,8 +6,8 @@ import { createRoot, Root } from "react-dom/client";
 
 import type SRPlugin from "src/main";
 import { Card } from "src/scheduling";
-import { Deck } from "./Deck";
-import { ModalElement } from "./ui/views/modal";
+import { Deck } from "../../Deck";
+import { ModalElement } from "../views/modal";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -18,21 +18,21 @@ export enum FlashcardModalMode {
 
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
-    public answerBtn: HTMLElement;
-    public flashcardView: HTMLElement;
-    public hardBtn: HTMLElement;
-    public goodBtn: HTMLElement;
-    public easyBtn: HTMLElement;
-    public nextBtn: HTMLElement;
-    public responseDiv: HTMLElement;
-    public fileLinkView: HTMLElement;
-    public resetLinkView: HTMLElement;
-    public contextView: HTMLElement;
-    public currentCard: Card;
-    public currentCardIdx: number;
-    public currentDeck: Deck;
-    public checkDeck: Deck;
-    public mode: FlashcardModalMode;
+    // public answerBtn: HTMLElement;
+    // public flashcardView: HTMLElement;
+    // public hardBtn: HTMLElement;
+    // public goodBtn: HTMLElement;
+    // public easyBtn: HTMLElement;
+    // public nextBtn: HTMLElement;
+    // public responseDiv: HTMLElement;
+    // public fileLinkView: HTMLElement;
+    // public resetLinkView: HTMLElement;
+    // public contextView: HTMLElement;
+    // public currentCard: Card;
+    // public currentCardIdx: number;
+    // public currentDeck: Deck;
+    // public checkDeck: Deck;
+    // public mode: FlashcardModalMode;
     public ignoreStats: boolean;
     private modalElReactRoot: Root;
 
