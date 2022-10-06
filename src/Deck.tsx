@@ -81,25 +81,6 @@ export class Deck {
         }
     }
 
-    // deleteFlashcardAtIndex(index: number, cardIsDue: boolean): void {
-    //     if (cardIsDue) {
-    //         this.dueFlashcards.splice(index, 1);
-    //         this.dueFlashcardsCount--;
-    //     } else {
-    //         this.newFlashcards.splice(index, 1);
-    //         this.newFlashcardsCount--;
-    //     }
-    //     let deck: Deck = this.parent;
-    //     while (deck !== null) {
-    //         if (cardIsDue) {
-    //             deck.dueFlashcardsCount--;
-    //         } else {
-    //             deck.newFlashcardsCount--;
-    //         }
-    //         deck = deck.parent;
-    //     }
-    // }
-
     sortSubdecksList(): void {
         this.subdecks.sort((a, b) => {
             if (a.deckName < b.deckName) {
