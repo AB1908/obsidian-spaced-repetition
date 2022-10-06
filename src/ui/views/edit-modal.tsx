@@ -1,7 +1,7 @@
-import { App, Modal, TextAreaComponent } from "obsidian";
-import SRPlugin from "src/main";
 import React from "react";
-import { createRoot } from "react-dom/client";
+import { App, Modal } from "obsidian";
+import { createRoot, Root } from "react-dom/client";
+import SRPlugin from "src/main";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
@@ -12,9 +12,7 @@ export class FlashcardEditModal extends Modal {
     private resolvePromise: (input: string) => void;
     private rejectPromise: (reason?: any) => void;
     private didSubmit: boolean = false;
-    private inputComponent: TextAreaComponent;
-    private readonly modalText: string;
-    contentRoot: any;
+    private contentRoot: Root;
 
     public static Prompt(app: App, plugin: SRPlugin, placeholder: string): Promise<string> {
         const newPromptModal = new FlashcardEditModal(app, plugin, placeholder);
@@ -25,7 +23,7 @@ export class FlashcardEditModal extends Modal {
         super(app);
         this.plugin = plugin;
         this.titleEl.setText("Edit Card");
-        this.modalText = existingText;
+        this.input = existingText;
 
         this.waitForClose = new Promise<string>((resolve, reject) => {
             this.resolvePromise = resolve;
@@ -42,11 +40,10 @@ export class FlashcardEditModal extends Modal {
         this.contentRoot = createRoot(this.contentEl);
         this.contentRoot.render(
             (
-            // <div className="modal-content">
                 <div className="sr-input-area">
                     <textarea spellCheck="false"
                         style={{ width: "100%" }}
-                        defaultValue={this.modalText}
+                        defaultValue={this.input}
                         // TODO: Fix this weird casting
                         onKeyDown={(e) => this.submitEnterCallback(e as unknown as KeyboardEvent)}
                         onChange={(event) => { this.input = event.target.value; }}
@@ -60,59 +57,18 @@ export class FlashcardEditModal extends Modal {
                         }}
                     >
                         <button className="mod-cta" style={{ marginRight: 0 }} onClick={(e) => this.submitClickCallback()}>
-                            Ok
+                            Submit
                         </button>
-                        <button onClick={(e) => this.cancelClickCallback()}>Cancel</button>
+                        <button onClick={(e) => this.close()}>Cancel</button>
                     </div>
                 </div>
-            // </div>
             )
         )
-
-        // const mainContentContainer: HTMLDivElement = this.contentEl.createDiv();
-        // mainContentContainer.addClass("sr-input-area");
-        // this.inputComponent = this.createInputField(mainContentContainer, this.modalText);
-        // this.createButtonBar(mainContentContainer);
     }
-
-    // private createButton(container: HTMLElement, text: string, callback: (evt: MouseEvent) => any) {
-    //     const btn = new ButtonComponent(container);
-    //     btn.setButtonText(text).onClick(callback);
-
-    //     return btn;
-    // }
-
-    // private createButtonBar(mainContentContainer: HTMLDivElement) {
-    //     const buttonBarContainer: HTMLDivElement = mainContentContainer.createDiv();
-    //     this.createButton(
-    //         buttonBarContainer,
-    //         "Ok",
-    //         this.submitClickCallback
-    //     ).setCta().buttonEl.style.marginRight = "0";
-    //     this.createButton(buttonBarContainer, "Cancel", this.cancelClickCallback);
-
-    //     buttonBarContainer.style.display = "flex";
-    //     buttonBarContainer.style.flexDirection = "row-reverse";
-    //     buttonBarContainer.style.justifyContent = "flex-start";
-    //     buttonBarContainer.style.marginTop = "1rem";
-    // }
-
-    // protected createInputField(container: HTMLElement, value: string) {
-    //     const textComponent = new TextAreaComponent(container);
-
-    //     textComponent.inputEl.style.width = "100%";
-    //     textComponent
-    //         .setValue(value ?? "")
-    //         .onChange((value) => (this.input = value))
-    //         .inputEl.addEventListener("keydown", this.submitEnterCallback);
-
-    //     return textComponent;
-    // }
 
     private submitClickCallback = () => {
         this.submit();
     }
-    private cancelClickCallback = () => this.cancel();
 
     private submitEnterCallback = (evt: KeyboardEvent) => {
         if ((evt.ctrlKey || evt.metaKey) && evt.key === "Enter") {
@@ -126,28 +82,13 @@ export class FlashcardEditModal extends Modal {
         this.close();
     }
 
-    private cancel() {
-        this.close();
-    }
-
-    onOpen() {
-        super.onOpen();
-
-        // this.inputComponent.inputEl.focus();
-    }
-
     onClose() {
         super.onClose();
         this.resolveInput();
-        // this.removeInputListener();
     }
 
     private resolveInput() {
         if (!this.didSubmit) this.rejectPromise("No input given.");
         else this.resolvePromise(this.input);
     }
-
-    // private removeInputListener() {
-    //     this.inputComponent.inputEl.removeEventListener("keydown", this.submitEnterCallback);
-    // }
 }
