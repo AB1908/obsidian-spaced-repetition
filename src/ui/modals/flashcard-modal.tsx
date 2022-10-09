@@ -8,6 +8,7 @@ import type SRPlugin from "src/main";
 import { Card } from "src/scheduling";
 import { Deck } from "../../Deck";
 import { ModalElement } from "../views/modal";
+import { AppContext } from "src/contexts/PluginContext";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -85,6 +86,7 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
+            <AppContext.Provider value={this.plugin}>
                 <ModalElement
                     handleCloseButtonClick={() => this.close()}
                     additionalProps={
@@ -95,6 +97,7 @@ export class FlashcardModal extends Modal {
                         }
                     }
                 />
+            </AppContext.Provider>
             </>
         )
     }
