@@ -14,7 +14,7 @@ export interface FlashcardButtons extends ContentProps {
 interface ContentProps {
     isQuestion: boolean;
     card: Card;
-    viewRef: MutableRefObject<HTMLDivElement>;
+    viewRef?: MutableRefObject<HTMLDivElement>;
 }
 
 export interface FlashcardProps {
