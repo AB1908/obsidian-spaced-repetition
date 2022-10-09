@@ -1,4 +1,4 @@
-import { TFile, FrontMatterCache, getAllTags, HeadingCache } from "obsidian";
+import { TFile, getAllTags, HeadingCache } from "obsidian";
 import { MULTI_SCHEDULING_EXTRACTOR, LEGACY_SCHEDULING_EXTRACTOR } from "./constants";
 import { Deck } from "./Deck";
 import { t } from "./lang/helpers";
@@ -12,8 +12,6 @@ import { cyrb53, escapeRegexString } from "./utils";
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
     let incomingLinks: Record<string, LinkStat[]> = {};
-    // let reviewDecks: { [deckKey: string]: ReviewDeck } = {};
-    let pageranks: Record<string, number> = {};
     let dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
     let easeByPath: Record<string, number> = {};
 
@@ -82,8 +80,6 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
 
         const fileCachedData = app.metadataCache.getFileCache(note) || {};
 
-        const frontmatter: FrontMatterCache | Record<string, unknown> =
-            fileCachedData.frontmatter || {};
         const tags = getAllTags(fileCachedData) || [];
 
         let shouldIgnore = true;
@@ -102,52 +98,7 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
         if (shouldIgnore) {
             continue;
         }
-
-        // file has no scheduling information
-        // if (
-        //     !(
-        //         Object.prototype.hasOwnProperty.call(frontmatter, "sr-due") &&
-        //         Object.prototype.hasOwnProperty.call(frontmatter, "sr-interval") &&
-        //         Object.prototype.hasOwnProperty.call(frontmatter, "sr-ease")
-        //     )
-        // ) {
-        //     for (const matchedNoteTag of matchedNoteTags) {
-        //         reviewDecks[matchedNoteTag].newNotes.push(note);
-        //     }
-        //     continue;
-        // }
-
-        // const dueUnix: number = window
-        //     .moment(frontmatter["sr-due"], ["YYYY-MM-DD", "DD-MM-YYYY", "ddd MMM DD YYYY"])
-        //     .valueOf();
-
-        // for (const matchedNoteTag of matchedNoteTags) {
-        //     reviewDecks[matchedNoteTag].scheduledNotes.push({ note, dueUnix });
-        //     if (dueUnix <= now.valueOf()) {
-        //         reviewDecks[matchedNoteTag].dueNotesCount++;
-        //     }
-        // }
-
-        // if (Object.prototype.hasOwnProperty.call(easeByPath, note.path)) {
-        //     easeByPath[note.path] = (easeByPath[note.path] + frontmatter["sr-ease"]) / 2;
-        // } else {
-        //     easeByPath[note.path] = frontmatter["sr-ease"];
-        // }
-
-        // if (dueUnix <= now.valueOf()) {
-        //     dueNotesCount++;
-        // }
-
-        // const nDays: number = Math.ceil((dueUnix - now.valueOf()) / (24 * 3600 * 1000));
-        // if (!Object.prototype.hasOwnProperty.call(dueDatesNotes, nDays)) {
-        // dueDatesNotes[nDays] = 0;
-        // }
-        // dueDatesNotes[nDays]++;
     }
-
-    // graph.rank(0.85, 0.000001, (node: string, rank: number) => {
-    // pageranks[node] = rank * 10000;
-    // });
 
     // sort the deck names
     deckTree.sortSubdecksList();
@@ -155,10 +106,6 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
         console.log(`SR: ${t("EASES")}`, easeByPath);
         console.log(`SR: ${t("DECKS")}`, deckTree);
     }
-
-    // for (const deckKey in reviewDecks) {
-    //     reviewDecks[deckKey].sortNotes(pageranks);
-    // }
 
     if (data.settings.showDebugMessages) {
         console.log(
@@ -178,6 +125,7 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
     // reviewQueueView.redraw();
 
     setSyncLock(false);
+    console.log(deckTree);
     return deckTree;
 }
 
@@ -241,52 +189,8 @@ async function findFlashcardsInNote(
 
         const siblingMatches: [string, string][] = [];
         if (cardType === CardType.Cloze) {
-            const siblings: RegExpMatchArray[] = [];
-            if (settings.convertHighlightsToClozes) {
-                siblings.push(...cardText.matchAll(/==(.*?)==/gm));
-            }
-            if (settings.convertBoldTextToClozes) {
-                siblings.push(...cardText.matchAll(/\*\*(.*?)\*\*/gm));
-            }
-            if (settings.convertCurlyBracketsToClozes) {
-                siblings.push(...cardText.matchAll(/{{(.*?)}}/gm));
-            }
-            siblings.sort((a, b) => {
-                if (a.index < b.index) {
-                    return -1;
-                }
-                if (a.index > b.index) {
-                    return 1;
-                }
-                return 0;
-            });
-
-            let front: string, back: string;
-            for (const m of siblings) {
-                const deletionStart: number = m.index,
-                    deletionEnd: number = deletionStart + m[0].length;
-                front =
-                    cardText.substring(0, deletionStart) +
-                    "<span style='color:#2196f3'>[...]</span>" +
-                    cardText.substring(deletionEnd);
-                front = front
-                    .replace(/==/gm, "")
-                    .replace(/\*\*/gm, "")
-                    .replace(/{{/gm, "")
-                    .replace(/}}/gm, "");
-                back =
-                    cardText.substring(0, deletionStart) +
-                    "<span style='color:#2196f3'>" +
-                    cardText.substring(deletionStart, deletionEnd) +
-                    "</span>" +
-                    cardText.substring(deletionEnd);
-                back = back
-                    .replace(/==/gm, "")
-                    .replace(/\*\*/gm, "")
-                    .replace(/{{/gm, "")
-                    .replace(/}}/gm, "");
-                siblingMatches.push([front, back]);
-            }
+            const siblings: RegExpMatchArray[] = generateSiblings(settings, cardText);
+            siblingMatches.push(...findSiblingMatches(siblings, cardText))
         } else {
             let idx: number;
             if (cardType === CardType.SingleLineBasic) {
@@ -321,7 +225,6 @@ async function findFlashcardsInNote(
         }
 
         let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
-        console.log(scheduling);
         if (scheduling.length === 0)
             scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
 
@@ -381,6 +284,61 @@ async function findFlashcardsInNote(
     }
 
     return 0;
+}
+
+function generateSiblings(settings: SRSettings, cardText: string) {
+    const siblings: RegExpMatchArray[] = [];
+    if (settings.convertHighlightsToClozes) {
+        siblings.push(...cardText.matchAll(/==(.*?)==/gm));
+    }
+    if (settings.convertBoldTextToClozes) {
+        siblings.push(...cardText.matchAll(/\*\*(.*?)\*\*/gm));
+    }
+    if (settings.convertCurlyBracketsToClozes) {
+        siblings.push(...cardText.matchAll(/{{(.*?)}}/gm));
+    }
+    siblings.sort((a, b) => {
+        if (a.index < b.index) {
+            return -1;
+        }
+        if (a.index > b.index) {
+            return 1;
+        }
+        return 0;
+    });
+    return siblings;
+}
+
+function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): [string, string][] {
+            let front: string;
+            let back: string;
+            let matches: [string, string][] = [];
+            for (const m of siblings) {
+                const deletionStart: number = m.index,
+                    deletionEnd: number = deletionStart + m[0].length;
+                front =
+                    cardText.substring(0, deletionStart) +
+                    "<span style='color:#2196f3'>[...]</span>" +
+                    cardText.substring(deletionEnd);
+                front = front
+                    .replace(/==/gm, "")
+                    .replace(/\*\*/gm, "")
+                    .replace(/{{/gm, "")
+                    .replace(/}}/gm, "");
+                back =
+                    cardText.substring(0, deletionStart) +
+                    "<span style='color:#2196f3'>" +
+                    cardText.substring(deletionStart, deletionEnd) +
+                    "</span>" +
+                    cardText.substring(deletionEnd);
+                back = back
+                    .replace(/==/gm, "")
+                    .replace(/\*\*/gm, "")
+                    .replace(/{{/gm, "")
+                    .replace(/}}/gm, "");
+                matches.push([front, back]);
+            }
+            return matches;
 }
 
 function getCardContext(cardLine: number, headings: HeadingCache[]): string {
