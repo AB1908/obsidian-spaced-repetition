@@ -32,7 +32,7 @@ export function ShowAnswerButton(props: ButtonProps) {
 }
 
 //TODO: Add types
-function Button({ text, id, responseHandler }) {
+function Button({ text, id, responseHandler }: { text: string, id: string, responseHandler: Function }) {
     return (<button id={id} onClick={() => responseHandler()}>
         {text}
     </button>)
@@ -43,59 +43,59 @@ export function ResponseButtonsDiv(props: ButtonProps) {
     let easyBtnText: string, goodBtnText: string, hardBtnText: string;
 
 
-        let interval = 1.0,
-            ease: number = data.settings.baseEase,
-            delayBeforeReview = 0;
-        const hardInterval: number = schedule(
-            ReviewResponse.Hard,
-            interval,
-            ease,
-            delayBeforeReview,
-            data.settings
-        ).interval;
-        const goodInterval: number = schedule(
-            ReviewResponse.Good,
-            interval,
-            ease,
-            delayBeforeReview,
-            data.settings
-        ).interval;
-        const easyInterval: number = schedule(
-            ReviewResponse.Easy,
-            interval,
-            ease,
-            delayBeforeReview,
-            data.settings
-        ).interval;
+    let interval = 1.0,
+        ease: number = data.settings.baseEase,
+        delayBeforeReview = 0;
+    const hardInterval: number = schedule(
+        ReviewResponse.Hard,
+        interval,
+        ease,
+        delayBeforeReview,
+        data.settings
+    ).interval;
+    const goodInterval: number = schedule(
+        ReviewResponse.Good,
+        interval,
+        ease,
+        delayBeforeReview,
+        data.settings
+    ).interval;
+    const easyInterval: number = schedule(
+        ReviewResponse.Easy,
+        interval,
+        ease,
+        delayBeforeReview,
+        data.settings
+    ).interval;
 
-        // if (ignoreStats) {
-        //     // Same for mobile/desktop
-        //     hardBtn.setText(`${plugin.data.settings.flashcardHardText}`);
-        //     easyBtn.setText(`${plugin.data.settings.flashcardEasyText}`);
-        // } else if (Platform.isMobile) {
-        // hardBtn.setText(textInterval(hardInterval, true));
-        // goodBtn.setText(textInterval(goodInterval, true));
-        // easyBtn.setText(textInterval(easyInterval, true));
-        // } else {
-        // hardBtn.setText(
-        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(
-            hardInterval,
-            false
-        )}`
-        // );
-        // goodBtn.setText(
-        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(
-            goodInterval,
-            false
-        )}`;
-        // );
-        // easyBtn.setText(
-        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(
-            easyInterval,
-            false
-        )}`;
-        // );
-        // }
+    // if (ignoreStats) {
+    //     // Same for mobile/desktop
+    //     hardBtn.setText(`${plugin.data.settings.flashcardHardText}`);
+    //     easyBtn.setText(`${plugin.data.settings.flashcardEasyText}`);
+    // } else if (Platform.isMobile) {
+    // hardBtn.setText(textInterval(hardInterval, true));
+    // goodBtn.setText(textInterval(goodInterval, true));
+    // easyBtn.setText(textInterval(easyInterval, true));
+    // } else {
+    // hardBtn.setText(
+    hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(
+        hardInterval,
+        false
+    )}`
+    // );
+    // goodBtn.setText(
+    goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(
+        goodInterval,
+        false
+    )}`;
+    // );
+    // easyBtn.setText(
+    easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(
+        easyInterval,
+        false
+    )}`;
+    // );
+    // }
 
     //TODO: Use correct scheduling information
     return (
