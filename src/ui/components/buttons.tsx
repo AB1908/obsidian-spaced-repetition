@@ -1,5 +1,7 @@
-import React from "react";
-import { ReviewResponse } from "src/scheduling";
+import { Platform } from "obsidian";
+import React, { useContext } from "react";
+import { AppContext } from "src/contexts/PluginContext";
+import { ReviewResponse, schedule, textInterval } from "src/scheduling";
 
 export interface ButtonProps {
     handleFlashcardResponse: Function;
@@ -29,6 +31,7 @@ export function ShowAnswerButton(props: ButtonProps) {
     );
 }
 
+//TODO: Add types
 function Button({ text, id, responseHandler }) {
     return (<button id={id} onClick={() => responseHandler()}>
         {text}
@@ -36,11 +39,70 @@ function Button({ text, id, responseHandler }) {
 }
 
 export function ResponseButtonsDiv(props: ButtonProps) {
+    const { data } = useContext(AppContext)
+    let easyBtnText: string, goodBtnText: string, hardBtnText: string;
+
+
+        let interval = 1.0,
+            ease: number = data.settings.baseEase,
+            delayBeforeReview = 0;
+        const hardInterval: number = schedule(
+            ReviewResponse.Hard,
+            interval,
+            ease,
+            delayBeforeReview,
+            data.settings
+        ).interval;
+        const goodInterval: number = schedule(
+            ReviewResponse.Good,
+            interval,
+            ease,
+            delayBeforeReview,
+            data.settings
+        ).interval;
+        const easyInterval: number = schedule(
+            ReviewResponse.Easy,
+            interval,
+            ease,
+            delayBeforeReview,
+            data.settings
+        ).interval;
+
+        // if (ignoreStats) {
+        //     // Same for mobile/desktop
+        //     hardBtn.setText(`${plugin.data.settings.flashcardHardText}`);
+        //     easyBtn.setText(`${plugin.data.settings.flashcardEasyText}`);
+        // } else if (Platform.isMobile) {
+        // hardBtn.setText(textInterval(hardInterval, true));
+        // goodBtn.setText(textInterval(goodInterval, true));
+        // easyBtn.setText(textInterval(easyInterval, true));
+        // } else {
+        // hardBtn.setText(
+        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(
+            hardInterval,
+            false
+        )}`
+        // );
+        // goodBtn.setText(
+        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(
+            goodInterval,
+            false
+        )}`;
+        // );
+        // easyBtn.setText(
+        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(
+            easyInterval,
+            false
+        )}`;
+        // );
+        // }
+
+    //TODO: Use correct scheduling information
     return (
-        <div className="sr-response" style={{ display: "grid" }}>
-            <Button text={`Hard - 1 day(s)`} id="sr-hard-btn" responseHandler={()=>props.handleFlashcardResponse(ReviewResponse.Hard)} />
-            <Button text={`Good - 1 day(s)`} id="sr-good-btn" responseHandler={()=>props.handleFlashcardResponse(ReviewResponse.Good)} />
-            <Button text={`Easy - 1 day(s)`} id="sr-easy-btn" responseHandler={()=>props.handleFlashcardResponse(ReviewResponse.Easy)} />
+        <div className="sr-response" style={{ display: "flex", justifyContent: "space-evenly" }}>
+            <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => props.handleFlashcardResponse(ReviewResponse.Hard)} />
+            <Button text={goodBtnText} id="sr-good-btn" responseHandler={() => props.handleFlashcardResponse(ReviewResponse.Good)} />
+            <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => props.handleFlashcardResponse(ReviewResponse.Easy)} />
         </div>
     );
 }
