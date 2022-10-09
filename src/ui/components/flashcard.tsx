@@ -1,7 +1,7 @@
 import { MarkdownRenderer } from "obsidian";
-import { ReactNode, MutableRefObject, useRef, useEffect } from "react";
+import React, { MutableRefObject, useRef, useEffect } from "react";
 import { Deck } from "src/Deck";
-import { Card, ReviewResponse } from "src/scheduling";
+import { Card, CardType, ReviewResponse } from "src/scheduling";
 import { AdditionalProps } from "../views/modal";
 import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtonsDiv } from "./buttons";
 
@@ -11,14 +11,10 @@ export interface FlashcardButtons extends ContentProps {
     flashcardEditLater: Function;
 }
 
-interface ContentProps extends Props {
+interface ContentProps {
     isQuestion: boolean;
     card: Card;
-}
-
-interface Props {
-    children?: ReactNode;
-    viewRef?: MutableRefObject<HTMLDivElement>;
+    viewRef: MutableRefObject<HTMLDivElement>;
 }
 
 export interface FlashcardProps {
@@ -103,15 +99,20 @@ function FlashcardBody(props: ContentProps) {
     return (
         <>
             {/* Question */}
-            <p>{props.card?.front}</p>
+            <QuestionText cardType={props.card.cardType} questionText={props.card.front} />
             {!props.isQuestion && (
                 <div id="markdown-child" ref={props.viewRef}>
                     <hr id="sr-hr-card-divide" />
                     {/* Answer */}
-                    {/* <Text>{props.card?.back}</Text> */}
-                    { }
                 </div>
             )}
         </>
     );
+}
+
+function QuestionText({ cardType, questionText }: { cardType: CardType, questionText: string }) {
+    if (cardType != CardType.Cloze)
+        return <p>{questionText}</p>
+    else
+        return <p dangerouslySetInnerHTML={{ __html: questionText }}></p>
 }
