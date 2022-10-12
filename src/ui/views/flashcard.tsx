@@ -1,5 +1,7 @@
-import React, { useRef, useState } from "react";
+import React, { useContext, useRef, useState } from "react";
 import { LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR } from "src/constants";
+import { FlashcardContext } from "src/contexts/FlashcardContext";
+import { AppContext } from "src/contexts/PluginContext";
 import { Deck } from "src/Deck";
 import { PluginData } from "src/main";
 import { Card, ReviewResponse, schedule } from "src/scheduling";
@@ -13,6 +15,7 @@ export function FlashcardView(props: FlashcardProps) {
     const [flashcardIndex, setFlashcardIndex] = useState(0);
     const deck: Deck = props.deck;
     const flashcardList = useRef(generateFlashcardList(deck));
+    const { data, easeByPath, dueDatesFlashcards } = useContext(AppContext);
 
     function handleShowAnswerButton() {
         setIsQuestion(false);
@@ -38,7 +41,7 @@ export function FlashcardView(props: FlashcardProps) {
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
         // todo: move to useefect?
-        await processReview(clickedResponse, flashcardList.current[flashcardIndex], props.additionalProps.pluginData, props.additionalProps.dueDatesFlashcards, props.additionalProps.easeByPath);
+        await processReview(clickedResponse, flashcardList.current[flashcardIndex], data, dueDatesFlashcards, easeByPath);
         moveToNextFlashcard();
     }
 
@@ -53,15 +56,14 @@ export function FlashcardView(props: FlashcardProps) {
 
     return (
         <>
-            <FlashcardContent
-                card={flashcardList.current[flashcardIndex]}
-                isQuestion={isQuestion}
-                handleFlashcardResponse={(clickedResponse: ReviewResponse) =>
-                    handleResponseButtons(clickedResponse)
-                }
-                showAnswerButtonsHandler={() => handleShowAnswerButton()}
-                flashcardEditLater={() => edit(flashcardList.current[flashcardIndex])}
-            />
+            <FlashcardContext.Provider value={{ handleShowAnswerButton, handleFlashcardResponse: handleResponseButtons }}>
+                <FlashcardContent
+                    card={flashcardList.current[flashcardIndex]}
+                    isQuestion={isQuestion}
+                    flashcardEditLater={() => edit(flashcardList.current[flashcardIndex])}
+                />
+
+            </FlashcardContext.Provider>
         </>
     );
 }

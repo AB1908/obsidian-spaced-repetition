@@ -1,13 +1,10 @@
 import { MarkdownRenderer } from "obsidian";
 import React, { MutableRefObject, useRef, useEffect } from "react";
 import { Deck } from "src/Deck";
-import { Card, CardType, ReviewResponse } from "src/scheduling";
-import { AdditionalProps } from "../views/modal";
+import { Card, CardType } from "src/scheduling";
 import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtonsDiv } from "./buttons";
 
 export interface FlashcardButtons extends ContentProps {
-    handleFlashcardResponse: Function;
-    showAnswerButtonsHandler: Function;
     flashcardEditLater: Function;
 }
 
@@ -20,7 +17,6 @@ interface ContentProps {
 export interface FlashcardProps {
     deck: Deck;
     changeModalStatus: Function;
-    additionalProps: AdditionalProps;
 }
 
 function FlashcardContextHeader({ text }: { text: string }) {
@@ -47,15 +43,7 @@ export function FlashcardContent(props: FlashcardButtons) {
             <div id="sr-flashcard-view" ref={props.viewRef}>
                 <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
             </div>
-            {props.isQuestion ? (
-                <ShowAnswerButton handleFlashcardResponse={() => props.showAnswerButtonsHandler()} />
-            ) : (
-                <ResponseButtonsDiv
-                    handleFlashcardResponse={(clickedResponse: ReviewResponse) =>
-                        props.handleFlashcardResponse(clickedResponse)
-                    }
-                />
-            )}
+            {props.isQuestion ? (<ShowAnswerButton />) : (<ResponseButtonsDiv />)}
         </>
     );
 }

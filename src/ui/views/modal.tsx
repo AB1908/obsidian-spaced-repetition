@@ -1,11 +1,12 @@
 import { t } from "src/lang/helpers";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useContext, useEffect, useRef, useState } from "react";
 import { sync } from "src/DeckBuilder";
 import { Deck } from "src/Deck";
 import { PluginData } from "src/main";
 import { DeckTreeView as DeckTreeView } from "./deck";
 import { AllDecks } from "../components/card-counts";
 import { FlashcardView } from "./flashcard";
+import { AppContext } from "src/contexts/PluginContext";
 
 interface ModalContainerProps {
     deckTree: Deck;
@@ -13,12 +14,10 @@ interface ModalContainerProps {
     currentDeck: Deck;
     isDeckInReview: ModalStates;
     changeModalState: Function;
-    additionalProps: AdditionalProps;
 }
 
 interface ContainerProps {
     handleCloseButtonClick: Function;
-    additionalProps: AdditionalProps;
 }
 
 export interface AdditionalProps {
@@ -38,11 +37,12 @@ export function ModalElement(props: ContainerProps) {
     const [modalState, setModalState] = useState(ModalStates.DECK_NOT_IN_REVIEW);
     const deckBeingReviewed = useRef(null);
     const [syncLock, setSyncLock] = useState(false);
+    const { data } = useContext(AppContext);
 
     useEffect(() => {
         const syncDeck = async () => {
             if (modalState == ModalStates.DECK_NOT_IN_REVIEW)
-                deckTree.current = await sync(syncLock, setSyncLock, props.additionalProps.pluginData);
+                deckTree.current = await sync(syncLock, setSyncLock, data);
         }
         syncDeck();
     }, [modalState]);
@@ -76,7 +76,6 @@ export function ModalElement(props: ContainerProps) {
                     currentDeck={deckBeingReviewed.current}
                     isDeckInReview={modalState}
                     deckTree={deckTree.current}
-                    additionalProps={props.additionalProps}
                 />
             </div>
         </>
@@ -90,7 +89,6 @@ export function ModalContent(props: ModalContainerProps) {
             <FlashcardView
                 deck={props.currentDeck}
                 changeModalStatus={(a: ModalStates) => props.changeModalState(a)}
-                additionalProps={props.additionalProps}
             />
         );
     } else if (props.deckTree && props.isDeckInReview == ModalStates.DECK_NOT_IN_REVIEW) {
