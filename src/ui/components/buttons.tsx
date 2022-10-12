@@ -1,11 +1,8 @@
 import { Platform } from "obsidian";
 import React, { useContext } from "react";
+import { FlashcardContext } from "src/contexts/FlashcardContext";
 import { AppContext } from "src/contexts/PluginContext";
 import { ReviewResponse, schedule, textInterval } from "src/scheduling";
-
-export interface ButtonProps {
-    handleFlashcardResponse: Function;
-}
 
 export function EditLaterButton({ editLaterHandler }: { editLaterHandler: Function }) {
     return <div className="sr-link" onClick={() => editLaterHandler()}>Edit Later</div>;
@@ -19,12 +16,13 @@ export function ResetButton() {
     );
 }
 
-export function ShowAnswerButton(props: ButtonProps) {
+export function ShowAnswerButton() {
+    const {handleShowAnswerButton} = useContext(FlashcardContext);
     return (
         <button
             id="sr-show-answer"
             style={{ display: "initial" }}
-            onClick={() => props.handleFlashcardResponse()}
+            onClick={() => handleShowAnswerButton()}
         >
             Show Answer
         </button>
@@ -38,10 +36,10 @@ function Button({ text, id, responseHandler }: { text: string, id: string, respo
     </button>)
 }
 
-export function ResponseButtonsDiv(props: ButtonProps) {
+export function ResponseButtonsDiv() {
     const { data } = useContext(AppContext)
     let easyBtnText: string, goodBtnText: string, hardBtnText: string;
-
+    const {handleFlashcardResponse} = useContext(FlashcardContext);
 
     let interval = 1.0,
         ease: number = data.settings.baseEase,
@@ -100,9 +98,9 @@ export function ResponseButtonsDiv(props: ButtonProps) {
     //TODO: Use correct scheduling information
     return (
         <div className="sr-response" style={{ display: "flex", justifyContent: "space-evenly" }}>
-            <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => props.handleFlashcardResponse(ReviewResponse.Hard)} />
-            <Button text={goodBtnText} id="sr-good-btn" responseHandler={() => props.handleFlashcardResponse(ReviewResponse.Good)} />
-            <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => props.handleFlashcardResponse(ReviewResponse.Easy)} />
+            <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Hard)} />
+            <Button text={goodBtnText} id="sr-good-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Good)} />
+            <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Easy)} />
         </div>
     );
 }

@@ -1,12 +1,7 @@
 import React from "react";
-import {
-    App, Modal, Platform
-} from "obsidian";
+import { App, Modal, Platform } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
-
 import type SRPlugin from "src/main";
-import { Card } from "src/scheduling";
-import { Deck } from "../../Deck";
 import { ModalElement } from "../views/modal";
 import { AppContext } from "src/contexts/PluginContext";
 
@@ -86,18 +81,11 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
-            <AppContext.Provider value={this.plugin}>
-                <ModalElement
-                    handleCloseButtonClick={() => this.close()}
-                    additionalProps={
-                        {
-                            pluginData: this.plugin.data,
-                            dueDatesFlashcards: this.plugin.dueDatesFlashcards,
-                            easeByPath: this.plugin.easeByPath
-                        }
-                    }
-                />
-            </AppContext.Provider>
+                <AppContext.Provider value={this.plugin}>
+                    <ModalElement
+                        handleCloseButtonClick={() => this.close()}
+                    />
+                </AppContext.Provider>
             </>
         )
     }
