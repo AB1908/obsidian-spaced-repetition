@@ -94,15 +94,14 @@ export function ResponseButtons() {
             false
         )}`;
         // );
-        // }
-
-        //TODO: Use correct scheduling information
-        return (
-            <div className="sr-response" style={{ display: "flex", justifyContent: "space-evenly" }}>
-                <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Hard)} />
-                <Button text={goodBtnText} id="sr-good-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Good)} />
-                <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Easy)} />
-            </div>
-        );
     }
+
+    //TODO: Use correct scheduling information
+    return (
+        <div className="sr-response" style={{ display: "flex", justifyContent: "space-evenly" }}>
+            <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Hard)} />
+            <Button text={goodBtnText} id="sr-good-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Good)} />
+            <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Easy)} />
+        </div>
+    );
 }
