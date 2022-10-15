@@ -2,7 +2,7 @@ import { MarkdownRenderer } from "obsidian";
 import React, { MutableRefObject, useRef, useEffect, useContext } from "react";
 import { FlashcardContext } from "src/contexts/FlashcardContext";
 import { Deck } from "src/Deck";
-import { Card, CardType } from "src/scheduling";
+import { CardType } from "src/scheduling";
 import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtons } from "./buttons";
 
 export interface FlashcardButtons extends ContentProps {
@@ -19,7 +19,6 @@ export interface FlashcardProps {
 }
 
 function FlashcardContextHeader({ text }: { text: string }) {
-    // TODO: add actual content
     return <div id="sr-context">{text}</div>;
 }
 
@@ -39,11 +38,10 @@ function FlashcardHeader({ editLaterHandler }: { editLaterHandler: Function }) {
 function FlashcardFooter() {
     const { isQuestion } = useContext(FlashcardContext);
 
-    if (isQuestion) {
+    if (isQuestion)
         return <ShowAnswerButton />;
-    } else {
+    else
         return <ResponseButtons />;
-    }
 }
 
 export function FlashcardContent(props: FlashcardButtons) {

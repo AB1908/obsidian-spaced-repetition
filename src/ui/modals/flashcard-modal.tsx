@@ -14,21 +14,6 @@ export enum FlashcardModalMode {
 
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
-    // public answerBtn: HTMLElement;
-    // public flashcardView: HTMLElement;
-    // public hardBtn: HTMLElement;
-    // public goodBtn: HTMLElement;
-    // public easyBtn: HTMLElement;
-    // public nextBtn: HTMLElement;
-    // public responseDiv: HTMLElement;
-    // public fileLinkView: HTMLElement;
-    // public resetLinkView: HTMLElement;
-    // public contextView: HTMLElement;
-    // public currentCard: Card;
-    // public currentCardIdx: number;
-    // public currentDeck: Deck;
-    // public checkDeck: Deck;
-    // public mode: FlashcardModalMode;
     public ignoreStats: boolean;
     private modalElReactRoot: Root;
 
