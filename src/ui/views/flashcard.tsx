@@ -1,3 +1,4 @@
+import { TFile } from "obsidian";
 import React, { useContext, useRef, useState } from "react";
 import { LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR } from "src/constants";
 import { FlashcardContext } from "src/contexts/FlashcardContext";
@@ -17,10 +18,6 @@ export function FlashcardView(props: FlashcardProps) {
     const flashcardList = useRef(generateFlashcardList(deck));
     const { data, easeByPath, dueDatesFlashcards } = useContext(AppContext);
 
-    function handleShowAnswerButton() {
-        setIsQuestion(false);
-    }
-
     async function edit(currentCard: Card) {
         let textPromptArr = currentCard.cardText.split("\n");
         let textPrompt = "";
@@ -33,7 +30,7 @@ export function FlashcardView(props: FlashcardProps) {
         let editModal = FlashcardEditModal.Prompt(this.app, this.plugin, textPrompt);
         editModal
             .then(async (modifiedCardText) => {
-                modifyCardText(currentCard, textPrompt, modifiedCardText);
+                modifyCardText(currentCard.note, textPrompt, modifiedCardText);
                 moveToNextFlashcard();
             })
             .catch((reason) => console.log(reason));
@@ -58,7 +55,7 @@ export function FlashcardView(props: FlashcardProps) {
         <>
             <FlashcardContext.Provider
                 value={{
-                    handleShowAnswerButton: handleShowAnswerButton,
+                    handleShowAnswerButton: () => setIsQuestion(false),
                     handleFlashcardResponse: (t: ReviewResponse) => handleResponseButtons(t),
                     isQuestion: isQuestion,
                     card: flashcardList.current[flashcardIndex]
@@ -67,7 +64,6 @@ export function FlashcardView(props: FlashcardProps) {
                 <FlashcardContent
                     flashcardEditLater={() => edit(flashcardList.current[flashcardIndex])}
                 />
-
             </FlashcardContext.Provider>
         </>
     );
@@ -193,11 +189,11 @@ function generateFlashcardList(deck: Deck) {
     return flashcards;
 }
 
-async function modifyCardText(currentCard: Card, originalText: string, replacementText: string) {
+async function modifyCardText(note: TFile, originalText: string, replacementText: string) {
     if (!replacementText) return;
     if (replacementText == originalText) return;
-    let fileText: string = await this.app.vault.read(currentCard.note);
+    let fileText: string = await this.app.vault.read(note);
     const originalTextRegex = new RegExp(escapeRegexString(originalText), "gm");
     fileText = fileText.replace(originalTextRegex, replacementText);
-    await this.app.vault.modify(currentCard.note, fileText);
+    await this.app.vault.modify(note, fileText);
 }
