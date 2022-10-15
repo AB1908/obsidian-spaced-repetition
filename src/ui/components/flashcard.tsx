@@ -1,16 +1,15 @@
 import { MarkdownRenderer } from "obsidian";
-import React, { MutableRefObject, useRef, useEffect } from "react";
+import React, { MutableRefObject, useRef, useEffect, useContext } from "react";
+import { FlashcardContext } from "src/contexts/FlashcardContext";
 import { Deck } from "src/Deck";
 import { Card, CardType } from "src/scheduling";
-import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtonsDiv } from "./buttons";
+import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtons } from "./buttons";
 
 export interface FlashcardButtons extends ContentProps {
     flashcardEditLater: Function;
 }
 
 interface ContentProps {
-    isQuestion: boolean;
-    card: Card;
     viewRef?: MutableRefObject<HTMLDivElement>;
 }
 
@@ -24,7 +23,10 @@ function FlashcardContextHeader({ text }: { text: string }) {
     return <div id="sr-context">{text}</div>;
 }
 
-function FlashcardHeader({ isQuestion, contextText, editLaterHandler }: { isQuestion: boolean, contextText: string, editLaterHandler: Function }) {
+function FlashcardHeader({ editLaterHandler }: { editLaterHandler: Function }) {
+    const { isQuestion } = useContext(FlashcardContext);
+    const contextText = useContext(FlashcardContext).card.context;
+
     return (
         <>
             <EditLaterButton editLaterHandler={editLaterHandler} />
@@ -34,21 +36,35 @@ function FlashcardHeader({ isQuestion, contextText, editLaterHandler }: { isQues
     );
 }
 
+function FlashcardFooter() {
+    const { isQuestion } = useContext(FlashcardContext);
+
+    if (isQuestion) {
+        return <ShowAnswerButton />;
+    } else {
+        return <ResponseButtons />;
+    }
+}
+
 export function FlashcardContent(props: FlashcardButtons) {
     const viewRef = useRef(null);
 
     return (
         <>
-            <FlashcardHeader isQuestion={props.isQuestion} contextText={props.card.context} editLaterHandler={() => props.flashcardEditLater()} />
+            <FlashcardHeader editLaterHandler={() => props.flashcardEditLater()} />
             <div id="sr-flashcard-view" ref={props.viewRef}>
-                <FlashcardBody viewRef={viewRef} card={props.card} isQuestion={props.isQuestion} />
+                <FlashcardBody viewRef={viewRef} />
             </div>
-            {props.isQuestion ? (<ShowAnswerButton />) : (<ResponseButtonsDiv />)}
+            <FlashcardFooter />
         </>
     );
 }
 
 function FlashcardBody(props: ContentProps) {
+    const { isQuestion } = useContext(FlashcardContext);
+    const { card } = useContext(FlashcardContext);
+
+
     async function renderMarkdownWrapper(
         markdownString: string,
         containerEl: HTMLElement,
@@ -59,7 +75,7 @@ function FlashcardBody(props: ContentProps) {
         await MarkdownRenderer.renderMarkdown(
             markdownString,
             containerEl,
-            props.card.note.path,
+            card.note.path,
             null
         );
 
@@ -81,14 +97,14 @@ function FlashcardBody(props: ContentProps) {
     }
 
     useEffect(() => {
-        if (!props.isQuestion) renderMarkdownWrapper(props.card.back, props.viewRef.current);
-    }, [props.isQuestion]);
+        if (!isQuestion) renderMarkdownWrapper(card.back, props.viewRef.current);
+    }, [isQuestion]);
 
     return (
         <>
             {/* Question */}
-            <QuestionText cardType={props.card.cardType} questionText={props.card.front} />
-            {!props.isQuestion && (
+            <QuestionText cardType={card.cardType} questionText={card.front} />
+            {!isQuestion && (
                 <div id="markdown-child" ref={props.viewRef}>
                     <hr id="sr-hr-card-divide" />
                     {/* Answer */}

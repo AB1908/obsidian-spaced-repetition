@@ -56,10 +56,15 @@ export function FlashcardView(props: FlashcardProps) {
 
     return (
         <>
-            <FlashcardContext.Provider value={{ handleShowAnswerButton, handleFlashcardResponse: handleResponseButtons }}>
+            <FlashcardContext.Provider
+                value={{
+                    handleShowAnswerButton: handleShowAnswerButton,
+                    handleFlashcardResponse: (t: ReviewResponse) => handleResponseButtons(t),
+                    isQuestion: isQuestion,
+                    card: flashcardList.current[flashcardIndex]
+                }}
+            >
                 <FlashcardContent
-                    card={flashcardList.current[flashcardIndex]}
-                    isQuestion={isQuestion}
                     flashcardEditLater={() => edit(flashcardList.current[flashcardIndex])}
                 />
 

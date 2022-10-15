@@ -36,7 +36,7 @@ function Button({ text, id, responseHandler }: { text: string, id: string, respo
     </button>)
 }
 
-export function ResponseButtonsDiv() {
+export function ResponseButtons() {
     const { data } = useContext(AppContext)
     let easyBtnText: string, goodBtnText: string, hardBtnText: string;
     const { handleFlashcardResponse } = useContext(FlashcardContext);
