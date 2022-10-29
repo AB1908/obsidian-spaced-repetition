@@ -447,14 +447,13 @@ export class FlashcardModal extends Modal {
     }
 
     parseLink(src: string) {
+        const currentNotePath = this.currentCard.note.path;
+
         const linkComponentsRegex =
             /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
         const matched = typeof src === "string" && src.match(linkComponentsRegex);
-        const file = matched.groups.file || this.currentCard.note.path;
-        const target = this.plugin.app.metadataCache.getFirstLinkpathDest(
-            file,
-            this.currentCard.note.path
-        );
+        const file = matched.groups.file || currentNotePath;
+        const target = this.plugin.app.metadataCache.getFirstLinkpathDest(file, currentNotePath);
         // move lookup upstream? ^^^
         return {
             text: matched[0],
