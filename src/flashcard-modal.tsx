@@ -31,6 +31,14 @@ export enum FlashcardModalMode {
     Closed,
 }
 
+function testMatches(src: string, currentNotePath: string) {
+    const linkComponentsRegex =
+        /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
+    const matched = typeof src === "string" && src.match(linkComponentsRegex);
+    const file = matched.groups.file || currentNotePath;
+    return {matched, file};
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -448,11 +456,8 @@ export class FlashcardModal extends Modal {
 
     parseLink(src: string) {
         const currentNotePath = this.currentCard.note.path;
+        const {matched, file} = testMatches(src, currentNotePath);
 
-        const linkComponentsRegex =
-            /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
-        const matched = typeof src === "string" && src.match(linkComponentsRegex);
-        const file = matched.groups.file || currentNotePath;
         const target = this.plugin.app.metadataCache.getFirstLinkpathDest(file, currentNotePath);
         // move lookup upstream? ^^^
         return {
