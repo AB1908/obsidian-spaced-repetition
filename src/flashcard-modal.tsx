@@ -107,6 +107,45 @@ function generateNewSchedulingText(sep: string, dueString: string, interval: num
     return cardText;
 }
 
+function calculateSchedInfo(currentCard: Card, response: ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard) {
+    let schedObj: Record<string, number>;
+    // scheduled card
+    if (currentCard.isDue) {
+        schedObj = schedule(
+            response,
+            currentCard.interval,
+            currentCard.ease,
+            currentCard.delayBeforeReview,
+            this.plugin.data.settings,
+            this.plugin.dueDatesFlashcards
+        );
+    } else {
+        let initial_ease: number = this.plugin.data.settings.baseEase;
+        if (
+            Object.prototype.hasOwnProperty.call(
+                this.plugin.easeByPath,
+                currentCard.note.path
+            )
+        ) {
+            initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
+        }
+
+        schedObj = schedule(
+            response,
+            1.0,
+            initial_ease,
+            0,
+            this.plugin.data.settings,
+            this.plugin.dueDatesFlashcards
+        );
+    }
+
+    const interval = schedObj.interval;
+    const ease = schedObj.ease;
+    const due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
+    return {interval, ease, due};
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -333,7 +372,7 @@ export class FlashcardModal extends Modal {
         let interval: number, ease: number, due;
 
         if (response !== ReviewResponse.Reset) {
-            const __ret = this.calculateSchedInfo(currentCard, response);
+            const __ret = calculateSchedInfo.call(this, currentCard, response);
             interval = __ret.interval;
             ease = __ret.ease;
             due = __ret.due;
@@ -368,45 +407,6 @@ export class FlashcardModal extends Modal {
         }
         await this.app.vault.modify(currentCard.note, fileText);
         currentDeck.nextCard(this);
-    }
-
-    private calculateSchedInfo(currentCard: Card, response: ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard) {
-        let schedObj: Record<string, number>;
-        // scheduled card
-        if (currentCard.isDue) {
-            schedObj = schedule(
-                response,
-                currentCard.interval,
-                currentCard.ease,
-                currentCard.delayBeforeReview,
-                this.plugin.data.settings,
-                this.plugin.dueDatesFlashcards
-            );
-        } else {
-            let initial_ease: number = this.plugin.data.settings.baseEase;
-            if (
-                Object.prototype.hasOwnProperty.call(
-                    this.plugin.easeByPath,
-                    currentCard.note.path
-                )
-            ) {
-                initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
-            }
-
-            schedObj = schedule(
-                response,
-                1.0,
-                initial_ease,
-                0,
-                this.plugin.data.settings,
-                this.plugin.dueDatesFlashcards
-            );
-        }
-
-        const interval = schedObj.interval;
-        const ease = schedObj.ease;
-        const due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
-        return {interval, ease, due};
     }
 
     private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card) {
