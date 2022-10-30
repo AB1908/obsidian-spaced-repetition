@@ -31,7 +31,7 @@ export enum FlashcardModalMode {
     Closed,
 }
 
-function testMatches(src: string, currentNotePath: string) {
+function extractFileMatches(src: string, currentNotePath: string) {
     const linkComponentsRegex = /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
     const matched = typeof src === "string" && src.match(linkComponentsRegex);
     const file = matched.groups.file || currentNotePath;
@@ -42,6 +42,36 @@ function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardMo
     for (const deck of decks) {
         deck.render(containerEl, modal);
     }
+}
+
+function createEditLaterButton(contentEl: any) {
+    this.fileLinkView = contentEl.createDiv("sr-link");
+    this.fileLinkView.setText(t("EDIT_LATER"));
+    if (this.plugin.data.settings.showFileNameInFileLink) {
+        this.fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
+    }
+    this.fileLinkView.addEventListener("click", async () => {
+        const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
+        const currentCard1 = this.currentCard;
+        if (this.plugin.app.workspace.getActiveFile() === null)
+            await activeLeaf.openFile(currentCard1.note);
+        else {
+            const newLeaf = this.plugin.app.workspace.createLeafBySplit(
+                activeLeaf,
+                "vertical",
+                false
+            );
+            await newLeaf.openFile(currentCard1.note, {active: true});
+        }
+        const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
+        activeView.editor.setCursor({
+            line: currentCard1.lineNo,
+            ch: 0,
+        });
+        this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, currentCard1.isDue);
+        burySiblingCards(false, currentCard1, this.currentDeck);
+        this.currentDeck.nextCard(this);
+    });
 }
 
 export class FlashcardModal extends Modal {
@@ -120,8 +150,6 @@ export class FlashcardModal extends Modal {
 
     decksList(): void {
         const titleContent = (
-            // @ts-ignore
-            <>
                 <p style="margin:0px;line-height:12px;">
                     <span
                         style="background-color:#4caf50;color:#ffffff;"
@@ -145,7 +173,6 @@ export class FlashcardModal extends Modal {
                         {this.plugin.deckTree.totalFlashcards.toString()}
                     </span>
                 </p>
-            </>
         );
 
         const aimDeck = this.plugin.deckTree.subdecks.filter(
@@ -183,33 +210,7 @@ export class FlashcardModal extends Modal {
                 this.decksList();
             }
         });
-
-        this.fileLinkView = this.contentEl.createDiv("sr-link");
-        this.fileLinkView.setText(t("EDIT_LATER"));
-        if (this.plugin.data.settings.showFileNameInFileLink) {
-            this.fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
-        }
-        this.fileLinkView.addEventListener("click", async () => {
-            const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
-            if (this.plugin.app.workspace.getActiveFile() === null)
-                await activeLeaf.openFile(this.currentCard.note);
-            else {
-                const newLeaf = this.plugin.app.workspace.createLeafBySplit(
-                    activeLeaf,
-                    "vertical",
-                    false
-                );
-                await newLeaf.openFile(this.currentCard.note, { active: true });
-            }
-            const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-            activeView.editor.setCursor({
-                line: this.currentCard.lineNo,
-                ch: 0,
-            });
-            this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
-            burySiblingCards(false, this.currentCard, this.currentDeck);
-            this.currentDeck.nextCard(this);
-        });
+        createEditLaterButton.call(this, this.contentEl);
 
         this.resetLinkView = this.contentEl.createDiv("sr-link");
         this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
@@ -443,7 +444,7 @@ export class FlashcardModal extends Modal {
 
     parseLink(src: string) {
         const currentNotePath = this.currentCard.note.path;
-        const { matched, file } = testMatches(src, currentNotePath);
+        const { matched, file } = extractFileMatches(src, currentNotePath);
 
         const target = this.plugin.app.metadataCache.getFirstLinkpathDest(file, currentNotePath);
         // move lookup upstream? ^^^
