@@ -14,13 +14,13 @@ export class FlashcardEditModal extends Modal {
     private didSubmit: boolean = false;
     private contentRoot: Root;
 
-    public static Prompt(app: App, plugin: SRPlugin, placeholder: string): Promise<string> {
-        const newPromptModal = new FlashcardEditModal(app, plugin, placeholder);
+    public static Prompt(plugin: SRPlugin, placeholder: string): Promise<string> {
+        const newPromptModal = new FlashcardEditModal(plugin, placeholder);
         return newPromptModal.waitForClose;
     }
 
-    constructor(app: App, plugin: SRPlugin, existingText: string) {
-        super(app);
+    constructor(plugin: SRPlugin, existingText: string) {
+        super(plugin.app);
         this.plugin = plugin;
         this.titleEl.setText("Edit Card");
         this.input = existingText;
