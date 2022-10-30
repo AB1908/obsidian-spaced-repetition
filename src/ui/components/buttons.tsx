@@ -70,33 +70,25 @@ export function ResponseButtons() {
     //     // Same for mobile/desktop
     //     hardBtn.setText(`${plugin.data.settings.flashcardHardText}`);
     //     easyBtn.setText(`${plugin.data.settings.flashcardEasyText}`);
-    // } else if (Platform.isMobile) {
     if (Platform.isMobile) {
         hardBtnText = `${textInterval(hardInterval, true)}`;
         goodBtnText = `${textInterval(goodInterval, true)}`;
         easyBtnText = `${textInterval(easyInterval, true)}`;
     } else {
-        // hardBtn.setText(
         hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(
             hardInterval,
             false
         )}`
-        // );
-        // goodBtn.setText(
         goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(
             goodInterval,
             false
         )}`;
-        // );
-        // easyBtn.setText(
         easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(
             easyInterval,
             false
         )}`;
-        // );
     }
 
-    //TODO: Use correct scheduling information
     return (
         <div className="sr-response" style={{ display: "flex", justifyContent: "space-evenly" }}>
             <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Hard)} />
