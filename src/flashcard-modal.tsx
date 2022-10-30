@@ -1,9 +1,18 @@
-import {App, MarkdownRenderer, MarkdownView, Modal, Notice, Platform, TFile, WorkspaceLeaf,} from "obsidian";
+import {
+    App,
+    MarkdownRenderer,
+    MarkdownView,
+    Modal,
+    Notice,
+    Platform,
+    TFile,
+    WorkspaceLeaf,
+} from "obsidian";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import h from "vhtml";
 
 import type SRPlugin from "src/main";
-import {Card, CardType, ReviewResponse, schedule} from "src/scheduling";
+import { Card, CardType, ReviewResponse, schedule } from "src/scheduling";
 import {
     AUDIO_FORMATS,
     IMAGE_FORMATS,
@@ -11,9 +20,9 @@ import {
     MULTI_SCHEDULING_EXTRACTOR,
     VIDEO_FORMATS,
 } from "src/constants";
-import {cyrb53, escapeRegexString} from "src/utils";
-import {t} from "src/lang/helpers";
-import {Deck} from "src/deck";
+import { cyrb53, escapeRegexString } from "src/utils";
+import { t } from "src/lang/helpers";
+import { Deck } from "src/deck";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -23,11 +32,10 @@ export enum FlashcardModalMode {
 }
 
 function testMatches(src: string, currentNotePath: string) {
-    const linkComponentsRegex =
-        /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
+    const linkComponentsRegex = /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
     const matched = typeof src === "string" && src.match(linkComponentsRegex);
     const file = matched.groups.file || currentNotePath;
-    return {matched, file};
+    return { matched, file };
 }
 
 function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardModal) {
@@ -80,7 +88,7 @@ export class FlashcardModal extends Modal {
                         this.currentCardIdx,
                         this.currentCard.isDue
                     );
-                    this.burySiblingCards(false);
+                    burySiblingCards(false, this.currentCard, this.currentDeck);
                     this.currentDeck.nextCard(this);
                 } else if (
                     this.mode === FlashcardModalMode.Front &&
@@ -111,30 +119,34 @@ export class FlashcardModal extends Modal {
     }
 
     decksList(): void {
-        // @ts-ignore
-        const titleContent = (<><p style="margin:0px;line-height:12px;">
-                <span
-                    style="background-color:#4caf50;color:#ffffff;"
-                    aria-label={t("DUE_CARDS")}
-                    class="tag-pane-tag-count tree-item-flair"
-                >
-                    {this.plugin.deckTree.dueFlashcardsCount.toString()}
-                </span>
-            <span
-                style="background-color:#2196f3;"
-                aria-label={t("NEW_CARDS")}
-                class="tag-pane-tag-count tree-item-flair sr-deck-counts"
-            >
-                    {this.plugin.deckTree.newFlashcardsCount.toString()}
-                </span>
-            <span
-                style="background-color:#ff7043;"
-                aria-label={t("TOTAL_CARDS")}
-                class="tag-pane-tag-count tree-item-flair sr-deck-counts"
-            >
-                    {this.plugin.deckTree.totalFlashcards.toString()}
-                </span>
-        </p></>);
+        const titleContent = (
+            // @ts-ignore
+            <>
+                <p style="margin:0px;line-height:12px;">
+                    <span
+                        style="background-color:#4caf50;color:#ffffff;"
+                        aria-label={t("DUE_CARDS")}
+                        class="tag-pane-tag-count tree-item-flair"
+                    >
+                        {this.plugin.deckTree.dueFlashcardsCount.toString()}
+                    </span>
+                    <span
+                        style="background-color:#2196f3;"
+                        aria-label={t("NEW_CARDS")}
+                        class="tag-pane-tag-count tree-item-flair sr-deck-counts"
+                    >
+                        {this.plugin.deckTree.newFlashcardsCount.toString()}
+                    </span>
+                    <span
+                        style="background-color:#ff7043;"
+                        aria-label={t("TOTAL_CARDS")}
+                        class="tag-pane-tag-count tree-item-flair sr-deck-counts"
+                    >
+                        {this.plugin.deckTree.totalFlashcards.toString()}
+                    </span>
+                </p>
+            </>
+        );
 
         const aimDeck = this.plugin.deckTree.subdecks.filter(
             (deck) => deck.deckName === this.plugin.data.historyDeck
@@ -195,7 +207,7 @@ export class FlashcardModal extends Modal {
                 ch: 0,
             });
             this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
-            this.burySiblingCards(false);
+            burySiblingCards(false, this.currentCard, this.currentDeck);
             this.currentDeck.nextCard(this);
         });
 
@@ -389,35 +401,11 @@ export class FlashcardModal extends Modal {
             sibling.cardText = this.currentCard.cardText;
         }
         if (this.plugin.data.settings.burySiblingCards) {
-            this.burySiblingCards(true);
+            burySiblingCards(true, this.currentCard, this.currentDeck);
         }
 
         await this.app.vault.modify(this.currentCard.note, fileText);
         this.currentDeck.nextCard(this);
-    }
-
-    async burySiblingCards(tillNextDay: boolean): Promise<void> {
-        if (tillNextDay) {
-            this.plugin.data.buryList.push(cyrb53(this.currentCard.cardText));
-            await this.plugin.savePluginData();
-        }
-
-        for (const sibling of this.currentCard.siblings) {
-            const dueIdx = this.currentDeck.dueFlashcards.indexOf(sibling);
-            const newIdx = this.currentDeck.newFlashcards.indexOf(sibling);
-
-            if (dueIdx !== -1) {
-                this.currentDeck.deleteFlashcardAtIndex(
-                    dueIdx,
-                    this.currentDeck.dueFlashcards[dueIdx].isDue
-                );
-            } else if (newIdx !== -1) {
-                this.currentDeck.deleteFlashcardAtIndex(
-                    newIdx,
-                    this.currentDeck.newFlashcards[newIdx].isDue
-                );
-            }
-        }
     }
 
     // slightly modified version of the renderMarkdown function in
@@ -455,7 +443,7 @@ export class FlashcardModal extends Modal {
 
     parseLink(src: string) {
         const currentNotePath = this.currentCard.note.path;
-        const {matched, file} = testMatches(src, currentNotePath);
+        const { matched, file } = testMatches(src, currentNotePath);
 
         const target = this.plugin.app.metadataCache.getFirstLinkpathDest(file, currentNotePath);
         // move lookup upstream? ^^^
@@ -556,3 +544,24 @@ export class FlashcardModal extends Modal {
     }
 }
 
+async function burySiblingCards(
+    tillNextDay: boolean,
+    currentCard1: Card,
+    currentDeck1: Deck
+): Promise<void> {
+    if (tillNextDay) {
+        this.plugin.data.buryList.push(cyrb53(currentCard1.cardText));
+        await this.plugin.savePluginData();
+    }
+
+    for (const sibling of currentCard1.siblings) {
+        const dueIdx = currentDeck1.dueFlashcards.indexOf(sibling);
+        const newIdx = currentDeck1.newFlashcards.indexOf(sibling);
+
+        if (dueIdx !== -1) {
+            currentDeck1.deleteFlashcardAtIndex(dueIdx, currentDeck1.dueFlashcards[dueIdx].isDue);
+        } else if (newIdx !== -1) {
+            currentDeck1.deleteFlashcardAtIndex(newIdx, currentDeck1.newFlashcards[newIdx].isDue);
+        }
+    }
+}
