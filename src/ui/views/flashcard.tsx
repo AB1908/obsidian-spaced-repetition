@@ -16,7 +16,8 @@ export function FlashcardView(props: FlashcardProps) {
     const [flashcardIndex, setFlashcardIndex] = useState(0);
     const deck: Deck = props.deck;
     const flashcardList = useRef(generateFlashcardList(deck));
-    const { data, easeByPath, dueDatesFlashcards } = useContext(AppContext);
+    const pluginContext = useContext(AppContext);
+    const { data, easeByPath, dueDatesFlashcards } = pluginContext;
 
     async function edit(currentCard: Card) {
         let textPromptArr = currentCard.cardText.split("\n");
@@ -27,7 +28,7 @@ export function FlashcardView(props: FlashcardProps) {
             textPrompt = currentCard.cardText;
         }
 
-        let editModal = FlashcardEditModal.Prompt(this.app, this.plugin, textPrompt);
+        let editModal = FlashcardEditModal.Prompt(pluginContext, textPrompt);
         editModal
             .then(async (modifiedCardText) => {
                 modifyCardText(currentCard.note, textPrompt, modifiedCardText);
