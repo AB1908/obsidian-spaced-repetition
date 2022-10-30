@@ -44,13 +44,13 @@ function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardMo
     }
 }
 
-function createEditLaterButton(contentEl: any) {
-    this.fileLinkView = contentEl.createDiv("sr-link");
-    this.fileLinkView.setText(t("EDIT_LATER"));
+function createEditLaterButton(contentEl: HTMLElement) {
+    const fileLinkView = contentEl.createDiv("sr-link");
+    fileLinkView.setText(t("EDIT_LATER"));
     if (this.plugin.data.settings.showFileNameInFileLink) {
-        this.fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
+        fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
     }
-    this.fileLinkView.addEventListener("click", async () => {
+    fileLinkView.addEventListener("click", async () => {
         const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
         const currentCard1 = this.currentCard;
         if (this.plugin.app.workspace.getActiveFile() === null)
@@ -72,6 +72,7 @@ function createEditLaterButton(contentEl: any) {
         burySiblingCards(false, currentCard1, this.currentDeck);
         this.currentDeck.nextCard(this);
     });
+    return fileLinkView;
 }
 
 export class FlashcardModal extends Modal {
@@ -210,7 +211,7 @@ export class FlashcardModal extends Modal {
                 this.decksList();
             }
         });
-        createEditLaterButton.call(this, this.contentEl);
+        this.fileLinkView = createEditLaterButton.call(this, this.contentEl);
 
         this.resetLinkView = this.contentEl.createDiv("sr-link");
         this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
