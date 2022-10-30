@@ -44,7 +44,7 @@ function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardMo
     }
 }
 
-function createEditLaterButton(contentEl: HTMLElement, currentDeck: any) {
+function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, currentCard: Card) {
     const fileLinkView = contentEl.createDiv("sr-link");
     fileLinkView.setText(t("EDIT_LATER"));
     if (this.plugin.data.settings.showFileNameInFileLink) {
@@ -52,24 +52,23 @@ function createEditLaterButton(contentEl: HTMLElement, currentDeck: any) {
     }
     fileLinkView.addEventListener("click", async () => {
         const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
-        const currentCard1 = this.currentCard;
         if (this.plugin.app.workspace.getActiveFile() === null)
-            await activeLeaf.openFile(currentCard1.note);
+            await activeLeaf.openFile(currentCard.note);
         else {
             const newLeaf = this.plugin.app.workspace.createLeafBySplit(
                 activeLeaf,
                 "vertical",
                 false
             );
-            await newLeaf.openFile(currentCard1.note, {active: true});
+            await newLeaf.openFile(currentCard.note, {active: true});
         }
         const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
         activeView.editor.setCursor({
-            line: currentCard1.lineNo,
+            line: currentCard.lineNo,
             ch: 0,
         });
-        currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, currentCard1.isDue);
-        burySiblingCards(false, currentCard1, currentDeck);
+        currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, currentCard.isDue);
+        burySiblingCards(false, currentCard, currentDeck);
         currentDeck.nextCard(this);
     });
     return fileLinkView;
@@ -82,7 +81,7 @@ export class FlashcardModal extends Modal {
     public hardBtn: HTMLElement;
     public goodBtn: HTMLElement;
     public easyBtn: HTMLElement;
-    public nextBtn: HTMLElement;
+    // public nextBtn: HTMLElement;
     public responseDiv: HTMLElement;
     public fileLinkView: HTMLElement;
     public resetLinkView: HTMLElement;
@@ -211,7 +210,7 @@ export class FlashcardModal extends Modal {
                 this.decksList();
             }
         });
-        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, this.currentDeck);
+        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, this.currentDeck, this.currentCard);
 
         this.resetLinkView = this.contentEl.createDiv("sr-link");
         this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
@@ -353,7 +352,7 @@ export class FlashcardModal extends Modal {
             } else {
                 this.currentDeck.newFlashcards.push(this.currentCard);
             }
-            due = window.moment(Date.now());
+            // due = window.moment(Date.now());
             new Notice(t("CARD_PROGRESS_RESET"));
             this.currentDeck.nextCard(this);
             return;
