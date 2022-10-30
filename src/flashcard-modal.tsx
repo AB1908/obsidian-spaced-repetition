@@ -324,13 +324,7 @@ export class FlashcardModal extends Modal {
 
     async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number): Promise<void> {
         if (ignoreStats) {
-            if (response == ReviewResponse.Easy) {
-                currentDeck.deleteFlashcardAtIndex(
-                    index,
-                    currentCard.isDue
-                );
-            }
-            currentDeck.nextCard(this);
+            this.processCrammedCards(response, currentDeck, index, currentCard);
             return;
         }
 
@@ -401,6 +395,16 @@ export class FlashcardModal extends Modal {
             burySiblingCards(true, currentCard, currentDeck);
         }
         await this.app.vault.modify(currentCard.note, fileText);
+        currentDeck.nextCard(this);
+    }
+
+    private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card) {
+        if (response == ReviewResponse.Easy) {
+            currentDeck.deleteFlashcardAtIndex(
+                index,
+                currentCard.isDue
+            );
+        }
         currentDeck.nextCard(this);
     }
 
