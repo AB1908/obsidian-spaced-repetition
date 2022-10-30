@@ -75,6 +75,36 @@ function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, curren
     return fileLinkView;
 }
 
+function generateNewSchedulingText(currentCard: Card, sep: string, dueString: string, interval: number, ease: number) {
+    // check if we're adding scheduling information to the flashcard
+    // for the first time
+    if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
+        currentCard.cardText =
+            currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
+    } else {
+        let scheduling: RegExpMatchArray[] = [
+            ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+        ];
+        if (scheduling.length === 0) {
+            scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+        }
+
+        const currCardSched: string[] = ["0", dueString, interval.toString(), ease.toString()];
+        if (currentCard.isDue) {
+            scheduling[currentCard.siblingIdx] = currCardSched;
+        } else {
+            scheduling.push(currCardSched);
+        }
+
+        currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
+        currentCard.cardText += "<!--SR:";
+        for (let i = 0; i < scheduling.length; i++) {
+            currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+        }
+        currentCard.cardText += "-->";
+    }
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -369,34 +399,7 @@ export class FlashcardModal extends Modal {
         if (currentCard.cardText.endsWith("```") && sep !== "\n") {
             sep = "\n";
         }
-
-        // check if we're adding scheduling information to the flashcard
-        // for the first time
-        if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
-            currentCard.cardText =
-                currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
-        } else {
-            let scheduling: RegExpMatchArray[] = [
-                ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
-            ];
-            if (scheduling.length === 0) {
-                scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
-            }
-
-            const currCardSched: string[] = ["0", dueString, interval.toString(), ease.toString()];
-            if (currentCard.isDue) {
-                scheduling[currentCard.siblingIdx] = currCardSched;
-            } else {
-                scheduling.push(currCardSched);
-            }
-
-            currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
-            currentCard.cardText += "<!--SR:";
-            for (let i = 0; i < scheduling.length; i++) {
-                currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
-            }
-            currentCard.cardText += "-->";
-        }
+        generateNewSchedulingText(currentCard, sep, dueString, interval, ease);
 
         fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
         for (const sibling of currentCard.siblings) {
