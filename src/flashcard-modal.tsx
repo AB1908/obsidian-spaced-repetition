@@ -44,7 +44,7 @@ function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardMo
     }
 }
 
-function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, currentCard: Card) {
+function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, currentCard: Card, index: number) {
     const fileLinkView = contentEl.createDiv("sr-link");
     fileLinkView.setText(t("EDIT_LATER"));
     if (this.plugin.data.settings.showFileNameInFileLink) {
@@ -52,23 +52,23 @@ function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, curren
     }
     fileLinkView.addEventListener("click", async () => {
         const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
-        if (this.plugin.app.workspace.getActiveFile() === null)
-            await activeLeaf.openFile(currentCard.note);
-        else {
+        if (this.plugin.app.workspace.getActiveFile() === null) {
+            await activeLeaf.openFile(this.currentCard.note);
+        } else {
             const newLeaf = this.plugin.app.workspace.createLeafBySplit(
                 activeLeaf,
                 "vertical",
                 false
             );
-            await newLeaf.openFile(currentCard.note, {active: true});
+            await newLeaf.openFile(this.currentCard.note, {active: true});
         }
         const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
         activeView.editor.setCursor({
-            line: currentCard.lineNo,
+            line: this.currentCard.lineNo,
             ch: 0,
         });
-        currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, currentCard.isDue);
-        burySiblingCards(false, currentCard, currentDeck);
+        currentDeck.deleteFlashcardAtIndex(index, this.currentCard.isDue);
+        burySiblingCards(false, this.currentCard, currentDeck);
         currentDeck.nextCard(this);
     });
     return fileLinkView;
@@ -210,7 +210,7 @@ export class FlashcardModal extends Modal {
                 this.decksList();
             }
         });
-        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, this.currentDeck, this.currentCard);
+        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, this.currentDeck, this.currentCard, this.currentCardIdx);
 
         this.resetLinkView = this.contentEl.createDiv("sr-link");
         this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
