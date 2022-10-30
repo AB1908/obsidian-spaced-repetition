@@ -105,6 +105,31 @@ export class FlashcardModal extends Modal {
     }
 
     decksList(): void {
+        // @ts-ignore
+        const titleContent = (<><p style="margin:0px;line-height:12px;">
+                <span
+                    style="background-color:#4caf50;color:#ffffff;"
+                    aria-label={t("DUE_CARDS")}
+                    class="tag-pane-tag-count tree-item-flair"
+                >
+                    {this.plugin.deckTree.dueFlashcardsCount.toString()}
+                </span>
+            <span
+                style="background-color:#2196f3;"
+                aria-label={t("NEW_CARDS")}
+                class="tag-pane-tag-count tree-item-flair sr-deck-counts"
+            >
+                    {this.plugin.deckTree.newFlashcardsCount.toString()}
+                </span>
+            <span
+                style="background-color:#ff7043;"
+                aria-label={t("TOTAL_CARDS")}
+                class="tag-pane-tag-count tree-item-flair sr-deck-counts"
+            >
+                    {this.plugin.deckTree.totalFlashcards.toString()}
+                </span>
+        </p></>);
+
         const aimDeck = this.plugin.deckTree.subdecks.filter(
             (deck) => deck.deckName === this.plugin.data.historyDeck
         );
@@ -119,31 +144,7 @@ export class FlashcardModal extends Modal {
 
         this.mode = FlashcardModalMode.DecksList;
         this.titleEl.setText(t("DECKS"));
-        this.titleEl.innerHTML += (
-            <p style="margin:0px;line-height:12px;">
-                <span
-                    style="background-color:#4caf50;color:#ffffff;"
-                    aria-label={t("DUE_CARDS")}
-                    class="tag-pane-tag-count tree-item-flair"
-                >
-                    {this.plugin.deckTree.dueFlashcardsCount.toString()}
-                </span>
-                <span
-                    style="background-color:#2196f3;"
-                    aria-label={t("NEW_CARDS")}
-                    class="tag-pane-tag-count tree-item-flair sr-deck-counts"
-                >
-                    {this.plugin.deckTree.newFlashcardsCount.toString()}
-                </span>
-                <span
-                    style="background-color:#ff7043;"
-                    aria-label={t("TOTAL_CARDS")}
-                    class="tag-pane-tag-count tree-item-flair sr-deck-counts"
-                >
-                    {this.plugin.deckTree.totalFlashcards.toString()}
-                </span>
-            </p>
-        );
+        this.titleEl.innerHTML += titleContent;
         this.contentEl.innerHTML = "";
         this.contentEl.setAttribute("id", "sr-flashcard-view");
 
