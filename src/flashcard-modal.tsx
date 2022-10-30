@@ -30,6 +30,12 @@ function testMatches(src: string, currentNotePath: string) {
     return {matched, file};
 }
 
+function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardModal) {
+    for (const deck of decks) {
+        deck.render(containerEl, modal);
+    }
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -148,9 +154,10 @@ export class FlashcardModal extends Modal {
         this.contentEl.innerHTML = "";
         this.contentEl.setAttribute("id", "sr-flashcard-view");
 
-        for (const deck of this.plugin.deckTree.subdecks) {
-            deck.render(this.contentEl, this);
-        }
+        const decks = this.plugin.deckTree.subdecks;
+        const containerEl = this.contentEl;
+        const modal: FlashcardModal = this;
+        renderDecks(decks, containerEl, modal);
     }
 
     setupCardsView(): void {
