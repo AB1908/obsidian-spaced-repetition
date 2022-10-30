@@ -10,7 +10,7 @@ import {
 import * as graph from "pagerank.js";
 
 import { SRSettingTab, SRSettings, DEFAULT_SETTINGS } from "src/settings";
-import { FlashcardModal, Deck } from "src/flashcard-modal";
+import { FlashcardModal } from "src/flashcard-modal";
 import { StatsModal, Stats } from "src/stats-modal";
 import { ReviewQueueListView, REVIEW_QUEUE_VIEW_TYPE } from "src/sidebar";
 import { Card, CardType, ReviewResponse, schedule } from "src/scheduling";
@@ -25,6 +25,7 @@ import { ReviewDeck, ReviewDeckSelectionModal } from "src/review-deck";
 import { t } from "src/lang/helpers";
 import { parse } from "src/parser";
 import { appIcon } from "src/icons/appicon";
+import {Deck} from "src/deck";
 
 interface PluginData {
     settings: SRSettings;
