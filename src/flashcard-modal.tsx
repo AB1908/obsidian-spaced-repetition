@@ -71,7 +71,7 @@ function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, curren
         });
         currentDeck.deleteFlashcardAtIndex(index, this.currentCard.isDue);
         burySiblingCards(false, this.currentCard, currentDeck);
-        currentDeck.nextCard(this);
+        currentDeck.nextCard(this, currentDeck);
     });
     return fileLinkView;
 }
@@ -191,7 +191,7 @@ export class FlashcardModal extends Modal {
                         this.currentCard.isDue
                     );
                     burySiblingCards(false, this.currentCard, this.currentDeck);
-                    this.currentDeck.nextCard(this);
+                    this.currentDeck.nextCard(this, this.currentDeck);
                 } else if (
                     this.mode === FlashcardModalMode.Front &&
                     (e.code === "Space" || e.code === "Enter")
@@ -255,7 +255,7 @@ export class FlashcardModal extends Modal {
             this.currentDeck = deck;
             this.checkDeck = deck.parent;
             this.setupCardsView();
-            deck.nextCard(this);
+            deck.nextCard(this, deck);
             return;
         }
 
@@ -406,7 +406,7 @@ export class FlashcardModal extends Modal {
             burySiblingCards(true, currentCard, currentDeck);
         }
         await this.app.vault.modify(currentCard.note, fileText);
-        currentDeck.nextCard(this);
+        currentDeck.nextCard(this, currentDeck);
     }
 
     private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card) {
@@ -416,7 +416,7 @@ export class FlashcardModal extends Modal {
                 currentCard.isDue
             );
         }
-        currentDeck.nextCard(this);
+        currentDeck.nextCard(this, currentDeck);
     }
 
     private resetCardProgress(currentCard: Card, currentDeck: Deck) {
@@ -429,7 +429,7 @@ export class FlashcardModal extends Modal {
         }
         // due = window.moment(Date.now());
         new Notice(t("CARD_PROGRESS_RESET"));
-        currentDeck.nextCard(this);
+        currentDeck.nextCard(this, currentDeck);
     }
 
 // slightly modified version of the renderMarkdown function in

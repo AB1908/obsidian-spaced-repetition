@@ -1,8 +1,8 @@
-import {Card, ReviewResponse, schedule, textInterval} from "src/scheduling";
-import {COLLAPSE_ICON} from "src/constants";
-import {Platform} from "obsidian";
+import { Card, ReviewResponse, schedule, textInterval } from "src/scheduling";
+import { COLLAPSE_ICON } from "src/constants";
+import { Platform } from "obsidian";
 import h from "vhtml";
-import {FlashcardModal, FlashcardModalMode} from "src/flashcard-modal";
+import { FlashcardModal, FlashcardModalMode } from "src/flashcard-modal";
 
 export class Deck {
     public deckName: string;
@@ -138,7 +138,7 @@ export class Deck {
             modal.currentDeck = this;
             modal.checkDeck = this.parent;
             modal.setupCardsView();
-            this.nextCard(modal);
+            this.nextCard(modal, this);
         });
         const deckViewInnerText: HTMLElement = deckViewInner.createDiv("tag-pane-tag-text");
         deckViewInnerText.innerHTML += <span class="tag-pane-tag-self">{this.deckName}</span>;
@@ -186,23 +186,23 @@ export class Deck {
         }
     }
 
-    nextCard(modal: FlashcardModal): void {
-        if (this.newFlashcards.length + this.dueFlashcards.length === 0) {
-            if (this.dueFlashcardsCount + this.newFlashcardsCount > 0) {
-                for (const deck of this.subdecks) {
+    nextCard(modal: FlashcardModal, currentDeck: Deck): void {
+        if (currentDeck.newFlashcards.length + currentDeck.dueFlashcards.length === 0) {
+            if (currentDeck.dueFlashcardsCount + currentDeck.newFlashcardsCount > 0) {
+                for (const deck of currentDeck.subdecks) {
                     if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0) {
                         modal.currentDeck = deck;
-                        deck.nextCard(modal);
+                        deck.nextCard(modal, this);
                         return;
                     }
                 }
             }
 
-            if (this.parent == modal.checkDeck) {
+            if (currentDeck.parent == modal.checkDeck) {
                 modal.plugin.data.historyDeck = "";
                 modal.decksList();
             } else {
-                this.parent.nextCard(modal);
+                currentDeck.parent.nextCard(modal, this);
             }
             return;
         }
@@ -210,7 +210,7 @@ export class Deck {
         modal.responseDiv.style.display = "none";
         modal.resetLinkView.style.display = "none";
         modal.titleEl.setText(
-            `${this.deckName}: ${this.dueFlashcardsCount + this.newFlashcardsCount}`
+            `${currentDeck.deckName}: ${currentDeck.dueFlashcardsCount + currentDeck.newFlashcardsCount}`
         );
 
         modal.answerBtn.style.display = "initial";
@@ -220,28 +220,28 @@ export class Deck {
         let interval = 1.0,
             ease: number = modal.plugin.data.settings.baseEase,
             delayBeforeReview = 0;
-        if (this.dueFlashcards.length > 0) {
+        if (currentDeck.dueFlashcards.length > 0) {
             if (modal.plugin.data.settings.randomizeCardOrder) {
-                modal.currentCardIdx = Math.floor(Math.random() * this.dueFlashcards.length);
+                modal.currentCardIdx = Math.floor(Math.random() * currentDeck.dueFlashcards.length);
             } else {
                 modal.currentCardIdx = 0;
             }
-            modal.currentCard = this.dueFlashcards[modal.currentCardIdx];
+            modal.currentCard = currentDeck.dueFlashcards[modal.currentCardIdx];
             modal.renderMarkdownWrapper(modal.currentCard.front, modal.flashcardView);
 
             interval = modal.currentCard.interval;
             ease = modal.currentCard.ease;
             delayBeforeReview = modal.currentCard.delayBeforeReview;
-        } else if (this.newFlashcards.length > 0) {
+        } else if (currentDeck.newFlashcards.length > 0) {
             if (modal.plugin.data.settings.randomizeCardOrder) {
-                const pickedCardIdx = Math.floor(Math.random() * this.newFlashcards.length);
+                const pickedCardIdx = Math.floor(Math.random() * currentDeck.newFlashcards.length);
                 modal.currentCardIdx = pickedCardIdx;
 
                 // look for first unscheduled sibling
-                const pickedCard: Card = this.newFlashcards[pickedCardIdx];
+                const pickedCard: Card = currentDeck.newFlashcards[pickedCardIdx];
                 let idx = pickedCardIdx;
-                while (idx >= 0 && pickedCard.siblings.includes(this.newFlashcards[idx])) {
-                    if (!this.newFlashcards[idx].isDue) {
+                while (idx >= 0 && pickedCard.siblings.includes(currentDeck.newFlashcards[idx])) {
+                    if (!currentDeck.newFlashcards[idx].isDue) {
                         modal.currentCardIdx = idx;
                     }
                     idx--;
@@ -250,7 +250,7 @@ export class Deck {
                 modal.currentCardIdx = 0;
             }
 
-            modal.currentCard = this.newFlashcards[modal.currentCardIdx];
+            modal.currentCard = currentDeck.newFlashcards[modal.currentCardIdx];
             modal.renderMarkdownWrapper(modal.currentCard.front, modal.flashcardView);
 
             if (
