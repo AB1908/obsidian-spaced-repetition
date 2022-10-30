@@ -358,7 +358,10 @@ export class FlashcardModal extends Modal {
         for (const sibling of currentCard.siblings) {
             sibling.cardText = currentCard.cardText;
         }
+        await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText);
+    }
 
+    private async buryAndJumpToNextCard(currentDeck: Deck, index: number, currentCard: Card, fileText: string) {
         currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue);
         if (this.plugin.data.settings.burySiblingCards) {
             burySiblingCards(true, currentCard, currentDeck);
