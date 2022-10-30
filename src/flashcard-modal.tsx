@@ -128,13 +128,13 @@ export class FlashcardModal extends Modal {
                     this.showAnswer();
                 } else if (this.mode === FlashcardModalMode.Back) {
                     if (e.code === "Numpad1" || e.code === "Digit1") {
-                        this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck);
+                        this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard);
                     } else if (e.code === "Numpad2" || e.code === "Digit2" || e.code === "Space") {
-                        this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck);
+                        this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard);
                     } else if (e.code === "Numpad3" || e.code === "Digit3") {
-                        this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck);
+                        this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard);
                     } else if (e.code === "Numpad0" || e.code === "Digit0") {
-                        this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck);
+                        this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard);
                     }
                 }
             }
@@ -216,7 +216,7 @@ export class FlashcardModal extends Modal {
         this.resetLinkView = this.contentEl.createDiv("sr-link");
         this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
         this.resetLinkView.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck);
+            this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard);
         });
         this.resetLinkView.style.float = "right";
 
@@ -234,7 +234,7 @@ export class FlashcardModal extends Modal {
         this.hardBtn.setAttribute("id", "sr-hard-btn");
         this.hardBtn.setText(this.plugin.data.settings.flashcardHardText);
         this.hardBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck);
+            this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard);
         });
         this.responseDiv.appendChild(this.hardBtn);
 
@@ -242,7 +242,7 @@ export class FlashcardModal extends Modal {
         this.goodBtn.setAttribute("id", "sr-good-btn");
         this.goodBtn.setText(this.plugin.data.settings.flashcardGoodText);
         this.goodBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck);
+            this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard);
         });
         this.responseDiv.appendChild(this.goodBtn);
 
@@ -250,7 +250,7 @@ export class FlashcardModal extends Modal {
         this.easyBtn.setAttribute("id", "sr-easy-btn");
         this.easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
         this.easyBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck);
+            this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard);
         });
         this.responseDiv.appendChild(this.easyBtn);
         this.responseDiv.style.display = "none";
@@ -292,12 +292,12 @@ export class FlashcardModal extends Modal {
         this.renderMarkdownWrapper(this.currentCard.back, this.flashcardView);
     }
 
-    async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck): Promise<void> {
+    async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card): Promise<void> {
         if (ignoreStats) {
             if (response == ReviewResponse.Easy) {
                 currentDeck.deleteFlashcardAtIndex(
                     this.currentCardIdx,
-                    this.currentCard.isDue
+                    currentCard.isDue
                 );
             }
             currentDeck.nextCard(this);
@@ -306,16 +306,16 @@ export class FlashcardModal extends Modal {
 
         let interval: number, ease: number, due;
 
-        currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue);
+        currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, currentCard.isDue);
         if (response !== ReviewResponse.Reset) {
             let schedObj: Record<string, number>;
             // scheduled card
-            if (this.currentCard.isDue) {
+            if (currentCard.isDue) {
                 schedObj = schedule(
                     response,
-                    this.currentCard.interval,
-                    this.currentCard.ease,
-                    this.currentCard.delayBeforeReview,
+                    currentCard.interval,
+                    currentCard.ease,
+                    currentCard.delayBeforeReview,
                     this.plugin.data.settings,
                     this.plugin.dueDatesFlashcards
                 );
@@ -324,10 +324,10 @@ export class FlashcardModal extends Modal {
                 if (
                     Object.prototype.hasOwnProperty.call(
                         this.plugin.easeByPath,
-                        this.currentCard.note.path
+                        currentCard.note.path
                     )
                 ) {
-                    initial_ease = Math.round(this.plugin.easeByPath[this.currentCard.note.path]);
+                    initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
                 }
 
                 schedObj = schedule(
@@ -346,12 +346,12 @@ export class FlashcardModal extends Modal {
             ease = schedObj.ease;
             due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
         } else {
-            this.currentCard.interval = 1.0;
-            this.currentCard.ease = this.plugin.data.settings.baseEase;
-            if (this.currentCard.isDue) {
-                currentDeck.dueFlashcards.push(this.currentCard);
+            currentCard.interval = 1.0;
+            currentCard.ease = this.plugin.data.settings.baseEase;
+            if (currentCard.isDue) {
+                currentDeck.dueFlashcards.push(currentCard);
             } else {
-                currentDeck.newFlashcards.push(this.currentCard);
+                currentDeck.newFlashcards.push(currentCard);
             }
             // due = window.moment(Date.now());
             new Notice(t("CARD_PROGRESS_RESET"));
@@ -361,52 +361,52 @@ export class FlashcardModal extends Modal {
 
         const dueString: string = due.format("YYYY-MM-DD");
 
-        let fileText: string = await this.app.vault.read(this.currentCard.note);
-        const replacementRegex = new RegExp(escapeRegexString(this.currentCard.cardText), "gm");
+        let fileText: string = await this.app.vault.read(currentCard.note);
+        const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
 
         let sep: string = this.plugin.data.settings.cardCommentOnSameLine ? " " : "\n";
         // Override separator if last block is a codeblock
-        if (this.currentCard.cardText.endsWith("```") && sep !== "\n") {
+        if (currentCard.cardText.endsWith("```") && sep !== "\n") {
             sep = "\n";
         }
 
         // check if we're adding scheduling information to the flashcard
         // for the first time
-        if (this.currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
-            this.currentCard.cardText =
-                this.currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
+        if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
+            currentCard.cardText =
+                currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
         } else {
             let scheduling: RegExpMatchArray[] = [
-                ...this.currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+                ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
             ];
             if (scheduling.length === 0) {
-                scheduling = [...this.currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+                scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
             }
 
             const currCardSched: string[] = ["0", dueString, interval.toString(), ease.toString()];
-            if (this.currentCard.isDue) {
-                scheduling[this.currentCard.siblingIdx] = currCardSched;
+            if (currentCard.isDue) {
+                scheduling[currentCard.siblingIdx] = currCardSched;
             } else {
                 scheduling.push(currCardSched);
             }
 
-            this.currentCard.cardText = this.currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
-            this.currentCard.cardText += "<!--SR:";
+            currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
+            currentCard.cardText += "<!--SR:";
             for (let i = 0; i < scheduling.length; i++) {
-                this.currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+                currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
             }
-            this.currentCard.cardText += "-->";
+            currentCard.cardText += "-->";
         }
 
-        fileText = fileText.replace(replacementRegex, () => this.currentCard.cardText);
-        for (const sibling of this.currentCard.siblings) {
-            sibling.cardText = this.currentCard.cardText;
+        fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
+        for (const sibling of currentCard.siblings) {
+            sibling.cardText = currentCard.cardText;
         }
         if (this.plugin.data.settings.burySiblingCards) {
-            burySiblingCards(true, this.currentCard, currentDeck);
+            burySiblingCards(true, currentCard, currentDeck);
         }
 
-        await this.app.vault.modify(this.currentCard.note, fileText);
+        await this.app.vault.modify(currentCard.note, fileText);
         currentDeck.nextCard(this);
     }
 
