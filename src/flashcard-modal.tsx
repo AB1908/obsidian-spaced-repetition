@@ -336,7 +336,6 @@ export class FlashcardModal extends Modal {
 
         let interval: number, ease: number, due;
 
-        currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue);
         if (response !== ReviewResponse.Reset) {
             let schedObj: Record<string, number>;
             // scheduled card
@@ -376,16 +375,7 @@ export class FlashcardModal extends Modal {
             ease = schedObj.ease;
             due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
         } else {
-            currentCard.interval = 1.0;
-            currentCard.ease = this.plugin.data.settings.baseEase;
-            if (currentCard.isDue) {
-                currentDeck.dueFlashcards.push(currentCard);
-            } else {
-                currentDeck.newFlashcards.push(currentCard);
-            }
-            // due = window.moment(Date.now());
-            new Notice(t("CARD_PROGRESS_RESET"));
-            currentDeck.nextCard(this);
+            this.resetCardProgress(currentCard, currentDeck);
             return;
         }
 
@@ -405,15 +395,29 @@ export class FlashcardModal extends Modal {
         for (const sibling of currentCard.siblings) {
             sibling.cardText = currentCard.cardText;
         }
+
+        currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue);
         if (this.plugin.data.settings.burySiblingCards) {
             burySiblingCards(true, currentCard, currentDeck);
         }
-
         await this.app.vault.modify(currentCard.note, fileText);
         currentDeck.nextCard(this);
     }
 
-    // slightly modified version of the renderMarkdown function in
+    private resetCardProgress(currentCard: Card, currentDeck: Deck) {
+        currentCard.interval = 1.0;
+        currentCard.ease = this.plugin.data.settings.baseEase;
+        if (currentCard.isDue) {
+            currentDeck.dueFlashcards.push(currentCard);
+        } else {
+            currentDeck.newFlashcards.push(currentCard);
+        }
+        // due = window.moment(Date.now());
+        new Notice(t("CARD_PROGRESS_RESET"));
+        currentDeck.nextCard(this);
+    }
+
+// slightly modified version of the renderMarkdown function in
     // https://github.com/mgmeyers/obsidian-kanban/blob/main/src/KanbanView.tsx
     async renderMarkdownWrapper(
         markdownString: string,
