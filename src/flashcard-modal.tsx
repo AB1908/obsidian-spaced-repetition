@@ -53,6 +53,7 @@ function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, curren
     fileLinkView.addEventListener("click", async () => {
         const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
         if (this.plugin.app.workspace.getActiveFile() === null) {
+            // TODO: this.currentCard is part of state and gets out of sync if extracted
             await activeLeaf.openFile(this.currentCard.note);
         } else {
             const newLeaf = this.plugin.app.workspace.createLeafBySplit(
@@ -127,13 +128,13 @@ export class FlashcardModal extends Modal {
                     this.showAnswer();
                 } else if (this.mode === FlashcardModalMode.Back) {
                     if (e.code === "Numpad1" || e.code === "Digit1") {
-                        this.processReview(ReviewResponse.Hard);
+                        this.processReview(ReviewResponse.Hard, this.ignoreStats);
                     } else if (e.code === "Numpad2" || e.code === "Digit2" || e.code === "Space") {
-                        this.processReview(ReviewResponse.Good);
+                        this.processReview(ReviewResponse.Good, this.ignoreStats);
                     } else if (e.code === "Numpad3" || e.code === "Digit3") {
-                        this.processReview(ReviewResponse.Easy);
+                        this.processReview(ReviewResponse.Easy, this.ignoreStats);
                     } else if (e.code === "Numpad0" || e.code === "Digit0") {
-                        this.processReview(ReviewResponse.Reset);
+                        this.processReview(ReviewResponse.Reset, this.ignoreStats);
                     }
                 }
             }
@@ -215,7 +216,7 @@ export class FlashcardModal extends Modal {
         this.resetLinkView = this.contentEl.createDiv("sr-link");
         this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
         this.resetLinkView.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Reset);
+            this.processReview(ReviewResponse.Reset, this.ignoreStats);
         });
         this.resetLinkView.style.float = "right";
 
@@ -233,7 +234,7 @@ export class FlashcardModal extends Modal {
         this.hardBtn.setAttribute("id", "sr-hard-btn");
         this.hardBtn.setText(this.plugin.data.settings.flashcardHardText);
         this.hardBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Hard);
+            this.processReview(ReviewResponse.Hard, this.ignoreStats);
         });
         this.responseDiv.appendChild(this.hardBtn);
 
@@ -241,7 +242,7 @@ export class FlashcardModal extends Modal {
         this.goodBtn.setAttribute("id", "sr-good-btn");
         this.goodBtn.setText(this.plugin.data.settings.flashcardGoodText);
         this.goodBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Good);
+            this.processReview(ReviewResponse.Good, this.ignoreStats);
         });
         this.responseDiv.appendChild(this.goodBtn);
 
@@ -249,7 +250,7 @@ export class FlashcardModal extends Modal {
         this.easyBtn.setAttribute("id", "sr-easy-btn");
         this.easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
         this.easyBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Easy);
+            this.processReview(ReviewResponse.Easy, this.ignoreStats);
         });
         this.responseDiv.appendChild(this.easyBtn);
         this.responseDiv.style.display = "none";
@@ -291,8 +292,8 @@ export class FlashcardModal extends Modal {
         this.renderMarkdownWrapper(this.currentCard.back, this.flashcardView);
     }
 
-    async processReview(response: ReviewResponse): Promise<void> {
-        if (this.ignoreStats) {
+    async processReview(response: ReviewResponse, ignoreStats: boolean): Promise<void> {
+        if (ignoreStats) {
             if (response == ReviewResponse.Easy) {
                 this.currentDeck.deleteFlashcardAtIndex(
                     this.currentCardIdx,
