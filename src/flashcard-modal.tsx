@@ -245,29 +245,28 @@ export class FlashcardModal extends Modal {
     async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number): Promise<void> {
         if (ignoreStats) {
             this.processCrammedCards(response, currentDeck, index, currentCard);
-            return;
         }
         if (response === ReviewResponse.Reset) {
             this.resetCardProgress(currentCard, currentDeck);
-            return;
+        } else {
+            const __ret = calculateSchedInfo.call(this, currentCard, response);
+            const interval = __ret.interval;
+            const ease = __ret.ease;
+            const due = __ret.due;
+            const cardText = currentCard.cardText;
+            const sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
+            const newCardText = generateNewSchedulingText(sep, due.format("YYYY-MM-DD"), interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
+
+            for (const sibling of currentCard.siblings) {
+                sibling.cardText = newCardText;
+            }
+
+            let fileText: string = await this.app.vault.read(currentCard.note);
+            const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
+            fileText = fileText.replace(replacementRegex, () => newCardText);
+            await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText, this.plugin.data.settings.burySiblingCards);
         }
-
-        const __ret = calculateSchedInfo.call(this, currentCard, response);
-        const interval = __ret.interval;
-        const ease = __ret.ease;
-        const due = __ret.due;
-        const cardText = currentCard.cardText;
-        const sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
-        const newCardText = generateNewSchedulingText(sep, due.format("YYYY-MM-DD"), interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
-
-        for (const sibling of currentCard.siblings) {
-            sibling.cardText = newCardText;
-        }
-
-        let fileText: string = await this.app.vault.read(currentCard.note);
-        const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
-        fileText = fileText.replace(replacementRegex, () => newCardText);
-        await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText, this.plugin.data.settings.burySiblingCards);
+        currentDeck.nextCard(this, currentDeck);
     }
 
     private async buryAndJumpToNextCard(currentDeck: Deck, index: number, currentCard: Card, fileText: string, shouldBurySiblings: boolean) {
@@ -276,7 +275,6 @@ export class FlashcardModal extends Modal {
             burySiblingCards(true, currentCard, currentDeck);
         }
         await this.plugin.app.vault.modify(currentCard.note, fileText);
-        currentDeck.nextCard(this, currentDeck);
     }
 
     private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card) {
@@ -286,7 +284,6 @@ export class FlashcardModal extends Modal {
                 currentCard.isDue
             );
         }
-        currentDeck.nextCard(this, currentDeck);
     }
 
     private resetCardProgress(currentCard: Card, currentDeck: Deck) {
@@ -299,7 +296,6 @@ export class FlashcardModal extends Modal {
         }
         // due = window.moment(Date.now());
         new Notice(t("CARD_PROGRESS_RESET"));
-        currentDeck.nextCard(this, currentDeck);
     }
 
 // slightly modified version of the renderMarkdown function in
