@@ -1,148 +1,28 @@
-import {App, MarkdownRenderer, MarkdownView, Modal, Notice, Platform, TFile, WorkspaceLeaf,} from "obsidian";
+import {App, MarkdownRenderer, Modal, Notice, Platform, TFile,} from "obsidian";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import h from "vhtml";
 
 import type SRPlugin from "src/main";
-import {Card, CardType, ReviewResponse, schedule} from "src/scheduling";
-import {
-    AUDIO_FORMATS,
-    IMAGE_FORMATS,
-    LEGACY_SCHEDULING_EXTRACTOR,
-    MULTI_SCHEDULING_EXTRACTOR,
-    VIDEO_FORMATS,
-} from "src/constants";
-import {cyrb53, escapeRegexString} from "src/utils";
+import {Card, CardType, ReviewResponse} from "src/scheduling";
+import {AUDIO_FORMATS, IMAGE_FORMATS, VIDEO_FORMATS,} from "src/constants";
+import {escapeRegexString} from "src/utils";
 import {t} from "src/lang/helpers";
 import {Deck} from "src/deck";
+import {
+    burySiblingCards,
+    calculateSchedInfo,
+    createEditLaterButton,
+    extractFileMatches,
+    generateNewSchedulingText,
+    getCardTextSeparator,
+    renderDecks
+} from "src/modal-utils";
 
 export enum FlashcardModalMode {
     DecksList,
     Front,
     Back,
     Closed,
-}
-
-function extractFileMatches(src: string, currentNotePath: string) {
-    const linkComponentsRegex = /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
-    const matched = typeof src === "string" && src.match(linkComponentsRegex);
-    const file = matched.groups.file || currentNotePath;
-    return { matched, file };
-}
-
-function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: FlashcardModal) {
-    for (const deck of decks) {
-        deck.render(containerEl, modal);
-    }
-}
-
-function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, currentCard: Card, index: number) {
-    const fileLinkView = contentEl.createDiv("sr-link");
-    fileLinkView.setText(t("EDIT_LATER"));
-    if (this.plugin.data.settings.showFileNameInFileLink) {
-        fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
-    }
-    fileLinkView.addEventListener("click", async () => {
-        const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
-        if (this.plugin.app.workspace.getActiveFile() === null) {
-            // TODO: this.currentCard is part of state and gets out of sync if extracted
-            await activeLeaf.openFile(this.currentCard.note);
-        } else {
-            const newLeaf = this.plugin.app.workspace.createLeafBySplit(
-                activeLeaf,
-                "vertical",
-                false
-            );
-            await newLeaf.openFile(this.currentCard.note, {active: true});
-        }
-        const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-        activeView.editor.setCursor({
-            line: this.currentCard.lineNo,
-            ch: 0,
-        });
-        currentDeck.deleteFlashcardAtIndex(index, this.currentCard.isDue);
-        burySiblingCards(false, this.currentCard, currentDeck);
-        currentDeck.nextCard(this, currentDeck);
-    });
-    return fileLinkView;
-}
-
-function generateNewSchedulingText(sep: string, dueString: string, interval: number, ease: number, cardText: string, due: boolean, siblingIdx: number) {
-    // check if we're adding scheduling information to the flashcard
-    // for the first time
-    if (cardText.lastIndexOf("<!--SR:") === -1) {
-        cardText =
-            cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
-    } else {
-        let scheduling: RegExpMatchArray[] = [
-            ...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
-        ];
-        if (scheduling.length === 0) {
-            scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
-        }
-
-        const currCardSched: string[] = ["0", dueString, interval.toString(), ease.toString()];
-        if (due) {
-            scheduling[siblingIdx] = currCardSched;
-        } else {
-            scheduling.push(currCardSched);
-        }
-
-        cardText = cardText.replace(/<!--SR:.+-->/gm, "");
-        cardText += "<!--SR:";
-        for (let i = 0; i < scheduling.length; i++) {
-            cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
-        }
-        cardText += "-->";
-    }
-    return cardText;
-}
-
-function calculateSchedInfo(currentCard: Card, response: ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard) {
-    let schedObj: Record<string, number>;
-    // scheduled card
-    if (currentCard.isDue) {
-        schedObj = schedule(
-            response,
-            currentCard.interval,
-            currentCard.ease,
-            currentCard.delayBeforeReview,
-            this.plugin.data.settings,
-            this.plugin.dueDatesFlashcards
-        );
-    } else {
-        let initial_ease: number = this.plugin.data.settings.baseEase;
-        if (
-            Object.prototype.hasOwnProperty.call(
-                this.plugin.easeByPath,
-                currentCard.note.path
-            )
-        ) {
-            initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
-        }
-
-        schedObj = schedule(
-            response,
-            1.0,
-            initial_ease,
-            0,
-            this.plugin.data.settings,
-            this.plugin.dueDatesFlashcards
-        );
-    }
-
-    const interval = schedObj.interval;
-    const ease = schedObj.ease;
-    const due = window.moment(Date.now() + interval * 24 * 3600 * 1000);
-    return {interval, ease, due};
-}
-
-function getCardTextSeparator(cardText: string, cardCommentOnSameLine: boolean) {
-    let sep: string = cardCommentOnSameLine ? " " : "\n";
-    // Override separator if last block is a codeblock
-    if (cardText.endsWith("```") && sep !== "\n") {
-        sep = "\n";
-    }
-    return sep;
 }
 
 export class FlashcardModal extends Modal {
@@ -377,7 +257,6 @@ export class FlashcardModal extends Modal {
         const ease = __ret.ease;
         const due = __ret.due;
         const cardText = currentCard.cardText;
-        const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
         const sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
         const newCardText = generateNewSchedulingText(sep, due.format("YYYY-MM-DD"), interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
 
@@ -386,13 +265,14 @@ export class FlashcardModal extends Modal {
         }
 
         let fileText: string = await this.app.vault.read(currentCard.note);
+        const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
         fileText = fileText.replace(replacementRegex, () => newCardText);
-        await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText);
+        await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText, this.plugin.data.settings.burySiblingCards);
     }
 
-    private async buryAndJumpToNextCard(currentDeck: Deck, index: number, currentCard: Card, fileText: string) {
+    private async buryAndJumpToNextCard(currentDeck: Deck, index: number, currentCard: Card, fileText: string, shouldBurySiblings: boolean) {
         currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue);
-        if (this.plugin.data.settings.burySiblingCards) {
+        if (shouldBurySiblings) {
             burySiblingCards(true, currentCard, currentDeck);
         }
         await this.plugin.app.vault.modify(currentCard.note, fileText);
@@ -558,24 +438,3 @@ export class FlashcardModal extends Modal {
     }
 }
 
-async function burySiblingCards(
-    tillNextDay: boolean,
-    currentCard1: Card,
-    currentDeck1: Deck
-): Promise<void> {
-    if (tillNextDay) {
-        this.plugin.data.buryList.push(cyrb53(currentCard1.cardText));
-        await this.plugin.savePluginData();
-    }
-
-    for (const sibling of currentCard1.siblings) {
-        const dueIdx = currentDeck1.dueFlashcards.indexOf(sibling);
-        const newIdx = currentDeck1.newFlashcards.indexOf(sibling);
-
-        if (dueIdx !== -1) {
-            currentDeck1.deleteFlashcardAtIndex(dueIdx, currentDeck1.dueFlashcards[dueIdx].isDue);
-        } else if (newIdx !== -1) {
-            currentDeck1.deleteFlashcardAtIndex(newIdx, currentDeck1.newFlashcards[newIdx].isDue);
-        }
-    }
-}
