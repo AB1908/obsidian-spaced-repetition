@@ -1,18 +1,9 @@
-import {
-    App,
-    MarkdownRenderer,
-    MarkdownView,
-    Modal,
-    Notice,
-    Platform,
-    TFile,
-    WorkspaceLeaf,
-} from "obsidian";
+import {App, MarkdownRenderer, MarkdownView, Modal, Notice, Platform, TFile, WorkspaceLeaf,} from "obsidian";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import h from "vhtml";
 
 import type SRPlugin from "src/main";
-import { Card, CardType, ReviewResponse, schedule } from "src/scheduling";
+import {Card, CardType, ReviewResponse, schedule} from "src/scheduling";
 import {
     AUDIO_FORMATS,
     IMAGE_FORMATS,
@@ -20,10 +11,9 @@ import {
     MULTI_SCHEDULING_EXTRACTOR,
     VIDEO_FORMATS,
 } from "src/constants";
-import { cyrb53, escapeRegexString } from "src/utils";
-import { t } from "src/lang/helpers";
-import { Deck } from "src/deck";
-import {Moment} from "moment";
+import {cyrb53, escapeRegexString} from "src/utils";
+import {t} from "src/lang/helpers";
+import {Deck} from "src/deck";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -386,19 +376,16 @@ export class FlashcardModal extends Modal {
         const interval = __ret.interval;
         const ease = __ret.ease;
         const due = __ret.due;
-
-        const dueString: string = due.format("YYYY-MM-DD");
-
-        let fileText: string = await this.app.vault.read(currentCard.note);
-        let cardText = currentCard.cardText;
+        const cardText = currentCard.cardText;
         const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
-        let sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
-        const newCardText = generateNewSchedulingText(sep, dueString, interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
+        const sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
+        const newCardText = generateNewSchedulingText(sep, due.format("YYYY-MM-DD"), interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
 
         for (const sibling of currentCard.siblings) {
             sibling.cardText = newCardText;
         }
 
+        let fileText: string = await this.app.vault.read(currentCard.note);
         fileText = fileText.replace(replacementRegex, () => newCardText);
         await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText);
     }
@@ -409,7 +396,6 @@ export class FlashcardModal extends Modal {
             burySiblingCards(true, currentCard, currentDeck);
         }
         await this.plugin.app.vault.modify(currentCard.note, fileText);
-        console.log("written")
         currentDeck.nextCard(this, currentDeck);
     }
 
