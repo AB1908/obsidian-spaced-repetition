@@ -368,18 +368,15 @@ export class FlashcardModal extends Modal {
             this.processCrammedCards(response, currentDeck, index, currentCard);
             return;
         }
-
-        let interval: number, ease: number, due;
-
-        if (response !== ReviewResponse.Reset) {
-            const __ret = calculateSchedInfo.call(this, currentCard, response);
-            interval = __ret.interval;
-            ease = __ret.ease;
-            due = __ret.due;
-        } else {
+        if (response === ReviewResponse.Reset) {
             this.resetCardProgress(currentCard, currentDeck);
             return;
         }
+
+        const __ret = calculateSchedInfo.call(this, currentCard, response);
+        const interval = __ret.interval;
+        const ease = __ret.ease;
+        const due = __ret.due;
 
         const dueString: string = due.format("YYYY-MM-DD");
 
