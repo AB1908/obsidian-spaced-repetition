@@ -146,6 +146,15 @@ function calculateSchedInfo(currentCard: Card, response: ReviewResponse.Easy | R
     return {interval, ease, due};
 }
 
+function getCardTextSeparator(cardText: string, cardCommentOnSameLine: boolean) {
+    let sep: string = cardCommentOnSameLine ? " " : "\n";
+    // Override separator if last block is a codeblock
+    if (cardText.endsWith("```") && sep !== "\n") {
+        sep = "\n";
+    }
+    return sep;
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -381,19 +390,16 @@ export class FlashcardModal extends Modal {
         const dueString: string = due.format("YYYY-MM-DD");
 
         let fileText: string = await this.app.vault.read(currentCard.note);
-        const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
+        let cardText = currentCard.cardText;
+        const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
+        let sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
+        const newCardText = generateNewSchedulingText(sep, dueString, interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
 
-        let sep: string = this.plugin.data.settings.cardCommentOnSameLine ? " " : "\n";
-        // Override separator if last block is a codeblock
-        if (currentCard.cardText.endsWith("```") && sep !== "\n") {
-            sep = "\n";
-        }
-        currentCard.cardText = generateNewSchedulingText(sep, dueString, interval, ease, currentCard.cardText, currentCard.isDue, currentCard.siblingIdx);
-
-        fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
         for (const sibling of currentCard.siblings) {
-            sibling.cardText = currentCard.cardText;
+            sibling.cardText = newCardText;
         }
+
+        fileText = fileText.replace(replacementRegex, () => newCardText);
         await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText);
     }
 
@@ -402,7 +408,8 @@ export class FlashcardModal extends Modal {
         if (this.plugin.data.settings.burySiblingCards) {
             burySiblingCards(true, currentCard, currentDeck);
         }
-        await this.app.vault.modify(currentCard.note, fileText);
+        await this.plugin.app.vault.modify(currentCard.note, fileText);
+        console.log("written")
         currentDeck.nextCard(this, currentDeck);
     }
 
