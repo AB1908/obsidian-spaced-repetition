@@ -192,7 +192,7 @@ export class Deck {
                 for (const deck of currentDeck.subdecks) {
                     if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0) {
                         modal.currentDeck = deck;
-                        deck.nextCard(modal, this);
+                        deck.nextCard(modal, deck);
                         return;
                     }
                 }
@@ -202,7 +202,7 @@ export class Deck {
                 modal.plugin.data.historyDeck = "";
                 modal.decksList();
             } else {
-                currentDeck.parent.nextCard(modal, this);
+                currentDeck.parent.nextCard(modal, currentDeck.parent);
             }
             return;
         }
