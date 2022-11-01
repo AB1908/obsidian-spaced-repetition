@@ -246,6 +246,11 @@ export class FlashcardModal extends Modal {
         if (ignoreStats) {
             this.processCrammedCards(response, currentDeck, index, currentCard);
         }
+        await this.processCardResponse(response, currentCard, currentDeck, index);
+        currentDeck.nextCard(this, currentDeck);
+    }
+
+    private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number) {
         if (response === ReviewResponse.Reset) {
             this.resetCardProgress(currentCard, currentDeck);
         } else {
@@ -266,7 +271,6 @@ export class FlashcardModal extends Modal {
             fileText = fileText.replace(replacementRegex, () => newCardText);
             await this.buryAndJumpToNextCard(currentDeck, index, currentCard, fileText, this.plugin.data.settings.burySiblingCards);
         }
-        currentDeck.nextCard(this, currentDeck);
     }
 
     private async buryAndJumpToNextCard(currentDeck: Deck, index: number, currentCard: Card, fileText: string, shouldBurySiblings: boolean) {
