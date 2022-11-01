@@ -249,7 +249,7 @@ export class FlashcardModal extends Modal {
         if (response === ReviewResponse.Reset) {
             this.resetCardProgress(currentCard, currentDeck);
         } else {
-            const __ret = calculateSchedInfo.call(this, currentCard, response);
+            const __ret = calculateSchedInfo(currentCard, response, this.plugin.data.settings, this.plugin.dueDatesFlashcards, this.plugin.easeByPath);
             const interval = __ret.interval;
             const ease = __ret.ease;
             const due = __ret.due;

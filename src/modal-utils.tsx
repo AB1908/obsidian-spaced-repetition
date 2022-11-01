@@ -5,6 +5,7 @@ import {t} from "src/lang/helpers";
 import {MarkdownView, WorkspaceLeaf} from "obsidian";
 import {cyrb53} from "src/utils";
 import {FlashcardModal} from "src/flashcard-modal";
+import {SRSettings} from "src/settings";
 
 export function extractFileMatches(src: string, currentNotePath: string) {
     const linkComponentsRegex = /^(?<file>[^#^]+)?(?:#(?!\^)(?<heading>.+)|#\^(?<blockId>.+)|#)?$/;
@@ -81,7 +82,7 @@ export function generateNewSchedulingText(sep: string, dueString: string, interv
     return cardText;
 }
 
-export function calculateSchedInfo(currentCard: Card, response: ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard) {
+export function calculateSchedInfo(currentCard: Card, response: ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, pluginSettings: SRSettings, dueDatesFlashcards: Record<number, number>, easyByPath: Record<string, number>) {
     let schedObj: Record<string, number>;
     // scheduled card
     if (currentCard.isDue) {
@@ -90,18 +91,18 @@ export function calculateSchedInfo(currentCard: Card, response: ReviewResponse.E
             currentCard.interval,
             currentCard.ease,
             currentCard.delayBeforeReview,
-            this.plugin.data.settings,
-            this.plugin.dueDatesFlashcards
+            pluginSettings,
+            dueDatesFlashcards
         );
     } else {
-        let initial_ease: number = this.plugin.data.settings.baseEase;
+        let initial_ease: number = pluginSettings.baseEase;
         if (
             Object.prototype.hasOwnProperty.call(
-                this.plugin.easeByPath,
+                easyByPath,
                 currentCard.note.path
             )
         ) {
-            initial_ease = Math.round(this.plugin.easeByPath[currentCard.note.path]);
+            initial_ease = Math.round(easyByPath[currentCard.note.path]);
         }
 
         schedObj = schedule(
@@ -109,8 +110,8 @@ export function calculateSchedInfo(currentCard: Card, response: ReviewResponse.E
             1.0,
             initial_ease,
             0,
-            this.plugin.data.settings,
-            this.plugin.dueDatesFlashcards
+            pluginSettings,
+            dueDatesFlashcards
         );
     }
 
