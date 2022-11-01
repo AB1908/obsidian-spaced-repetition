@@ -25,6 +25,16 @@ export enum FlashcardModalMode {
     Closed,
 }
 
+function createResetLinkButton(currentDeck: Deck, ignoreStats: boolean) {
+    let resetLinkDiv = this.contentEl.createDiv("sr-link");
+    resetLinkDiv.setText(t("RESET_CARD_PROGRESS"));
+    resetLinkDiv.addEventListener("click", () => {
+        this.processReview(ReviewResponse.Reset, ignoreStats, currentDeck, this.currentCard, this.currentCardIdx);
+    });
+    resetLinkDiv.style.float = "right";
+    return resetLinkDiv;
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -161,14 +171,11 @@ export class FlashcardModal extends Modal {
                 this.decksList();
             }
         });
-        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, this.currentDeck, this.currentCard, this.currentCardIdx);
 
-        this.resetLinkView = this.contentEl.createDiv("sr-link");
-        this.resetLinkView.setText(t("RESET_CARD_PROGRESS"));
-        this.resetLinkView.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
-        });
-        this.resetLinkView.style.float = "right";
+        let currentDeck1 = this.currentDeck;
+        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, currentDeck1, this.currentCard, this.currentCardIdx);
+        let ignoreStats1 = this.ignoreStats;
+        this.resetLinkView = createResetLinkButton.call(this, currentDeck1, ignoreStats1);
 
         if (this.plugin.data.settings.showContextInCards) {
             this.contextView = this.contentEl.createDiv();
@@ -184,7 +191,7 @@ export class FlashcardModal extends Modal {
         this.hardBtn.setAttribute("id", "sr-hard-btn");
         this.hardBtn.setText(this.plugin.data.settings.flashcardHardText);
         this.hardBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+            this.processReview(ReviewResponse.Hard, ignoreStats1, currentDeck1, this.currentCard, this.currentCardIdx);
         });
         this.responseDiv.appendChild(this.hardBtn);
 
@@ -192,7 +199,7 @@ export class FlashcardModal extends Modal {
         this.goodBtn.setAttribute("id", "sr-good-btn");
         this.goodBtn.setText(this.plugin.data.settings.flashcardGoodText);
         this.goodBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+            this.processReview(ReviewResponse.Good, ignoreStats1, currentDeck1, this.currentCard, this.currentCardIdx);
         });
         this.responseDiv.appendChild(this.goodBtn);
 
@@ -200,7 +207,7 @@ export class FlashcardModal extends Modal {
         this.easyBtn.setAttribute("id", "sr-easy-btn");
         this.easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
         this.easyBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+            this.processReview(ReviewResponse.Easy, ignoreStats1, currentDeck1, this.currentCard, this.currentCardIdx);
         });
         this.responseDiv.appendChild(this.easyBtn);
         this.responseDiv.style.display = "none";
@@ -212,7 +219,7 @@ export class FlashcardModal extends Modal {
             this.showAnswer();
         });
 
-        if (this.ignoreStats) {
+        if (ignoreStats1) {
             this.goodBtn.style.display = "none";
 
             this.responseDiv.addClass("sr-ignorestats-response");
