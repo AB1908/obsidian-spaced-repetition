@@ -32,8 +32,8 @@ export enum FlashcardModalMode {
 function createResetLinkButton(currentDeck: Deck, ignoreStats: boolean) {
     let resetLinkDiv = this.contentEl.createDiv("sr-link");
     resetLinkDiv.setText(t("RESET_CARD_PROGRESS"));
-    resetLinkDiv.addEventListener("click", () => {
-        this.processReview(ReviewResponse.Reset, ignoreStats, currentDeck, this.currentCard, this.currentCardIdx);
+    resetLinkDiv.addEventListener("click", async () => {
+        await this.processReview(ReviewResponse.Reset, ignoreStats, currentDeck, this.currentCard, this.currentCardIdx, this);
     });
     resetLinkDiv.style.float = "right";
     return resetLinkDiv;
@@ -44,7 +44,7 @@ function createBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, 
     buttonElement.setAttribute("id", buttonId);
     buttonElement.setText(buttonText);
     buttonElement.addEventListener("click", async () => {
-        await state.processReview(reviewResponse, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx);
+        await state.processReview(reviewResponse, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx, state);
     });
     if (ignoreStats) {
         if (reviewResponse == ReviewResponse.Good)
@@ -53,6 +53,13 @@ function createBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, 
             buttonElement.addClass("sr-ignorestats-btn");
     }
     return buttonElement;
+}
+
+function buttonGenerator(ignoreStats: boolean, currentDeck1: Deck, flashcardHardText: string, flashcardGoodText: string, flashcardEasyText: string, state: FlashcardModal) {
+    const hardButton = createBtn(ignoreStats, currentDeck1, flashcardHardText, state, "sr-hard-btn", ReviewResponse.Hard);
+    const goodButton = createBtn(ignoreStats, currentDeck1, flashcardGoodText, state, "sr-good-btn", ReviewResponse.Good);
+    const easyButton = createBtn(ignoreStats, currentDeck1, flashcardEasyText, state, "sr-easy-btn", ReviewResponse.Easy);
+    return {hardBtn: hardButton, goodBtn: goodButton, easyBtn: easyButton};
 }
 
 export class FlashcardModal extends Modal {
@@ -105,13 +112,13 @@ export class FlashcardModal extends Modal {
                     this.showAnswer();
                 } else if (this.mode === FlashcardModalMode.Back) {
                     if (e.code === "Numpad1" || e.code === "Digit1") {
-                        await this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx, this);
                     } else if (e.code === "Numpad2" || e.code === "Digit2" || e.code === "Space") {
-                        await this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx, this);
                     } else if (e.code === "Numpad3" || e.code === "Digit3") {
-                        await this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx, this);
                     } else if (e.code === "Numpad0" || e.code === "Digit0") {
-                        await this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx, this);
                     }
                 }
             }
@@ -178,7 +185,7 @@ export class FlashcardModal extends Modal {
     }
 
     setupCardsView(): void {
-        this.contentEl.innerHTML = "";
+        this.contentEl.empty();
         const historyLinkView = this.contentEl.createEl("button");
 
         historyLinkView.setText("〈");
@@ -205,13 +212,18 @@ export class FlashcardModal extends Modal {
 
         this.responseDiv = this.contentEl.createDiv("sr-response");
 
-        this.hardBtn = createBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this, "sr-hard-btn", ReviewResponse.Hard);
+        const {
+            hardBtn,
+            goodBtn,
+            easyBtn
+        } = buttonGenerator(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this.plugin.data.settings.flashcardGoodText, this.plugin.data.settings.flashcardEasyText, this);
+
+        this.hardBtn = hardBtn;
+        this.goodBtn = goodBtn;
+        this.easyBtn = easyBtn;
+
         this.responseDiv.appendChild(this.hardBtn);
-
-        this.goodBtn = createBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardGoodText, this, "sr-good-btn", ReviewResponse.Good);
         this.responseDiv.appendChild(this.goodBtn);
-
-        this.easyBtn = createBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardEasyText, this, "sr-easy-btn", ReviewResponse.Easy);
         this.responseDiv.appendChild(this.easyBtn);
 
         this.responseDiv.style.display = "none";
@@ -250,9 +262,9 @@ export class FlashcardModal extends Modal {
         this.renderMarkdownWrapper(this.currentCard.back, this.flashcardView);
     }
 
-    async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number): Promise<void> {
+    async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number, state: FlashcardModal): Promise<void> {
         if (ignoreStats) {
-            currentDeck = processCrammedCards(response, currentDeck, index, currentCard);
+            currentDeck = processCrammedCards(response, state.currentDeck, index, currentCard);
         } else {
             currentDeck = await this.processCardResponse(response, currentCard, currentDeck, index, this.plugin.dueDatesFlashcards, this.plugin.easeByPath, this.plugin.data.settings.baseEase, this.plugin.data.settings.cardCommentOnSameLine, this.plugin.data.settings.burySiblingCards, this.plugin.data.settings);
         }
@@ -295,7 +307,7 @@ export class FlashcardModal extends Modal {
     ): Promise<void> {
         if (recursiveDepth > 4) return;
 
-        MarkdownRenderer.renderMarkdown(
+        await MarkdownRenderer.renderMarkdown(
             markdownString,
             containerEl,
             this.currentCard.note.path,
@@ -418,6 +430,6 @@ export class FlashcardModal extends Modal {
             blockText = text;
         }
 
-        this.renderMarkdownWrapper(blockText, el, recursiveDepth + 1);
+        await this.renderMarkdownWrapper(blockText, el, recursiveDepth + 1);
     }
 }
