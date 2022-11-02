@@ -1,6 +1,6 @@
 import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/constants";
 import {Card, ReviewResponse, schedule} from "src/scheduling";
-import {Deck} from "src/deck";
+import {Deck, deleteFlashcardAtIndex} from "src/deck";
 import {t} from "src/lang/helpers";
 import {MarkdownView, WorkspaceLeaf} from "obsidian";
 import {cyrb53} from "src/utils";
@@ -44,7 +44,7 @@ export function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck,
             line: this.currentCard.lineNo,
             ch: 0,
         });
-        currentDeck.deleteFlashcardAtIndex(index, this.currentCard.isDue, currentDeck);
+        currentDeck = deleteFlashcardAtIndex(index, this.currentCard.isDue, currentDeck);
         burySiblingCards(false, this.currentCard, currentDeck);
         currentDeck.nextCard(this, currentDeck);
     });
@@ -145,9 +145,9 @@ export async function burySiblingCards(
         const newIdx = currentDeck1.newFlashcards.indexOf(sibling);
 
         if (dueIdx !== -1) {
-            currentDeck1.deleteFlashcardAtIndex(dueIdx, currentDeck1.dueFlashcards[dueIdx].isDue, currentDeck1);
+            currentDeck1 = deleteFlashcardAtIndex(dueIdx, currentDeck1.dueFlashcards[dueIdx].isDue, currentDeck1);
         } else if (newIdx !== -1) {
-            currentDeck1.deleteFlashcardAtIndex(newIdx, currentDeck1.newFlashcards[newIdx].isDue, currentDeck1);
+            currentDeck1 = deleteFlashcardAtIndex(newIdx, currentDeck1.newFlashcards[newIdx].isDue, currentDeck1);
         }
     }
 }

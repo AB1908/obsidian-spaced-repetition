@@ -7,7 +7,7 @@ import {Card, CardType, ReviewResponse} from "src/scheduling";
 import {AUDIO_FORMATS, IMAGE_FORMATS, VIDEO_FORMATS,} from "src/constants";
 import {escapeRegexString} from "src/utils";
 import {t} from "src/lang/helpers";
-import {Deck} from "src/deck";
+import {Deck, deleteFlashcardAtIndex} from "src/deck";
 import {
     burySiblingCards,
     calculateSchedInfo,
@@ -75,7 +75,7 @@ export class FlashcardModal extends Modal {
         document.body.onkeydown = (e) => {
             if (this.mode !== FlashcardModalMode.DecksList) {
                 if (this.mode !== FlashcardModalMode.Closed && e.code === "KeyS") {
-                    this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue, this.currentDeck);
+                    this.currentDeck = deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue, this.currentDeck);
                     burySiblingCards(false, this.currentCard, this.currentDeck);
                     this.currentDeck.nextCard(this, this.currentDeck);
                 } else if (
@@ -290,7 +290,7 @@ export class FlashcardModal extends Modal {
     }
 
     private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean) {
-        currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+        deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
         if (shouldBurySiblings) {
             await burySiblingCards(true, currentCard, currentDeck);
         }
@@ -447,7 +447,7 @@ export class FlashcardModal extends Modal {
 
 function processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
     if (response == ReviewResponse.Easy) {
-        currentDeck = currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+        currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
     }
     return currentDeck;
 }

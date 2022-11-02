@@ -4,6 +4,27 @@ import { Platform } from "obsidian";
 import h from "vhtml";
 import { FlashcardModal, FlashcardModalMode } from "src/flashcard-modal";
 
+export function deleteFlashcardAtIndex(index: number, cardIsDue: boolean, currentDeck: Deck) {
+    if (cardIsDue) {
+        currentDeck.dueFlashcards.splice(index, 1);
+        currentDeck.dueFlashcardsCount--;
+    } else {
+        currentDeck.newFlashcards.splice(index, 1);
+        currentDeck.newFlashcardsCount--;
+    }
+
+    let deck: Deck = currentDeck.parent;
+    while (deck !== null) {
+        if (cardIsDue) {
+            deck.dueFlashcardsCount--;
+        } else {
+            deck.newFlashcardsCount--;
+        }
+        deck = deck.parent;
+    }
+    return currentDeck;
+}
+
 export class Deck {
     public deckName: string;
     public newFlashcards: Card[];
@@ -81,27 +102,6 @@ export class Deck {
                 return;
             }
         }
-    }
-
-    deleteFlashcardAtIndex(index: number, cardIsDue: boolean, currentDeck: Deck): Deck {
-        if (cardIsDue) {
-            currentDeck.dueFlashcards.splice(index, 1);
-            currentDeck.dueFlashcardsCount--;
-        } else {
-            currentDeck.newFlashcards.splice(index, 1);
-            currentDeck.newFlashcardsCount--;
-        }
-
-        let deck: Deck = currentDeck.parent;
-        while (deck !== null) {
-            if (cardIsDue) {
-                deck.dueFlashcardsCount--;
-            } else {
-                deck.newFlashcardsCount--;
-            }
-            deck = deck.parent;
-        }
-        return currentDeck;
     }
 
     sortSubdecksList(): void {
