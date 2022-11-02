@@ -72,7 +72,7 @@ export class FlashcardModal extends Modal {
         this.contentEl.style.height = "92%";
         this.contentEl.addClass("sr-modal-content");
 
-        document.body.onkeydown = (e) => {
+        document.body.onkeydown = async (e) => {
             if (this.mode !== FlashcardModalMode.DecksList) {
                 if (this.mode !== FlashcardModalMode.Closed && e.code === "KeyS") {
                     this.currentDeck = deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue, this.currentDeck);
@@ -267,7 +267,7 @@ export class FlashcardModal extends Modal {
 
     private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number) {
         if (response === ReviewResponse.Reset) {
-            this.resetCardProgress(currentCard, currentDeck);
+            currentDeck = this.resetCardProgress(currentCard, currentDeck, this.plugin.data.settings.baseEase);
         } else {
             const __ret = calculateSchedInfo(currentCard, response, this.plugin.data.settings, this.plugin.dueDatesFlashcards, this.plugin.easeByPath);
             const interval = __ret.interval;
@@ -297,10 +297,9 @@ export class FlashcardModal extends Modal {
         return currentDeck;
     }
 
-
-    private resetCardProgress(currentCard: Card, currentDeck: Deck) {
+    private resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
         currentCard.interval = 1.0;
-        currentCard.ease = this.plugin.data.settings.baseEase;
+        currentCard.ease = ease;
         if (currentCard.isDue) {
             currentDeck.dueFlashcards.push(currentCard);
         } else {
@@ -308,6 +307,7 @@ export class FlashcardModal extends Modal {
         }
         // due = window.moment(Date.now());
         new Notice(t("CARD_PROGRESS_RESET"));
+        return currentDeck;
     }
 
 // slightly modified version of the renderMarkdown function in
