@@ -39,17 +39,20 @@ function createResetLinkButton(currentDeck: Deck, ignoreStats: boolean) {
     return resetLinkDiv;
 }
 
-function createHardBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, state: FlashcardModal) {
-    const hardBtn = document.createElement("button");
-    hardBtn.setAttribute("id", "sr-hard-btn");
-    hardBtn.setText(buttonText);
-    hardBtn.addEventListener("click", async () => {
-        await state.processReview(ReviewResponse.Hard, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx);
+function createBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, state: FlashcardModal, buttonId: string, reviewResponse: ReviewResponse) {
+    const buttonElement = document.createElement("button");
+    buttonElement.setAttribute("id", buttonId);
+    buttonElement.setText(buttonText);
+    buttonElement.addEventListener("click", async () => {
+        await state.processReview(reviewResponse, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx);
     });
     if (ignoreStats) {
-        hardBtn.addClass("sr-ignorestats-btn");
+        if (reviewResponse == ReviewResponse.Good)
+            buttonElement.style.display = "none";
+        else
+            buttonElement.addClass("sr-ignorestats-btn");
     }
-    return hardBtn;
+    return buttonElement;
 }
 
 export class FlashcardModal extends Modal {
@@ -202,32 +205,14 @@ export class FlashcardModal extends Modal {
 
         this.responseDiv = this.contentEl.createDiv("sr-response");
 
-        this.hardBtn = createHardBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this);
+        this.hardBtn = createBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this, "sr-hard-btn", ReviewResponse.Hard);
         this.responseDiv.appendChild(this.hardBtn);
 
-        const goodBtn = document.createElement("button");
-        goodBtn.setAttribute("id", "sr-good-btn");
-        goodBtn.setText(this.plugin.data.settings.flashcardGoodText);
-        goodBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Good, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
-        });
-        if (ignoreStats) {
-            goodBtn.style.display = "none";
-        }
-        this.goodBtn = goodBtn;
-        this.responseDiv.appendChild(goodBtn);
+        this.goodBtn = createBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardGoodText, this, "sr-good-btn", ReviewResponse.Good);
+        this.responseDiv.appendChild(this.goodBtn);
 
-        let easyBtn = document.createElement("button");
-        easyBtn.setAttribute("id", "sr-easy-btn");
-        easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
-        easyBtn.addEventListener("click", async () => {
-            await this.processReview(ReviewResponse.Easy, ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
-        });
-        this.responseDiv.appendChild(easyBtn);
-        if (ignoreStats) {
-            easyBtn.addClass("sr-ignorestats-btn");
-        }
-        this.easyBtn = easyBtn;
+        this.easyBtn = createBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardEasyText, this, "sr-easy-btn", ReviewResponse.Easy);
+        this.responseDiv.appendChild(this.easyBtn);
 
         this.responseDiv.style.display = "none";
 
