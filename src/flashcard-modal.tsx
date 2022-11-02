@@ -75,10 +75,7 @@ export class FlashcardModal extends Modal {
         document.body.onkeydown = (e) => {
             if (this.mode !== FlashcardModalMode.DecksList) {
                 if (this.mode !== FlashcardModalMode.Closed && e.code === "KeyS") {
-                    this.currentDeck.deleteFlashcardAtIndex(
-                        this.currentCardIdx,
-                        this.currentCard.isDue
-                    );
+                    this.currentDeck.deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue, this.currentDeck);
                     burySiblingCards(false, this.currentCard, this.currentDeck);
                     this.currentDeck.nextCard(this, this.currentDeck);
                 } else if (
@@ -214,8 +211,8 @@ export class FlashcardModal extends Modal {
         let easyBtn = document.createElement("button");
         easyBtn.setAttribute("id", "sr-easy-btn");
         easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
-        easyBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Easy, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
+        easyBtn.addEventListener("click", async () => {
+            await this.processReview(ReviewResponse.Easy, ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
         });
         this.responseDiv.appendChild(easyBtn);
         if (ignoreStats) {
@@ -261,7 +258,7 @@ export class FlashcardModal extends Modal {
 
     async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number): Promise<void> {
         if (ignoreStats) {
-            this.processCrammedCards(response, currentDeck, index, currentCard);
+            currentDeck = this.processCrammedCards(response, currentDeck, index, currentCard);
         } else {
             await this.processCardResponse(response, currentCard, currentDeck, index);
         }
@@ -293,19 +290,17 @@ export class FlashcardModal extends Modal {
     }
 
     private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean) {
-        currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue);
+        currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
         if (shouldBurySiblings) {
             await burySiblingCards(true, currentCard, currentDeck);
         }
     }
 
-    private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card) {
+    private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
         if (response == ReviewResponse.Easy) {
-            currentDeck.deleteFlashcardAtIndex(
-                index,
-                currentCard.isDue
-            );
+            currentDeck = currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
         }
+        return currentDeck;
     }
 
     private resetCardProgress(currentCard: Card, currentDeck: Deck) {

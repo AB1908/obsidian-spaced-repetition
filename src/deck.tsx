@@ -83,16 +83,16 @@ export class Deck {
         }
     }
 
-    deleteFlashcardAtIndex(index: number, cardIsDue: boolean): void {
+    deleteFlashcardAtIndex(index: number, cardIsDue: boolean, currentDeck: Deck): Deck {
         if (cardIsDue) {
-            this.dueFlashcards.splice(index, 1);
-            this.dueFlashcardsCount--;
+            currentDeck.dueFlashcards.splice(index, 1);
+            currentDeck.dueFlashcardsCount--;
         } else {
-            this.newFlashcards.splice(index, 1);
-            this.newFlashcardsCount--;
+            currentDeck.newFlashcards.splice(index, 1);
+            currentDeck.newFlashcardsCount--;
         }
 
-        let deck: Deck = this.parent;
+        let deck: Deck = currentDeck.parent;
         while (deck !== null) {
             if (cardIsDue) {
                 deck.dueFlashcardsCount--;
@@ -101,6 +101,7 @@ export class Deck {
             }
             deck = deck.parent;
         }
+        return currentDeck;
     }
 
     sortSubdecksList(): void {
