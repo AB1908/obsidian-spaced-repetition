@@ -39,6 +39,19 @@ function createResetLinkButton(currentDeck: Deck, ignoreStats: boolean) {
     return resetLinkDiv;
 }
 
+function createHardBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, state: FlashcardModal) {
+    const hardBtn = document.createElement("button");
+    hardBtn.setAttribute("id", "sr-hard-btn");
+    hardBtn.setText(buttonText);
+    hardBtn.addEventListener("click", async () => {
+        await state.processReview(ReviewResponse.Hard, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx);
+    });
+    if (ignoreStats) {
+        hardBtn.addClass("sr-ignorestats-btn");
+    }
+    return hardBtn;
+}
+
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public answerBtn: HTMLElement;
@@ -174,8 +187,9 @@ export class FlashcardModal extends Modal {
         });
 
         let currentDeck1 = this.currentDeck;
-        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, currentDeck1, this.currentCard, this.currentCardIdx);
         let ignoreStats = this.ignoreStats;
+
+        this.fileLinkView = createEditLaterButton.call(this, this.contentEl, currentDeck1, this.currentCard, this.currentCardIdx);
         this.resetLinkView = createResetLinkButton.call(this, currentDeck1, ignoreStats);
 
         if (this.plugin.data.settings.showContextInCards) {
@@ -188,17 +202,8 @@ export class FlashcardModal extends Modal {
 
         this.responseDiv = this.contentEl.createDiv("sr-response");
 
-        const hardBtn = document.createElement("button");
-        hardBtn.setAttribute("id", "sr-hard-btn");
-        hardBtn.setText(this.plugin.data.settings.flashcardHardText);
-        hardBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Hard, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
-        });
-        this.responseDiv.appendChild(hardBtn);
-        if (ignoreStats) {
-            hardBtn.addClass("sr-ignorestats-btn");
-        }
-        this.hardBtn = hardBtn;
+        this.hardBtn = createHardBtn(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this);
+        this.responseDiv.appendChild(this.hardBtn);
 
         const goodBtn = document.createElement("button");
         goodBtn.setAttribute("id", "sr-good-btn");
@@ -206,11 +211,11 @@ export class FlashcardModal extends Modal {
         goodBtn.addEventListener("click", () => {
             this.processReview(ReviewResponse.Good, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
         });
-        this.responseDiv.appendChild(goodBtn);
         if (ignoreStats) {
             goodBtn.style.display = "none";
         }
         this.goodBtn = goodBtn;
+        this.responseDiv.appendChild(goodBtn);
 
         let easyBtn = document.createElement("button");
         easyBtn.setAttribute("id", "sr-easy-btn");
