@@ -260,12 +260,12 @@ export class FlashcardModal extends Modal {
         if (ignoreStats) {
             currentDeck = processCrammedCards(response, currentDeck, index, currentCard);
         } else {
-            await this.processCardResponse(response, currentCard, currentDeck, index);
+            currentDeck = await this.processCardResponse(response, currentCard, currentDeck, index);
         }
         currentDeck.nextCard(this, currentDeck);
     }
 
-    private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number) {
+    private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number): Promise<Deck> {
         if (response === ReviewResponse.Reset) {
             currentDeck = this.resetCardProgress(currentCard, currentDeck, this.plugin.data.settings.baseEase);
         } else {
@@ -287,6 +287,7 @@ export class FlashcardModal extends Modal {
             currentDeck = await this.buryCardAndSiblings(currentDeck, index, currentCard, this.plugin.data.settings.burySiblingCards);
             await this.plugin.app.vault.modify(currentCard.note, fileText);
         }
+        return currentDeck;
     }
 
     private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean): Promise<Deck> {
