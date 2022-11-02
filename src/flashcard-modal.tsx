@@ -258,7 +258,7 @@ export class FlashcardModal extends Modal {
 
     async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number): Promise<void> {
         if (ignoreStats) {
-            currentDeck = this.processCrammedCards(response, currentDeck, index, currentCard);
+            currentDeck = processCrammedCards(response, currentDeck, index, currentCard);
         } else {
             await this.processCardResponse(response, currentCard, currentDeck, index);
         }
@@ -296,12 +296,6 @@ export class FlashcardModal extends Modal {
         }
     }
 
-    private processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
-        if (response == ReviewResponse.Easy) {
-            currentDeck = currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
-        }
-        return currentDeck;
-    }
 
     private resetCardProgress(currentCard: Card, currentDeck: Deck) {
         currentCard.interval = 1.0;
@@ -451,3 +445,9 @@ export class FlashcardModal extends Modal {
     }
 }
 
+function processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
+    if (response == ReviewResponse.Easy) {
+        currentDeck = currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+    }
+    return currentDeck;
+}
