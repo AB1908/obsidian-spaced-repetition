@@ -1,4 +1,4 @@
-import {App, MarkdownRenderer, Modal, Notice, Platform, TFile,} from "obsidian";
+import {App, MarkdownRenderer, Modal, Platform, TFile,} from "obsidian";
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 import h from "vhtml";
 
@@ -9,13 +9,16 @@ import {escapeRegexString} from "src/utils";
 import {t} from "src/lang/helpers";
 import {Deck, deleteFlashcardAtIndex} from "src/deck";
 import {
+    buryCardAndSiblings,
     burySiblingCards,
     calculateSchedInfo,
     createEditLaterButton,
     extractFileMatches,
     generateNewSchedulingText,
     getCardTextSeparator,
-    renderDecks
+    processCrammedCards,
+    renderDecks,
+    resetCardProgress
 } from "src/modal-utils";
 import {SRSettings} from "src/settings";
 
@@ -427,32 +430,4 @@ export class FlashcardModal extends Modal {
 
         this.renderMarkdownWrapper(blockText, el, recursiveDepth + 1);
     }
-}
-
-function processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
-    if (response == ReviewResponse.Easy) {
-        currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
-    }
-    return currentDeck;
-}
-
-async function buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean): Promise<Deck> {
-    currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
-    if (shouldBurySiblings) {
-        currentDeck = await burySiblingCards(true, currentCard, currentDeck);
-    }
-    return currentDeck;
-}
-
-function resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
-    currentCard.interval = 1.0;
-    currentCard.ease = ease;
-    if (currentCard.isDue) {
-        currentDeck.dueFlashcards.push(currentCard);
-    } else {
-        currentDeck.newFlashcards.push(currentCard);
-    }
-    // due = window.moment(Date.now());
-    new Notice(t("CARD_PROGRESS_RESET"));
-    return currentDeck;
 }

@@ -2,7 +2,7 @@ import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/const
 import {Card, ReviewResponse, schedule} from "src/scheduling";
 import {Deck, deleteFlashcardAtIndex} from "src/deck";
 import {t} from "src/lang/helpers";
-import {MarkdownView, WorkspaceLeaf} from "obsidian";
+import {MarkdownView, Notice, WorkspaceLeaf} from "obsidian";
 import {cyrb53} from "src/utils";
 import {FlashcardModal} from "src/flashcard-modal";
 import {SRSettings} from "src/settings";
@@ -151,4 +151,32 @@ export async function burySiblingCards(
         }
     }
     return currentDeck1;
+}
+
+export function processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
+    if (response == ReviewResponse.Easy) {
+        currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+    }
+    return currentDeck;
+}
+
+export async function buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean): Promise<Deck> {
+    currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+    if (shouldBurySiblings) {
+        currentDeck = await burySiblingCards(true, currentCard, currentDeck);
+    }
+    return currentDeck;
+}
+
+export function resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
+    currentCard.interval = 1.0;
+    currentCard.ease = ease;
+    if (currentCard.isDue) {
+        currentDeck.dueFlashcards.push(currentCard);
+    } else {
+        currentDeck.newFlashcards.push(currentCard);
+    }
+    // due = window.moment(Date.now());
+    new Notice(t("CARD_PROGRESS_RESET"));
+    return currentDeck;
 }
