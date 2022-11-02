@@ -134,7 +134,7 @@ export async function burySiblingCards(
     tillNextDay: boolean,
     currentCard1: Card,
     currentDeck1: Deck
-): Promise<void> {
+): Promise<Deck> {
     if (tillNextDay) {
         this.plugin.data.buryList.push(cyrb53(currentCard1.cardText));
         await this.plugin.savePluginData();
@@ -150,4 +150,5 @@ export async function burySiblingCards(
             currentDeck1 = deleteFlashcardAtIndex(newIdx, currentDeck1.newFlashcards[newIdx].isDue, currentDeck1);
         }
     }
+    return currentDeck1;
 }

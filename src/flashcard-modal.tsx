@@ -76,7 +76,7 @@ export class FlashcardModal extends Modal {
             if (this.mode !== FlashcardModalMode.DecksList) {
                 if (this.mode !== FlashcardModalMode.Closed && e.code === "KeyS") {
                     this.currentDeck = deleteFlashcardAtIndex(this.currentCardIdx, this.currentCard.isDue, this.currentDeck);
-                    burySiblingCards(false, this.currentCard, this.currentDeck);
+                    this.currentDeck = await burySiblingCards(false, this.currentCard, this.currentDeck);
                     this.currentDeck.nextCard(this, this.currentDeck);
                 } else if (
                     this.mode === FlashcardModalMode.Front &&
@@ -85,13 +85,13 @@ export class FlashcardModal extends Modal {
                     this.showAnswer();
                 } else if (this.mode === FlashcardModalMode.Back) {
                     if (e.code === "Numpad1" || e.code === "Digit1") {
-                        this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Hard, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
                     } else if (e.code === "Numpad2" || e.code === "Digit2" || e.code === "Space") {
-                        this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Good, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
                     } else if (e.code === "Numpad3" || e.code === "Digit3") {
-                        this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Easy, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
                     } else if (e.code === "Numpad0" || e.code === "Digit0") {
-                        this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
+                        await this.processReview(ReviewResponse.Reset, this.ignoreStats, this.currentDeck, this.currentCard, this.currentCardIdx);
                     }
                 }
             }
@@ -284,16 +284,17 @@ export class FlashcardModal extends Modal {
             let fileText: string = await this.app.vault.read(currentCard.note);
             const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
             fileText = fileText.replace(replacementRegex, () => newCardText);
-            await this.buryCardAndSiblings(currentDeck, index, currentCard, this.plugin.data.settings.burySiblingCards);
+            currentDeck = await this.buryCardAndSiblings(currentDeck, index, currentCard, this.plugin.data.settings.burySiblingCards);
             await this.plugin.app.vault.modify(currentCard.note, fileText);
         }
     }
 
-    private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean) {
-        deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+    private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean): Promise<Deck> {
+        currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
         if (shouldBurySiblings) {
-            await burySiblingCards(true, currentCard, currentDeck);
+            currentDeck = await burySiblingCards(true, currentCard, currentDeck);
         }
+        return currentDeck;
     }
 
 
