@@ -174,8 +174,8 @@ export class FlashcardModal extends Modal {
 
         let currentDeck1 = this.currentDeck;
         this.fileLinkView = createEditLaterButton.call(this, this.contentEl, currentDeck1, this.currentCard, this.currentCardIdx);
-        let ignoreStats1 = this.ignoreStats;
-        this.resetLinkView = createResetLinkButton.call(this, currentDeck1, ignoreStats1);
+        let ignoreStats = this.ignoreStats;
+        this.resetLinkView = createResetLinkButton.call(this, currentDeck1, ignoreStats);
 
         if (this.plugin.data.settings.showContextInCards) {
             this.contextView = this.contentEl.createDiv();
@@ -187,44 +187,54 @@ export class FlashcardModal extends Modal {
 
         this.responseDiv = this.contentEl.createDiv("sr-response");
 
-        this.hardBtn = document.createElement("button");
-        this.hardBtn.setAttribute("id", "sr-hard-btn");
-        this.hardBtn.setText(this.plugin.data.settings.flashcardHardText);
-        this.hardBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Hard, ignoreStats1, currentDeck1, this.currentCard, this.currentCardIdx);
+        const hardBtn = document.createElement("button");
+        hardBtn.setAttribute("id", "sr-hard-btn");
+        hardBtn.setText(this.plugin.data.settings.flashcardHardText);
+        hardBtn.addEventListener("click", () => {
+            this.processReview(ReviewResponse.Hard, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
         });
-        this.responseDiv.appendChild(this.hardBtn);
+        this.responseDiv.appendChild(hardBtn);
+        if (ignoreStats) {
+            hardBtn.addClass("sr-ignorestats-btn");
+        }
+        this.hardBtn = hardBtn;
 
-        this.goodBtn = document.createElement("button");
-        this.goodBtn.setAttribute("id", "sr-good-btn");
-        this.goodBtn.setText(this.plugin.data.settings.flashcardGoodText);
-        this.goodBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Good, ignoreStats1, currentDeck1, this.currentCard, this.currentCardIdx);
+        const goodBtn = document.createElement("button");
+        goodBtn.setAttribute("id", "sr-good-btn");
+        goodBtn.setText(this.plugin.data.settings.flashcardGoodText);
+        goodBtn.addEventListener("click", () => {
+            this.processReview(ReviewResponse.Good, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
         });
-        this.responseDiv.appendChild(this.goodBtn);
+        this.responseDiv.appendChild(goodBtn);
+        if (ignoreStats) {
+            goodBtn.style.display = "none";
+        }
+        this.goodBtn = goodBtn;
 
-        this.easyBtn = document.createElement("button");
-        this.easyBtn.setAttribute("id", "sr-easy-btn");
-        this.easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
-        this.easyBtn.addEventListener("click", () => {
-            this.processReview(ReviewResponse.Easy, ignoreStats1, currentDeck1, this.currentCard, this.currentCardIdx);
+        let easyBtn = document.createElement("button");
+        easyBtn.setAttribute("id", "sr-easy-btn");
+        easyBtn.setText(this.plugin.data.settings.flashcardEasyText);
+        easyBtn.addEventListener("click", () => {
+            this.processReview(ReviewResponse.Easy, ignoreStats, currentDeck1, this.currentCard, this.currentCardIdx);
         });
-        this.responseDiv.appendChild(this.easyBtn);
+        this.responseDiv.appendChild(easyBtn);
+        if (ignoreStats) {
+            easyBtn.addClass("sr-ignorestats-btn");
+        }
+        this.easyBtn = easyBtn;
+
         this.responseDiv.style.display = "none";
 
-        this.answerBtn = this.contentEl.createDiv();
-        this.answerBtn.setAttribute("id", "sr-show-answer");
-        this.answerBtn.setText(t("SHOW_ANSWER"));
-        this.answerBtn.addEventListener("click", () => {
+        const answerBtn = this.contentEl.createDiv();
+        answerBtn.setAttribute("id", "sr-show-answer");
+        answerBtn.setText(t("SHOW_ANSWER"));
+        answerBtn.addEventListener("click", () => {
             this.showAnswer();
         });
+        this.answerBtn = answerBtn;
 
-        if (ignoreStats1) {
-            this.goodBtn.style.display = "none";
-
+        if (ignoreStats) {
             this.responseDiv.addClass("sr-ignorestats-response");
-            this.easyBtn.addClass("sr-ignorestats-btn");
-            this.hardBtn.addClass("sr-ignorestats-btn");
         }
     }
 
