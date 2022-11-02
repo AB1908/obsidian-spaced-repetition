@@ -277,12 +277,12 @@ export class FlashcardModal extends Modal {
             let fileText: string = await this.app.vault.read(currentCard.note);
             const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
             fileText = fileText.replace(replacementRegex, () => newCardText);
-            await this.buryCardAndSiblings(currentDeck, index, currentCard, fileText, this.plugin.data.settings.burySiblingCards);
+            await this.buryCardAndSiblings(currentDeck, index, currentCard, this.plugin.data.settings.burySiblingCards);
             await this.plugin.app.vault.modify(currentCard.note, fileText);
         }
     }
 
-    private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, fileText: string, shouldBurySiblings: boolean) {
+    private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean) {
         currentDeck.deleteFlashcardAtIndex(index, currentCard.isDue);
         if (shouldBurySiblings) {
             await burySiblingCards(true, currentCard, currentDeck);
