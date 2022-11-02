@@ -17,6 +17,7 @@ import {
     getCardTextSeparator,
     renderDecks
 } from "src/modal-utils";
+import {SRSettings} from "src/settings";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -260,21 +261,21 @@ export class FlashcardModal extends Modal {
         if (ignoreStats) {
             currentDeck = processCrammedCards(response, currentDeck, index, currentCard);
         } else {
-            currentDeck = await this.processCardResponse(response, currentCard, currentDeck, index);
+            currentDeck = await this.processCardResponse(response, currentCard, currentDeck, index, this.plugin.dueDatesFlashcards, this.plugin.easeByPath, this.plugin.data.settings.baseEase, this.plugin.data.settings.cardCommentOnSameLine, this.plugin.data.settings.burySiblingCards, this.plugin.data.settings);
         }
         currentDeck.nextCard(this, currentDeck);
     }
 
-    private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number): Promise<Deck> {
+    private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>, baseEase: number, isCardCommentOnSameLine: boolean, shouldBurySiblings: boolean, pluginSettings: SRSettings): Promise<Deck> {
         if (response === ReviewResponse.Reset) {
-            currentDeck = this.resetCardProgress(currentCard, currentDeck, this.plugin.data.settings.baseEase);
+            currentDeck = this.resetCardProgress(currentCard, currentDeck, baseEase);
         } else {
-            const __ret = calculateSchedInfo(currentCard, response, this.plugin.data.settings, this.plugin.dueDatesFlashcards, this.plugin.easeByPath);
+            const __ret = calculateSchedInfo(currentCard, response, pluginSettings, dueDatesFlashcards, easeByPath);
             const interval = __ret.interval;
             const ease = __ret.ease;
             const due = __ret.due;
             const cardText = currentCard.cardText;
-            const sep = getCardTextSeparator(cardText, this.plugin.data.settings.cardCommentOnSameLine);
+            const sep = getCardTextSeparator(cardText, isCardCommentOnSameLine);
             const newCardText = generateNewSchedulingText(sep, due.format("YYYY-MM-DD"), interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
 
             for (const sibling of currentCard.siblings) {
@@ -284,7 +285,7 @@ export class FlashcardModal extends Modal {
             let fileText: string = await this.app.vault.read(currentCard.note);
             const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
             fileText = fileText.replace(replacementRegex, () => newCardText);
-            currentDeck = await this.buryCardAndSiblings(currentDeck, index, currentCard, this.plugin.data.settings.burySiblingCards);
+            currentDeck = await this.buryCardAndSiblings(currentDeck, index, currentCard, shouldBurySiblings);
             await this.plugin.app.vault.modify(currentCard.note, fileText);
         }
         return currentDeck;
