@@ -268,7 +268,7 @@ export class FlashcardModal extends Modal {
 
     private async processCardResponse(response: ReviewResponse | ReviewResponse.Easy | ReviewResponse.Good | ReviewResponse.Hard, currentCard: Card, currentDeck: Deck, index: number, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>, baseEase: number, isCardCommentOnSameLine: boolean, shouldBurySiblings: boolean, pluginSettings: SRSettings): Promise<Deck> {
         if (response === ReviewResponse.Reset) {
-            currentDeck = this.resetCardProgress(currentCard, currentDeck, baseEase);
+            currentDeck = resetCardProgress(currentCard, currentDeck, baseEase);
         } else {
             const __ret = calculateSchedInfo(currentCard, response, pluginSettings, dueDatesFlashcards, easeByPath);
             const interval = __ret.interval;
@@ -292,18 +292,6 @@ export class FlashcardModal extends Modal {
     }
 
 
-    private resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
-        currentCard.interval = 1.0;
-        currentCard.ease = ease;
-        if (currentCard.isDue) {
-            currentDeck.dueFlashcards.push(currentCard);
-        } else {
-            currentDeck.newFlashcards.push(currentCard);
-        }
-        // due = window.moment(Date.now());
-        new Notice(t("CARD_PROGRESS_RESET"));
-        return currentDeck;
-    }
 
 // slightly modified version of the renderMarkdown function in
     // https://github.com/mgmeyers/obsidian-kanban/blob/main/src/KanbanView.tsx
@@ -453,5 +441,18 @@ async function buryCardAndSiblings(currentDeck: Deck, index: number, currentCard
     if (shouldBurySiblings) {
         currentDeck = await burySiblingCards(true, currentCard, currentDeck);
     }
+    return currentDeck;
+}
+
+function resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
+    currentCard.interval = 1.0;
+    currentCard.ease = ease;
+    if (currentCard.isDue) {
+        currentDeck.dueFlashcards.push(currentCard);
+    } else {
+        currentDeck.newFlashcards.push(currentCard);
+    }
+    // due = window.moment(Date.now());
+    new Notice(t("CARD_PROGRESS_RESET"));
     return currentDeck;
 }
