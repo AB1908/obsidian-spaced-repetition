@@ -252,8 +252,9 @@ export class FlashcardModal extends Modal {
     async processReview(response: ReviewResponse, ignoreStats: boolean, currentDeck: Deck, currentCard: Card, index: number): Promise<void> {
         if (ignoreStats) {
             this.processCrammedCards(response, currentDeck, index, currentCard);
+        } else {
+            await this.processCardResponse(response, currentCard, currentDeck, index);
         }
-        await this.processCardResponse(response, currentCard, currentDeck, index);
         currentDeck.nextCard(this, currentDeck);
     }
 
