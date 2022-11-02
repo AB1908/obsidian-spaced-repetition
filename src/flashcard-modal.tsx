@@ -285,19 +285,12 @@ export class FlashcardModal extends Modal {
             let fileText: string = await this.app.vault.read(currentCard.note);
             const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
             fileText = fileText.replace(replacementRegex, () => newCardText);
-            currentDeck = await this.buryCardAndSiblings(currentDeck, index, currentCard, shouldBurySiblings);
+            currentDeck = await buryCardAndSiblings(currentDeck, index, currentCard, shouldBurySiblings);
             await this.plugin.app.vault.modify(currentCard.note, fileText);
         }
         return currentDeck;
     }
 
-    private async buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean): Promise<Deck> {
-        currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
-        if (shouldBurySiblings) {
-            currentDeck = await burySiblingCards(true, currentCard, currentDeck);
-        }
-        return currentDeck;
-    }
 
     private resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
         currentCard.interval = 1.0;
@@ -451,6 +444,14 @@ export class FlashcardModal extends Modal {
 function processCrammedCards(response: ReviewResponse, currentDeck: Deck, index: number, currentCard: Card): Deck {
     if (response == ReviewResponse.Easy) {
         currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+    }
+    return currentDeck;
+}
+
+async function buryCardAndSiblings(currentDeck: Deck, index: number, currentCard: Card, shouldBurySiblings: boolean): Promise<Deck> {
+    currentDeck = deleteFlashcardAtIndex(index, currentCard.isDue, currentDeck);
+    if (shouldBurySiblings) {
+        currentDeck = await burySiblingCards(true, currentCard, currentDeck);
     }
     return currentDeck;
 }
