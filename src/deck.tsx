@@ -1,8 +1,8 @@
-import { Card, ReviewResponse, schedule, textInterval } from "src/scheduling";
-import { COLLAPSE_ICON } from "src/constants";
-import { Platform } from "obsidian";
+import {Card, ReviewResponse, schedule, textInterval} from "src/scheduling";
+import {COLLAPSE_ICON} from "src/constants";
+import {Platform} from "obsidian";
 import h from "vhtml";
-import { FlashcardModal, FlashcardModalMode } from "src/flashcard-modal";
+import {FlashcardModal, FlashcardModalMode} from "src/flashcard-modal";
 
 export function deleteFlashcardAtIndex(index: number, cardIsDue: boolean, currentDeck: Deck) {
     if (cardIsDue) {
@@ -76,6 +76,14 @@ function resetCardView(modal: FlashcardModal, currentDeck: Deck) {
     modal.answerBtn.style.display = "initial";
     modal.flashcardView.innerHTML = "";
     modal.mode = FlashcardModalMode.Front;
+}
+
+function generateNextCardIndex(modal: FlashcardModal, currentDeck: Deck, randomizeCardOrder: boolean) {
+    if (randomizeCardOrder) {
+        return Math.floor(Math.random() * currentDeck.dueFlashcards.length);
+    } else {
+        return 0;
+    }
 }
 
 export class Deck {
@@ -267,11 +275,7 @@ export class Deck {
             ease: number = modal.plugin.data.settings.baseEase,
             delayBeforeReview = 0;
         if (currentDeck.dueFlashcards.length > 0) {
-            if (modal.plugin.data.settings.randomizeCardOrder) {
-                modal.currentCardIdx = Math.floor(Math.random() * currentDeck.dueFlashcards.length);
-            } else {
-                modal.currentCardIdx = 0;
-            }
+            modal.currentCardIdx = generateNextCardIndex(modal, currentDeck, modal.plugin.data.settings.randomizeCardOrder);
             modal.currentCard = currentDeck.dueFlashcards[modal.currentCardIdx];
             modal.renderMarkdownWrapper(modal.currentCard.front, modal.flashcardView);
 
