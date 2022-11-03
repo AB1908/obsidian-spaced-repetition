@@ -12,7 +12,6 @@ import {
     buryCardAndSiblings,
     burySiblingCards,
     calculateSchedInfo,
-    createEditLaterButton,
     extractFileMatches,
     generateNewSchedulingText,
     getCardTextSeparator,
@@ -21,58 +20,13 @@ import {
     resetCardProgress
 } from "src/modal-utils";
 import {SRSettings} from "src/settings";
+import {createAnswerBtn, createEditLaterButton, createResetLinkButton, createResponseButtons} from "src/buttons";
 
 export enum FlashcardModalMode {
     DecksList,
     Front,
     Back,
     Closed,
-}
-
-function createResetLinkButton(currentDeck: Deck, ignoreStats: boolean) {
-    let resetLinkDiv = this.contentEl.createDiv("sr-link");
-    resetLinkDiv.setText(t("RESET_CARD_PROGRESS"));
-    resetLinkDiv.addEventListener("click", async () => {
-        await this.processReview(ReviewResponse.Reset, ignoreStats, currentDeck, this.currentCard, this.currentCardIdx, this);
-    });
-    resetLinkDiv.style.float = "right";
-    return resetLinkDiv;
-}
-
-function createButton(buttonId: string, buttonText: string) {
-    const buttonElement = document.createElement("button");
-    buttonElement.setAttribute("id", buttonId);
-    buttonElement.setText(buttonText);
-    return buttonElement;
-}
-
-function createButtonWithListener(currentDeck: Deck, buttonText: string, state: FlashcardModal, buttonId: string, ignoreStats?: boolean, reviewResponse?: ReviewResponse) {
-    const buttonElement = createButton(buttonId, buttonText);
-    buttonElement.addEventListener("click", async () => {
-        await state.processReview(reviewResponse, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx, state);
-    });
-    if (ignoreStats) {
-        if (reviewResponse == ReviewResponse.Good)
-            buttonElement.style.display = "none";
-        else
-            buttonElement.addClass("sr-ignorestats-btn");
-    }
-    return buttonElement;
-}
-
-function createResponseButtons(ignoreStats: boolean, currentDeck1: Deck, flashcardHardText: string, flashcardGoodText: string, flashcardEasyText: string, state: FlashcardModal) {
-    const hardButton = createButtonWithListener(currentDeck1, flashcardHardText, state, "sr-hard-btn", ignoreStats, ReviewResponse.Hard);
-    const goodButton = createButtonWithListener(currentDeck1, flashcardGoodText, state, "sr-good-btn", ignoreStats, ReviewResponse.Good);
-    const easyButton = createButtonWithListener(currentDeck1, flashcardEasyText, state, "sr-easy-btn", ignoreStats, ReviewResponse.Easy);
-    return {hardBtn: hardButton, goodBtn: goodButton, easyBtn: easyButton};
-}
-
-function createAnswerBtn(state: FlashcardModal) {
-    const answerBtn = createButton("sr-show-answer",t("SHOW_ANSWER"));
-    answerBtn.addEventListener("click", () => {
-        state.showAnswer();
-    });
-    return answerBtn;
 }
 
 export class FlashcardModal extends Modal {

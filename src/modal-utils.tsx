@@ -2,7 +2,7 @@ import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/const
 import {Card, ReviewResponse, schedule} from "src/scheduling";
 import {Deck, deleteFlashcardAtIndex} from "src/deck";
 import {t} from "src/lang/helpers";
-import {MarkdownView, Notice, WorkspaceLeaf} from "obsidian";
+import {Notice} from "obsidian";
 import {cyrb53} from "src/utils";
 import {FlashcardModal} from "src/flashcard-modal";
 import {SRSettings} from "src/settings";
@@ -18,37 +18,6 @@ export function renderDecks(decks: Deck[], containerEl: HTMLElement, modal: Flas
     for (const deck of decks) {
         deck.render(containerEl, modal);
     }
-}
-
-export function createEditLaterButton(contentEl: HTMLElement, currentDeck: Deck, currentCard: Card, index: number) {
-    const fileLinkView = contentEl.createDiv("sr-link");
-    fileLinkView.setText(t("EDIT_LATER"));
-    if (this.plugin.data.settings.showFileNameInFileLink) {
-        fileLinkView.setAttribute("aria-label", t("EDIT_LATER"));
-    }
-    fileLinkView.addEventListener("click", async () => {
-        const activeLeaf: WorkspaceLeaf = this.plugin.app.workspace.getLeaf();
-        if (this.plugin.app.workspace.getActiveFile() === null) {
-            // TODO: this.currentCard is part of state and gets out of sync if extracted
-            await activeLeaf.openFile(this.currentCard.note);
-        } else {
-            const newLeaf = this.plugin.app.workspace.createLeafBySplit(
-                activeLeaf,
-                "vertical",
-                false
-            );
-            await newLeaf.openFile(this.currentCard.note, {active: true});
-        }
-        const activeView: MarkdownView = this.app.workspace.getActiveViewOfType(MarkdownView);
-        activeView.editor.setCursor({
-            line: this.currentCard.lineNo,
-            ch: 0,
-        });
-        currentDeck = deleteFlashcardAtIndex(index, this.currentCard.isDue, currentDeck);
-        burySiblingCards(false, this.currentCard, currentDeck);
-        currentDeck.nextCard(this, currentDeck);
-    });
-    return fileLinkView;
 }
 
 export function generateNewSchedulingText(sep: string, dueString: string, interval: number, ease: number, cardText: string, due: boolean, siblingIdx: number) {
@@ -169,6 +138,7 @@ export async function buryCardAndSiblings(currentDeck: Deck, index: number, curr
 }
 
 export function resetCardProgress(currentCard: Card, currentDeck: Deck, ease: number): Deck {
+    // TODO: Why are we assigning these?
     currentCard.interval = 1.0;
     currentCard.ease = ease;
     if (currentCard.isDue) {
