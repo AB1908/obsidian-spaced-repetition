@@ -66,6 +66,18 @@ function generateAndUpdateResponseButtonText(modal: FlashcardModal, hardInterval
     modal.goodBtn.setText(goodBtnText);
 }
 
+function resetCardView(modal: FlashcardModal, currentDeck: Deck) {
+    modal.responseDiv.style.display = "none";
+    modal.resetLinkView.style.display = "none";
+    modal.titleEl.setText(
+        `${currentDeck.deckName}: ${currentDeck.dueFlashcardsCount + currentDeck.newFlashcardsCount}`
+    );
+
+    modal.answerBtn.style.display = "initial";
+    modal.flashcardView.innerHTML = "";
+    modal.mode = FlashcardModalMode.Front;
+}
+
 export class Deck {
     public deckName: string;
     public newFlashcards: Card[];
@@ -249,15 +261,7 @@ export class Deck {
             return;
         }
 
-        modal.responseDiv.style.display = "none";
-        modal.resetLinkView.style.display = "none";
-        modal.titleEl.setText(
-            `${currentDeck.deckName}: ${currentDeck.dueFlashcardsCount + currentDeck.newFlashcardsCount}`
-        );
-
-        modal.answerBtn.style.display = "initial";
-        modal.flashcardView.innerHTML = "";
-        modal.mode = FlashcardModalMode.Front;
+        resetCardView(modal, currentDeck);
 
         let interval = 1.0,
             ease: number = modal.plugin.data.settings.baseEase,
