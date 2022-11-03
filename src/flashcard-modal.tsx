@@ -232,10 +232,7 @@ export class FlashcardModal extends Modal {
         if (response === ReviewResponse.Reset) {
             currentDeck = resetCardProgress(currentCard, currentDeck, baseEase);
         } else {
-            const __ret = calculateSchedInfo(currentCard, response, pluginSettings, dueDatesFlashcards, easeByPath);
-            const interval = __ret.interval;
-            const ease = __ret.ease;
-            const due = __ret.due;
+            const {interval, ease, due} = calculateSchedInfo(currentCard, response, pluginSettings, dueDatesFlashcards, easeByPath);
             const cardText = currentCard.cardText;
             const sep = getCardTextSeparator(cardText, isCardCommentOnSameLine);
             const newCardText = generateNewSchedulingText(sep, due.format("YYYY-MM-DD"), interval, ease, cardText, currentCard.isDue, currentCard.siblingIdx);
@@ -244,10 +241,11 @@ export class FlashcardModal extends Modal {
                 sibling.cardText = newCardText;
             }
 
+            currentDeck = await buryCardAndSiblings(currentDeck, index, currentCard, shouldBurySiblings);
+
             let fileText: string = await this.app.vault.read(currentCard.note);
             const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
             fileText = fileText.replace(replacementRegex, () => newCardText);
-            currentDeck = await buryCardAndSiblings(currentDeck, index, currentCard, shouldBurySiblings);
             await this.plugin.app.vault.modify(currentCard.note, fileText);
         }
         return currentDeck;
