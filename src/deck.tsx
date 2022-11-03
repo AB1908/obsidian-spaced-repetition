@@ -43,6 +43,29 @@ function generateIntervals(interval: number, ease: number, delayBeforeReview: nu
     };
 }
 
+function generateAndUpdateResponseButtonText(modal: FlashcardModal, hardInterval: number, goodInterval: number, easyInterval: number, ignoreStats: boolean) {
+    const {flashcardHardText, flashcardEasyText, flashcardGoodText} = modal.plugin.data.settings;
+    let hardBtnText: string, easyBtnText: string, goodBtnText: string;
+
+    if (ignoreStats) {
+        // Same for mobile/desktop
+        hardBtnText = `${flashcardHardText}`;
+        easyBtnText = `${flashcardEasyText}`;
+    } else if (Platform.isMobile) {
+        hardBtnText = textInterval(hardInterval, true);
+        goodBtnText = textInterval(goodInterval, true);
+        easyBtnText = textInterval(easyInterval, true);
+    } else {
+        hardBtnText = `${flashcardHardText} - ${textInterval( hardInterval, false )}`;
+        goodBtnText = `${flashcardGoodText} - ${textInterval( goodInterval, false )}`;
+        easyBtnText = `${flashcardEasyText} - ${textInterval( easyInterval, false )}`;
+    }
+
+    modal.hardBtn.setText(hardBtnText);
+    modal.easyBtn.setText(easyBtnText);
+    modal.goodBtn.setText(goodBtnText);
+}
+
 export class Deck {
     public deckName: string;
     public newFlashcards: Card[];
@@ -282,35 +305,7 @@ export class Deck {
             }
         }
         const {hardInterval, goodInterval, easyInterval} = generateIntervals(interval, ease, delayBeforeReview, modal);
-
-        if (modal.ignoreStats) {
-            // Same for mobile/desktop
-            modal.hardBtn.setText(`${modal.plugin.data.settings.flashcardHardText}`);
-            modal.easyBtn.setText(`${modal.plugin.data.settings.flashcardEasyText}`);
-        } else if (Platform.isMobile) {
-            modal.hardBtn.setText(textInterval(hardInterval, true));
-            modal.goodBtn.setText(textInterval(goodInterval, true));
-            modal.easyBtn.setText(textInterval(easyInterval, true));
-        } else {
-            modal.hardBtn.setText(
-                `${modal.plugin.data.settings.flashcardHardText} - ${textInterval(
-                    hardInterval,
-                    false
-                )}`
-            );
-            modal.goodBtn.setText(
-                `${modal.plugin.data.settings.flashcardGoodText} - ${textInterval(
-                    goodInterval,
-                    false
-                )}`
-            );
-            modal.easyBtn.setText(
-                `${modal.plugin.data.settings.flashcardEasyText} - ${textInterval(
-                    easyInterval,
-                    false
-                )}`
-            );
-        }
+        generateAndUpdateResponseButtonText(modal, hardInterval, goodInterval, easyInterval, modal.ignoreStats);
 
         if (modal.plugin.data.settings.showContextInCards)
             modal.contextView.setText(modal.currentCard.context);
