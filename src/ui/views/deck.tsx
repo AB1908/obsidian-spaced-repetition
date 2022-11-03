@@ -2,14 +2,6 @@ import React, { Component, ReactNode, useState } from "react";
 import { Deck } from "src/Deck";
 import { AllCardCounts } from "../components/card-counts";
 
-interface CollapsibleState {
-    isDeckTreeOpen: boolean;
-}
-
-interface StateChanger extends CollapsibleState {
-    handleTriangleClick: Function;
-}
-
 export interface DeckModalProps {
     deckName: string;
     subdecksArray: Deck[];
@@ -32,18 +24,18 @@ function InnerTreeItem(props: SubDeckProps) {
     );
 }
 
-function CollapseIcon(props: StateChanger) {
+function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {isDeckTreeOpen: boolean, handleTriangleClick: Function}) {
     return (
         <div
             className="tree-item-icon collapse-icon"
-            onClick={(e) => props.handleTriangleClick(e)}
+            onClick={(e) => handleTriangleClick(e)}
         >
             <svg
                 viewBox="0 0 100 100"
                 width={10}
                 height={10}
                 className="right-triangle"
-                style={props.isDeckTreeOpen ? {} : { transform: "rotate(-90deg)" }}
+                style={isDeckTreeOpen ? {} : { transform: "rotate(-90deg)" }}
             >
                 <path
                     fill="currentColor"
@@ -72,7 +64,7 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
                 >
                     {/* tree-item-self*/}
                     <CollapseIcon
-                        {...{ isDeckTreeOpen }}
+                        isDeckTreeOpen = {isDeckTreeOpen}
                         handleTriangleClick={(e: MouseEvent) => handleTriangleClick(e)}
                     />
                     <InnerTreeItem
