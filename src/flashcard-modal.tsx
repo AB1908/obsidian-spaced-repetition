@@ -39,10 +39,15 @@ function createResetLinkButton(currentDeck: Deck, ignoreStats: boolean) {
     return resetLinkDiv;
 }
 
-function createBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, state: FlashcardModal, buttonId: string, reviewResponse: ReviewResponse) {
+function createButton(buttonId: string, buttonText: string) {
     const buttonElement = document.createElement("button");
     buttonElement.setAttribute("id", buttonId);
     buttonElement.setText(buttonText);
+    return buttonElement;
+}
+
+function createButtonWithListener(currentDeck: Deck, buttonText: string, state: FlashcardModal, buttonId: string, ignoreStats?: boolean, reviewResponse?: ReviewResponse) {
+    const buttonElement = createButton(buttonId, buttonText);
     buttonElement.addEventListener("click", async () => {
         await state.processReview(reviewResponse, ignoreStats, currentDeck, state.currentCard, state.currentCardIdx, state);
     });
@@ -55,11 +60,19 @@ function createBtn(ignoreStats: boolean, currentDeck: Deck, buttonText: string, 
     return buttonElement;
 }
 
-function buttonGenerator(ignoreStats: boolean, currentDeck1: Deck, flashcardHardText: string, flashcardGoodText: string, flashcardEasyText: string, state: FlashcardModal) {
-    const hardButton = createBtn(ignoreStats, currentDeck1, flashcardHardText, state, "sr-hard-btn", ReviewResponse.Hard);
-    const goodButton = createBtn(ignoreStats, currentDeck1, flashcardGoodText, state, "sr-good-btn", ReviewResponse.Good);
-    const easyButton = createBtn(ignoreStats, currentDeck1, flashcardEasyText, state, "sr-easy-btn", ReviewResponse.Easy);
+function createResponseButtons(ignoreStats: boolean, currentDeck1: Deck, flashcardHardText: string, flashcardGoodText: string, flashcardEasyText: string, state: FlashcardModal) {
+    const hardButton = createButtonWithListener(currentDeck1, flashcardHardText, state, "sr-hard-btn", ignoreStats, ReviewResponse.Hard);
+    const goodButton = createButtonWithListener(currentDeck1, flashcardGoodText, state, "sr-good-btn", ignoreStats, ReviewResponse.Good);
+    const easyButton = createButtonWithListener(currentDeck1, flashcardEasyText, state, "sr-easy-btn", ignoreStats, ReviewResponse.Easy);
     return {hardBtn: hardButton, goodBtn: goodButton, easyBtn: easyButton};
+}
+
+function createAnswerBtn(state: FlashcardModal) {
+    const answerBtn = createButton("sr-show-answer",t("SHOW_ANSWER"));
+    answerBtn.addEventListener("click", () => {
+        state.showAnswer();
+    });
+    return answerBtn;
 }
 
 export class FlashcardModal extends Modal {
@@ -212,15 +225,10 @@ export class FlashcardModal extends Modal {
 
         this.responseDiv = this.contentEl.createDiv("sr-response");
 
-        const {
-            hardBtn,
-            goodBtn,
-            easyBtn
-        } = buttonGenerator(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this.plugin.data.settings.flashcardGoodText, this.plugin.data.settings.flashcardEasyText, this);
-
-        this.hardBtn = hardBtn;
-        this.goodBtn = goodBtn;
-        this.easyBtn = easyBtn;
+        const __ret = createResponseButtons(ignoreStats, currentDeck1, this.plugin.data.settings.flashcardHardText, this.plugin.data.settings.flashcardGoodText, this.plugin.data.settings.flashcardEasyText, this);
+        this.hardBtn = __ret.hardBtn;
+        this.goodBtn = __ret.goodBtn;
+        this.easyBtn = __ret.easyBtn;
 
         this.responseDiv.appendChild(this.hardBtn);
         this.responseDiv.appendChild(this.goodBtn);
@@ -228,13 +236,8 @@ export class FlashcardModal extends Modal {
 
         this.responseDiv.style.display = "none";
 
-        const answerBtn = this.contentEl.createDiv();
-        answerBtn.setAttribute("id", "sr-show-answer");
-        answerBtn.setText(t("SHOW_ANSWER"));
-        answerBtn.addEventListener("click", () => {
-            this.showAnswer();
-        });
-        this.answerBtn = answerBtn;
+        this.answerBtn = createAnswerBtn(this);
+        this.contentEl.appendChild(this.answerBtn)
 
         if (ignoreStats) {
             this.responseDiv.addClass("sr-ignorestats-response");
