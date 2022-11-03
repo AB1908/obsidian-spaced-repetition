@@ -25,6 +25,24 @@ export function deleteFlashcardAtIndex(index: number, cardIsDue: boolean, curren
     return currentDeck;
 }
 
+function generateIntervals(interval: number, ease: number, delayBeforeReview: number, modal: FlashcardModal) {
+    function getInterval(response: ReviewResponse) {
+        return schedule(
+            response,
+            interval,
+            ease,
+            delayBeforeReview,
+            modal.plugin.data.settings
+        ).interval;
+    }
+
+    return {
+        hardInterval: getInterval(ReviewResponse.Hard),
+        goodInterval: getInterval(ReviewResponse.Good),
+        easyInterval: getInterval(ReviewResponse.Easy)
+    };
+}
+
 export class Deck {
     public deckName: string;
     public newFlashcards: Card[];
@@ -263,28 +281,7 @@ export class Deck {
                 ease = modal.plugin.easeByPath[modal.currentCard.note.path];
             }
         }
-
-        const hardInterval: number = schedule(
-            ReviewResponse.Hard,
-            interval,
-            ease,
-            delayBeforeReview,
-            modal.plugin.data.settings
-        ).interval;
-        const goodInterval: number = schedule(
-            ReviewResponse.Good,
-            interval,
-            ease,
-            delayBeforeReview,
-            modal.plugin.data.settings
-        ).interval;
-        const easyInterval: number = schedule(
-            ReviewResponse.Easy,
-            interval,
-            ease,
-            delayBeforeReview,
-            modal.plugin.data.settings
-        ).interval;
+        const {hardInterval, goodInterval, easyInterval} = generateIntervals(interval, ease, delayBeforeReview, modal);
 
         if (modal.ignoreStats) {
             // Same for mobile/desktop
