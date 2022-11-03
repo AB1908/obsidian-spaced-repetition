@@ -1,4 +1,4 @@
-import React, { Component, ReactNode, useState } from "react";
+import React, { useState } from "react";
 import { Deck } from "src/Deck";
 import { AllCardCounts } from "../components/card-counts";
 
@@ -24,7 +24,7 @@ function InnerTreeItem(props: SubDeckProps) {
     );
 }
 
-function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {isDeckTreeOpen: boolean, handleTriangleClick: Function}) {
+function CollapseIcon({ isDeckTreeOpen, handleTriangleClick }: { isDeckTreeOpen: boolean, handleTriangleClick: Function }) {
     return (
         <div
             className="tree-item-icon collapse-icon"
@@ -64,7 +64,7 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
                 >
                     {/* tree-item-self*/}
                     <CollapseIcon
-                        isDeckTreeOpen = {isDeckTreeOpen}
+                        isDeckTreeOpen={isDeckTreeOpen}
                         handleTriangleClick={(e: MouseEvent) => handleTriangleClick(e)}
                     />
                     <InnerTreeItem
@@ -85,41 +85,37 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
     );
 }
 
-class NonCollapsibleDeckTreeEntry extends Component<SubDeckProps> {
-    render(): ReactNode {
-        return (
-            <div className="tree-item">
-                <li style={{ display: "contents" }}>
-                    <div className="tree-item-self tag-pane-tag is-clickable">
-                        <InnerTreeItem
-                            deck={this.props.deck}
-                            startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                        />
-                        <AllCardCounts deck={this.props.deck} />
-                    </div>
-                </li>
-            </div>
-        );
-    }
+function NonCollapsibleDeckTreeEntry(props: SubDeckProps) {
+    return (
+        <div className="tree-item">
+            <li style={{ display: "contents" }}>
+                <div className="tree-item-self tag-pane-tag is-clickable">
+                    <InnerTreeItem
+                        deck={props.deck}
+                        startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
+                    />
+                    <AllCardCounts deck={props.deck} />
+                </div>
+            </li>
+        </div>
+    );
 }
 
-class DeckTreeEntry extends Component<SubDeckProps> {
-    render(): ReactNode {
-        if (this.props.deck.subdecks.length) {
-            return (
-                <CollapsibleDeckTreeEntry
-                    deck={this.props.deck}
-                    startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                />
-            );
-        } else {
-            return (
-                <NonCollapsibleDeckTreeEntry
-                    deck={this.props.deck}
-                    startReviewingDeck={(d: Deck) => this.props.startReviewingDeck(d)}
-                />
-            );
-        }
+function DeckTreeEntry(props: SubDeckProps) {
+    if (props.deck.subdecks.length) {
+        return (
+            <CollapsibleDeckTreeEntry
+                deck={props.deck}
+                startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
+            />
+        );
+    } else {
+        return (
+            <NonCollapsibleDeckTreeEntry
+                deck={props.deck}
+                startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
+            />
+        );
     }
 }
 
