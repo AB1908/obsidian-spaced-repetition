@@ -70,6 +70,20 @@ export function FlashcardView(props: FlashcardProps) {
     );
 }
 
+export function generateCardTextWithoutSchedInfo(cardText: string) {
+    return cardText.replace(/<!--SR:.+-->/gm, "");
+}
+
+function generateCardTextWithSchedInfo(cardText: string, scheduling: RegExpMatchArray[]) {
+    cardText = generateCardTextWithoutSchedInfo(cardText);
+    cardText += "<!--SR:";
+    for (let i = 0; i < scheduling.length; i++) {
+        cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+    }
+    cardText += "-->";
+    return cardText;
+}
+
 function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
     let sep: string = isCardCommentOnSameLine ? " " : "\n";
     // Override separator if last block is a codeblock
@@ -158,18 +172,13 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
         } else {
             scheduling.push(currCardSched);
         }
-
-        currentCard.cardText = currentCard.cardText.replace(/<!--SR:.+-->/gm, "");
-        currentCard.cardText += "<!--SR:";
-        for (let i = 0; i < scheduling.length; i++) {
-            currentCard.cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
-        }
-        currentCard.cardText += "-->";
+        cardText = generateCardTextWithSchedInfo(cardText, scheduling);
     }
+    currentCard.cardText = cardText;
 
-    fileText = fileText.replace(replacementRegex, () => currentCard.cardText);
+    fileText = fileText.replace(replacementRegex, () => cardText);
     for (const sibling of currentCard.siblings) {
-        sibling.cardText = currentCard.cardText;
+        sibling.cardText = cardText;
     }
     if (data.settings.burySiblingCards) {
         // this.burySiblingCards(true);
