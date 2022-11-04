@@ -70,6 +70,15 @@ export function FlashcardView(props: FlashcardProps) {
     );
 }
 
+function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
+    let sep: string = isCardCommentOnSameLine ? " " : "\n";
+    // Override separator if last block is a codeblock
+    if (cardText.endsWith("```") && sep !== "\n") {
+        sep = "\n";
+    }
+    return sep;
+}
+
 async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
     if (this.ignoreStats) {
         if (response == ReviewResponse.Easy) {
@@ -125,25 +134,22 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
     const dueString: string = due.format("YYYY-MM-DD");
 
     let fileText: string = await this.app.vault.read(currentCard.note);
-    const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
-
-    let sep: string = data.settings.cardCommentOnSameLine ? " " : "\n";
-    // Override separator if last block is a codeblock
-    if (currentCard.cardText.endsWith("```") && sep !== "\n") {
-        sep = "\n";
-    }
+    let cardText = currentCard.cardText;
+    const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
+    const sep = generateSeparator(cardText, data.settings.cardCommentOnSameLine);
 
     // check if we're adding scheduling information to the flashcard
     // for the first time
-    if (currentCard.cardText.lastIndexOf("<!--SR:") === -1) {
-        currentCard.cardText =
-            currentCard.cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
+    // let cardText: string = currentCard.cardText;
+    if (cardText.lastIndexOf("<!--SR:") === -1) {
+        cardText = cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
+            // cardText;
     } else {
         let scheduling: RegExpMatchArray[] = [
-            ...currentCard.cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+            ...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
         ];
         if (scheduling.length === 0) {
-            scheduling = [...currentCard.cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+            scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
         }
 
         const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
