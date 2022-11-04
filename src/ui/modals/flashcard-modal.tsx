@@ -25,6 +25,7 @@ export class FlashcardModal extends Modal {
 
         if (Platform.isMobile) {
             this.contentEl.style.display = "block";
+            this.modalEl.style.width = "100%";
         }
         this.modalEl.style.height = this.plugin.data.settings.flashcardHeightPercentage + "%";
         this.modalEl.style.width = this.plugin.data.settings.flashcardWidthPercentage + "%";
