@@ -20,21 +20,11 @@ export function FlashcardView(props: FlashcardProps) {
     const { data, easeByPath, dueDatesFlashcards } = pluginContext;
 
     async function edit(currentCard: Card) {
-        let textPromptArr = currentCard.cardText.split("\n");
-        let textPrompt = "";
-        if (textPromptArr[textPromptArr.length - 1].startsWith("<!--SR:")) {
-            textPrompt = textPromptArr.slice(0, -1).join("\n");
-        } else {
-            textPrompt = currentCard.cardText;
+        let modifiedCard: Card = await FlashcardEditModal.Prompt(pluginContext, currentCard);
+        if (modifiedCard !== currentCard) {
+            await writeCardBackToFile(currentCard, modifiedCard, modifiedCard.note);
         }
-
-        let editModal = FlashcardEditModal.Prompt(pluginContext, textPrompt);
-        editModal
-            .then(async (modifiedCardText) => {
-                modifyCardText(currentCard.note, textPrompt, modifiedCardText);
-                moveToNextFlashcard();
-            })
-            .catch((reason) => console.log(reason));
+        moveToNextFlashcard();
     }
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
@@ -136,13 +126,11 @@ function updateFileTextForCard(currentCard: Card, fileText: string, cardText: st
     return fileText.replace(replacementRegex, () => cardText);
 }
 
-async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
-    if (this.ignoreStats) {
-        if (response == ReviewResponse.Easy) {
-        }
-        return;
-    }
+async function writeBack(currentCard: Card, fileText: string) {
+    await this.app.vault.modify(currentCard.note, fileText);
+}
 
+async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
     let interval: number, ease: number, due;
 
     if (response !== ReviewResponse.Reset) {
@@ -199,8 +187,7 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
     if (data.settings.burySiblingCards) {
         // this.burySiblingCards(true);
     }
-
-    await this.app.vault.modify(currentCard.note, fileText);
+    await writeBack.call(this, currentCard, fileText);
 }
 
 function generateFlashcardList(deck: Deck) {
@@ -221,11 +208,8 @@ function generateFlashcardList(deck: Deck) {
     return flashcards;
 }
 
-async function modifyCardText(note: TFile, originalText: string, replacementText: string) {
-    if (!replacementText) return;
-    if (replacementText == originalText) return;
-    let fileText: string = await this.app.vault.read(note);
-    const originalTextRegex = new RegExp(escapeRegexString(originalText), "gm");
-    fileText = fileText.replace(originalTextRegex, replacementText);
-    await this.app.vault.modify(note, fileText);
+async function writeCardBackToFile(currentCard: Card, updatedCard: Card, file: TFile) {
+    let fileText = await app.vault.read(file);
+    fileText = updateFileTextForCard(currentCard, fileText, updatedCard.cardText);
+    await writeBack.call(this, currentCard, fileText);
 }
