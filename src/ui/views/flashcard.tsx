@@ -74,14 +74,19 @@ export function generateCardTextWithoutSchedInfo(cardText: string) {
     return cardText.replace(/<!--SR:.+-->/gm, "");
 }
 
+function generateSchedInfoString(scheduling: RegExpMatchArray[]) {
+    let schedInfo = "<!--SR:";
+    for (let i = 0; i < scheduling.length; i++) {
+        schedInfo += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+    }
+    schedInfo += "-->";
+    return schedInfo;
+}
+
 function generateCardTextWithSchedInfo(cardText: string, scheduling: RegExpMatchArray[]) {
     cardText = generateCardTextWithoutSchedInfo(cardText);
-    cardText += "<!--SR:";
-    for (let i = 0; i < scheduling.length; i++) {
-        cardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
-    }
-    cardText += "-->";
-    return cardText;
+    let schedInfo = generateSchedInfoString(scheduling);
+    return cardText+schedInfo;
 }
 
 function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
@@ -93,25 +98,30 @@ function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
     return sep;
 }
 
+function generateSchedulingArray(cardText: string, dueString: string, interval: number, ease: number, currentCard: Card) {
+    let scheduling: RegExpMatchArray[] = [
+        ...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+    ];
+    if (scheduling.length === 0) {
+        scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+    }
+
+    const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
+    if (currentCard.isDue) {
+        scheduling[currentCard.siblingIdx] = currCardSched;
+    } else {
+        scheduling.push(currCardSched);
+    }
+    return scheduling;
+}
+
 function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueString: string, interval: number, ease: number, currentCard: Card) {
     // adding info to the card for the first time
     if (cardText.lastIndexOf("<!--SR:") === -1) {
         return cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
         // cardText;
     } else {
-        let scheduling: RegExpMatchArray[] = [
-            ...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
-        ];
-        if (scheduling.length === 0) {
-            scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
-        }
-
-        const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
-        if (currentCard.isDue) {
-            scheduling[currentCard.siblingIdx] = currCardSched;
-        } else {
-            scheduling.push(currCardSched);
-        }
+        let scheduling = generateSchedulingArray(cardText, dueString, interval, ease, currentCard);
         return generateCardTextWithSchedInfo(cardText, scheduling);
     }
 }
