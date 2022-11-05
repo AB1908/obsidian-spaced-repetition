@@ -1,15 +1,15 @@
-import { TFile } from "obsidian";
-import React, { useContext, useRef, useState } from "react";
-import { LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR } from "src/constants";
-import { FlashcardContext } from "src/contexts/FlashcardContext";
-import { AppContext } from "src/contexts/PluginContext";
-import { Deck } from "src/Deck";
-import { PluginData } from "src/main";
-import { Card, ReviewResponse, schedule } from "src/scheduling";
-import { escapeRegexString } from "src/utils";
-import { FlashcardContent, FlashcardProps } from "../components/flashcard";
-import { FlashcardEditModal } from "../modals/edit-modal";
-import { ModalStates } from "./modal";
+import {TFile} from "obsidian";
+import React, {useContext, useRef, useState} from "react";
+import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/constants";
+import {FlashcardContext} from "src/contexts/FlashcardContext";
+import {AppContext} from "src/contexts/PluginContext";
+import {Deck} from "src/Deck";
+import {PluginData} from "src/main";
+import {Card, ReviewResponse, schedule} from "src/scheduling";
+import {escapeRegexString} from "src/utils";
+import {FlashcardContent, FlashcardProps} from "../components/flashcard";
+import {FlashcardEditModal} from "../modals/edit-modal";
+import {ModalStates} from "./modal";
 
 export function FlashcardView(props: FlashcardProps) {
     const [isQuestion, setIsQuestion] = useState(true);
@@ -38,7 +38,7 @@ export function FlashcardView(props: FlashcardProps) {
     }
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
-        // todo: move to useefect?
+        // todo: move to useEffect?
         await processReview(clickedResponse, flashcardList.current[flashcardIndex], data, dueDatesFlashcards, easeByPath);
         moveToNextFlashcard();
     }
@@ -70,7 +70,7 @@ export function FlashcardView(props: FlashcardProps) {
     );
 }
 
-export function generateCardTextWithoutSchedInfo(cardText: string) {
+export function removeSchedTextFromCard(cardText: string) {
     return cardText.replace(/<!--SR:.+-->/gm, "");
 }
 
@@ -84,7 +84,7 @@ function generateSchedInfoString(scheduling: RegExpMatchArray[]) {
 }
 
 function generateCardTextWithSchedInfo(cardText: string, scheduling: RegExpMatchArray[]) {
-    cardText = generateCardTextWithoutSchedInfo(cardText);
+    cardText = removeSchedTextFromCard(cardText);
     let schedInfo = generateSchedInfoString(scheduling);
     return cardText+schedInfo;
 }
@@ -119,11 +119,21 @@ function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueStrin
     // adding info to the card for the first time
     if (cardText.lastIndexOf("<!--SR:") === -1) {
         return cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
-        // cardText;
     } else {
         let scheduling = generateSchedulingArray(cardText, dueString, interval, ease, currentCard);
         return generateCardTextWithSchedInfo(cardText, scheduling);
     }
+}
+
+function updateCardText(currentCard: Card, data: PluginData, dueString: string, interval: number, ease: number, isCardCommentOnSameLine: boolean = data.settings.cardCommentOnSameLine) {
+    let cardText = currentCard.cardText;
+    const sep = generateSeparator(cardText, isCardCommentOnSameLine);
+    return regenerateCardTextWithSchedInfo(cardText, sep, dueString, interval, ease, currentCard);
+}
+
+function updateFileTextForCard(currentCard: Card, fileText: string, cardText: string) {
+    const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
+    return fileText.replace(replacementRegex, () => cardText);
 }
 
 async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
@@ -178,18 +188,13 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
         return;
     }
 
-    const dueString: string = due.format("YYYY-MM-DD");
+    let updatedCardText = updateCardText(currentCard, data, due.format("YYYY-MM-DD"), interval, ease);
 
     let fileText: string = await this.app.vault.read(currentCard.note);
-    let cardText = currentCard.cardText;
-    const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
-    const sep = generateSeparator(cardText, data.settings.cardCommentOnSameLine);
+    fileText = updateFileTextForCard(currentCard, fileText, updatedCardText);
 
-    cardText = regenerateCardTextWithSchedInfo(cardText, sep, dueString, interval, ease, currentCard);
-
-    fileText = fileText.replace(replacementRegex, () => cardText);
     for (const sibling of currentCard.siblings) {
-        sibling.cardText = cardText;
+        sibling.cardText = updatedCardText;
     }
     if (data.settings.burySiblingCards) {
         // this.burySiblingCards(true);
