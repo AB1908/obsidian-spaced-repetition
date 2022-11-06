@@ -5,11 +5,10 @@ import {AppContext} from "src/contexts/PluginContext";
 import {Deck} from "src/Deck";
 import {PluginData} from "src/main";
 import {Card, ReviewResponse, schedule} from "src/scheduling";
-import {escapeRegexString} from "src/utils";
 import {FlashcardContent, FlashcardProps} from "../components/flashcard";
 import {FlashcardEditModal} from "../modals/edit-modal";
 import {ModalStates} from "./modal";
-import {updateCardText} from "src/sched-utils";
+import {updateCardInFileText, updateCardText} from "src/sched-utils";
 
 export function FlashcardView(props: FlashcardProps) {
     const [isQuestion, setIsQuestion] = useState(true);
@@ -58,11 +57,6 @@ export function FlashcardView(props: FlashcardProps) {
             </FlashcardContext.Provider>
         </>
     );
-}
-
-function updateCardInFileText(currentCard: Card, fileText: string, cardText: string) {
-    const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
-    return fileText.replace(replacementRegex, () => cardText);
 }
 
 async function writeBack(currentCard: Card, fileText: string) {
