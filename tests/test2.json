@@ -1,0 +1,33 @@
+{
+  "currentCard": {
+    "isDue": true,
+    "note": {
+      "deleted": false,
+      "vault": {},
+      "path": "FIlename.md",
+      "name": "FIlename.md",
+      "basename": "FIlename",
+      "extension": "md",
+      "saving": false,
+      "stat": {
+        "ctime": 1661948183322,
+        "mtime": 1667705342446,
+        "size": 354
+      },
+      "parent": {}
+    },
+    "lineNo": 5,
+    "front": "newdeck question 5",
+    "back": "Answer that was edited on 2022-10-31\n<!--SR:!2022-10-03,3,230-->",
+    "cardText": "newdeck question 5\n?\nAnswer that was edited on 2022-10-31\n<!--SR:!2022-10-03,3,230-->",
+    "context": "New deck top level",
+    "cardType": 2,
+    "siblingIdx": 0,
+    "siblings": [],
+    "interval": 3,
+    "ease": 230,
+    "delayBeforeReview": 2969935552
+  },
+  "fileText": "#flashcards/newdeck\n\n# New deck top level\n\nnewdeck question 5\n?\nAnswer that was edited on 2022-10-31\n<!--SR:!2022-10-03,3,230-->\n\nnewdeckquestion6::text\n<!--SR:!2022-11-07,1,230-->\n\nnewdeckquestion7 ==things==\n<!--SR:!2022-11-26,26,250-->\n\n## This is a context header\n\nnewdeck question under context header\n?\nwith an answer\n<!--SR:!2022-12-30,60,290-->",
+  "cardText": "newdeck question 5\n?\nAnswer that was edited on 2022-10-31\n<!--SR:!2023-03-06,120,250-->"
+}
