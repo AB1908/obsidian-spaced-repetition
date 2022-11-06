@@ -63,7 +63,7 @@ export class FlashcardEditModal extends Modal {
                     <textarea spellCheck="false"
                               className={"answer"}
                               style={{ width: "100%" }}
-                              defaultValue={removeSchedTextFromCard(this.card.back)}
+                              defaultValue={removeSchedTextFromCard(this.card.back, "")}
                               // TODO: Fix this weird casting
                               onKeyDown={(e) => this.submitEnterCallback(e as unknown as KeyboardEvent)}
                               onChange={(event) => { this.answerText = event.target.value }}
@@ -112,7 +112,7 @@ export class FlashcardEditModal extends Modal {
                 const output: Card = {...this.card}
                 const frontReplacementRegex = new RegExp(escapeRegexString(this.card.front), "gm");
                 output.cardText = this.card.cardText.replace(frontReplacementRegex, this.questionText);
-                const backReplacementRegex = new RegExp(escapeRegexString(removeSchedTextFromCard(this.card.back)), "gm");
+                const backReplacementRegex = new RegExp(escapeRegexString(removeSchedTextFromCard(this.card.back, "")), "gm");
                 output.cardText = output.cardText.replace(backReplacementRegex, this.answerText);
                 this.resolvePromise(output);
             }

@@ -1,10 +1,9 @@
 import {Card} from "src/scheduling";
 import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/constants";
-import {PluginData} from "src/main";
 import {escapeRegexString} from "src/utils";
 
-export function removeSchedTextFromCard(cardText: string) {
-    return cardText.replace(/<!--SR:.+-->/gm, "");
+export function removeSchedTextFromCard(cardText: string, separator?: string) {
+    return cardText.replace(new RegExp((separator??"")+"<!--SR:.+-->", "gm"), "");
 }
 
 function generateSchedInfoString(scheduling: RegExpMatchArray[]) {
@@ -16,13 +15,13 @@ function generateSchedInfoString(scheduling: RegExpMatchArray[]) {
     return schedInfo;
 }
 
-function generateCardTextWithSchedInfo(cardText: string, scheduling: RegExpMatchArray[]) {
-    cardText = removeSchedTextFromCard(cardText);
+function generateCardTextWithSchedInfo(cardText: string, scheduling: RegExpMatchArray[], sep: string) {
+    cardText = removeSchedTextFromCard(cardText, sep);
     let schedInfo = generateSchedInfoString(scheduling);
-    return cardText + schedInfo;
+    return cardText + sep + schedInfo;
 }
 
-function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
+export function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
     let sep: string = isCardCommentOnSameLine ? " " : "\n";
     // Override separator if last block is a codeblock
     if (cardText.endsWith("```") && sep !== "\n") {
@@ -54,7 +53,7 @@ function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueStrin
         return cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
     } else {
         let scheduling = generateSchedulingArray(cardText, dueString, interval, ease, currentCard);
-        return generateCardTextWithSchedInfo(cardText, scheduling);
+        return generateCardTextWithSchedInfo(cardText, scheduling, sep);
     }
 }
 
