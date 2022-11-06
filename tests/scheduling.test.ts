@@ -9,6 +9,9 @@ test("Test reviewing with default settings", () => {
         interval: 4,
     });
 
+    expect( () =>
+        schedule(ReviewResponse.Easy, undefined, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, {}) ).toThrow("invalid interval");
+
     expect(
         schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, {})
     ).toEqual({
@@ -134,10 +137,13 @@ test("Test load balancing", () => {
 });
 
 test("Test textInterval - desktop", () => {
-    expect(textInterval(1, false)).toEqual("1 day(s)");
-    expect(textInterval(41, false)).toEqual("1.3 month(s)");
-    expect(textInterval(366, false)).toEqual("1 year(s)");
-    expect(textInterval(1000, false)).toEqual("2.7 year(s)");
+    expect(textInterval(2, false)).toEqual("2 days");
+    expect(textInterval(1, false)).toEqual("1 day");
+    expect(textInterval(31, false)).toEqual("1 month");
+    expect(textInterval(41, false)).toEqual("1.3 months");
+    expect(textInterval(730, false)).toEqual("2 years");
+    expect(textInterval(365, false)).toEqual("1 year");
+    expect(textInterval(1000, false)).toEqual("2.7 years");
 });
 
 test("Test textInterval - mobile", () => {
