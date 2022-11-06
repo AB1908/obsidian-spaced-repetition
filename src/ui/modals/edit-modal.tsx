@@ -104,7 +104,7 @@ export class FlashcardEditModal extends Modal {
     }
 
     private resolveInput() {
-        if (!this.didSubmit) this.rejectPromise("No input given.");
+        if (!this.didSubmit) this.resolvePromise(this.card);
         else {
             if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
                 this.resolvePromise(this.card);
