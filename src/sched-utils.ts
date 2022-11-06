@@ -32,9 +32,6 @@ function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
 }
 
 export function generateSchedulingArray(cardSchedulingText: string, dueString: string, interval: number, ease: number, currentCard: Card) {
-    console.group("input")
-    console.log(arguments)
-    console.groupEnd()
     let scheduling: RegExpMatchArray[] = [
         ...cardSchedulingText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
     ];
@@ -48,9 +45,6 @@ export function generateSchedulingArray(cardSchedulingText: string, dueString: s
     } else {
         scheduling.push(currCardSched);
     }
-    console.group("output");
-    console.log(scheduling);
-    console.groupEnd();
     return scheduling;
 }
 
@@ -64,13 +58,17 @@ function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueStrin
     }
 }
 
-export function updateCardText(currentCard: Card, data: PluginData, dueString: string, interval: number, ease: number, isCardCommentOnSameLine: boolean = data.settings.cardCommentOnSameLine) {
+export function updateCardText(currentCard: Card, dueString: string, interval: number, ease: number, isCardCommentOnSameLine: boolean) {
     let cardText = currentCard.cardText;
     const sep = generateSeparator(cardText, isCardCommentOnSameLine);
     return regenerateCardTextWithSchedInfo(cardText, sep, dueString, interval, ease, currentCard);
 }
 
 export function updateCardInFileText(currentCard: Card, fileText: string, cardText: string) {
+    console.group("input")
+    console.groupEnd()
     const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
+    console.group("output");
+    console.groupEnd();
     return fileText.replace(replacementRegex, () => cardText);
 }

@@ -109,7 +109,7 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
         return;
     }
 
-    let updatedCardText = updateCardText(currentCard, data, due.format("YYYY-MM-DD"), interval, ease);
+    let updatedCardText = updateCardText(currentCard, due.format("YYYY-MM-DD"), interval, ease, data.settings.cardCommentOnSameLine);
 
     let fileText: string = await this.app.vault.read(currentCard.note);
     fileText = updateCardInFileText(currentCard, fileText, updatedCardText);
