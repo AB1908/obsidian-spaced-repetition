@@ -36,9 +36,12 @@ export default {
     ALL_CAUGHT_UP: "You're all caught up now :D.",
 
     // scheduling.ts
-    DAYS_STR_IVL: "${interval} day(s)",
-    MONTHS_STR_IVL: "${interval} month(s)",
-    YEARS_STR_IVL: "${interval} year(s)",
+    DAY_STR_IVL: "${interval} day",
+    MONTH_STR_IVL: "${interval} month",
+    YEAR_STR_IVL: "${interval} year",
+    DAYS_STR_IVL: "${interval} days",
+    MONTHS_STR_IVL: "${interval} months",
+    YEARS_STR_IVL: "${interval} years",
     DAYS_STR_IVL_MOBILE: "${interval}d",
     MONTHS_STR_IVL_MOBILE: "${interval}m",
     YEARS_STR_IVL_MOBILE: "${interval}y",

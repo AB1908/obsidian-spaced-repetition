@@ -50,6 +50,9 @@ export function schedule(
     dueDates?: Record<number, number>
 ): Record<string, number> {
     delayBeforeReview = Math.max(0, Math.floor(delayBeforeReview / (24 * 3600 * 1000)));
+    if (isNaN(interval)) {
+        throw Error("invalid interval");
+    }
 
     if (response === ReviewResponse.Easy) {
         ease += 20;
@@ -101,6 +104,7 @@ export function schedule(
 }
 
 export function textInterval(interval: number, isMobile: boolean): string {
+    // WTF? What are these random numbers?
     const m: number = Math.round(interval / 3.04375) / 10,
         y: number = Math.round(interval / 36.525) / 10;
 
@@ -109,8 +113,11 @@ export function textInterval(interval: number, isMobile: boolean): string {
         else if (y < 1.0) return t("MONTHS_STR_IVL_MOBILE", { interval: m });
         else return t("YEARS_STR_IVL_MOBILE", { interval: y });
     } else {
-        if (m < 1.0) return t("DAYS_STR_IVL", { interval });
+        if (interval <= 1.0) return t("DAY_STR_IVL", { interval });
+        else if (m < 1.0) return t("DAYS_STR_IVL", { interval });
+        else if (m == 1.0) return t("MONTH_STR_IVL", { interval: m});
         else if (y < 1.0) return t("MONTHS_STR_IVL", { interval: m });
+        else if (y == 1.0) return t("YEAR_STR_IVL", { interval: y});
         else return t("YEARS_STR_IVL", { interval: y });
     }
 }
