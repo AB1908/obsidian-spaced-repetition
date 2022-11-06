@@ -30,15 +30,15 @@ function generateSeparator(cardText: string, isCardCommentOnSameLine: boolean) {
     return sep;
 }
 
-export function generateSchedulingArray(cardText: string, dueString: string, interval: number, ease: number, currentCard: Card) {
+export function generateSchedulingArray(cardSchedulingText: string, dueString: string, interval: number, ease: number, currentCard: Card) {
     console.group("input")
     console.log(arguments)
     console.groupEnd()
     let scheduling: RegExpMatchArray[] = [
-        ...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
+        ...cardSchedulingText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
     ];
     if (scheduling.length === 0) {
-        scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+        scheduling = [...cardSchedulingText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
     }
 
     const currCardSched: RegExpMatchArray = ["0", dueString, interval.toString(), ease.toString()];
