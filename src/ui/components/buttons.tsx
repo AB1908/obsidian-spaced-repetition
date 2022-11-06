@@ -1,8 +1,8 @@
-import { Platform } from "obsidian";
-import React, { useContext } from "react";
-import { FlashcardContext } from "src/contexts/FlashcardContext";
-import { AppContext } from "src/contexts/PluginContext";
-import { ReviewResponse, schedule, textInterval } from "src/scheduling";
+import {Platform} from "obsidian";
+import React, {useContext} from "react";
+import {FlashcardContext} from "src/contexts/FlashcardContext";
+import {AppContext} from "src/contexts/PluginContext";
+import {ReviewResponse, schedule, textInterval} from "src/scheduling";
 
 export function EditLaterButton({ editLaterHandler }: { editLaterHandler: Function }) {
     return <div className="sr-link" onClick={() => editLaterHandler()}>Edit Later</div>;
@@ -39,54 +39,40 @@ function Button({ text, id, responseHandler }: { text: string, id: string, respo
 export function ResponseButtons() {
     const { data } = useContext(AppContext)
     let easyBtnText: string, goodBtnText: string, hardBtnText: string;
-    const { handleFlashcardResponse } = useContext(FlashcardContext);
+    const { handleFlashcardResponse, card } = useContext(FlashcardContext);
 
     let interval = 1.0,
         ease: number = data.settings.baseEase,
         delayBeforeReview = 0;
-    const hardInterval: number = schedule(
-        ReviewResponse.Hard,
-        interval,
-        ease,
-        delayBeforeReview,
-        data.settings
-    ).interval;
-    const goodInterval: number = schedule(
-        ReviewResponse.Good,
-        interval,
-        ease,
-        delayBeforeReview,
-        data.settings
-    ).interval;
-    const easyInterval: number = schedule(
-        ReviewResponse.Easy,
-        interval,
-        ease,
-        delayBeforeReview,
-        data.settings
-    ).interval;
 
-    // if (ignoreStats) {
-    //     // Same for mobile/desktop
-    //     hardBtn.setText(`${plugin.data.settings.flashcardHardText}`);
-    //     easyBtn.setText(`${plugin.data.settings.flashcardEasyText}`);
+    if (card.isDue) {
+        interval = card.interval;
+        ease = card.ease;
+        delayBeforeReview = card.delayBeforeReview;
+    }
+
+    function getInterval(response?: ReviewResponse) {
+        return schedule(
+            response,
+            interval,
+            ease,
+            delayBeforeReview,
+            data.settings
+        ).interval;
+    }
+
+    const hardInterval: number = getInterval(ReviewResponse.Hard);
+    const goodInterval: number = getInterval(ReviewResponse.Good);
+    const easyInterval: number = getInterval(ReviewResponse.Easy);
+
     if (Platform.isMobile) {
         hardBtnText = `${textInterval(hardInterval, true)}`;
         goodBtnText = `${textInterval(goodInterval, true)}`;
         easyBtnText = `${textInterval(easyInterval, true)}`;
     } else {
-        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(
-            hardInterval,
-            false
-        )}`
-        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(
-            goodInterval,
-            false
-        )}`;
-        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(
-            easyInterval,
-            false
-        )}`;
+        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval( hardInterval, false )}`
+        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval( goodInterval, false )}`;
+        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval( easyInterval, false )}`;
     }
 
     return (
