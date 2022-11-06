@@ -3,8 +3,8 @@ import {Modal} from "obsidian";
 import {createRoot, Root} from "react-dom/client";
 import SRPlugin from "src/main";
 import {Card} from "src/scheduling";
-import {removeSchedTextFromCard} from "src/ui/views/flashcard";
 import {escapeRegexString} from "src/utils";
+import {removeSchedTextFromCard} from "src/sched-utils";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
@@ -107,7 +107,6 @@ export class FlashcardEditModal extends Modal {
         if (!this.didSubmit) this.rejectPromise("No input given.");
         else {
             if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
-                // this.card.back = removeSchedTextFromCard(this.card.back);
                 this.resolvePromise(this.card);
             } else {
                 const output: Card = {...this.card}
