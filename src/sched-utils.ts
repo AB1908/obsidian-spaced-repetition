@@ -1,6 +1,7 @@
 import {Card} from "src/scheduling";
 import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/constants";
 import {PluginData} from "src/main";
+import {escapeRegexString} from "src/utils";
 
 export function removeSchedTextFromCard(cardText: string) {
     return cardText.replace(/<!--SR:.+-->/gm, "");
@@ -67,4 +68,9 @@ export function updateCardText(currentCard: Card, data: PluginData, dueString: s
     let cardText = currentCard.cardText;
     const sep = generateSeparator(cardText, isCardCommentOnSameLine);
     return regenerateCardTextWithSchedInfo(cardText, sep, dueString, interval, ease, currentCard);
+}
+
+export function updateCardInFileText(currentCard: Card, fileText: string, cardText: string) {
+    const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");
+    return fileText.replace(replacementRegex, () => cardText);
 }
