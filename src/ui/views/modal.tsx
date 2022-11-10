@@ -64,7 +64,7 @@ export function ModalElement(props: ContainerProps) {
             </div>
             <div
                 className="modal-content sr-modal-content"
-                style={{ position: "relative", height: "92%" }}
+                // style={{ position: "relative", height: "92%" }}
             >
                 <ModalContent
                     startReviewingDeck={(deck: Deck) => {

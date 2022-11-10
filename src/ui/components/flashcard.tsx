@@ -27,11 +27,11 @@ function FlashcardHeader({ editLaterHandler }: { editLaterHandler: Function }) {
     const contextText = useContext(FlashcardContext).card.context;
 
     return (
-        <>
+        <div className={"sr-header"}>
             <EditLaterButton editLaterHandler={editLaterHandler} />
             {!isQuestion && <ResetButton />}
             <FlashcardContextHeader text={contextText} />
-        </>
+        </div>
     );
 }
 

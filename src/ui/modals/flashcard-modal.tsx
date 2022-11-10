@@ -1,5 +1,5 @@
 import React from "react";
-import { App, Modal, Platform } from "obsidian";
+import { App, Modal } from "obsidian";
 import { createRoot, Root } from "react-dom/client";
 import type SRPlugin from "src/main";
 import { ModalElement } from "../views/modal";
@@ -23,16 +23,7 @@ export class FlashcardModal extends Modal {
         this.plugin = plugin;
         this.ignoreStats = ignoreStats;
 
-        if (Platform.isMobile) {
-            this.contentEl.style.display = "block";
-            this.modalEl.style.width = "100%";
-        }
-        this.modalEl.style.height = this.plugin.data.settings.flashcardHeightPercentage + "%";
-        this.modalEl.style.width = this.plugin.data.settings.flashcardWidthPercentage + "%";
-
-        // this.contentEl.style.position = "relative";
-        // this.contentEl.style.height = "92%";
-        // this.contentEl.addClass("sr-modal-content");
+        this.modalEl.addClass("sr-modal");
 
         // document.body.onkeydown = (e) => {
         //     if (this.mode !== FlashcardModalMode.DecksList) {
@@ -68,9 +59,7 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot.render(
             <>
                 <AppContext.Provider value={this.plugin}>
-                    <ModalElement
-                        handleCloseButtonClick={() => this.close()}
-                    />
+                    <ModalElement handleCloseButtonClick={() => this.close()}/>
                 </AppContext.Provider>
             </>
         )
