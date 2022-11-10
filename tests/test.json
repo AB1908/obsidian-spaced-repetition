@@ -1,0 +1,36 @@
+{
+    "cardText": "newdeck question 5\n?\nAnswer that was edited on 2022-10-31\n<!--SR:!2022-10-03,3,230-->",
+    "dueString": "2023-03-06",
+    "interval": 120,
+    "ease": 250,
+    "currentCard": {
+        "isDue": true,
+        "note": {
+            "deleted": false,
+            "vault": {},
+            "path": "FIlename.md",
+            "name": "FIlename.md",
+            "basename": "FIlename",
+            "extension": "md",
+            "saving": false,
+            "stat": {
+                "ctime": 1661948183322,
+                "mtime": 1667695198736,
+                "size": 352
+            },
+            "parent": {}
+        },
+        "lineNo": 5,
+        "front": "newdeck question 5",
+        "back": "Answer that was edited on 2022-10-31\n<!--SR:!2022-10-03,3,230-->",
+        "cardText": "newdeck question 5\n?\nAnswer that was edited on 2022-10-31\n<!--SR:!2023-03-06,120,250-->",
+        "context": "New deck top level",
+        "cardType": 2,
+        "siblingIdx": 0,
+        "siblings": [],
+        "interval": 3,
+        "ease": 230,
+        "delayBeforeReview": 2959630856,
+        "parent": {}
+    }
+}
