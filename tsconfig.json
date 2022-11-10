@@ -14,7 +14,8 @@
         "esModuleInterop": true,
         "importHelpers": true,
         "lib": ["dom", "dom.Iterable", "scripthost", "ES5", "ES6", "ES7", "ES2021"],
-        "jsx": "react-jsx"
+        "jsx": "react-jsx",
+        "resolveJsonModule": true
     },
     "include": ["**/*.ts", "**/*.tsx"]
 }

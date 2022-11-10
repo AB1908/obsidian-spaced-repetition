@@ -10,7 +10,7 @@ export function EditLaterButton({ editLaterHandler }: { editLaterHandler: Functi
 
 export function ResetButton() {
     return (
-        <div className="sr-link" style={{ float: "right" }}>
+        <div className="sr-link">
             Reset card's progress
         </div>
     );
@@ -21,7 +21,6 @@ export function ShowAnswerButton() {
     return (
         <button
             id="sr-show-answer"
-            style={{ display: "initial" }}
             onClick={() => handleShowAnswerButton()}
         >
             Show Answer
@@ -76,7 +75,7 @@ export function ResponseButtons() {
     }
 
     return (
-        <div className="sr-response" style={{ display: "flex", justifyContent: "space-evenly" }}>
+        <div className="sr-response">
             <Button text={hardBtnText} id="sr-hard-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Hard)} />
             <Button text={goodBtnText} id="sr-good-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Good)} />
             <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Easy)} />

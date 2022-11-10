@@ -1,18 +1,80 @@
+.tree-item-self:hover .tree-item-flair {
+    color: initial;
+}
+
+.sr-modal {
+    height: 80%;
+    width: 60%;
+}
+
+.sr-header {
+    height: 15%;
+}
+
+div.tree-item-flair-outer {
+    margin-left: 0;
+}
+
+div.tree-item-inner {
+    text-align: left;
+}
+
+span.new-cards {
+    color: lightgreen;
+}
+
+span.total-cards {
+    color: lightsalmon;
+}
+
+span.due-cards {
+    color: lightskyblue;
+}
+
+span.sr-deck-counts {
+    font-weight: bold;
+}
+
+.sr-modal-content {
+    text-align: center;
+    height: 80%;
+}
+
 .sr-link {
     color: var(--text-accent);
     text-decoration: underline;
     cursor: pointer;
     margin-bottom: 16px;
-    display: inline-block;
+    float: left;
+    width: 33%;
+    text-align: center;
+}
+
+.sr-input-modal {
+    height: 80%;
+    width: 60%;
+}
+
+.sr-input-area {
+    height: 80%;
+}
+
+.sr-input-area > textarea.question {
+    width: 100%;
+}
+
+.sr-input-area > textarea.answer {
+    height: 50%;
+    width: 100%;
 }
 
 .sr-response {
     display: inline-grid;
     width: 100%;
     grid-template-columns: auto auto auto;
-    position: absolute;
-    bottom: 0;
+    margin-bottom: 1em;
 }
+
 .sr-ignorestats-response {
     grid-template-columns: auto auto !important;
 }
@@ -24,8 +86,10 @@
 }
 
 .sr-deck-counts {
-    color: #ffffff;
-    margin-left: 4px;
+    padding: 2px;
+    margin: 2px;
+    width: 1.5rem;
+    text-align: center;
 }
 
 #sr-show-answer {
@@ -33,12 +97,13 @@
     line-height: 48px;
     width: 100%;
     text-align: center;
-    position: absolute;
     bottom: 0;
     cursor: pointer;
     background-color: #2196f3;
     color: #ffffff;
     border-radius: 4px;
+    padding: 0;
+    align-self: center;
 }
 
 #sr-hr-card-divide {
@@ -71,11 +136,12 @@
     font-style: italic;
     font-weight: bold;
     margin-top: 16px;
+    display: inline-block;
+    width: 100%;
 }
 
 #sr-flashcard-view {
-    overflow-y: auto;
-    height: 80%;
+    height: 70%;
 }
 
 .sr-ignorestats-btn {
@@ -84,20 +150,33 @@
     margin-right: 12px !important;
 }
 
+
 @media only screen and (max-width: 600px) {
+    div.modal-content.sr-modal-content {
+        display: block !important;
+        /* width: 90%; */
+    }
+
     .sr-modal-content::-webkit-scrollbar,
     #sr-flashcard-view::-webkit-scrollbar {
         display: none;
-    }
-
-    .sr-response,
-    #sr-show-answer {
-        width: 95% !important;
     }
 
     #sr-hard-btn,
     #sr-good-btn,
     #sr-easy-btn {
         width: 100px;
+    }
+
+    .sr-input-area > textarea.question {
+        width: 100%;
+        align-self: center;
+        height: 15%;
+    }
+
+    .sr-input-area > textarea.answer {
+        width: 100%;
+        align-self: center;
+        height: 35%;
     }
 }
