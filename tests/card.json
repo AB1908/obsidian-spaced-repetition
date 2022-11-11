@@ -1,0 +1,29 @@
+{
+  "isDue": true,
+  "note": {
+    "deleted": false,
+    "vault": {},
+    "path": "flashcards.md",
+    "name": "flashcards.md",
+    "basename": "flashcards",
+    "extension": "md",
+    "saving": false,
+    "stat": {
+      "ctime": 1661948183326,
+      "mtime": 1668158949169,
+      "size": 220
+    },
+    "parent": {}
+  },
+  "lineNo": 3,
+  "front": "Root question more stuff and added",
+  "back": "Answer to root question 1 (should be gone) new text edited on mobile\n<!--SR:!2022-11-05,5,170-->",
+  "cardText": "Root question more stuff and added\n?\nAnswer to root question 1 (should be gone) new text edited on mobile\n<!--SR:!2022-11-05,5,170-->",
+  "context": "",
+  "cardType": 2,
+  "siblingIdx": 0,
+  "siblings": [],
+  "interval": 5,
+  "ease": 170,
+  "delayBeforeReview": 568996654
+}
