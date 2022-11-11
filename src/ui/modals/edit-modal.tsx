@@ -1,10 +1,10 @@
 import React from "react";
-import { Modal } from "obsidian";
-import { createRoot, Root } from "react-dom/client";
+import {Modal} from "obsidian";
+import {createRoot, Root} from "react-dom/client";
 import SRPlugin from "src/main";
-import { Card } from "src/scheduling";
-import { escapeRegexString } from "src/utils";
-import { generateSeparator, removeSchedTextFromCard } from "src/sched-utils";
+import {Card} from "src/scheduling";
+import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
+import {replacedCardText} from "src/edit-utils";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
@@ -100,11 +100,13 @@ export class FlashcardEditModal extends Modal {
             if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
                 this.resolvePromise(this.card);
             } else {
-                const output: Card = { ...this.card }
-                const frontReplacementRegex = new RegExp(escapeRegexString(this.card.front), "gm");
-                output.cardText = this.card.cardText.replace(frontReplacementRegex, this.questionText);
-                const backReplacementRegex = new RegExp(escapeRegexString(removeSchedTextFromCard(this.card.back, "")), "gm");
-                output.cardText = output.cardText.replace(backReplacementRegex, this.answerText);
+                let output: Card = { ...this.card }
+                const front = this.card.front;
+                const cardText = this.card.cardText;
+                const questionText = this.questionText;
+                const back = this.card.back;
+                const answerText = this.answerText;
+                output.cardText = replacedCardText(front, output, cardText, questionText, back, answerText, this.plugin.data.settings.cardCommentOnSameLine);
                 this.resolvePromise(output);
             }
         }

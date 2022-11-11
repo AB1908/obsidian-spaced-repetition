@@ -1,6 +1,6 @@
 {
     "name": "obsidian-spaced-repetition",
-    "version": "1.8.0",
+    "version": "1.9.1-beta",
     "description": "Fight the forgetting curve by reviewing flashcards & entire notes.",
     "main": "main.js",
     "scripts": {
@@ -8,8 +8,7 @@
         "dev": "node esbuild.config.mjs",
         "format": "yarn prettier --write .",
         "lint": "yarn prettier --check .",
-        "test": "jest --coverage",
-        "prepare": "husky install"
+        "test": "jest"
     },
     "author": "Stephen Mwangi",
     "license": "MIT",
@@ -17,25 +16,33 @@
         "@types/jest": "^27.0.3",
         "@types/jest-expect-message": "^1.0.4",
         "@types/node": "^17.0.5",
+        "@types/react": "^18.0.21",
         "@types/vhtml": "^2.2.4",
         "@typescript-eslint/eslint-plugin": "^5.2.0",
         "@typescript-eslint/parser": "^5.2.0",
         "builtin-modules": "^3.2.0",
+        "electron-react-devtools": "^0.5.3",
         "esbuild": "~0.13.0",
         "eslint": "^8.3.0",
         "husky": "^7.0.4",
         "jest": "^27.4.5",
         "jest-27-expect-message": "^1.1.0",
+        "json-circular-stringify": "^1.0.1",
         "moment": "^2.29.4",
         "obsidian": "^0.15.4",
         "prettier": "^2.5.1",
+        "react-devtools": "^4.25.0",
         "ts-jest": "^27.0.4",
         "tslib": "2.3.1",
         "typescript": "4.5.4",
         "vhtml": "^2.2.0"
     },
     "dependencies": {
+        "@types/react-dom": "^18.0.6",
         "chart.js": "^3.7.0",
-        "pagerank.js": "^1.0.2"
+        "immutability-helper": "^3.1.1",
+        "pagerank.js": "^1.0.2",
+        "react": "^18.2.0",
+        "react-dom": "^18.2.0"
     }
 }
