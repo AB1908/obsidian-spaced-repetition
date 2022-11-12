@@ -2,6 +2,10 @@
     color: initial;
 }
 
+.modal-title > .tree-item-flair-outer {
+    justify-content: space-around;
+}
+
 .sr-modal {
     height: 80%;
     width: 60%;
