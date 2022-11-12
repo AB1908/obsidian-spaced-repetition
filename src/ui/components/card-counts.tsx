@@ -17,7 +17,6 @@ interface CardCountProps {
 
 export class CardCount extends React.Component<CardCountProps> {
     render(): React.ReactNode {
-        console.log("tag-pane-tag-count tree-item-flair sr-deck-counts "+this.props.additionalClass)
         return (
             <span
                 aria-label={t(this.props.cardType)}
