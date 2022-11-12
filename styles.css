@@ -139,13 +139,13 @@ span.sr-deck-counts {
 #sr-context {
     font-style: italic;
     font-weight: bold;
-    margin-top: 16px;
     display: inline-block;
     width: 100%;
 }
 
 #sr-flashcard-view {
-    height: 70%;
+    margin-top: 5em;
+    height: 60%;
 }
 
 .sr-ignorestats-btn {
