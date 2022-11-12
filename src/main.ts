@@ -8,7 +8,6 @@ import { FlashcardModal } from "src/ui/modals/flashcard-modal";
 import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
-import { StatsModal } from "src/stats-modal";
 
 export interface PluginData {
     settings: SRSettings;
@@ -101,17 +100,6 @@ export default class SRPlugin extends Plugin {
                     // await this.findFlashcardsInNote(openFile, deckPath, false, true);
                     new FlashcardModal(this.app, this, true).open();
                 }
-            },
-        });
-
-        this.addCommand({
-            id: "srs-view-stats",
-            name: t("VIEW_STATS"),
-            callback: async () => {
-                // if (!this.syncLock) {
-                    // await this.sync();
-                    new StatsModal(this.app, this).open();
-                // }
             },
         });
 
