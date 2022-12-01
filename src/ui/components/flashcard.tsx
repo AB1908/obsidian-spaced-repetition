@@ -2,7 +2,7 @@ import { MarkdownRenderer } from "obsidian";
 import React, { MutableRefObject, useRef, useEffect, useContext } from "react";
 import { FlashcardContext } from "src/contexts/FlashcardContext";
 import { Deck } from "src/Deck";
-import { CardType } from "src/scheduling";
+import {Card, CardType} from "src/scheduling";
 import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtons } from "./buttons";
 
 export interface FlashcardButtons extends ContentProps {
@@ -101,7 +101,7 @@ function FlashcardBody(props: ContentProps) {
     return (
         <>
             {/* Question */}
-            <QuestionText cardType={card.cardType} questionText={card.front} />
+            <QuestionText cardType={card.cardType} card={card} />
             {!isQuestion && (
                 <div id="markdown-child" ref={props.viewRef}>
                     <hr id="sr-hr-card-divide" />
@@ -112,9 +112,9 @@ function FlashcardBody(props: ContentProps) {
     );
 }
 
-function QuestionText({ cardType, questionText }: { cardType: CardType, questionText: string }) {
+function QuestionText({cardType, card}: { cardType: CardType; card: Card }) {
     if (cardType != CardType.Cloze)
-        return <p>{questionText}</p>
+        return <p>{card.front}</p>
     else
-        return <p dangerouslySetInnerHTML={{ __html: questionText }}></p>
+        return <p dangerouslySetInnerHTML={{ __html: card.front }}></p>
 }
