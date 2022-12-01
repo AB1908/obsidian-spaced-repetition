@@ -19,13 +19,12 @@ function QuestionEdit(props: { card: Card, onKeyDown: (e: React.KeyboardEvent) =
     </>;
 }
 
-function AnswerEdit(props: { card: Card; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void }) {
-    const {data} = useContext(AppContext);
+function AnswerEdit(props: { card: Card; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void; answerText: string }) {
     return <>
         <h3>Answer</h3>
         <textarea spellCheck="false"
                   className={"answer"}
-                  defaultValue={removeSchedTextFromCard(props.card.back, generateSeparator(props.card.cardText, data.settings.cardCommentOnSameLine))}
+                  defaultValue={props.answerText}
                   onKeyDown={props.onKeyDown}
                   onChange={props.onChange}
         />
@@ -55,10 +54,8 @@ export class FlashcardEditModal extends Modal {
         this.plugin = plugin;
         this.titleEl.setText("Edit Card");
         this.card = card;
-        this.questionText = String(card.front);
-        // this.questionText = "";
-        console.log(this.card)
-        this.answerText = card.back;
+        this.questionText = card.front;
+        this.answerText = removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, plugin.data.settings.cardCommentOnSameLine));
 
         this.waitForClose = new Promise<Card>((resolve, reject) => {
             this.resolvePromise = resolve;
@@ -86,6 +83,7 @@ export class FlashcardEditModal extends Modal {
                             card={this.card}
                             onKeyDown={(e) => this.submitEnterCallback(e)}
                             onChange={(event) => { this.answerText = event.target.value }}
+                            answerText={this.answerText}
                         />
                         <div className="modal-button-container">
                             <button className="mod-cta" onClick={(_e) => this.submit()}>
