@@ -22,8 +22,8 @@ export function FlashcardView(props: FlashcardProps) {
         let modifiedCard: Card = await FlashcardEditModal.Prompt(pluginContext, currentCard);
         if (modifiedCard !== currentCard) {
             await writeCardBackToFile(currentCard, modifiedCard, modifiedCard.note);
+            moveToNextFlashcard();
         }
-        moveToNextFlashcard();
     }
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
