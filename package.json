@@ -1,6 +1,6 @@
 {
     "name": "obsidian-spaced-repetition",
-    "version": "1.9.2-beta",
+    "version": "1.10.0-beta",
     "description": "Fight the forgetting curve by reviewing flashcards & entire notes.",
     "main": "main.js",
     "scripts": {
