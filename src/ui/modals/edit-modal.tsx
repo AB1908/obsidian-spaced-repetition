@@ -54,16 +54,14 @@ export class FlashcardEditModal extends Modal {
                     <textarea spellCheck="false"
                         className={"question"}
                         defaultValue={this.card.front}
-                        // TODO: Fix this weird casting
-                        onKeyDown={(e) => this.submitEnterCallback(e as unknown as KeyboardEvent)}
+                        onKeyDown={(e) => this.submitEnterCallback(e)}
                         onChange={(event) => { this.questionText = event.target.value; }}
                     />
                     <h3>Answer</h3>
                     <textarea spellCheck="false"
                         className={"answer"}
                         defaultValue={removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, this.plugin.data.settings.cardCommentOnSameLine))}
-                        // TODO: Fix this weird casting
-                        onKeyDown={(e) => this.submitEnterCallback(e as unknown as KeyboardEvent)}
+                        onKeyDown={(e) => this.submitEnterCallback(e)}
                         onChange={(event) => { this.answerText = event.target.value }}
                     />
                     <div className="modal-button-container" >
@@ -77,7 +75,7 @@ export class FlashcardEditModal extends Modal {
         )
     }
 
-    private submitEnterCallback = (evt: KeyboardEvent) => {
+    private submitEnterCallback = (evt: React.KeyboardEvent) => {
         if ((evt.ctrlKey || evt.metaKey) && evt.key === "Enter") {
             evt.preventDefault();
             this.submit();
