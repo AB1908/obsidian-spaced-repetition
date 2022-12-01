@@ -1,13 +1,13 @@
-import { TFile, getAllTags, HeadingCache } from "obsidian";
-import { MULTI_SCHEDULING_EXTRACTOR, LEGACY_SCHEDULING_EXTRACTOR } from "./constants";
-import { Deck } from "./Deck";
-import { t } from "./lang/helpers";
-import { PluginData, LinkStat } from "./main";
-import { parse } from "./parser";
-import { CardType, Card } from "./scheduling";
-import { SRSettings } from "./settings";
-import { Stats } from "./stats-modal";
-import { cyrb53, escapeRegexString } from "./utils";
+import {getAllTags, HeadingCache, TFile} from "obsidian";
+import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "./constants";
+import {Deck} from "./Deck";
+import {t} from "./lang/helpers";
+import {LinkStat, PluginData} from "./main";
+import {parse} from "./parser";
+import {Card, CardType} from "./scheduling";
+import {SRSettings} from "./settings";
+import {Stats} from "./stats-modal";
+import {cyrb53, escapeRegexString} from "./utils";
 
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
@@ -129,6 +129,10 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
     return deckTree;
 }
 
+function generateSiblingMatchArray(settings: SRSettings, cardText: string) {
+    return findSiblingMatches(generateSiblings(settings, cardText), cardText);
+}
+
 async function findFlashcardsInNote(
     note: TFile,
     deckPath: string[],
@@ -189,8 +193,8 @@ async function findFlashcardsInNote(
 
         const siblingMatches: [string, string][] = [];
         if (cardType === CardType.Cloze) {
-            const siblings: RegExpMatchArray[] = generateSiblings(settings, cardText);
-            siblingMatches.push(...findSiblingMatches(siblings, cardText))
+            const findSiblingMatches1 = generateSiblingMatchArray(settings, cardText);
+            siblingMatches.push(...findSiblingMatches1)
         } else {
             let idx: number;
             if (cardType === CardType.SingleLineBasic) {
