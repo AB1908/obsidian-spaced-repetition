@@ -309,11 +309,9 @@ function generateSiblings(settings: SRSettings, cardText: string) {
     return siblings;
 }
 
-function generateClozeFront(front: string, cardText: string, deletionStart: number, deletionEnd: number) {
-    front =
-        cardText.substring(0, deletionStart) +
-        "<span style='color:#2196f3'>[...]</span>" +
-        cardText.substring(deletionEnd);
+export function generateClozeFront(cardText: string, deletionStart: number, deletionEnd: number) {
+    let front =
+        `${cardText.substring(0, deletionStart)}<span style='color:#2196f3'>[...]</span>${cardText.substring(deletionEnd)}`;
     return front
         .replace(/==/gm, "")
         .replace(/\*\*/gm, "")
@@ -342,7 +340,7 @@ function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): [st
             for (const m of siblings) {
                 const deletionStart: number = m.index,
                     deletionEnd: number = deletionStart + m[0].length;
-                front = generateClozeFront(front, cardText, deletionStart, deletionEnd);
+                front = generateClozeFront(cardText, deletionStart, deletionEnd);
                 back = generateClozeBack(back, cardText, deletionStart, deletionEnd);
                 matches.push([front, back]);
             }
