@@ -309,6 +309,32 @@ function generateSiblings(settings: SRSettings, cardText: string) {
     return siblings;
 }
 
+function generateClozeFront(front: string, cardText: string, deletionStart: number, deletionEnd: number) {
+    front =
+        cardText.substring(0, deletionStart) +
+        "<span style='color:#2196f3'>[...]</span>" +
+        cardText.substring(deletionEnd);
+    return front
+        .replace(/==/gm, "")
+        .replace(/\*\*/gm, "")
+        .replace(/{{/gm, "")
+        .replace(/}}/gm, "");
+}
+
+function generateClozeBack(back: string, cardText: string, deletionStart: number, deletionEnd: number) {
+    back =
+        cardText.substring(0, deletionStart) +
+        "<span style='color:#2196f3'>" +
+        cardText.substring(deletionStart, deletionEnd) +
+        "</span>" +
+        cardText.substring(deletionEnd);
+    return back
+        .replace(/==/gm, "")
+        .replace(/\*\*/gm, "")
+        .replace(/{{/gm, "")
+        .replace(/}}/gm, "");
+}
+
 function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): [string, string][] {
             let front: string;
             let back: string;
@@ -316,26 +342,8 @@ function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): [st
             for (const m of siblings) {
                 const deletionStart: number = m.index,
                     deletionEnd: number = deletionStart + m[0].length;
-                front =
-                    cardText.substring(0, deletionStart) +
-                    "<span style='color:#2196f3'>[...]</span>" +
-                    cardText.substring(deletionEnd);
-                front = front
-                    .replace(/==/gm, "")
-                    .replace(/\*\*/gm, "")
-                    .replace(/{{/gm, "")
-                    .replace(/}}/gm, "");
-                back =
-                    cardText.substring(0, deletionStart) +
-                    "<span style='color:#2196f3'>" +
-                    cardText.substring(deletionStart, deletionEnd) +
-                    "</span>" +
-                    cardText.substring(deletionEnd);
-                back = back
-                    .replace(/==/gm, "")
-                    .replace(/\*\*/gm, "")
-                    .replace(/{{/gm, "")
-                    .replace(/}}/gm, "");
+                front = generateClozeFront(front, cardText, deletionStart, deletionEnd);
+                back = generateClozeBack(back, cardText, deletionStart, deletionEnd);
                 matches.push([front, back]);
             }
             return matches;
