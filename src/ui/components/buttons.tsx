@@ -69,6 +69,7 @@ export function ResponseButtons() {
         goodBtnText = `${textInterval(goodInterval, true)}`;
         easyBtnText = `${textInterval(easyInterval, true)}`;
     } else {
+        // TODO: investigate fix for button labels being empty
         hardBtnText = `${data.settings.flashcardHardText} - ${textInterval( hardInterval, false )}`
         goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval( goodInterval, false )}`;
         easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval( easyInterval, false )}`;
