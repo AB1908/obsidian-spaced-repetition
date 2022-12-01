@@ -1,11 +1,10 @@
-import React, {useContext} from "react";
+import React from "react";
 import {Modal} from "obsidian";
 import {createRoot, Root} from "react-dom/client";
 import SRPlugin from "src/main";
 import {Card} from "src/scheduling";
 import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
 import {replacedCardText} from "src/edit-utils";
-import {AppContext} from "src/contexts/PluginContext";
 
 function QuestionEdit(props: { card: Card, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
     return <>
@@ -73,7 +72,6 @@ export class FlashcardEditModal extends Modal {
         this.contentRoot.render(
             (
                 <div className="sr-input-area">
-                    <AppContext.Provider value={this.plugin}>
                         <QuestionEdit
                             card={this.card}
                             onKeyDown={(e) => this.submitEnterCallback(e)}
@@ -91,7 +89,6 @@ export class FlashcardEditModal extends Modal {
                             </button>
                             <button onClick={(_e) => this.close()}>Cancel</button>
                         </div>
-                    </AppContext.Provider>
                 </div>
             )
         )
