@@ -1,10 +1,36 @@
-import React from "react";
+import React, {useContext} from "react";
 import {Modal} from "obsidian";
 import {createRoot, Root} from "react-dom/client";
 import SRPlugin from "src/main";
 import {Card} from "src/scheduling";
 import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
 import {replacedCardText} from "src/edit-utils";
+import {AppContext} from "src/contexts/PluginContext";
+
+function QuestionEdit(props: { card: Card, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
+    return <>
+        <h3>Question</h3>
+        <textarea spellCheck="false"
+                  className={"question"}
+                  defaultValue={props.card.front}
+                  onKeyDown={props.onKeyDown}
+                  onChange={props.onChange}
+        />
+    </>;
+}
+
+function AnswerEdit(props: { card: Card; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void }) {
+    const {data} = useContext(AppContext);
+    return <>
+        <h3>Answer</h3>
+        <textarea spellCheck="false"
+                  className={"answer"}
+                  defaultValue={removeSchedTextFromCard(props.card.back, generateSeparator(props.card.cardText, data.settings.cardCommentOnSameLine))}
+                  onKeyDown={props.onKeyDown}
+                  onChange={props.onChange}
+        />
+    </>;
+}
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
@@ -50,26 +76,24 @@ export class FlashcardEditModal extends Modal {
         this.contentRoot.render(
             (
                 <div className="sr-input-area">
-                    <h3>Question</h3>
-                    <textarea spellCheck="false"
-                        className={"question"}
-                        defaultValue={this.card.front}
-                        onKeyDown={(e) => this.submitEnterCallback(e)}
-                        onChange={(event) => { this.questionText = event.target.value; }}
-                    />
-                    <h3>Answer</h3>
-                    <textarea spellCheck="false"
-                        className={"answer"}
-                        defaultValue={removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, this.plugin.data.settings.cardCommentOnSameLine))}
-                        onKeyDown={(e) => this.submitEnterCallback(e)}
-                        onChange={(event) => { this.answerText = event.target.value }}
-                    />
-                    <div className="modal-button-container" >
-                        <button className="mod-cta" onClick={(_e) => this.submit()}>
-                            Submit
-                        </button>
-                        <button onClick={(_e) => this.close()}>Cancel</button>
-                    </div>
+                    <AppContext.Provider value={this.plugin}>
+                        <QuestionEdit
+                            card={this.card}
+                            onKeyDown={(e) => this.submitEnterCallback(e)}
+                            onChange={(event) => { this.questionText = event.target.value; }}
+                        />
+                        <AnswerEdit
+                            card={this.card}
+                            onKeyDown={(e) => this.submitEnterCallback(e)}
+                            onChange={(event) => { this.answerText = event.target.value }}
+                        />
+                        <div className="modal-button-container">
+                            <button className="mod-cta" onClick={(_e) => this.submit()}>
+                                Submit
+                            </button>
+                            <button onClick={(_e) => this.close()}>Cancel</button>
+                        </div>
+                    </AppContext.Provider>
                 </div>
             )
         )
@@ -98,7 +122,7 @@ export class FlashcardEditModal extends Modal {
             if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
                 this.resolvePromise(this.card);
             } else {
-                let output: Card = { ...this.card }
+                let output: Card = {...this.card}
                 const front = this.card.front;
                 const cardText = this.card.cardText;
                 const questionText = this.questionText;
