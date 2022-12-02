@@ -1,6 +1,6 @@
-import {CardInterface} from "src/scheduling";
 import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "src/constants";
 import {escapeRegexString} from "src/utils";
+import {Card} from "src/Card";
 
 export function removeSchedTextFromCard(cardText: string, separator?: string) {
     return cardText.replace(new RegExp((separator??"")+"<!--SR:.+-->", "gm"), "");
@@ -30,7 +30,7 @@ export function generateSeparator(cardText: string, isCardCommentOnSameLine: boo
     return sep;
 }
 
-export function generateSchedulingArray(cardSchedulingText: string, dueString: string, interval: number, ease: number, currentCard: CardInterface) {
+export function generateSchedulingArray(cardSchedulingText: string, dueString: string, interval: number, ease: number, currentCard: Card) {
     let scheduling: RegExpMatchArray[] = [
         ...cardSchedulingText.matchAll(MULTI_SCHEDULING_EXTRACTOR),
     ];
@@ -47,7 +47,7 @@ export function generateSchedulingArray(cardSchedulingText: string, dueString: s
     return scheduling;
 }
 
-function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueString: string, interval: number, ease: number, currentCard: CardInterface) {
+function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueString: string, interval: number, ease: number, currentCard: Card) {
     // adding info to the card for the first time
     if (cardText.lastIndexOf("<!--SR:") === -1) {
         return cardText + sep + `<!--SR:!${dueString},${interval},${ease}-->`;
@@ -57,13 +57,13 @@ function regenerateCardTextWithSchedInfo(cardText: string, sep: string, dueStrin
     }
 }
 
-export function updateCardText(currentCard: CardInterface, dueString: string, interval: number, ease: number, isCardCommentOnSameLine: boolean) {
+export function updateCardText(currentCard: Card, dueString: string, interval: number, ease: number, isCardCommentOnSameLine: boolean) {
     let cardText = currentCard.cardText;
     const sep = generateSeparator(cardText, isCardCommentOnSameLine);
     return regenerateCardTextWithSchedInfo(cardText, sep, dueString, interval, ease, currentCard);
 }
 
-export function updateCardInFileText(currentCard: CardInterface, fileText: string, cardText: string) {
+export function updateCardInFileText(currentCard: Card, fileText: string, cardText: string) {
     console.group("input")
     console.groupEnd()
     const replacementRegex = new RegExp(escapeRegexString(currentCard.cardText), "gm");

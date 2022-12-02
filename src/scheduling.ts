@@ -1,8 +1,5 @@
-import { TFile } from "obsidian";
-
 import { SRSettings } from "src/settings";
 import { t } from "src/lang/helpers";
-import {Card} from "src/Card";
 
 export enum ReviewResponse {
     Easy,
@@ -12,8 +9,6 @@ export enum ReviewResponse {
 }
 
 // Flashcards
-export type CardInterface = InstanceType<typeof Card>
-
 export enum CardType {
     SingleLineBasic,
     SingleLineReversed,

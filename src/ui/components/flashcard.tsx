@@ -1,9 +1,10 @@
-import { MarkdownRenderer } from "obsidian";
-import React, { MutableRefObject, useRef, useEffect, useContext } from "react";
-import { FlashcardContext } from "src/contexts/FlashcardContext";
-import { Deck } from "src/Deck";
-import {CardInterface, CardType} from "src/scheduling";
-import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtons } from "./buttons";
+import {MarkdownRenderer} from "obsidian";
+import React, {MutableRefObject, useContext, useEffect, useRef} from "react";
+import {FlashcardContext} from "src/contexts/FlashcardContext";
+import {Deck} from "src/Deck";
+import {CardType} from "src/scheduling";
+import {EditLaterButton, ResetButton, ResponseButtons, ShowAnswerButton} from "./buttons";
+import {Card} from "src/Card";
 
 export interface FlashcardButtons extends ContentProps {
     flashcardEditLater: Function;
@@ -112,7 +113,7 @@ function FlashcardBody(props: ContentProps) {
     );
 }
 
-function QuestionText({cardType, card}: { cardType: CardType; card: CardInterface }) {
+function QuestionText({cardType, card}: { cardType: CardType; card: Card }) {
     if (cardType != CardType.Cloze)
         return <p>{card.front}</p>
     else
