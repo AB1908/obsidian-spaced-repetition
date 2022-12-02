@@ -1,7 +1,7 @@
 import {TFile} from "obsidian";
 import {CardType} from "src/scheduling";
 
-export class CardClass {
+export class Card {
     isDue: boolean;
     interval?: number;
     ease?: number;
@@ -18,9 +18,9 @@ export class CardClass {
     cardType: CardType;
     // information for sibling cards
     siblingIdx: number;
-    siblings: CardClass[];
+    siblings: Card[];
 
-    constructor(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: CardClass[]) {
+    constructor(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: Card[]) {
         this.isDue = i < scheduling.length;
         this.note = note;
         this.lineNo = lineNo;
