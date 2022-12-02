@@ -2,6 +2,7 @@ import { TFile } from "obsidian";
 
 import { SRSettings } from "src/settings";
 import { t } from "src/lang/helpers";
+import {Card} from "src/Card";
 
 export enum ReviewResponse {
     Easy,
@@ -11,27 +12,7 @@ export enum ReviewResponse {
 }
 
 // Flashcards
-
-export interface CardInterface {
-    // scheduling
-    isDue: boolean;
-    interval?: number;
-    ease?: number;
-    delayBeforeReview?: number;
-    // note
-    note: TFile;
-    lineNo: number;
-    // visuals
-    front: string;
-    back: string;
-    cardText: string;
-    context: string;
-    // types
-    cardType: CardType;
-    // information for sibling cards
-    siblingIdx: number;
-    siblings: CardInterface[];
-}
+export type CardInterface = InstanceType<typeof Card>
 
 export enum CardType {
     SingleLineBasic,
