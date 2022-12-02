@@ -1,11 +1,11 @@
 import React from "react";
-import { Card } from "src/scheduling";
+import { CardInterface } from "src/scheduling";
 
 interface FlaschardContextProps{
     handleShowAnswerButton: Function;
     handleFlashcardResponse: Function;
     isQuestion: boolean;
-    card: Card;
+    card: CardInterface;
 }
 
 export const FlashcardContext = React.createContext<FlaschardContextProps>(undefined);

@@ -12,7 +12,7 @@ export enum ReviewResponse {
 
 // Flashcards
 
-export interface Card {
+export interface CardInterface {
     // scheduling
     isDue: boolean;
     interval?: number;
@@ -30,7 +30,7 @@ export interface Card {
     cardType: CardType;
     // information for sibling cards
     siblingIdx: number;
-    siblings: Card[];
+    siblings: CardInterface[];
 }
 
 export enum CardType {
@@ -76,7 +76,7 @@ export function schedule(
         } else {
             // disable fuzzing for small intervals
             if (interval > 4) {
-                let fuzz = 0;
+                let fuzz: number;
                 if (interval < 7) fuzz = 1;
                 else if (interval < 30) fuzz = Math.max(2, Math.floor(interval * 0.15));
                 else fuzz = Math.max(4, Math.floor(interval * 0.05));
