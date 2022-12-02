@@ -8,6 +8,7 @@ import {Card, CardType} from "./scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
 import {cyrb53, escapeRegexString} from "./utils";
+import {createCard} from "src/Card";
 
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
@@ -129,7 +130,7 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
     return deckTree;
 }
 
-function generateSiblingMatchArray(settings: SRSettings, cardText: string) {
+export function generateSiblingMatchArray(settings: SRSettings, cardText: string): [string, string][] {
     return findSiblingMatches(generateSiblings(settings, cardText), cardText);
 }
 
@@ -338,17 +339,17 @@ function generateClozeBack(back: string, cardText: string, deletionStart: number
 }
 
 function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): [string, string][] {
-            let front: string;
-            let back: string;
-            let matches: [string, string][] = [];
-            for (const m of siblings) {
-                const deletionStart: number = m.index,
-                    deletionEnd: number = deletionStart + m[0].length;
-                front = generateClozeFront(cardText, deletionStart, deletionEnd);
-                back = generateClozeBack(back, cardText, deletionStart, deletionEnd);
-                matches.push([front, back]);
-            }
-            return matches;
+    let front: string;
+    let back: string;
+    let matches: [string, string][] = [];
+    for (const m of siblings) {
+        const deletionStart: number = m.index,
+            deletionEnd: number = deletionStart + m[0].length;
+        front = generateClozeFront(cardText, deletionStart, deletionEnd);
+        back = generateClozeBack(back, cardText, deletionStart, deletionEnd);
+        matches.push([front, back]);
+    }
+    return matches;
 }
 
 function getCardContext(cardLine: number, headings: HeadingCache[]): string {
@@ -396,19 +397,7 @@ function createCards(
     for (let i = 0; i < siblingMatches.length; i++) {
         const front: string = siblingMatches[i][0].trim(),
             back: string = siblingMatches[i][1].trim();
-
-        const cardObj: Card = {
-            isDue: i < scheduling.length,
-            note,
-            lineNo,
-            front,
-            back,
-            cardText,
-            context,
-            cardType,
-            siblingIdx: i,
-            siblings,
-        };
+        const cardObj = createCard(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
 
         // card scheduled
         if (ignoreStats) {
