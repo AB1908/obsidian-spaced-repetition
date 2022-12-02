@@ -4,7 +4,7 @@ import {FlashcardContext} from "src/contexts/FlashcardContext";
 import {AppContext} from "src/contexts/PluginContext";
 import {Deck} from "src/Deck";
 import {PluginData} from "src/main";
-import {Card, ReviewResponse, schedule} from "src/scheduling";
+import {CardInterface, ReviewResponse, schedule} from "src/scheduling";
 import {FlashcardContent, FlashcardProps} from "../components/flashcard";
 import {FlashcardEditModal} from "../modals/edit-modal";
 import {ModalStates} from "./modal";
@@ -18,8 +18,8 @@ export function FlashcardView(props: FlashcardProps) {
     const pluginContext = useContext(AppContext);
     const { data, easeByPath, dueDatesFlashcards } = pluginContext;
 
-    async function edit(currentCard: Card) {
-        let modifiedCard: Card = await FlashcardEditModal.Prompt(pluginContext, currentCard);
+    async function edit(currentCard: CardInterface) {
+        let modifiedCard: CardInterface = await FlashcardEditModal.Prompt(pluginContext, currentCard);
         if (modifiedCard !== currentCard) {
             await writeCardBackToFile(currentCard, modifiedCard, modifiedCard.note);
             moveToNextFlashcard();
@@ -59,11 +59,11 @@ export function FlashcardView(props: FlashcardProps) {
     );
 }
 
-async function writeBack(currentCard: Card, fileText: string) {
+async function writeBack(currentCard: CardInterface, fileText: string) {
     await this.app.vault.modify(currentCard.note, fileText);
 }
 
-async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
+async function processReview(response: ReviewResponse, currentCard: CardInterface, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
     let interval: number, ease: number, due;
 
     if (response !== ReviewResponse.Reset) {
@@ -126,7 +126,7 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
 function generateFlashcardList(deck: Deck) {
     let currentDeck = deck;
     let stack: Deck[] = [];
-    let flashcards: Card[] = [];
+    let flashcards: CardInterface[] = [];
     while (stack || currentDeck) {
         flashcards.push(...currentDeck.newFlashcards);
         flashcards.push(...currentDeck.dueFlashcards);
@@ -141,7 +141,7 @@ function generateFlashcardList(deck: Deck) {
     return flashcards;
 }
 
-async function writeCardBackToFile(currentCard: Card, updatedCard: Card, file: TFile) {
+async function writeCardBackToFile(currentCard: CardInterface, updatedCard: CardInterface, file: TFile) {
     let fileText = await app.vault.read(file);
     fileText = updateCardInFileText(currentCard, fileText, updatedCard.cardText);
     await writeBack.call(this, currentCard, fileText);

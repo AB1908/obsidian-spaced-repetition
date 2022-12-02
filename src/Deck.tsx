@@ -1,10 +1,10 @@
-import { Card } from "src/scheduling";
+import { CardInterface } from "src/scheduling";
 
 export class Deck {
     public deckName: string;
-    public newFlashcards: Card[];
+    public newFlashcards: CardInterface[];
     public newFlashcardsCount = 0; // counts those in subdecks too
-    public dueFlashcards: Card[];
+    public dueFlashcards: CardInterface[];
     public dueFlashcardsCount = 0; // counts those in subdecks too
     public totalFlashcards = 0; // counts those in subdecks too
     public subdecks: Deck[];
@@ -41,7 +41,7 @@ export class Deck {
         deck.createDeck(deckPath);
     }
 
-    insertFlashcard(deckPath: string[], cardObj: Card): void {
+    insertFlashcard(deckPath: string[], cardObj: CardInterface): void {
         if (cardObj.isDue) {
             this.dueFlashcardsCount++;
         } else {

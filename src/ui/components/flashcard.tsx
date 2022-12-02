@@ -2,7 +2,7 @@ import { MarkdownRenderer } from "obsidian";
 import React, { MutableRefObject, useRef, useEffect, useContext } from "react";
 import { FlashcardContext } from "src/contexts/FlashcardContext";
 import { Deck } from "src/Deck";
-import {Card, CardType} from "src/scheduling";
+import {CardInterface, CardType} from "src/scheduling";
 import { EditLaterButton, ResetButton, ShowAnswerButton, ResponseButtons } from "./buttons";
 
 export interface FlashcardButtons extends ContentProps {
@@ -112,7 +112,7 @@ function FlashcardBody(props: ContentProps) {
     );
 }
 
-function QuestionText({cardType, card}: { cardType: CardType; card: Card }) {
+function QuestionText({cardType, card}: { cardType: CardType; card: CardInterface }) {
     if (cardType != CardType.Cloze)
         return <p>{card.front}</p>
     else
