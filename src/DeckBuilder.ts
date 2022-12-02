@@ -4,7 +4,7 @@ import {Deck} from "./Deck";
 import {t} from "./lang/helpers";
 import {LinkStat, PluginData} from "./main";
 import {parse} from "./parser";
-import {CardInterface, CardType} from "./scheduling";
+import {CardType} from "./scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
 import {cyrb53, escapeRegexString} from "./utils";
@@ -249,7 +249,7 @@ async function findFlashcardsInNote(
         const context: string = settings.showContextInCards
             ? getCardContext(lineNo, headings)
             : "";
-        const siblings: CardInterface[] = [];
+        const siblings: Card[] = [];
         ({ totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards } = createCards(
             siblingMatches,
             scheduling,
@@ -382,7 +382,7 @@ function createCards(
     cardText: string,
     context: string,
     cardType: CardType,
-    siblings: CardInterface[],
+    siblings: Card[],
     ignoreStats: boolean,
     deckPath: string[],
     now: number,

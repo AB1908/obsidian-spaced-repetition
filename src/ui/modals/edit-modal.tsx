@@ -2,11 +2,11 @@ import React from "react";
 import {Modal} from "obsidian";
 import {createRoot, Root} from "react-dom/client";
 import SRPlugin from "src/main";
-import {CardInterface} from "src/scheduling";
 import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
 import {replacedCardText} from "src/edit-utils";
+import {Card} from "src/Card";
 
-function QuestionEdit(props: { card: CardInterface, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
+function QuestionEdit(props: { card: Card, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
     return <>
         <h3>Question</h3>
         <textarea spellCheck="false"
@@ -18,7 +18,7 @@ function QuestionEdit(props: { card: CardInterface, onKeyDown: (e: React.Keyboar
     </>;
 }
 
-function AnswerEdit(props: { card: CardInterface; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void; answerText: string }) {
+function AnswerEdit(props: { card: Card; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void; answerText: string }) {
     return <>
         <h3>Answer</h3>
         <textarea spellCheck="false"
@@ -33,22 +33,22 @@ function AnswerEdit(props: { card: CardInterface; onKeyDown: (e: React.KeyboardE
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
     public plugin: SRPlugin;
-    public waitForClose: Promise<CardInterface>;
+    public waitForClose: Promise<Card>;
 
-    private resolvePromise: (input: CardInterface) => void;
+    private resolvePromise: (input: Card) => void;
     private rejectPromise: (reason?: any) => void;
     private didSubmit: boolean = false;
     private contentRoot: Root;
-    private card: CardInterface;
+    private card: Card;
     private questionText: string;
     private answerText: string;
 
-    public static Prompt(plugin: SRPlugin, card: CardInterface): Promise<CardInterface> {
+    public static Prompt(plugin: SRPlugin, card: Card): Promise<Card> {
         const newPromptModal = new FlashcardEditModal(plugin, "", card);
         return newPromptModal.waitForClose;
     }
 
-    constructor(plugin: SRPlugin, existingText: string, card: CardInterface) {
+    constructor(plugin: SRPlugin, existingText: string, card: Card) {
         super(plugin.app);
         this.plugin = plugin;
         this.titleEl.setText("Edit Card");
@@ -56,7 +56,7 @@ export class FlashcardEditModal extends Modal {
         this.questionText = card.front;
         this.answerText = removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, plugin.data.settings.cardCommentOnSameLine));
 
-        this.waitForClose = new Promise<CardInterface>((resolve, reject) => {
+        this.waitForClose = new Promise<Card>((resolve, reject) => {
             this.resolvePromise = resolve;
             this.rejectPromise = reject;
         });
@@ -117,7 +117,7 @@ export class FlashcardEditModal extends Modal {
             if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
                 this.resolvePromise(this.card);
             } else {
-                let output: CardInterface = {...this.card}
+                let output: Card = {...this.card}
                 const front = this.card.front;
                 const cardText = this.card.cardText;
                 const questionText = this.questionText;
