@@ -1,22 +1,35 @@
 import {TFile} from "obsidian";
-import {Card, CardType} from "src/scheduling";
+import {CardType} from "src/scheduling";
 
-export function createCard(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: Card[]) {
-    const cardObj: Card = {
-        isDue: i < scheduling.length,
-        note,
-        lineNo,
-        front,
-        back,
-        cardText,
-        context,
-        cardType,
-        siblingIdx: i,
-        siblings,
-    };
-    return cardObj;
-}
+export class CardClass {
+    isDue: boolean;
+    interval?: number;
+    ease?: number;
+    delayBeforeReview?: number;
+    // note
+    note: TFile;
+    lineNo: number;
+    // visuals
+    front: string;
+    back: string;
+    cardText: string;
+    context: string;
+    // types
+    cardType: CardType;
+    // information for sibling cards
+    siblingIdx: number;
+    siblings: CardClass[];
 
-class CardClass {
-
+    constructor(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: CardClass[]) {
+        this.isDue = i < scheduling.length;
+        this.note = note;
+        this.lineNo = lineNo;
+        this.front = front;
+        this.back = back;
+        this.cardText = cardText;
+        this.context = context;
+        this.cardType = cardType;
+        this.siblings = siblings;
+        this.siblingIdx = i;
+    }
 }

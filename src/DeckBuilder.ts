@@ -8,7 +8,7 @@ import {Card, CardType} from "./scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
 import {cyrb53, escapeRegexString} from "./utils";
-import {createCard} from "src/Card";
+import {CardClass} from "src/Card";
 
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
@@ -397,7 +397,7 @@ function createCards(
     for (let i = 0; i < siblingMatches.length; i++) {
         const front: string = siblingMatches[i][0].trim(),
             back: string = siblingMatches[i][1].trim();
-        const cardObj = createCard(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
+        const cardObj = new CardClass(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
 
         // card scheduled
         if (ignoreStats) {
