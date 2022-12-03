@@ -151,6 +151,14 @@ function singleLineReversedSiblingMatches(cardText: string, settings: SRSettings
     return [[side1, side2], [side2, side1]];
 }
 
+function multiLineBasicSiblingMatches(cardText: string, settings: SRSettings): [string, string] {
+    let idx = cardText.indexOf("\n" + settings.multilineCardSeparator + "\n");
+    return [
+        cardText.substring(0, idx),
+        cardText.substring(idx + 2 + settings.multilineCardSeparator.length),
+    ];
+}
+
 async function findFlashcardsInNote(
     note: TFile,
     deckPath: string[],
@@ -220,11 +228,7 @@ async function findFlashcardsInNote(
             } else if (cardType === CardType.SingleLineReversed) {
                 siblingMatches.push(...(singleLineReversedSiblingMatches(cardText, settings)));
             } else if (cardType === CardType.MultiLineBasic) {
-                idx = cardText.indexOf("\n" + settings.multilineCardSeparator + "\n");
-                siblingMatches.push([
-                    cardText.substring(0, idx),
-                    cardText.substring(idx + 2 + settings.multilineCardSeparator.length),
-                ]);
+                siblingMatches.push(multiLineBasicSiblingMatches(cardText, settings));
             } else if (cardType === CardType.MultiLineReversed) {
                 idx = cardText.indexOf("\n" + settings.multilineReversedCardSeparator + "\n");
                 const side1: string = cardText.substring(0, idx),
