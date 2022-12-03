@@ -168,6 +168,23 @@ function multiLineReversedSiblingMatches(cardText: string, settings: SRSettings)
     return [[side1, side2], [side2, side1]];
 }
 
+function deleteSchedulingDates(cardText: string, siblingMatches: [string, string][], scheduling: RegExpMatchArray[], fileText: string, fileChanged: boolean) {
+    const idxSched: number = cardText.lastIndexOf("<!--SR:") + 7;
+    let newCardText: string = cardText.substring(0, idxSched);
+    for (let i = 0; i < siblingMatches.length; i++)
+        newCardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
+    newCardText += "-->";
+
+    const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
+    fileText = fileText.replace(replacementRegex, () => newCardText);
+    fileChanged = true;
+    return {fileText, fileChanged};
+}
+
+function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatches: [string, string][]) {
+    return scheduling.length > siblingMatches.length;
+}
+
 async function findFlashcardsInNote(
     note: TFile,
     deckPath: string[],
@@ -247,17 +264,8 @@ async function findFlashcardsInNote(
         if (scheduling.length === 0)
             scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
 
-        // we have some extra scheduling dates to delete
-        if (scheduling.length > siblingMatches.length) {
-            const idxSched: number = cardText.lastIndexOf("<!--SR:") + 7;
-            let newCardText: string = cardText.substring(0, idxSched);
-            for (let i = 0; i < siblingMatches.length; i++)
-                newCardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
-            newCardText += "-->";
-
-            const replacementRegex = new RegExp(escapeRegexString(cardText), "gm");
-            fileText = fileText.replace(replacementRegex, () => newCardText);
-            fileChanged = true;
+        if (doExtraSchedulingDatesExist(scheduling, siblingMatches)) {
+            ({fileText, fileChanged} = deleteSchedulingDates(cardText, siblingMatches, scheduling, fileText, fileChanged));
         }
 
         const context: string = settings.showContextInCards
