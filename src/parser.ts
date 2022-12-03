@@ -1,5 +1,11 @@
 import { CardType } from "src/scheduling";
 
+interface parsedCard {
+    cardType: CardType,
+    cardText: string,
+    lineNo: number
+}
+
 /**
  * Returns flashcards found in `text`
  *
@@ -24,12 +30,14 @@ export function parse(
     const cards: [CardType, string, number][] = [];
     let cardType: CardType | null = null;
     let lineNo = 0;
+    let cardObjArray: parsedCard[] = [];
 
     const lines: string[] = text.split("\n");
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].length === 0) {
             if (cardType) {
                 cards.push([cardType, cardText, lineNo]);
+                cardObjArray.push({cardType, cardText, lineNo})
                 cardType = null;
             }
 
@@ -60,6 +68,7 @@ export function parse(
                 i++;
             }
             cards.push([cardType, cardText, lineNo]);
+            cardObjArray.push({cardType, cardText, lineNo})
             cardType = null;
             cardText = "";
         } else if (
@@ -89,6 +98,7 @@ export function parse(
 
     if (cardType && cardText) {
         cards.push([cardType, cardText, lineNo]);
+        cardObjArray.push({cardType, cardText, lineNo})
     }
 
     return cards;
