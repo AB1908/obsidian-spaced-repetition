@@ -248,7 +248,6 @@ async function findFlashcardsInNote(
             const findSiblingMatches1 = generateSiblingMatchArray(settings, cardText);
             siblingMatches.push(...findSiblingMatches1)
         } else {
-            let idx: number;
             if (cardType === CardType.SingleLineBasic) {
                 siblingMatches.push(singleLineBasicSiblingMatches(cardText, settings));
             } else if (cardType === CardType.SingleLineReversed) {
