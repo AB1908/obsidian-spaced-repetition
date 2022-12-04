@@ -3,7 +3,7 @@ import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "./constan
 import {Deck} from "./Deck";
 import {t} from "./lang/helpers";
 import {LinkStat, PluginData} from "./main";
-import {parse} from "./parser";
+import {parse, parsedCard} from "./parser";
 import {CardType} from "./scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
@@ -205,21 +205,10 @@ async function findFlashcardsInNote(
     const noteDeckPath = deckPath;
 
     const now: number = Date.now();
-    const parsedCards: [CardType, string, number][] = parse(
-        fileText,
-        settings.singlelineCardSeparator,
-        settings.singlelineReversedCardSeparator,
-        settings.multilineCardSeparator,
-        settings.multilineReversedCardSeparator,
-        settings.convertHighlightsToClozes,
-        settings.convertBoldTextToClozes,
-        settings.convertCurlyBracketsToClozes
-    );
+    const parsedCards: parsedCard[] = parse(fileText, settings.singlelineCardSeparator, settings.singlelineReversedCardSeparator, settings.multilineCardSeparator, settings.multilineReversedCardSeparator, settings.convertHighlightsToClozes, settings.convertBoldTextToClozes, settings.convertCurlyBracketsToClozes);
     for (const parsedCard of parsedCards) {
         deckPath = noteDeckPath;
-        const cardType: CardType = parsedCard[0],
-            lineNo: number = parsedCard[2];
-        let cardText: string = parsedCard[1];
+        let {cardText, cardType, lineNo} = parsedCard;
 
         if (!settings.convertFoldersToDecks) {
             const tagInCardRegEx = /^#[^\s#]+/gi;

@@ -1,6 +1,6 @@
 import { CardType } from "src/scheduling";
 
-interface parsedCard {
+export interface parsedCard {
     cardType: CardType,
     cardText: string,
     lineNo: number
@@ -25,19 +25,17 @@ export function parse(
     convertHighlightsToClozes: boolean,
     convertBoldTextToClozes: boolean,
     convertCurlyBracketsToClozes: boolean
-): [CardType, string, number][] {
+): parsedCard[] {
     let cardText = "";
-    const cards: [CardType, string, number][] = [];
     let cardType: CardType | null = null;
     let lineNo = 0;
-    let cardObjArray: parsedCard[] = [];
+    let parsedCards: parsedCard[] = [];
 
     const lines: string[] = text.split("\n");
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].length === 0) {
             if (cardType) {
-                cards.push([cardType, cardText, lineNo]);
-                cardObjArray.push({cardType, cardText, lineNo})
+                parsedCards.push({cardType, cardText, lineNo})
                 cardType = null;
             }
 
@@ -67,8 +65,7 @@ export function parse(
                 cardText += "\n" + lines[i + 1];
                 i++;
             }
-            cards.push([cardType, cardText, lineNo]);
-            cardObjArray.push({cardType, cardText, lineNo})
+            parsedCards.push({cardType, cardText, lineNo})
             cardType = null;
             cardText = "";
         } else if (
@@ -97,9 +94,8 @@ export function parse(
     }
 
     if (cardType && cardText) {
-        cards.push([cardType, cardText, lineNo]);
-        cardObjArray.push({cardType, cardText, lineNo})
+        parsedCards.push({cardType, cardText, lineNo})
     }
 
-    return cards;
+    return parsedCards;
 }
