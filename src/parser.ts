@@ -1,4 +1,5 @@
-import { CardType } from "src/scheduling";
+import {CardType} from "src/scheduling";
+import type {SRSettings} from "src/settings";
 
 export interface parsedCard {
     cardType: CardType,
@@ -10,26 +11,23 @@ export interface parsedCard {
  * Returns flashcards found in `text`
  *
  * @param text - The text to extract flashcards from
- * @param singlelineCardSeparator - Separator for inline basic cards
- * @param singlelineReversedCardSeparator - Separator for inline reversed cards
- * @param multilineCardSeparator - Separator for multiline basic cards
- * @param multilineReversedCardSeparator - Separator for multiline basic card
+ * @settings SRSettings - The plugin's settings
  * @returns An array of [CardType, card text, line number] tuples
  */
-export function parse(
-    text: string,
-    singlelineCardSeparator: string,
-    singlelineReversedCardSeparator: string,
-    multilineCardSeparator: string,
-    multilineReversedCardSeparator: string,
-    convertHighlightsToClozes: boolean,
-    convertBoldTextToClozes: boolean,
-    convertCurlyBracketsToClozes: boolean
-): parsedCard[] {
+export function parse( text: string, settings: SRSettings) : parsedCard[] {
     let cardText = "";
     let cardType: CardType | null = null;
     let lineNo = 0;
     let parsedCards: parsedCard[] = [];
+    const {
+        singlelineCardSeparator,
+        singlelineReversedCardSeparator,
+        multilineCardSeparator,
+        multilineReversedCardSeparator,
+        convertHighlightsToClozes,
+        convertBoldTextToClozes,
+        convertCurlyBracketsToClozes
+    } = settings;
 
     const lines: string[] = text.split("\n");
     for (let i = 0; i < lines.length; i++) {
