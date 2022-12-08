@@ -130,7 +130,7 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
     return deckTree;
 }
 
-export function generateSiblingMatchArray(settings: SRSettings, cardText: string): [string, string][] {
+export function generateClozeSiblingMatches(settings: SRSettings, cardText: string): [string, string][] {
     return findSiblingMatches(generateSiblings(settings, cardText), cardText);
 }
 
@@ -234,7 +234,7 @@ async function findFlashcardsInNote(
 
         const siblingMatches: [string, string][] = [];
         if (cardType === CardType.Cloze) {
-            const findSiblingMatches1 = generateSiblingMatchArray(settings, cardText);
+            const findSiblingMatches1 = generateClozeSiblingMatches(settings, cardText);
             siblingMatches.push(...findSiblingMatches1)
         } else {
             if (cardType === CardType.SingleLineBasic) {
