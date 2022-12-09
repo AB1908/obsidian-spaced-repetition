@@ -1,19 +1,19 @@
 import {SRSettings} from "src/settings";
-import type {cardSides} from "src/DeckBuilder";
+import type {CardSides} from "src/DeckBuilder";
 
-export function generateClozeSiblingMatches(settings: SRSettings, cardText: string): cardSides[] {
+export function generateClozeSiblingMatches(settings: SRSettings, cardText: string): CardSides[] {
     return findSiblingMatches(generateSiblings(settings, cardText), cardText);
 }
 
-export function singleLineBasicSiblingMatches(cardText: string, settings: SRSettings): cardSides {
+export function singleLineBasicSiblingMatches(cardText: string, settings: SRSettings): CardSides[] {
     let idx = cardText.indexOf(settings.singlelineCardSeparator);
-    return {
+    return [{
         front: cardText.substring(0, idx),
         back: cardText.substring(idx + settings.singlelineCardSeparator.length),
-    };
+    }];
 }
 
-export function singleLineReversedSiblingMatches(cardText: string, settings: SRSettings): cardSides[] {
+export function singleLineReversedSiblingMatches(cardText: string, settings: SRSettings): CardSides[] {
     let idx = cardText.indexOf(settings.singlelineReversedCardSeparator);
     const side1: string = cardText.substring(0, idx),
         side2: string = cardText.substring(
@@ -22,15 +22,15 @@ export function singleLineReversedSiblingMatches(cardText: string, settings: SRS
     return [{front: side1, back: side2}, {front: side2, back: side1}];
 }
 
-export function multiLineBasicSiblingMatches(cardText: string, settings: SRSettings): cardSides {
+export function multiLineBasicSiblingMatches(cardText: string, settings: SRSettings): CardSides[] {
     let idx = cardText.indexOf("\n" + settings.multilineCardSeparator + "\n");
-    return {
+    return [{
         front: cardText.substring(0, idx),
         back: cardText.substring(idx + 2 + settings.multilineCardSeparator.length),
-    };
+    }];
 }
 
-export function multiLineReversedSiblingMatches(cardText: string, settings: SRSettings): cardSides[] {
+export function multiLineReversedSiblingMatches(cardText: string, settings: SRSettings): CardSides[] {
     let idx = cardText.indexOf("\n" + settings.multilineReversedCardSeparator + "\n");
     const side1: string = cardText.substring(0, idx),
         side2: string = cardText.substring(
@@ -86,10 +86,10 @@ function generateClozeBack(back: string, cardText: string, deletionStart: number
         .replace(/}}/gm, "");
 }
 
-function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): cardSides[] {
+function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): CardSides[] {
     let front: string;
     let back: string;
-    let matches: cardSides[] = [];
+    let matches: CardSides[] = [];
     for (const m of siblings) {
         const deletionStart: number = m.index,
             deletionEnd: number = deletionStart + m[0].length;
