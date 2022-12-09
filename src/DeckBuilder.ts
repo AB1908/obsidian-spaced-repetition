@@ -174,7 +174,7 @@ async function findFlashcardsInNote(
     const noteDeckPath = deckPath;
 
     const now: number = Date.now();
-    const parsedCards: parsedCard[] = parse(fileText, this.plugin.data.settings);
+    const parsedCards: parsedCard[] = parse(fileText, settings);
     for (const parsedCard of parsedCards) {
         deckPath = noteDeckPath;
         let {cardText, cardType, lineNo} = parsedCard;
