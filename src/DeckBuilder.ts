@@ -170,6 +170,13 @@ function generateSiblingsFromCardType(cardType: CardType | CardType.SingleLineBa
     return siblingMatches;
 }
 
+function extractSchedulingArray(cardText: string) {
+    let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
+    if (scheduling.length === 0)
+        scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+    return scheduling;
+}
+
 async function findFlashcardsInNote(
     note: TFile,
     deckPath: string[],
@@ -217,10 +224,7 @@ async function findFlashcardsInNote(
             continue;
         }
         const siblingMatches = generateSiblingsFromCardType(cardType, settings, cardText);
-
-        let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
-        if (scheduling.length === 0)
-            scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
+        let scheduling = extractSchedulingArray(cardText);
 
         if (doExtraSchedulingDatesExist(scheduling, siblingMatches)) {
             ({fileText, fileChanged} = deleteSchedulingDates(cardText, scheduling, fileText, fileChanged, siblingMatches.length));
