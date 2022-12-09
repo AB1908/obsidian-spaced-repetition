@@ -137,10 +137,10 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
     return deckTree;
 }
 
-function deleteSchedulingDates(cardText: string, siblingMatches: [string, string][], scheduling: RegExpMatchArray[], fileText: string, fileChanged: boolean) {
+function deleteSchedulingDates(cardText: string, scheduling: RegExpMatchArray[], fileText: string, fileChanged: boolean, expectedLength: number) {
     const idxSched: number = cardText.lastIndexOf("<!--SR:") + 7;
     let newCardText: string = cardText.substring(0, idxSched);
-    for (let i = 0; i < siblingMatches.length; i++)
+    for (let i = 0; i < expectedLength; i++)
         newCardText += `!${scheduling[i][1]},${scheduling[i][2]},${scheduling[i][3]}`;
     newCardText += "-->";
 
@@ -150,7 +150,7 @@ function deleteSchedulingDates(cardText: string, siblingMatches: [string, string
     return {fileText, fileChanged};
 }
 
-function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatches: [string, string][]) {
+function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatches: cardSides[]) {
     return scheduling.length > siblingMatches.length;
 }
 
@@ -201,7 +201,7 @@ async function findFlashcardsInNote(
             continue;
         }
 
-        const siblingMatches: [string, string][] = [];
+        const siblingMatches: cardSides[] = [];
         if (cardType === CardType.Cloze) {
             siblingMatches.push(...(generateClozeSiblingMatches(settings, cardText)))
         } else if (cardType === CardType.SingleLineBasic) {
@@ -219,7 +219,7 @@ async function findFlashcardsInNote(
             scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
 
         if (doExtraSchedulingDatesExist(scheduling, siblingMatches)) {
-            ({fileText, fileChanged} = deleteSchedulingDates(cardText, siblingMatches, scheduling, fileText, fileChanged));
+            ({fileText, fileChanged} = deleteSchedulingDates(cardText, scheduling, fileText, fileChanged, siblingMatches.length));
         }
 
         const context: string = settings.showContextInCards
@@ -289,13 +289,13 @@ function getCardContext(cardLine: number, headings: HeadingCache[]): string {
     return context.slice(0, -3);
 }
 
-interface cardText {
+export interface cardSides {
     front: string;
     back: string;
 }
 
 function createCards(
-    siblingMatches: [string, string][],
+    siblingMatches: cardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,
     lineNo: number,
@@ -315,7 +315,7 @@ function createCards(
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
     for (let i = 0; i < siblingMatches.length; i++) {
-        let obj: cardText = {front: siblingMatches[i][0].trim(), back: siblingMatches[i][1].trim()};
+        let obj: cardSides = {front: siblingMatches[i].front.trim(), back: siblingMatches[i].back.trim()};
         const {front, back} = obj;
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
 
