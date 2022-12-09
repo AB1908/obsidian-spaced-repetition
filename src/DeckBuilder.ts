@@ -203,18 +203,15 @@ async function findFlashcardsInNote(
 
         const siblingMatches: [string, string][] = [];
         if (cardType === CardType.Cloze) {
-            const findSiblingMatches1 = generateClozeSiblingMatches(settings, cardText);
-            siblingMatches.push(...findSiblingMatches1)
-        } else {
-            if (cardType === CardType.SingleLineBasic) {
-                siblingMatches.push(singleLineBasicSiblingMatches(cardText, settings));
-            } else if (cardType === CardType.SingleLineReversed) {
+            siblingMatches.push(...(generateClozeSiblingMatches(settings, cardText)))
+        } else if (cardType === CardType.SingleLineBasic) {
+            siblingMatches.push(singleLineBasicSiblingMatches(cardText, settings));
+        } else if (cardType === CardType.SingleLineReversed) {
                 siblingMatches.push(...(singleLineReversedSiblingMatches(cardText, settings)));
-            } else if (cardType === CardType.MultiLineBasic) {
-                siblingMatches.push(multiLineBasicSiblingMatches(cardText, settings));
-            } else if (cardType === CardType.MultiLineReversed) {
-                siblingMatches.push(...(multiLineReversedSiblingMatches(cardText, settings)));
-            }
+        } else if (cardType === CardType.MultiLineBasic) {
+            siblingMatches.push(multiLineBasicSiblingMatches(cardText, settings));
+        } else if (cardType === CardType.MultiLineReversed) {
+            siblingMatches.push(...(multiLineReversedSiblingMatches(cardText, settings)));
         }
 
         let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
