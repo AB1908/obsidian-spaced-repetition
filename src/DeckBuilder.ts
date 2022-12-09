@@ -150,20 +150,20 @@ function deleteSchedulingDates(cardText: string, scheduling: RegExpMatchArray[],
     return {fileText, fileChanged};
 }
 
-function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatches: cardSides[]) {
+function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatches: CardSides[]) {
     return scheduling.length > siblingMatches.length;
 }
 
 function generateSiblingsFromCardType(cardType: CardType | CardType.SingleLineBasic | CardType.SingleLineReversed | CardType.MultiLineBasic | CardType.MultiLineReversed, settings: SRSettings, cardText: string) {
-    const siblingMatches: cardSides[] = [];
+    const siblingMatches: CardSides[] = [];
     if (cardType === CardType.Cloze) {
         siblingMatches.push(...(generateClozeSiblingMatches(settings, cardText)))
     } else if (cardType === CardType.SingleLineBasic) {
-        siblingMatches.push(singleLineBasicSiblingMatches(cardText, settings));
+        siblingMatches.push(...(singleLineBasicSiblingMatches(cardText, settings)));
     } else if (cardType === CardType.SingleLineReversed) {
         siblingMatches.push(...(singleLineReversedSiblingMatches(cardText, settings)));
     } else if (cardType === CardType.MultiLineBasic) {
-        siblingMatches.push(multiLineBasicSiblingMatches(cardText, settings));
+        siblingMatches.push(...(multiLineBasicSiblingMatches(cardText, settings)));
     } else if (cardType === CardType.MultiLineReversed) {
         siblingMatches.push(...(multiLineReversedSiblingMatches(cardText, settings)));
     }
@@ -293,13 +293,13 @@ function getCardContext(cardLine: number, headings: HeadingCache[]): string {
     return context.slice(0, -3);
 }
 
-export interface cardSides {
+export interface CardSides {
     front: string;
     back: string;
 }
 
 function createCards(
-    siblingMatches: cardSides[],
+    siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,
     lineNo: number,
@@ -319,7 +319,7 @@ function createCards(
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
     for (let i = 0; i < siblingMatches.length; i++) {
-        let obj: cardSides = {front: siblingMatches[i].front.trim(), back: siblingMatches[i].back.trim()};
+        let obj: CardSides = {front: siblingMatches[i].front.trim(), back: siblingMatches[i].back.trim()};
         const {front, back} = obj;
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
 
