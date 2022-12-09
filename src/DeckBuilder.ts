@@ -16,6 +16,7 @@ import {
     singleLineBasicSiblingMatches,
     singleLineReversedSiblingMatches
 } from "src/Sibling";
+import {consoleStart, logArgs} from "src/devUtils";
 
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
@@ -170,7 +171,13 @@ function generateSiblingsFromCardType(cardType: CardType | CardType.SingleLineBa
     return siblingMatches;
 }
 
-function extractSchedulingArray(cardText: string) {
+export interface SchedulingInfo {
+    due: number;
+    ease: number;
+    interval: number;
+}
+
+export function extractSchedulingArray(cardText: string) {
     let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
     if (scheduling.length === 0)
         scheduling = [...cardText.matchAll(LEGACY_SCHEDULING_EXTRACTOR)];
@@ -308,6 +315,15 @@ function queryCardSide(siblingMatch: CardSides) {
     return {front, back};
 }
 
+function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNumber: number): SchedulingInfo {
+    const interval: number = parseInt(scheduling[siblingNumber][2]),
+        ease: number = parseInt(scheduling[siblingNumber][3]);
+    const dueUnix: number = window
+        .moment(scheduling[siblingNumber][1], ["YYYY-MM-DD", "DD-MM-YYYY"])
+        .valueOf();
+    return {due: dueUnix, interval, ease};
+}
+
 function createCards(
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
@@ -338,17 +354,13 @@ function createCards(
             cardObj.isDue = true;
             deckTree.insertFlashcard([...deckPath], cardObj);
         } else if (i < scheduling.length) {
-            const dueUnix: number = window
-                .moment(scheduling[i][1], ["YYYY-MM-DD", "DD-MM-YYYY"])
-                .valueOf();
+            const {interval, ease, due: dueUnix} = generateParsedSchedulingInfo(scheduling, i);
             const nDays: number = Math.ceil((dueUnix - now) / (24 * 3600 * 1000));
             if (!Object.prototype.hasOwnProperty.call(dueDatesFlashcards, nDays)) {
                 dueDatesFlashcards[nDays] = 0;
             }
             dueDatesFlashcards[nDays]++;
 
-            const interval: number = parseInt(scheduling[i][2]),
-                ease: number = parseInt(scheduling[i][3]);
             if (!Object.prototype.hasOwnProperty.call(cardStats.intervals, interval)) {
                 cardStats.intervals[interval] = 0;
             }
