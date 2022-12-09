@@ -154,6 +154,22 @@ function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatc
     return scheduling.length > siblingMatches.length;
 }
 
+function generateSiblingsFromCardType(cardType: CardType | CardType.SingleLineBasic | CardType.SingleLineReversed | CardType.MultiLineBasic | CardType.MultiLineReversed, settings: SRSettings, cardText: string) {
+    const siblingMatches: cardSides[] = [];
+    if (cardType === CardType.Cloze) {
+        siblingMatches.push(...(generateClozeSiblingMatches(settings, cardText)))
+    } else if (cardType === CardType.SingleLineBasic) {
+        siblingMatches.push(singleLineBasicSiblingMatches(cardText, settings));
+    } else if (cardType === CardType.SingleLineReversed) {
+        siblingMatches.push(...(singleLineReversedSiblingMatches(cardText, settings)));
+    } else if (cardType === CardType.MultiLineBasic) {
+        siblingMatches.push(multiLineBasicSiblingMatches(cardText, settings));
+    } else if (cardType === CardType.MultiLineReversed) {
+        siblingMatches.push(...(multiLineReversedSiblingMatches(cardText, settings)));
+    }
+    return siblingMatches;
+}
+
 async function findFlashcardsInNote(
     note: TFile,
     deckPath: string[],
@@ -200,19 +216,7 @@ async function findFlashcardsInNote(
             data.buryList.push(cardTextHash);
             continue;
         }
-
-        const siblingMatches: cardSides[] = [];
-        if (cardType === CardType.Cloze) {
-            siblingMatches.push(...(generateClozeSiblingMatches(settings, cardText)))
-        } else if (cardType === CardType.SingleLineBasic) {
-            siblingMatches.push(singleLineBasicSiblingMatches(cardText, settings));
-        } else if (cardType === CardType.SingleLineReversed) {
-                siblingMatches.push(...(singleLineReversedSiblingMatches(cardText, settings)));
-        } else if (cardType === CardType.MultiLineBasic) {
-            siblingMatches.push(multiLineBasicSiblingMatches(cardText, settings));
-        } else if (cardType === CardType.MultiLineReversed) {
-            siblingMatches.push(...(multiLineReversedSiblingMatches(cardText, settings)));
-        }
+        const siblingMatches = generateSiblingsFromCardType(cardType, settings, cardText);
 
         let scheduling: RegExpMatchArray[] = [...cardText.matchAll(MULTI_SCHEDULING_EXTRACTOR)];
         if (scheduling.length === 0)
