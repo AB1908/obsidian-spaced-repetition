@@ -289,6 +289,11 @@ function getCardContext(cardLine: number, headings: HeadingCache[]): string {
     return context.slice(0, -3);
 }
 
+interface cardText {
+    front: string;
+    back: string;
+}
+
 function createCards(
     siblingMatches: [string, string][],
     scheduling: RegExpMatchArray[],
@@ -310,8 +315,8 @@ function createCards(
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
     for (let i = 0; i < siblingMatches.length; i++) {
-        const front: string = siblingMatches[i][0].trim(),
-            back: string = siblingMatches[i][1].trim();
+        let obj: cardText = {front: siblingMatches[i][0].trim(), back: siblingMatches[i][1].trim()};
+        const {front, back} = obj;
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
 
         // card scheduled
