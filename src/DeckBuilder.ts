@@ -298,6 +298,12 @@ export interface CardSides {
     back: string;
 }
 
+function queryCardSide(siblingMatch: CardSides) {
+    let obj: CardSides = {front: siblingMatch.front.trim(), back: siblingMatch.back.trim()};
+    const {front, back} = obj;
+    return {front, back};
+}
+
 function createCards(
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
@@ -319,8 +325,7 @@ function createCards(
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
     for (let i = 0; i < siblingMatches.length; i++) {
-        let obj: CardSides = {front: siblingMatches[i].front.trim(), back: siblingMatches[i].back.trim()};
-        const {front, back} = obj;
+        const {front, back} = queryCardSide(siblingMatches[i]);
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
 
         // card scheduled
