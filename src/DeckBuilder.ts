@@ -310,35 +310,36 @@ function generateSiblings(settings: SRSettings, cardText: string) {
 }
 
 function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): [string, string][] {
-            let front: string;
-            let back: string;
-            let matches: [string, string][] = [];
-            for (const m of siblings) {
-                const deletionStart: number = m.index,
-                    deletionEnd: number = deletionStart + m[0].length;
-                front =
-                    cardText.substring(0, deletionStart) +
-                    "<span style='color:#2196f3'>[...]</span>" +
-                    cardText.substring(deletionEnd);
-                front = front
-                    .replace(/==/gm, "")
-                    .replace(/\*\*/gm, "")
-                    .replace(/{{/gm, "")
-                    .replace(/}}/gm, "");
-                back =
-                    cardText.substring(0, deletionStart) +
-                    "<span style='color:#2196f3'>" +
-                    cardText.substring(deletionStart, deletionEnd) +
-                    "</span>" +
-                    cardText.substring(deletionEnd);
-                back = back
-                    .replace(/==/gm, "")
-                    .replace(/\*\*/gm, "")
-                    .replace(/{{/gm, "")
-                    .replace(/}}/gm, "");
-                matches.push([front, back]);
-            }
-            return matches;
+    let front: string;
+    let back: string;
+    let matches: [string, string][] = [];
+    for (const sibling of siblings) {
+        debugger;
+        const deletionStart: number = sibling.index,
+            deletionEnd: number = deletionStart + sibling[0].length;
+        front =
+            cardText.substring(0, deletionStart) +
+            "<span style='color:#2196f3'>[...]</span>" +
+            cardText.substring(deletionEnd);
+        front = front
+            .replace(/==/gm, "")
+            .replace(/\*\*/gm, "")
+            .replace(/{{/gm, "")
+            .replace(/}}/gm, "");
+        back =
+            cardText.substring(0, deletionStart) +
+            "<span style='color:#2196f3'>" +
+            cardText.substring(deletionStart, deletionEnd) +
+            "</span>" +
+            cardText.substring(deletionEnd);
+        back = back
+            .replace(/==/gm, "")
+            .replace(/\*\*/gm, "")
+            .replace(/{{/gm, "")
+            .replace(/}}/gm, "");
+        matches.push([front, back]);
+    }
+    return matches;
 }
 
 function getCardContext(cardLine: number, headings: HeadingCache[]): string {
