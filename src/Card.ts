@@ -14,13 +14,14 @@ export class Card {
     back: string;
     cardText: string;
     context: string;
+    clozeInsertionAt: number;
     // types
     cardType: CardType;
     // information for sibling cards
     siblingIdx: number;
     siblings: Card[];
 
-    constructor(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: Card[]) {
+    constructor(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: Card[], clozeInsertionAt: number) {
         this.isDue = i < scheduling.length;
         this.note = note;
         this.lineNo = lineNo;
@@ -31,5 +32,6 @@ export class Card {
         this.cardType = cardType;
         this.siblings = siblings;
         this.siblingIdx = i;
+        this.clozeInsertionAt = clozeInsertionAt;
     }
 }
