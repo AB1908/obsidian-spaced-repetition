@@ -16,7 +16,7 @@ import {
     singleLineBasicSiblingMatches,
     singleLineReversedSiblingMatches
 } from "src/Sibling";
-import {consoleStart, logArgs} from "src/devUtils";
+// import {consoleStart, logArgs} from "src/devUtils";
 
 //TODO: Also include decks that don't have due flashcards
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
@@ -307,12 +307,13 @@ function getCardContext(cardLine: number, headings: HeadingCache[]): string {
 export interface CardSides {
     front: string;
     back: string;
+    clozeInsertionAt?: number;
 }
 
 function queryCardSide(siblingMatch: CardSides) {
-    let obj: CardSides = {front: siblingMatch.front.trim(), back: siblingMatch.back.trim()};
+    let obj: CardSides = {front: siblingMatch.front, back: siblingMatch.back.trim()};
     const {front, back} = obj;
-    return {front, back};
+    return {front, back, clozeInsertionAt: siblingMatch.clozeInsertionAt};
 }
 
 function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNumber: number): SchedulingInfo {
@@ -345,8 +346,8 @@ function createCards(
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
     for (let i = 0; i < siblingMatches.length; i++) {
-        const {front, back} = queryCardSide(siblingMatches[i]);
-        const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings);
+        const {front, back, clozeInsertionAt} = queryCardSide(siblingMatches[i]);
+        const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings, clozeInsertionAt);
 
         // card scheduled
         if (ignoreStats) {
