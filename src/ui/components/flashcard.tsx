@@ -5,6 +5,8 @@ import {Deck} from "src/Deck";
 import {CardType} from "src/scheduling";
 import {EditLaterButton, ResetButton, ResponseButtons, ShowAnswerButton} from "./buttons";
 import {Card} from "src/Card";
+import {removeSchedTextFromCard} from "src/sched-utils";
+import {renderToString} from 'react-dom/server';
 
 export interface FlashcardButtons extends ContentProps {
     flashcardEditLater: Function;
@@ -96,7 +98,7 @@ function FlashcardBody(props: ContentProps) {
     }
 
     useEffect(() => {
-        if (!isQuestion) renderMarkdownWrapper(card.back, props.viewRef.current);
+        if (!isQuestion) renderMarkdownWrapper(renderToString(<AnswerText card={card} cardType={card.cardType} />), props.viewRef.current);
     }, [isQuestion]);
 
     return (
@@ -113,9 +115,35 @@ function FlashcardBody(props: ContentProps) {
     );
 }
 
-function QuestionText({cardType, card}: { cardType: CardType; card: Card }) {
+function QuestionText({ cardType, card }: { cardType: CardType; card: Card }) {
     if (cardType != CardType.Cloze)
         return <p>{card.front}</p>
-    else
-        return <p dangerouslySetInnerHTML={{ __html: card.front }}></p>
+    else {
+        let splitCardText = split_at_index(removeSchedTextFromCard(card.front), card.clozeInsertionAt);
+        splitCardText.splice(1, 0, <QuestionSpan></QuestionSpan>)
+        return <p>{splitCardText}</p>
+    }
+}
+
+function AnswerText({ cardType, card }: { cardType: CardType; card: Card }) {
+    if (cardType != CardType.Cloze)
+        return <p>{card.front}</p>
+    else {
+        let splitCardText = split_at_index(removeSchedTextFromCard(card.front), card.clozeInsertionAt);
+        splitCardText.splice(1, 0, <AnswerSpan text={card.back}></AnswerSpan>)
+        return <p>{splitCardText}</p>
+    }
+}
+
+function QuestionSpan() {
+    return <span style={{ color: "#2196f3" }}>[...]</span>
+}
+
+function AnswerSpan({ text }: { text: string }) {
+    return <span style={{ color: "#2196f3" }}>{text}</span>
+}
+
+// TODO: Fix return type
+function split_at_index(value: string, index: number): any[] {
+    return [value.substring(0, index), value.substring(index)];
 }
