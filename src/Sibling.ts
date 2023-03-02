@@ -64,22 +64,12 @@ function generateSiblings(settings: SRSettings, cardText: string) {
 
 export function generateClozeFront(cardText: string, deletionStart: number, deletionEnd: number) {
     let front =
-        `${cardText.substring(0, deletionStart)}<span style='color:#2196f3'>[...]</span>${cardText.substring(deletionEnd)}`;
-    return front
-        .replace(/==/gm, "")
-        .replace(/\*\*/gm, "")
-        .replace(/{{/gm, "")
-        .replace(/}}/gm, "");
+        `${cardText.substring(0, deletionStart)}${cardText.substring(deletionEnd)}`;
+    return removeOtherClozes(front);
 }
 
-function generateClozeBack(back: string, cardText: string, deletionStart: number, deletionEnd: number) {
-    back =
-        cardText.substring(0, deletionStart) +
-        "<span style='color:#2196f3'>" +
-        cardText.substring(deletionStart, deletionEnd) +
-        "</span>" +
-        cardText.substring(deletionEnd);
-    return back
+function removeOtherClozes(text: string) {
+    return text
         .replace(/==/gm, "")
         .replace(/\*\*/gm, "")
         .replace(/{{/gm, "")
@@ -88,14 +78,12 @@ function generateClozeBack(back: string, cardText: string, deletionStart: number
 
 function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): CardSides[] {
     let front: string;
-    let back: string;
     let matches: CardSides[] = [];
-    for (const m of siblings) {
-        const deletionStart: number = m.index,
-            deletionEnd: number = deletionStart + m[0].length;
+    for (const sibling of siblings) {
+        const deletionStart: number = sibling.index,
+            deletionEnd: number = deletionStart + sibling[0].length;
         front = generateClozeFront(cardText, deletionStart, deletionEnd);
-        back = generateClozeBack(back, cardText, deletionStart, deletionEnd);
-        matches.push({front, back});
+        matches.push({front, back: sibling[1], clozeInsertionAt: deletionStart});
     }
     return matches;
 }
