@@ -31,8 +31,6 @@ export class FlashcardEditModal extends Modal {
         this.plugin = plugin;
         this.titleEl.setText("Edit Card");
         this.card = card;
-        // this.questionText = card.front;
-        debugger;
         this.questionText = removeSchedTextFromCard(this.card.front, generateSeparator(this.card.cardText, plugin.data.settings.cardCommentOnSameLine));
         this.answerText = removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, plugin.data.settings.cardCommentOnSameLine));
 
