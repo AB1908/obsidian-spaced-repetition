@@ -64,8 +64,9 @@ function generateSiblings(settings: SRSettings, cardText: string) {
 
 export function generateClozeFront(cardText: string, deletionStart: number, deletionEnd: number) {
     let front =
-        `${cardText.substring(0, deletionStart)}${cardText.substring(deletionEnd)}`;
-    return removeOtherClozes(front);
+        [`${cardText.substring(0, deletionStart)}`,`${cardText.substring(deletionEnd)}`].map(t=> removeOtherClozes(t));;
+    // todo: add comment about why front0len
+    return {frontArray: front, insertAt: front[0].length};
 }
 
 function removeOtherClozes(text: string) {
@@ -77,13 +78,12 @@ function removeOtherClozes(text: string) {
 }
 
 function findSiblingMatches(siblings: RegExpMatchArray[], cardText: string): CardSides[] {
-    let front: string;
     let matches: CardSides[] = [];
     for (const sibling of siblings) {
         const deletionStart: number = sibling.index,
             deletionEnd: number = deletionStart + sibling[0].length;
-        front = generateClozeFront(cardText, deletionStart, deletionEnd);
-        matches.push({front, back: sibling[1], clozeInsertionAt: deletionStart});
+        const {frontArray, insertAt} = generateClozeFront(cardText, deletionStart, deletionEnd);
+        matches.push({front: frontArray.join(""), back: sibling[1], clozeInsertionAt: insertAt});
     }
     return matches;
 }
