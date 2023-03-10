@@ -5,30 +5,7 @@ import SRPlugin from "src/main";
 import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
 import {replacedCardText} from "src/edit-utils";
 import {Card} from "src/Card";
-
-function QuestionEdit(props: { questionText: string, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
-    return <>
-        <h3>Question</h3>
-        <textarea spellCheck="false"
-                  className={"question"}
-                  defaultValue={props.questionText}
-                  onKeyDown={props.onKeyDown}
-                  onChange={props.onChange}
-        />
-    </>;
-}
-
-function AnswerEdit(props: { answerText: string; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void; }) {
-    return <>
-        <h3>Answer</h3>
-        <textarea spellCheck="false"
-                  className={"answer"}
-                  defaultValue={props.answerText}
-                  onKeyDown={props.onKeyDown}
-                  onChange={props.onChange}
-        />
-    </>;
-}
+import { QuestionEdit, AnswerEdit } from "../components/edit-card-text-areas";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
