@@ -18,7 +18,7 @@ function QuestionEdit(props: { questionText: string, onKeyDown: (e: React.Keyboa
     </>;
 }
 
-function AnswerEdit(props: { card: Card; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void; answerText: string }) {
+function AnswerEdit(props: { answerText: string; onKeyDown: (e: React.KeyboardEvent) => void; onChange: (event: any) => void; }) {
     return <>
         <h3>Answer</h3>
         <textarea spellCheck="false"
@@ -81,10 +81,9 @@ export class FlashcardEditModal extends Modal {
                             onChange={(event) => { this.questionText = event.target.value; }}
                         />
                         <AnswerEdit
-                            card={this.card}
+                            answerText={this.answerText}
                             onKeyDown={(e) => this.submitEnterCallback(e)}
                             onChange={(event) => { this.answerText = event.target.value }}
-                            answerText={this.answerText}
                         />
                         <div className="modal-button-container">
                             <button className="mod-cta" onClick={(_e) => this.submit()}>
