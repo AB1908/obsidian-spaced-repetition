@@ -1,10 +1,10 @@
 import React from "react";
-import {Modal} from "obsidian";
-import {createRoot, Root} from "react-dom/client";
+import { Modal, TextAreaComponent } from "obsidian";
+import { createRoot, Root } from "react-dom/client";
 import SRPlugin from "src/main";
-import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
-import {replacedCardText} from "src/edit-utils";
-import {Card} from "src/Card";
+import { generateSeparator, removeSchedTextFromCard } from "src/sched-utils";
+import { replacedCardText } from "src/edit-utils";
+import { Card } from "src/Card";
 import { QuestionEdit, AnswerEdit } from "../components/edit-card-text-areas";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
@@ -48,61 +48,73 @@ export class FlashcardEditModal extends Modal {
         this.modalEl.addClass("sr-input-modal");
         this.contentRoot = createRoot(this.contentEl);
         this.contentRoot.render(
-            (
-                <div className="sr-input-area">
-                        <QuestionEdit
-                            questionText={this.questionText}
-                            onKeyDown={(e) => this.submitEnterCallback(e)}
-                            onChange={(event) => { this.questionText = event.target.value; }}
-                        />
-                        <AnswerEdit
-                            answerText={this.answerText}
-                            onKeyDown={(e) => this.submitEnterCallback(e)}
-                            onChange={(event) => { this.answerText = event.target.value }}
-                        />
-                        <div className="modal-button-container">
-                            <button className="mod-cta" onClick={(_e) => this.submit()}>
-                                Submit
-                            </button>
-                            <button onClick={(_e) => this.close()}>Cancel</button>
-                        </div>
-                </div>
-            )
+            <EditModal
+                onClickCancel={(_e) => this.close()}
+                onClickSubmit={(_e) => this.submit()}
+                questionText = {this.questionText}
+                answerText={this.answerText}
+                answerChangeHandler={(event: React.ChangeEvent<HTMLInputElement>) => { this.answerText = event.target.value}} 
+                onKeyDown = {(e) => this.submitEnterCallback(e)}
+                questionChangeHandler = {(event) => { this.questionText = event.target.value; }}
+            />
         )
     }
 
     private submitEnterCallback = (evt: React.KeyboardEvent) => {
-        if ((evt.ctrlKey || evt.metaKey) && evt.key === "Enter") {
-            evt.preventDefault();
-            this.submit();
-        }
-    };
+    if ((evt.ctrlKey || evt.metaKey) && evt.key === "Enter") {
+        evt.preventDefault();
+        this.submit();
+    }
+};
 
     private submit() {
-        this.didSubmit = true;
-        this.close();
-    }
+    this.didSubmit = true;
+    this.close();
+}
 
-    onClose() {
-        super.onClose();
-        this.resolveInput();
-    }
+onClose() {
+    super.onClose();
+    this.resolveInput();
+}
 
     private resolveInput() {
-        if (!this.didSubmit) this.resolvePromise(this.card);
-        else {
-            if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
-                this.resolvePromise(this.card);
-            } else {
-                let output: Card = {...this.card}
-                const front = this.card.front;
-                const cardText = this.card.cardText;
-                const questionText = this.questionText;
-                const back = this.card.back;
-                const answerText = this.answerText;
-                output.cardText = replacedCardText(front, output, cardText, questionText, back, answerText, this.plugin.data.settings.cardCommentOnSameLine);
-                this.resolvePromise(output);
-            }
+    if (!this.didSubmit) this.resolvePromise(this.card);
+    else {
+        if ((this.questionText === this.card.front) && (this.answerText === this.card.back)) {
+            this.resolvePromise(this.card);
+        } else {
+            let output: Card = { ...this.card }
+            const front = this.card.front;
+            const cardText = this.card.cardText;
+            const questionText = this.questionText;
+            const back = this.card.back;
+            const answerText = this.answerText;
+            output.cardText = replacedCardText(front, output, cardText, questionText, back, answerText, this.plugin.data.settings.cardCommentOnSameLine);
+            this.resolvePromise(output);
         }
     }
+}
+}
+
+function EditModal({ questionText, onKeyDown, questionChangeHandler, answerChangeHandler, answerText, onClickSubmit, onClickCancel }: { questionText: string, onKeyDown: (e: React.KeyboardEvent) => void,  questionChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void, answerChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void, answerText: string, onClickSubmit: (e: React.MouseEvent) => void, onClickCancel: (e: React.MouseEvent) => void }) {
+    return (
+        <div className="sr-input-area">
+            <QuestionEdit
+                questionText={questionText}
+                onKeyDown={onKeyDown}
+                onChange={questionChangeHandler}
+            />
+            <AnswerEdit
+                answerText={answerText}
+                onKeyDown={onKeyDown}
+                onChange={answerChangeHandler}
+            />
+            <div className="modal-button-container">
+                <button className="mod-cta" onClick={onClickSubmit}>
+                    Submit
+                </button>
+                <button onClick={onClickCancel}>Cancel</button>
+            </div>
+        </div>
+    )
 }
