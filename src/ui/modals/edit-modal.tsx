@@ -6,12 +6,12 @@ import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
 import {replacedCardText} from "src/edit-utils";
 import {Card} from "src/Card";
 
-function QuestionEdit(props: { card: Card, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
+function QuestionEdit(props: { questionText: string, onKeyDown: (e: React.KeyboardEvent) => void, onChange: (event: any) => void }) {
     return <>
         <h3>Question</h3>
         <textarea spellCheck="false"
                   className={"question"}
-                  defaultValue={props.card.front}
+                  defaultValue={props.questionText}
                   onKeyDown={props.onKeyDown}
                   onChange={props.onChange}
         />
@@ -54,7 +54,9 @@ export class FlashcardEditModal extends Modal {
         this.plugin = plugin;
         this.titleEl.setText("Edit Card");
         this.card = card;
-        this.questionText = card.front;
+        // this.questionText = card.front;
+        debugger;
+        this.questionText = removeSchedTextFromCard(this.card.front, generateSeparator(this.card.cardText, plugin.data.settings.cardCommentOnSameLine));
         this.answerText = removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, plugin.data.settings.cardCommentOnSameLine));
 
         this.waitForClose = new Promise<Card>((resolve, reject) => {
@@ -74,7 +76,7 @@ export class FlashcardEditModal extends Modal {
             (
                 <div className="sr-input-area">
                         <QuestionEdit
-                            card={this.card}
+                            questionText={this.questionText}
                             onKeyDown={(e) => this.submitEnterCallback(e)}
                             onChange={(event) => { this.questionText = event.target.value; }}
                         />
