@@ -48,6 +48,7 @@ export class FlashcardEditModal extends Modal {
         return newPromptModal.waitForClose;
     }
 
+    // todo: handle clozes more elegantly
     constructor(plugin: SRPlugin, existingText: string, card: Card) {
         super(plugin.app);
         this.plugin = plugin;
