@@ -21,6 +21,7 @@ export class Card {
     siblingIdx: number;
     siblings: Card[];
 
+    // Why does Card need to know about front and back?
     constructor(i: number, scheduling: RegExpMatchArray[], note: TFile, lineNo: number, front: string, back: string, cardText: string, context: string, cardType: CardType, siblings: Card[], clozeInsertionAt: number) {
         this.isDue = i < scheduling.length;
         this.note = note;
