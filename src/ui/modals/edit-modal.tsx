@@ -6,6 +6,7 @@ import { generateSeparator, removeSchedTextFromCard } from "src/sched-utils";
 import { replacedCardText } from "src/edit-utils";
 import { Card } from "src/Card";
 import { QuestionEdit, AnswerEdit } from "../components/edit-card-text-areas";
+import { CardType } from "src/scheduling";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {
@@ -56,6 +57,7 @@ export class FlashcardEditModal extends Modal {
                 answerChangeHandler={(event: React.ChangeEvent<HTMLInputElement>) => { this.answerText = event.target.value}} 
                 onKeyDown = {(e) => this.submitEnterCallback(e)}
                 questionChangeHandler = {(event) => { this.questionText = event.target.value; }}
+                cardtype = {this.card.cardType}
             />
         )
     }
@@ -96,7 +98,24 @@ onClose() {
 }
 }
 
-function EditModal({ questionText, onKeyDown, questionChangeHandler, answerChangeHandler, answerText, onClickSubmit, onClickCancel }: { questionText: string, onKeyDown: (e: React.KeyboardEvent) => void,  questionChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void, answerChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void, answerText: string, onClickSubmit: (e: React.MouseEvent) => void, onClickCancel: (e: React.MouseEvent) => void }) {
+function EditModal({ questionText, onKeyDown, questionChangeHandler, answerChangeHandler, answerText, onClickSubmit, onClickCancel, cardtype: cardType }: { questionText: string, onKeyDown: (e: React.KeyboardEvent) => void,  questionChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void, answerChangeHandler: (e: React.ChangeEvent<HTMLInputElement>) => void, answerText: string, onClickSubmit: (e: React.MouseEvent) => void, onClickCancel: (e: React.MouseEvent) => void, cardtype: CardType }) {
+    if (cardType == CardType.Cloze) {
+        return (
+            <div className="sr-input-area">
+                <QuestionEdit
+                    questionText={questionText}
+                    onKeyDown={onKeyDown}
+                    onChange={questionChangeHandler}
+            />
+                <div className="modal-button-container">
+                    <button className="mod-cta" onClick={onClickSubmit}>
+                        Submit
+                    </button>
+                    <button onClick={onClickCancel}>Cancel</button>
+                </div>
+            </div>
+        )    
+    } else
     return (
         <div className="sr-input-area">
             <QuestionEdit
