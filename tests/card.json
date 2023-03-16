@@ -25,5 +25,6 @@
   "siblings": [],
   "interval": 5,
   "ease": 170,
-  "delayBeforeReview": 568996654
+  "delayBeforeReview": 568996654,
+  "clozeInsertionAt": null
 }
