@@ -51,16 +51,14 @@ export class FlashcardEditModal extends Modal {
                 onClickCancel={(_e) => this.close()}
                 onClickSubmit={(_e) => this.submit()}
                 questionText={removeSchedTextFromCard(this.card.front, generateSeparator(this.card.cardText, this.plugin.data.settings.cardCommentOnSameLine))}
+                questionChangeHandler={(event) => {
+                    this.questionText = event.target.value;
+                }}
                 answerText={removeSchedTextFromCard(this.card.back, generateSeparator(this.card.cardText, this.plugin.data.settings.cardCommentOnSameLine))}
                 answerChangeHandler={(event: React.ChangeEvent<HTMLInputElement>) => {
                     this.answerText = event.target.value
-                    console.log("answerhandler",event.target.value);
                 }}
                 onKeyDown={(e) => this.submitEnterCallback(e)}
-                questionChangeHandler={(event) => {
-                    this.questionText = event.target.value;
-                    console.log("questionhandler",event.target.value);
-                }}
                 cardType={this.card.cardType}
             />
         )
@@ -90,12 +88,9 @@ export class FlashcardEditModal extends Modal {
                 this.resolvePromise(this.card);
             } else {
                 let output: Card = {...this.card}
-                const front = this.card.front;
-                const cardText = this.card.cardText;
-                const questionText = this.questionText ?? front;
-                const back = this.card.back;
+                const questionText = this.questionText ?? this.card.front;
                 const answerText = this.answerText;
-                output.cardText = replacedCardText(front, output, cardText, questionText, back, answerText, this.plugin.data.settings.cardCommentOnSameLine);
+                output.cardText = replacedCardText(output, {front: questionText, back: answerText}, this.plugin.data.settings.cardCommentOnSameLine);
                 this.resolvePromise(output);
             }
         }
@@ -132,7 +127,7 @@ function EditModal({
                 <EditButtons submitClickHandler={onClickSubmit} cancelClickHandler={onClickCancel}/>
             </div>
         )
-    } else
+    } else {
         return (
             <div className="sr-input-area">
                 <QuestionEdit
@@ -148,4 +143,5 @@ function EditModal({
                 <EditButtons submitClickHandler={onClickSubmit} cancelClickHandler={onClickCancel}/>
             </div>
         )
+    }
 }
