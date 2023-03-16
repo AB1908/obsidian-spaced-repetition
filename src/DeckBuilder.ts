@@ -311,8 +311,7 @@ export interface CardSides {
 }
 
 function queryCardSide(siblingMatch: CardSides) {
-    let obj: CardSides = {front: siblingMatch.front, back: siblingMatch.back.trim()};
-    const {front, back} = obj;
+    const {front, back} = {front: siblingMatch.front, back: siblingMatch.back.trim()};
     return {front, back, clozeInsertionAt: siblingMatch.clozeInsertionAt};
 }
 
