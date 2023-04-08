@@ -19,10 +19,15 @@
     "author": "Stephen Mwangi",
     "license": "MIT",
     "devDependencies": {
+        "@testing-library/dom": "^9.2.0",
+        "@testing-library/jest-dom": "^5.16.5",
+        "@testing-library/react": "^14.0.0",
+        "@testing-library/user-event": "^14.4.3",
         "@types/jest": "^27.0.3",
         "@types/jest-expect-message": "^1.0.4",
         "@types/node": "^17.0.5",
         "@types/react": "^18.0.21",
+        "@types/react-router-dom": "^5.3.3",
         "@types/vhtml": "^2.2.4",
         "@typescript-eslint/eslint-plugin": "^5.2.0",
         "@typescript-eslint/parser": "^5.2.0",
@@ -45,6 +50,7 @@
     "dependencies": {
         "@types/react-dom": "^18.0.6",
         "react": "^18.2.0",
-        "react-dom": "^18.2.0"
+        "react-dom": "^18.2.0",
+        "react-router-dom": "^6.10.0"
     }
 }
