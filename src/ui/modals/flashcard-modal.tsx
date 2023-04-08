@@ -1,9 +1,13 @@
 import React from "react";
 import { App, Modal } from "obsidian";
-import { createRoot, Root } from "react-dom/client";
+import { createRoot, Root as ReactDomRoot} from "react-dom/client";
 import type SRPlugin from "src/main";
 import { ModalElement } from "../views/modal";
 import { AppContext } from "src/contexts/PluginContext";
+import {createBrowserRouter, RouterProvider} from "react-router-dom";
+import {FlashcardReview, Notes, Root, Tabs, Tags} from "../../routes/root";
+import ErrorPage from "src/routes/errorPage";
+import {createMemoryRouter} from "react-router-dom";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -15,7 +19,36 @@ export enum FlashcardModalMode {
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
     public ignoreStats: boolean;
-    private modalElReactRoot: Root;
+    private modalElReactRoot: ReactDomRoot;
+
+    private router = createMemoryRouter([
+        {
+            path: "/",
+            element: <Root handleCloseButton={()=>this.close()}/>,
+            errorElement: <ErrorPage />,
+            children: [
+                {
+                    path: "/home",
+                    element: <Tabs />,
+                    children: [
+                        {
+                            path: "/home/tags",
+                            element: <Tags />,
+                            // index: true
+                        },
+                        {
+                            path: "/home/notes",
+                            element: <Notes />,
+                        },
+                    ]
+                },
+                {
+                    path: "/notes/deck/1",
+                    element: <FlashcardReview/>
+                }
+            ]
+        },
+    ]);
 
     constructor(app: App, plugin: SRPlugin, ignoreStats = false) {
         super(app);
@@ -24,6 +57,7 @@ export class FlashcardModal extends Modal {
         this.ignoreStats = ignoreStats;
 
         this.modalEl.addClass("sr-modal");
+
 
         // document.body.onkeydown = (e) => {
         //     if (this.mode !== FlashcardModalMode.DecksList) {
@@ -59,7 +93,7 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot.render(
             <>
                 <AppContext.Provider value={this.plugin}>
-                    <ModalElement handleCloseButtonClick={() => this.close()}/>
+                    <RouterProvider router={this.router}/>
                 </AppContext.Provider>
             </>
         )
