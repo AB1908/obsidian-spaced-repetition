@@ -16,7 +16,7 @@ interface SubDeckProps {
 function InnerTreeItem(props: SubDeckProps) {
     return (
         <div
-            className="tree-item-inner"
+            className="sr-deck tree-item-inner"
             onClick={() => { props.startReviewingDeck(props.deck); }}
         >
             {props.deck.deckName}
@@ -59,7 +59,7 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
         <div className="tree-item">
             <details open={isDeckTreeOpen}>
                 <summary
-                    className="tree-item-self tag-pane-tag is-clickable"
+                    className="sr-deck tree-item-self is-clickable"
                     onClick={(e) => e.preventDefault()}
                 >
                     {/* tree-item-self*/}
