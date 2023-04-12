@@ -1,5 +1,4 @@
-import {AllCardCounts, AllDecks} from "src/ui/components/card-counts";
-import {t} from "src/lang/helpers";
+import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {DeckTreeView} from "src/ui/views/deck";
@@ -8,38 +7,9 @@ import {AppContext} from "src/contexts/PluginContext";
 import {Outlet, useNavigate} from "react-router";
 import {Link, NavLink} from "react-router-dom";
 import {setIcon} from "obsidian";
+import {ICON_LIST} from "src/constants";
 
-// <>
-//     <div
-//         className="modal-close-button"
-//         onClick={() => props.handleCloseButtonClick()}
-//     />
-//     <div className="modal-title">
-//         {modalState == ModalStates.DECK_NOT_IN_REVIEW &&
-//             <AllDecks
-//                 deck={deckTree.current}
-//                 localizedModalTitle={t("DECKS")}
-//             />
-//         }
-//         {modalState == ModalStates.DECK_IN_REVIEW && ("Flashcards")}
-//     </div>
-//     <div
-//         className="modal-content sr-modal-content"
-//         // style={{ position: "relative", height: "92%" }}
-//     >
-//         <ModalContent
-//             startReviewingDeck={(deck: Deck) => {
-//                 if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0)
-//                     setModalState(ModalStates.DECK_IN_REVIEW);
-//                 deckBeingReviewed.current = deck;
-//             }}
-//             changeModalState={(state: ModalStates) => setModalState(state)}
-//             currentDeck={deckBeingReviewed.current}
-//             isDeckInReview={modalState}
-//             deckTree={deckTree.current}
-//         />
-//     </div>
-// </>
+export type Icon = typeof ICON_LIST[number];
 
 
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
