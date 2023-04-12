@@ -1,3 +1,19 @@
+ul.deck-list {
+    padding-inline-start: 0;
+}
+
+div.sr-tab-nav {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    align-items: center;
+    /* padding: 1rem; */
+}
+
+a.sr-nav-link {
+    padding: 1rem;
+}
+
 .tree-item-self:hover .tree-item-flair {
     color: initial;
 }
