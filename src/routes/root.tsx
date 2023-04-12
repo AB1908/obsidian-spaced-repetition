@@ -5,8 +5,9 @@ import React, {useContext, useEffect, useRef, useState} from "react";
 import {DeckTreeView} from "src/ui/views/deck";
 import {sync} from "src/DeckBuilder";
 import {AppContext} from "src/contexts/PluginContext";
-import {Outlet, useLocation, useNavigate} from "react-router";
+import {Outlet, useNavigate} from "react-router";
 import {Link, NavLink} from "react-router-dom";
+import {setIcon} from "obsidian";
 
 // <>
 //     <div
@@ -40,11 +41,6 @@ import {Link, NavLink} from "react-router-dom";
 //     </div>
 // </>
 
-export enum ModalStates {
-    HOME,
-    DECK_REVIEW,
-    CARD_CREATION
-}
 
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     // const router = createBrowserRouter([
@@ -54,7 +50,6 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     //         errorElement: <ErrorPage />,
     //     },
     // ]);
-    const [modalState, setModalState] = useState(ModalStates.HOME);
     const navigate = useNavigate();
     useEffect(() => {
         navigate("/home/tags");
@@ -84,60 +79,53 @@ enum TabState {
 }
 
 export function Tabs() {
-    const [tabState, setTabState] = useState(TabState.Notes);
-
     return (
         <>
-            <NavLink to="/home/tags" >
-                Tags
-            </NavLink>
-            <NavLink to="/home/notes" >
-                Notes
-            </NavLink>
+            <div className={"sr-tab-nav"}>
+                <NavLink to="/home/tags" className={"sr-nav-link is-clickable"} >
+                    Tags
+                </NavLink>
+                <NavLink to="/home/notes" className={"sr-nav-link is-clickable"}>
+                    Notes
+                </NavLink>
+            </div>
             <Outlet/>
         </>
-    // <div className={"Tabs"}>
-    //         {/* Tab nav */}
-    //         <ul className={"nav"}>
-    //             <li className={`${tabState == TabState.Notes && "active-tab"}`}>
-    //                 <Link to={`/index/tags`}>
-    //                     Notes
-    //                 </Link>
-    //             </li>
-    //             <li className={`${tabState == TabState.Tags && "active-tab"}`}>
-    //                 <Link to={`/index/notes`}>
-    //                     Tags
-    //                 </Link>
-    //             </li>
-    //         </ul>
-    //         <div className={"outlet"}>
-    //             {/* content will be shown here */}
-    //             <Outlet />
-    //         </div>
-    //     </div>
-    );
+);
 };
 
 // export function Notes({deck}:{deck: Deck}) {
 export function Notes() {
     // TODO: rewrite to use props
-    const deck = {dueFlashcardsCount: 10, newFlashcardsCount:20, totalFlashcards: 30} as Deck;
+    const deck1 = {dueFlashcardsCount: 10, newFlashcardsCount:20, totalFlashcards: 30, deckName: "Deck1"} as Deck;
+    const deck2 = {dueFlashcardsCount: 40, newFlashcardsCount:40, totalFlashcards: 40, deckName: "Deck2"} as Deck;
+    const deckArray = [deck1, deck2];
+    const iconRef = useRef(null);
+
+    useEffect(() => {
+        const plus: Icon = 'plus-circle';
+        setIcon(iconRef.current, plus);
+    }, []);
+
     return (
         <div className={"Notes"}>
-           <ul>
-               <li className={"tree-item-self is-clickable"}>
-                   <div className={"tree-item-inner"}>Book 1</div>
-                   <AllCardCounts deck={deck}/>
-               </li>
-               <li className={"tree-item-self is-clickable"}>
-                   <div className={"tree-item-inner"}>
-                       <Link to={'/notes/deck/1'}>
-                           Book 2
-                       </Link>
-                   </div>
-                   <AllCardCounts deck={deck}/>
-               </li>
+           <ul className={"sr-deck-tree"}>
+               { deckArray.map((deck, i)=>(
+                   <li className={"sr-deck tree-item-self is-clickable"} key={i}>
+                       <div className={"tree-item-inner"}>
+                           <Link to={'/notes/deck/1'}>
+                               {deck.deckName}
+                           </Link>
+                       </div>
+                       <AllCardCounts deck={deck}/>
+                   </li>
+                   )
+               ) }
            </ul>
+            <button className={"create-deck"}>
+                <div ref={iconRef}></div>
+                Add new deck
+            </button>
         </div>
     )
 }
@@ -166,7 +154,6 @@ export function Tags() {
 }
 
 export function FlashcardReview() {
-    console.log("in here");
     return (
         <p>Well, this is a let down!</p>
     );
