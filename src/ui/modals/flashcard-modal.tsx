@@ -8,6 +8,8 @@ import {createBrowserRouter, RouterProvider} from "react-router-dom";
 import {FlashcardReview, Notes, Root, Tabs, Tags} from "../../routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {createMemoryRouter} from "react-router-dom";
+import {ChapterList} from "src/ui/components/chapters-list";
+import {DeckLandingPage} from "src/routes/flashcard-review";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -44,7 +46,11 @@ export class FlashcardModal extends Modal {
                 },
                 {
                     path: "/notes/deck/1",
-                    element: <FlashcardReview/>
+                    element: <DeckLandingPage/>
+                },
+                {
+                    path: "/deck/new",
+                    element: <ChapterList/>
                 }
             ]
         },
