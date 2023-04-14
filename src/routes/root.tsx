@@ -82,13 +82,13 @@ export function Notes() {
         <div className={"Notes"}>
            <ul className={"sr-deck-tree"}>
                { deckArray.map((deck, i)=>(
-                   <Link to={'/notes/deck/1'}>
+                   <Link to={'/notes/deck'}>
                        <li className={"sr-deck tree-item-self is-clickable"} key={i}>
-                       <div className={"tree-item-inner"}>
+                           <div className={"tree-item-inner"}>
                                {deck.deckName}
-                       </div>
-                       <AllCardCounts deck={deck}/>
-                   </li>
+                           </div>
+                           <AllCardCounts deck={deck}/>
+                       </li>
                    </Link>
                    )
                ) }
