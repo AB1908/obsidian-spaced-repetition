@@ -45,7 +45,7 @@ export class FlashcardModal extends Modal {
                     ]
                 },
                 {
-                    path: "/notes/deck/1",
+                    path: "/notes/deck",
                     element: <DeckLandingPage/>
                 },
                 {
