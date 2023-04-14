@@ -51,6 +51,10 @@ export class FlashcardModal extends Modal {
                 {
                     path: "/deck/new",
                     element: <ChapterList/>
+                },
+                {
+                    path: "/notes/deck/1",
+                    element: <ChapterList/>
                 }
             ]
         },
