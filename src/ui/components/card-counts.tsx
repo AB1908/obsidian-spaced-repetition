@@ -20,7 +20,7 @@ export class CardCount extends React.Component<CardCountProps> {
         return (
             <span
                 aria-label={t(this.props.cardType)}
-                className={`tag-pane-tag-count tree-item-flair sr-deck-counts ${this.props.additionalClass}`}
+                className={`tree-item-flair sr-deck-counts ${this.props.additionalClass}`}
             >
                 {this.props.cardCount.toString()}
             </span>
