@@ -77,18 +77,19 @@ export function Notes() {
         setIcon(iconRef.current, plus);
     }, []);
 
+    // TODO: use onClick instead of Link?
     return (
         <div className={"Notes"}>
            <ul className={"sr-deck-tree"}>
                { deckArray.map((deck, i)=>(
-                   <li className={"sr-deck tree-item-self is-clickable"} key={i}>
+                   <Link to={'/notes/deck/1'}>
+                       <li className={"sr-deck tree-item-self is-clickable"} key={i}>
                        <div className={"tree-item-inner"}>
-                           <Link to={'/notes/deck/1'}>
                                {deck.deckName}
-                           </Link>
                        </div>
                        <AllCardCounts deck={deck}/>
                    </li>
+                   </Link>
                    )
                ) }
            </ul>
