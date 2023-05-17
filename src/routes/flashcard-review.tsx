@@ -14,12 +14,12 @@ export function DeckLandingPage() {
                 <AllCardCounts deck={deck1}/>
             </h4>
             <p>
-                <Link to={""}>
+                <Link to={"/notes/deck/chapters"}>
                     <button>
                         Create New Cards
                     </button>
                 </Link>
-                <Link to={"/notes/deck/1"}>
+                <Link to={""}>
                     <button>
                         Review
                     </button>
