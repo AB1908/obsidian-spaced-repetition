@@ -22,7 +22,7 @@ export function ChapterList() {
             <p>Add flashcards from:</p>
             <ul className={"sr-chapter-tree"}>
                 {chapterList.map((chapter: any) => (
-                    <Link to={""}>
+                    <Link to={"/notes/deck/chapters/1"}>
                         <li key={chapter.id} className={"sr-chapter tree-item-self is-clickable"}>
                             <div className={"tree-item-inner"}>
                                 {chapter.title}
