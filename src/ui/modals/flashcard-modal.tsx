@@ -10,12 +10,20 @@ import ErrorPage from "src/routes/errorPage";
 import {createMemoryRouter} from "react-router-dom";
 import {ChapterList} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
+import {HighlightsList} from "src/ui/components/highlights";
+import {ChooseCardType, CreateRegularCard} from "src/ui/components/card-creation";
 
 export enum FlashcardModalMode {
     DecksList,
     Front,
     Back,
     Closed,
+}
+
+export const routes = {
+    bookList: "/notes/books",
+    chapterList: "/notes/books/1/chapters",
+    highlightList: "notes/books/1/chapters/1/highlights"
 }
 
 export class FlashcardModal extends Modal {
@@ -53,8 +61,20 @@ export class FlashcardModal extends Modal {
                     element: <ChapterList/>
                 },
                 {
-                    path: "/notes/deck/1",
+                    path: "/notes/deck/chapters",
                     element: <ChapterList/>
+                },
+                {
+                    path: "/notes/deck/chapters/1",
+                    element: <HighlightsList/>
+                },
+                {
+                    path: "/notes/deck/chapters/1/add",
+                    element: <ChooseCardType/>
+                },
+                {
+                    path: "/notes/deck/chapters/1/add/regular",
+                    element: <CreateRegularCard/>
                 }
             ]
         },
