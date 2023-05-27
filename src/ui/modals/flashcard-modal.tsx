@@ -74,7 +74,8 @@ export class FlashcardModal extends Modal {
                 },
                 {
                     path: "/notes/deck/chapters/1/add/regular",
-                    element: <CreateRegularCard/>
+                    element: <CreateRegularCard/>,
+                    action: creationAction
                 }
             ]
         },
