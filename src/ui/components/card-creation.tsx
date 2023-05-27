@@ -171,3 +171,9 @@ export function CreateRegularCard() {
         </>
     );
 }
+
+export async function creationAction(): Promise<void> {
+    // TODO: Add logic to update the deck
+    console.log("Submitted!");
+    return null;
+}
