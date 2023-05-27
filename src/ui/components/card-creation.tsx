@@ -152,14 +152,9 @@ export function CreateRegularCard() {
                </div>
                 <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}/>
             </div>
-            {/*
-            TODO: this loops back to the highlights page to choose a highlight
-            */}
-            <Link to={""}>
-                <button className={"mod-cta"}>
-                    Submit
-                </button>
-            </Link>
+            <Form method="post">
+                <button type="submit" className={"mod-cta"} >Submit</button>
+            </Form>
             {
             //     TODO: this loops back to some other page I guess
             }
