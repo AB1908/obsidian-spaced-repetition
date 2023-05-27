@@ -2,14 +2,15 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
+import {useLoaderData} from "react-router";
 
-function NoteAndHighlight() {
+function NoteAndHighlight({highlightText, noteText}: {highlightText: string, noteText: string}) {
     return <>
         <div>
             <blockquote className={"markdown-rendered blockquote"}>
 
                 <p>
-                    This is a sample highlight
+                    {highlightText}
                 </p>
             </blockquote>
 
@@ -17,15 +18,15 @@ function NoteAndHighlight() {
         <div>
             <blockquote>
                 <p>
-                    This is a sample note
+                    {noteText}
                 </p>
             </blockquote>
         </div>
     </>;
 }
 
-export function ChooseCardType() {
-    const highlightsList = [
+export async function loader() {
+    const test = [
         {
             id: 1,
             highlightContent: "This is a sample highlight",
@@ -49,10 +50,41 @@ export function ChooseCardType() {
             flashcards: []
         },
     ];
-const highlight = highlightsList[0];
+    return test;
+}
+
+export function ChooseCardType() {
+    // const test = useLoaderData();
+    const test = [
+        {
+            id: 1,
+            highlightContent: "This is a sample highlight",
+            highlightNote: "This is a note for that highlight",
+            flashcards: [
+                {
+                    questionText: "This is a flashcard question that asks about highlight 1",
+                    answerText: "This is the answer to that question"
+                },
+                {
+                    questionText: "Flashcard 2",
+                    answerText: "Answer 2"
+                },
+            ]
+        },
+        {
+            id: 2,
+            highlightContent: "This is a sample highlight but without a note",
+            //TODO: think about whether this should be a null or an empty string on the backend
+            highlightNote: "",
+            flashcards: []
+        },
+    ];
+    //TODO: fix any
+    const highlightsList: any = test;
+    const highlight: any = highlightsList[0];
     return (
         <>
-            <NoteAndHighlight/>
+            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <p>
                 Which type of flashcard?
             </p>
@@ -108,7 +140,7 @@ export function PreviewExistingFlashcards() {
     const highlight = highlightsList[0];
     return (
         <>
-            <NoteAndHighlight/>
+            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <div>
                 <p>
                     Existing questions:
@@ -132,9 +164,34 @@ export function PreviewExistingFlashcards() {
 }
 
 export function CreateRegularCard() {
+    const highlightsList = [
+        {
+            id: 1,
+            highlightContent: "This is a sample highlight",
+            highlightNote: "This is a note for that highlight",
+            flashcards: [
+                {
+                    questionText: "This is a flashcard question that asks about highlight 1",
+                    answerText: "This is the answer to that question"
+                },
+                {
+                    questionText: "Flashcard 2",
+                    answerText: "Answer 2"
+                },
+            ]
+        },
+        {
+            id: 2,
+            highlightContent: "This is a sample highlight but without a note",
+            //TODO: think about whether this should be a null or an empty string on the backend
+            highlightNote: "",
+            flashcards: []
+        },
+    ];
+    const highlight = highlightsList[0];
     return (
         <>
-            <NoteAndHighlight/>
+            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <div className={"sr-question-input"}>
                 <div className={"label-wrapper"}>
 
