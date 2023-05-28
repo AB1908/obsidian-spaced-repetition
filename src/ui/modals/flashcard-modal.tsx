@@ -11,7 +11,7 @@ import {createMemoryRouter} from "react-router-dom";
 import {ChapterList} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
 import {HighlightsList} from "src/ui/components/highlights";
-import {ChooseCardType, CreateRegularCard} from "src/ui/components/card-creation";
+import {creationAction, ChooseCardType, CreateRegularCard, loader} from "src/ui/components/card-creation";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -70,7 +70,8 @@ export class FlashcardModal extends Modal {
                 },
                 {
                     path: "/notes/deck/chapters/1/add",
-                    element: <ChooseCardType/>
+                    element: <ChooseCardType/>,
+                    loader: loader
                 },
                 {
                     path: "/notes/deck/chapters/1/add/regular",
