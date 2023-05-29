@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Link} from "react-router-dom";
+import {Form, Link, redirect} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {routes} from "src/ui/modals/flashcard-modal";
@@ -133,6 +133,9 @@ export function CreateRegularCard() {
 
 export async function creationAction(): Promise<void> {
     // TODO: Add logic to update the deck
+    // TODO: call the right api instead, there shouldn' be any actual update logic
     console.log("Submitted!");
+    redirect(routes.flashcardsList);
+    // TODO: add redirect here
     return null;
 }
