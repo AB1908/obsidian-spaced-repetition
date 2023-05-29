@@ -23,8 +23,15 @@ export enum FlashcardModalMode {
 export const routes = {
     bookList: "/notes/books",
     chapterList: "/notes/books/1/chapters",
-    highlightList: "notes/books/1/chapters/1/highlights"
-}
+    // specificChapter: "/notes/books/1/chapters/1",
+    highlightList: "/notes/deck/chapters/1/highlights",
+    // specificHighlight: "notes/books/1/chapters/1/highlights/1",
+    flashcardsList: "/notes/deck/chapters/1/highlights/1/flashcards",
+    createCard: "/notes/deck/chapters/1/highlights/1/add",
+    createRegularCard: "/notes/deck/chapters/1/highlights/1/add/regular",
+};
+
+
 
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
@@ -65,18 +72,24 @@ export class FlashcardModal extends Modal {
                     element: <ChapterList/>
                 },
                 {
-                    path: "/notes/deck/chapters/1",
+                    path: routes.highlightList,
                     element: true && <HighlightsList/>,
                     //todo: conditional logic for intermediate page where we display existing flashcards
                     loader: loader
                 },
                 {
-                    path: "/notes/deck/chapters/1/add",
+                    path: routes.flashcardsList,
+                    element: <PreviewExistingFlashcards/>,
+                    loader: loader
+                },
+                {
+                    path: routes.createCard,
                     element: <ChooseCardType/>,
                     loader: loader
                 },
                 {
-                    path: "/notes/deck/chapters/1/add/regular",
+                    // TODO: this should be refactored into a single add with params for type of card
+                    path: routes.createRegularCard,
                     element: <CreateRegularCard/>,
                     action: creationAction,
                     loader: loader
