@@ -1,7 +1,5 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {AllCardCounts} from "src/ui/components/card-counts";
-import {Deck} from "src/Deck";
 import {routes} from "src/ui/modals/flashcard-modal";
 
 // export function ChapterList({chapterList}: { chapterList: any }) {
@@ -37,21 +35,31 @@ export function HighlightsList() {
             },
         ],
     }
-    const deck1 = {dueFlashcardsCount: 10, newFlashcardsCount:20, totalFlashcards: 30, deckName: "Deck1"} as Deck;
     return (
         <>
             {/*
-             This needs to be replaced with the chapter and the highlights done and remaining
+             TODO: This needs to be replaced with the chapter and the highlights done and remaining
              */}
             <h3>
                 {chapterData.title}
             </h3>
             <h4>
-                <AllCardCounts deck={deck1}/>
+                <span
+                    className={"no-tests tree-item-flair sr-test-counts"}
+                    aria-label={"Cards without tests"}
+                >
+                    {chapterData.notesWithoutTests}
+                </span>
+                <span
+                    className={"no-tests tree-item-flair sr-test-counts"}
+                    aria-label={"Cards without tests"}
+                >
+                    {chapterData.notesWithTests}
+                </span>
             </h4>
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
-                {highlightsList.map((highlight: any) => (
+                {chapterData.highlights.map((highlight: any) => (
                     <div>
                         <Link to={routes.flashcardsList}>
                             <li key={highlight.id} className={"sr-highlight tree-item-self is-clickable"}>
