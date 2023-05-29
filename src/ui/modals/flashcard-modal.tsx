@@ -2,16 +2,20 @@ import React from "react";
 import { App, Modal } from "obsidian";
 import { createRoot, Root as ReactDomRoot} from "react-dom/client";
 import type SRPlugin from "src/main";
-import { ModalElement } from "../views/modal";
-import { AppContext } from "src/contexts/PluginContext";
-import {createBrowserRouter, RouterProvider} from "react-router-dom";
-import {FlashcardReview, Notes, Root, Tabs, Tags} from "../../routes/root";
+import {AppContext} from "src/contexts/PluginContext";
+import {createMemoryRouter, RouterProvider} from "react-router-dom";
+import {Notes, Root, Tabs, Tags} from "../../routes/root";
 import ErrorPage from "src/routes/errorPage";
-import {createMemoryRouter} from "react-router-dom";
 import {ChapterList} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
 import {HighlightsList} from "src/ui/components/highlights";
-import {creationAction, ChooseCardType, CreateRegularCard, loader} from "src/ui/components/card-creation";
+import {
+    ChooseCardType,
+    CreateRegularCard,
+    creationAction,
+    highlightLoader,
+    PreviewExistingFlashcards
+} from "src/ui/components/card-creation";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -75,24 +79,24 @@ export class FlashcardModal extends Modal {
                     path: routes.highlightList,
                     element: true && <HighlightsList/>,
                     //todo: conditional logic for intermediate page where we display existing flashcards
-                    loader: loader
+                    loader: highlightLoader
                 },
                 {
                     path: routes.flashcardsList,
                     element: <PreviewExistingFlashcards/>,
-                    loader: loader
+                    loader: highlightLoader
                 },
                 {
                     path: routes.createCard,
                     element: <ChooseCardType/>,
-                    loader: loader
+                    loader: highlightLoader
                 },
                 {
                     // TODO: this should be refactored into a single add with params for type of card
                     path: routes.createRegularCard,
                     element: <CreateRegularCard/>,
                     action: creationAction,
-                    loader: loader
+                    loader: highlightLoader
                 }
             ]
         },
