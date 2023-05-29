@@ -33,9 +33,11 @@ export function ChooseCardType() {
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
+
             <p>
                 Which type of flashcard?
             </p>
+
             <ol>
 
                 <Link to={routes.createRegularCard}>
@@ -112,7 +114,7 @@ export function CreateRegularCard() {
                            Answer
                        </label>
                    </div>
-                    <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}/>
+                   <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}/>
                 </div>
 
                 <button type="submit" className={"mod-cta"} >Submit</button>
@@ -128,11 +130,9 @@ export function CreateRegularCard() {
     );
 }
 
-export async function creationAction(): Promise<void> {
+export async function creationAction(): Promise<Response> {
     // TODO: Add logic to update the deck
     // TODO: call the right api instead, there shouldn' be any actual update logic
     console.log("Submitted!");
-    redirect(routes.flashcardsList);
-    // TODO: add redirect here
-    return null;
+    return redirect(routes.flashcardsList);
 }
