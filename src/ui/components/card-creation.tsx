@@ -1,34 +1,29 @@
+// TODO: move each page to its own file
+// TODO: move data to loader functions
+// KILL: Figure out how to cache data between pages. may need subroutes
+// TODO: handle action for card submission. How to update plugin data?
 import React from "react";
 import {Form, Link, redirect} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {routes} from "src/ui/modals/flashcard-modal";
 
-export async function loader() {
-    const test = [
-        {
-            id: 1,
-            highlightContent: "This is a sample highlight",
-            highlightNote: "This is a note for that highlight",
-            flashcards: [
-                {
-                    questionText: "This is a flashcard question that asks about highlight 1",
-                    answerText: "This is the answer to that question"
-                },
-                {
-                    questionText: "Flashcard 2",
-                    answerText: "Answer 2"
-                },
-            ]
-        },
-        {
-            id: 2,
-            highlightContent: "This is a sample highlight but without a note",
-            //TODO: think about whether this should be a null or an empty string on the backend
-            highlightNote: "",
-            flashcards: []
-        },
-    ];
+export async function highlightLoader() {
+    const test = {
+        id: 1,
+        highlightContent: "This is a sample highlight",
+        highlightNote: "This is a note for that highlight",
+        flashcards: [
+            {
+                questionText: "This is a flashcard question that asks about highlight 1",
+                answerText: "This is the answer to that question"
+            },
+            {
+                questionText: "Flashcard 2",
+                answerText: "Answer 2"
+            },
+        ]
+    };
     return test;
 }
 
@@ -77,7 +72,12 @@ export function PreviewExistingFlashcards() {
                 <ul>
                     {highlight.flashcards.map((t,i) => (
                         <li key={i}>
-                            {t.questionText}
+                            <p>
+                                {t.questionText}
+                            </p>
+                            <p>
+                                {t.answerText}
+                            </p>
                         </li>
                     ))}
                     <Link to={routes.createCard}>
@@ -117,6 +117,7 @@ export function CreateRegularCard() {
 
                 <button type="submit" className={"mod-cta"} >Submit</button>
 
+                {/*TODO: Replace with useNavigate and use history?*/}
                 <Link to={"./.."} className={""}>
                     <button>
                         Cancel
