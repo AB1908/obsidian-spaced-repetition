@@ -66,7 +66,9 @@ export class FlashcardModal extends Modal {
                 },
                 {
                     path: "/notes/deck/chapters/1",
-                    element: <HighlightsList/>
+                    element: true && <HighlightsList/>,
+                    //todo: conditional logic for intermediate page where we display existing flashcards
+                    loader: loader
                 },
                 {
                     path: "/notes/deck/chapters/1/add",
@@ -76,7 +78,8 @@ export class FlashcardModal extends Modal {
                 {
                     path: "/notes/deck/chapters/1/add/regular",
                     element: <CreateRegularCard/>,
-                    action: creationAction
+                    action: creationAction,
+                    loader: loader
                 }
             ]
         },
