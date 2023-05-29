@@ -1,29 +1,7 @@
 import React from "react";
 import {Form, Link} from "react-router-dom";
-import {AllCardCounts} from "src/ui/components/card-counts";
-import {Deck} from "src/Deck";
 import {useLoaderData} from "react-router";
-
-function NoteAndHighlight({highlightText, noteText}: {highlightText: string, noteText: string}) {
-    return <>
-        <div>
-            <blockquote className={"markdown-rendered blockquote"}>
-
-                <p>
-                    {highlightText}
-                </p>
-            </blockquote>
-
-        </div>
-        <div>
-            <blockquote>
-                <p>
-                    {noteText}
-                </p>
-            </blockquote>
-        </div>
-    </>;
-}
+import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 
 export async function loader() {
     const test = [
