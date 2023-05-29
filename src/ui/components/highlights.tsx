@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
+import {routes} from "src/ui/modals/flashcard-modal";
 
 // export function ChapterList({chapterList}: { chapterList: any }) {
 export function HighlightsList() {
@@ -49,7 +50,7 @@ export function HighlightsList() {
             <ul className={"sr-highlight-tree"}>
                 {highlightsList.map((highlight: any) => (
                     <div>
-                        <Link to={"/notes/deck/chapters/1/add"}>
+                        <Link to={routes.flashcardsList}>
                             <li key={highlight.id} className={"sr-highlight tree-item-self is-clickable"}>
                                 {highlight.highlightContent}
                             </li>

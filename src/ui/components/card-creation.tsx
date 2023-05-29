@@ -2,6 +2,7 @@ import React from "react";
 import {Form, Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
+import {routes} from "src/ui/modals/flashcard-modal";
 
 export async function loader() {
     const test = [
@@ -44,7 +45,7 @@ export function ChooseCardType() {
             </p>
             <ol>
 
-                <Link to={"/notes/deck/chapters/1/add/regular"}>
+                <Link to={routes.createRegularCard}>
                     <li>
                         Regular
                     </li>
@@ -82,7 +83,7 @@ export function PreviewExistingFlashcards() {
                             {t.questionText}
                         </li>
                     ))}
-                    <Link to={"/notes/deck/chapters/1/add/regular"}>
+                    <Link to={routes.createCard}>
                         <li>
                             Add new card
                         </li>
