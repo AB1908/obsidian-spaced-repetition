@@ -73,14 +73,16 @@ export function PreviewExistingFlashcards() {
                 </p>
                 <ul>
                     {highlight.flashcards.map((t,i) => (
-                        <li key={i}>
-                            <p>
-                                {t.questionText}
-                            </p>
-                            <p>
-                                {t.answerText}
-                            </p>
-                        </li>
+                        <Link to={""}>
+                            <li key={i}>
+                                <p>
+                                    {t.questionText}
+                                </p>
+                                <p>
+                                    {t.answerText}
+                                </p>
+                            </li>
+                        </Link>
                     ))}
                     <Link to={routes.createCard}>
                         <li>
