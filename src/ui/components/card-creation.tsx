@@ -33,10 +33,8 @@ export async function loader() {
 }
 
 export function ChooseCardType() {
-    const test = useLoaderData();
     //TODO: fix any
-    const highlightsList: any = test;
-    const highlight: any = highlightsList[0];
+    const highlight: any = useLoaderData();
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
@@ -68,8 +66,7 @@ export function ChooseCardType() {
 }
 
 export function PreviewExistingFlashcards() {
-    const test = useLoaderData();
-    const highlight = test[0];
+    const highlight = useLoaderData();
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
@@ -96,8 +93,7 @@ export function PreviewExistingFlashcards() {
 }
 
 export function CreateRegularCard() {
-    const highlightsList = useLoaderData();
-    const highlight = highlightsList[0];
+    const highlight = useLoaderData();
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
