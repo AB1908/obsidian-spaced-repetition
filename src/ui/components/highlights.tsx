@@ -53,19 +53,14 @@ export function HighlightsList() {
                         <Link to={routes.flashcardsList}>
                             <li key={highlight.id} className={"sr-highlight tree-item-self is-clickable"}>
                                 {highlight.highlightContent}
+                                <span>
+                                    <span className={"no-tests tree-item-flair sr-test-counts"}>
+                                        {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
+                                        {highlight.flashcards.length}
+                                    </span>
+                                </span>
                             </li>
                         </Link>
-                        <div className={"tree-item-inner"}>
-                            {highlight.flashcards.map((flashcard: any) =>
-                                (
-                                    <Link to={""}>
-                                        <li>
-                                            {flashcard.questionText.substring(0, 10)}
-                                        </li>
-                                    </Link>
-                                )
-                            )}
-                        </div>
                     </div>
                     ))}
             </ul>
