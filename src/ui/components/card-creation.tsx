@@ -168,34 +168,32 @@ export function CreateRegularCard() {
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-            <div className={"sr-question-input"}>
-                <div className={"label-wrapper"}>
-
-                    <label htmlFor={"question"} className={"sr-question-input-label"}>
-                        Question
-                    </label>
-                </div>
-                <textarea id={"question"} name={"question"} className={"sr-question-input-text"} />
-            </div>
-            <div className={"sr-answer-input"}>
-               <div className={"label-wrapper"}>
-                   <label htmlFor={"answer"} className={"sr-answer-input-label"}>
-                       Answer
-                   </label>
-               </div>
-                <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}/>
-            </div>
             <Form method="post">
+                <div className={"sr-question-input"}>
+                    <div className={"label-wrapper"}>
+                        <label htmlFor={"question"} className={"sr-question-input-label"}>
+                            Question
+                        </label>
+                    </div>
+                    <textarea id={"question"} name={"question"} className={"sr-question-input-text"} />
+                </div>
+                <div className={"sr-answer-input"}>
+                   <div className={"label-wrapper"}>
+                       <label htmlFor={"answer"} className={"sr-answer-input-label"}>
+                           Answer
+                       </label>
+                   </div>
+                    <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}/>
+                </div>
+
                 <button type="submit" className={"mod-cta"} >Submit</button>
+
+                <Link to={"./.."} className={""}>
+                    <button>
+                        Cancel
+                    </button>
+                </Link>
             </Form>
-            {
-            //     TODO: this loops back to some other page I guess
-            }
-            <Link to={""} className={""}>
-                <button>
-                    Cancel
-                </button>
-            </Link>
         </>
     );
 }
