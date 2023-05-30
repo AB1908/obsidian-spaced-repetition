@@ -2,42 +2,48 @@ import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {Form, Link, useLocation} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
-import React from "react";
+import React, {useState} from "react";
 
 export function ChooseCardType() {
     //TODO: fix any
+}
+
+function CardTypePicker() {
+    return <>
+        <p>
+            Which type of flashcard?
+        </p>
+
+        <ol>
+            <Link to={routes.createRegularCard}>
+                <li>
+                    Regular
+                </li>
+            </Link>
+            <Link to={""}>
+                <li>
+                    Reversed
+                </li>
+            </Link>
+            <Link to={""}>
+                <li>
+                    Cloze
+                </li>
+            </Link>
+        </ol>
+    </>;
+}
+
+export function CreateRegularCard() {
     const highlight: any = useLoaderData();
+    const [cardType, setCardType] = useState(null);
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
 
-            <p>
-                Which type of flashcard?
-            </p>
-
-            <ol>
-                <Link to={routes.createRegularCard}>
-                    <li>
-                        Regular
-                    </li>
-                </Link>
-                <Link to={""}>
-                    <li>
-                        Reversed
-                    </li>
-                </Link>
-                <Link to={""}>
-                    <li>
-                        Cloze
-                    </li>
-                </Link>
-            </ol>
+            <CardTypePicker/>
         </>
     );
-}
-
-export function CreateRegularCard() {
-    const highlight = useLoaderData();
     const {pathname} = useLocation();
     console.log(pathname);
     const pathFragments = pathname.split("/");
