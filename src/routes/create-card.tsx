@@ -30,6 +30,38 @@ function CardTypePicker() {
     </>;
 }
 
+function CardCreationForm(props: { defaultValue: any, defaultValue1: any }) {
+    return <Form method="post">
+        <div className={"sr-question-input"}>
+            <div className={"label-wrapper"}>
+                <label htmlFor={"question"} className={"sr-question-input-label"}>
+                    Question
+                </label>
+            </div>
+            <textarea id={"question"} name={"question"} className={"sr-question-input-text"}
+                      defaultValue={props.defaultValue} required/>
+        </div>
+        <div className={"sr-answer-input"}>
+            <div className={"label-wrapper"}>
+                <label htmlFor={"answer"} className={"sr-answer-input-label"}>
+                    Answer
+                </label>
+            </div>
+            <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}
+                      defaultValue={props.defaultValue1} required/>
+        </div>
+
+        <button type="submit" className={"mod-cta"}>Submit</button>
+
+        {/*TODO: Replace with useNavigate and use history?*/}
+        <Link to={"./.."} className={""}>
+            <button>
+                Cancel
+            </button>
+        </Link>
+    </Form>;
+}
+
 export function CreateRegularCard() {
     const highlight: any = useLoaderData();
     const [cardType, setCardType] = useState(null);
@@ -48,35 +80,7 @@ export function CreateRegularCard() {
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-            <Form method="post">
-                <div className={"sr-question-input"}>
-                    <div className={"label-wrapper"}>
-                        <label htmlFor={"question"} className={"sr-question-input-label"}>
-                            Question
-                        </label>
-                    </div>
-                    <textarea id={"question"} name={"question"} className={"sr-question-input-text"}
-                              defaultValue={defaultQuestionValue} required/>
-                </div>
-                <div className={"sr-answer-input"}>
-                    <div className={"label-wrapper"}>
-                        <label htmlFor={"answer"} className={"sr-answer-input-label"}>
-                            Answer
-                        </label>
-                    </div>
-                    <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}
-                              defaultValue={defaultAnswerValue} required/>
-                </div>
-
-                <button type="submit" className={"mod-cta"}>Submit</button>
-
-                {/*TODO: Replace with useNavigate and use history?*/}
-                <Link to={"./.."} className={""}>
-                    <button>
-                        Cancel
-                    </button>
-                </Link>
-            </Form>
+            <CardCreationForm defaultValue={defaultQuestionValue} defaultValue1={defaultAnswerValue}/>
         </>
     );
 }
