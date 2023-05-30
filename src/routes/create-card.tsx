@@ -65,13 +65,6 @@ function CardCreationForm(props: { defaultValue: any, defaultValue1: any }) {
 export function CreateRegularCard() {
     const highlight: any = useLoaderData();
     const [cardType, setCardType] = useState(null);
-    return (
-        <>
-            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-
-            <CardTypePicker/>
-        </>
-    );
     const {pathname} = useLocation();
     const pathFragments = pathname.split("/");
     const currentPath = pathFragments[pathFragments.length - 1];
@@ -80,7 +73,8 @@ export function CreateRegularCard() {
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-            <CardCreationForm defaultValue={defaultQuestionValue} defaultValue1={defaultAnswerValue}/>
+
+            <CardTypePicker/>
         </>
     );
 }
