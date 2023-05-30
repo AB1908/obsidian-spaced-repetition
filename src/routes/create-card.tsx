@@ -74,7 +74,7 @@ export function CreateRegularCard() {
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
 
-            <CardTypePicker/>
+            {cardType === null ? <CardTypePicker/> : <CardCreationForm defaultValue={defaultQuestionValue} defaultValue1={defaultAnswerValue}/>}
         </>
     );
 }
