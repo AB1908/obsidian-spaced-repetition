@@ -1,3 +1,17 @@
+// TODO: add data loading logic
+// TODO: make routes dynamic
+// DONE: add missing page for previewing existing flashcards
+// TODO: make inputs dynamic and convert them into state?
+// TODO: Add tests?
+// TODO: reorganize components and pages
+// TODO: breadcrumbs
+// TODO: CSS and styling
+// TODO: animations?
+// TODO: single route paths across the pages/refactor into a single const or whatever
+// TODO: Back button
+// TODO: Breadcrumbs
+// TODO: Backend?
+// TODO: history management for back button
 import React from "react";
 import {App, Modal} from "obsidian";
 import {createRoot, Root as ReactDomRoot} from "react-dom/client";
@@ -31,10 +45,25 @@ export const routes = {
     flashcardsList: "/notes/deck/chapters/1/highlights/1/flashcards",
     flashcard: "/notes/deck/chapters/1/highlights/1/flashcards/:flashcardId",
     // createCard: "/notes/deck/chapters/1/highlights/1/flashcards/inter",
-    createRegularCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
+    // createRegularCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
 };
 
+/*
+books by title or id?
+generated id might be diff in every scenario
+but that shouldn't matter since routing is completely internal
+any other potential downsides?
+makes it difficult to use navigate? no doesn't seem like it
+id -> would be array index of the books list which we would pass to nested routes I guess
+or should I pass the book itself?
 
+I have three options for passing data:
+- useref
+- context: this seems like a decent option
+- action data but how do I associate a link with an action? onclick
+  - this won't scale well, i don't need dozens of actions and loaders
+/notes/books/The
+ */
 
 export class FlashcardModal extends Modal {
     public plugin: SRPlugin;
