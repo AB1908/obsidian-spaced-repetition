@@ -50,7 +50,7 @@ export function PreviewExistingFlashcards() {
                             </li>
                         </Link>
                     ))}
-                    <Link to={routes.createCard}>
+                    <Link to={routes.flashcard}>
                         <li>
                             Add new card
                         </li>
