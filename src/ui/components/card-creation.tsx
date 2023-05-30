@@ -3,7 +3,7 @@
 // KILL: Figure out how to cache data between pages. may need subroutes
 // TODO: handle action for card submission. How to update plugin data?
 import React from "react";
-import {Link, redirect, useParams} from "react-router-dom";
+import {Link, useParams} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {routes} from "src/ui/modals/flashcard-modal";
@@ -62,9 +62,3 @@ export function PreviewExistingFlashcards() {
     )
 }
 
-export async function creationAction(): Promise<Response> {
-    // TODO: Add logic to update the deck
-    // TODO: call the right api instead, there shouldn' be any actual update logic
-    console.log("Submitted!");
-    return redirect(routes.flashcardsList);
-}

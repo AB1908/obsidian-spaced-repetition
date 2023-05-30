@@ -10,11 +10,10 @@ import {ChapterList} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
 import {HighlightsList} from "src/ui/components/highlights";
 import {
-    creationAction,
     highlightLoader,
     PreviewExistingFlashcards
 } from "src/ui/components/card-creation";
-import {ChooseCardType, CreateCard} from "src/routes/create-card";
+import {ChooseCardType, CreateCard, creationAction} from "src/routes/create-card";
 
 export enum FlashcardModalMode {
     DecksList,

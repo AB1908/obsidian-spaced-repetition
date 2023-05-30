@@ -1,8 +1,8 @@
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
-import {Form, Link, useLocation} from "react-router-dom";
-import {routes} from "src/ui/modals/flashcard-modal";
+import {Form, redirect, useLocation} from "react-router-dom";
 import React, {useState} from "react";
+import {routes} from "src/ui/modals/flashcard-modal";
 
 enum CardType {
     REGULAR,
@@ -61,6 +61,8 @@ function CardCreationForm(props: { defaultQuestionValue: string, defaultAnswerVa
 }
 
 // TODO: think of a better name since this also edits cards
+// The path is basically being used as a bit of state but not explicitly so.
+// Is there a better way of doing this?
 export function CreateCard() {
     const highlight: any = useLoaderData();
     const [cardType, setCardType] = useState(null);
@@ -77,4 +79,11 @@ export function CreateCard() {
             {cardType === CardType.REGULAR && <CardCreationForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue} setCardType={setCardType}/>}
         </>
     );
+}
+
+export async function creationAction(): Promise<Response> {
+    // TODO: Add logic to update the deck
+    // TODO: call the right api instead, there shouldn' be any actual update logic
+    console.log("Submitted!");
+    return redirect(routes.flashcardsList);
 }
