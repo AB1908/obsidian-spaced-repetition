@@ -4,10 +4,6 @@ import {Form, Link, useLocation} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
 import React, {useState} from "react";
 
-export function ChooseCardType() {
-    //TODO: fix any
-}
-
 function CardTypePicker() {
     return <>
         <p>
@@ -45,7 +41,6 @@ export function CreateRegularCard() {
         </>
     );
     const {pathname} = useLocation();
-    console.log(pathname);
     const pathFragments = pathname.split("/");
     const currentPath = pathFragments[pathFragments.length - 1];
     let defaultQuestionValue = currentPath != "regular" ? highlight.flashcards[0].questionText : "";
