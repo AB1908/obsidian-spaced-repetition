@@ -30,7 +30,7 @@ function CardTypePicker({setCardType}: {setCardType: (cardType: CardType) => voi
     </>);
 }
 
-function CardCreationForm(props: { defaultValue: any, defaultValue1: any }) {
+function CardCreationForm(props: { defaultQuestionValue: string, defaultAnswerValue: string, setCardType: (cardType: null)=>void }) {
     return <Form method="post">
         <div className={"sr-question-input"}>
             <div className={"label-wrapper"}>
@@ -39,7 +39,7 @@ function CardCreationForm(props: { defaultValue: any, defaultValue1: any }) {
                 </label>
             </div>
             <textarea id={"question"} name={"question"} className={"sr-question-input-text"}
-                      defaultValue={props.defaultValue} required/>
+                      defaultValue={props.defaultQuestionValue} required/>
         </div>
         <div className={"sr-answer-input"}>
             <div className={"label-wrapper"}>
@@ -48,17 +48,15 @@ function CardCreationForm(props: { defaultValue: any, defaultValue1: any }) {
                 </label>
             </div>
             <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}
-                      defaultValue={props.defaultValue1} required/>
+                      defaultValue={props.defaultAnswerValue} required/>
         </div>
 
         <button type="submit" className={"mod-cta"}>Submit</button>
 
         {/*TODO: Replace with useNavigate and use history?*/}
-        <Link to={"./.."} className={""}>
-            <button>
-                Cancel
-            </button>
-        </Link>
+        <button onClick={()=>props.setCardType(null)}>
+            Cancel
+        </button>
     </Form>;
 }
 
@@ -74,7 +72,8 @@ export function CreateRegularCard() {
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
 
-            {cardType === null ? <CardTypePicker setCardType={setCardType}/> : <CardCreationForm defaultValue={defaultQuestionValue} defaultValue1={defaultAnswerValue}/>}
+            {cardType === null && <CardTypePicker setCardType={setCardType}/> }
+            {cardType === CardType.REGULAR && <CardCreationForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue} setCardType={setCardType}/>}
         </>
     );
 }
