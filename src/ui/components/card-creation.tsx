@@ -29,7 +29,6 @@ export async function highlightLoader() {
 
 export function PreviewExistingFlashcards() {
     const highlight = useLoaderData();
-    const params = useParams();
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
@@ -50,7 +49,7 @@ export function PreviewExistingFlashcards() {
                             </li>
                         </Link>
                     ))}
-                    <Link to={routes.flashcard}>
+                    <Link to={routes.createCard}>
                         <li>
                             Add new card
                         </li>

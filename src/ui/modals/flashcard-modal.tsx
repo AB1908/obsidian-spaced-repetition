@@ -44,7 +44,7 @@ export const routes = {
     // specificHighlight: "notes/books/1/chapters/1/highlights/1",
     flashcardsList: "/notes/deck/chapters/1/highlights/1/flashcards",
     flashcard: "/notes/deck/chapters/1/highlights/1/flashcards/:flashcardId",
-    // createCard: "/notes/deck/chapters/1/highlights/1/flashcards/inter",
+    createCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
     // createRegularCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
 };
 
