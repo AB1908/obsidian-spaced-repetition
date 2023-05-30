@@ -60,7 +60,8 @@ function CardCreationForm(props: { defaultQuestionValue: string, defaultAnswerVa
     </Form>;
 }
 
-export function CreateRegularCard() {
+// TODO: think of a better name since this also edits cards
+export function CreateCard() {
     const highlight: any = useLoaderData();
     const [cardType, setCardType] = useState(null);
     const {pathname} = useLocation();

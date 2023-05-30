@@ -14,7 +14,7 @@ import {
     highlightLoader,
     PreviewExistingFlashcards
 } from "src/ui/components/card-creation";
-import {ChooseCardType, CreateRegularCard} from "src/routes/create-card";
+import {ChooseCardType, CreateCard} from "src/routes/create-card";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -94,7 +94,7 @@ export class FlashcardModal extends Modal {
                 {
                     // TODO: this should be refactored into a single add with params for type of card
                     path: routes.flashcard,
-                    element: <CreateRegularCard/>,
+                    element: <CreateCard/>,
                     action: creationAction,
                     loader: highlightLoader
                 }
