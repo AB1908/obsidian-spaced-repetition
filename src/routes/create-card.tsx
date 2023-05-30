@@ -1,6 +1,6 @@
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
-import {Form, redirect, useLocation} from "react-router-dom";
+import {Form, redirect, useLocation, useParams} from "react-router-dom";
 import React, {useState} from "react";
 import {routes} from "src/ui/modals/flashcard-modal";
 
@@ -67,10 +67,11 @@ export function CreateCard() {
     const highlight: any = useLoaderData();
     const [cardType, setCardType] = useState(null);
     const {pathname} = useLocation();
+    const {flashcardId} = useParams();
     const pathFragments = pathname.split("/");
     const currentPath = pathFragments[pathFragments.length - 1];
-    let defaultQuestionValue = currentPath != "regular" ? highlight.flashcards[0].questionText : "";
-    let defaultAnswerValue = currentPath != "regular" ? highlight.flashcards[0].answerText : "";
+    let defaultQuestionValue = currentPath != "new" ? highlight.flashcards[flashcardId-1].questionText : "";
+    let defaultAnswerValue = currentPath != "new" ? highlight.flashcards[flashcardId-1].answerText : "";
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
