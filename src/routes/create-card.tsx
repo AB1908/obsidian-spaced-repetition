@@ -4,30 +4,30 @@ import {Form, Link, useLocation} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
 import React, {useState} from "react";
 
-function CardTypePicker() {
-    return <>
+enum CardType {
+    REGULAR,
+    REVERSED,
+    CLOZE
+}
+
+function CardTypePicker({setCardType}: {setCardType: (cardType: CardType) => void}) {
+    return (<>
         <p>
             Which type of flashcard?
         </p>
 
         <ol>
-            <Link to={routes.createRegularCard}>
-                <li>
-                    Regular
-                </li>
-            </Link>
-            <Link to={""}>
-                <li>
-                    Reversed
-                </li>
-            </Link>
-            <Link to={""}>
-                <li>
-                    Cloze
-                </li>
-            </Link>
+            <li onClick={() => setCardType(CardType.REGULAR)}>
+                Regular
+            </li>
+            <li onClick={() => setCardType(CardType.REVERSED)}>
+                Reversed
+            </li>
+            <li onClick={() => setCardType(CardType.CLOZE)}>
+                Cloze
+            </li>
         </ol>
-    </>;
+    </>);
 }
 
 function CardCreationForm(props: { defaultValue: any, defaultValue1: any }) {
@@ -74,7 +74,7 @@ export function CreateRegularCard() {
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
 
-            {cardType === null ? <CardTypePicker/> : <CardCreationForm defaultValue={defaultQuestionValue} defaultValue1={defaultAnswerValue}/>}
+            {cardType === null ? <CardTypePicker setCardType={setCardType}/> : <CardCreationForm defaultValue={defaultQuestionValue} defaultValue1={defaultAnswerValue}/>}
         </>
     );
 }
