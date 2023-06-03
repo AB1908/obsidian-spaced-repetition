@@ -1,10 +1,10 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {Deck} from "src/Deck";
 import {routes} from "src/ui/modals/flashcard-modal";
 import {HeaderWithCounts} from "src/ui/components/highlights";
+import {useLoaderData} from "react-router";
 
-export function ChapterList() {
+export function chapterLoader() {
     const deck1 = {
         deckName: "Deck1",
         chapters: [
@@ -12,6 +12,11 @@ export function ChapterList() {
             {id: 2, title: "Chapter 2", notesWithoutTests: 12, notesWithTests: 15},
         ]
     };
+    return deck1;
+}
+
+export function ChapterList() {
+    const deck1 = useLoaderData();
     const chapterList = deck1.chapters;
     return (
         <>
