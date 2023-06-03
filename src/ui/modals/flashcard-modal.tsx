@@ -20,7 +20,7 @@ import {AppContext} from "src/contexts/PluginContext";
 import {createMemoryRouter, RouterProvider} from "react-router-dom";
 import {Notes, Root, Tabs, Tags} from "../../routes/root";
 import ErrorPage from "src/routes/errorPage";
-import {ChapterList} from "src/ui/components/chapters-list";
+import {ChapterList, chapterLoader} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
 import {chapterLoaderData, HighlightsList} from "src/ui/components/highlights";
 import {
@@ -97,7 +97,8 @@ export class FlashcardModal extends Modal {
                 },
                 {
                     path: routes.chapterList,
-                    element: <ChapterList/>
+                    element: <ChapterList/>,
+                    loader: chapterLoader,
                 },
                 {
                     path: "/notes/deck/chapters",
