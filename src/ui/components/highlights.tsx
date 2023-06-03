@@ -37,6 +37,23 @@ export function chapterLoaderData() {
     return chapterData;
 }
 
+export function HeaderWithCounts(props: { chapterData: any }) {
+    return <h4>
+                <span
+                    className={"no-tests tree-item-flair sr-test-counts"}
+                    aria-label={"Cards without tests"}
+                >
+                    {props.chapterData.notesWithoutTests}
+                </span>
+        <span
+            className={"no-tests tree-item-flair sr-test-counts"}
+            aria-label={"Cards without tests"}
+        >
+                    {props.chapterData.notesWithTests}
+                </span>
+    </h4>;
+}
+
 // export function ChapterList({chapterList}: { chapterList: any }) {
 export function HighlightsList() {
     //TODO: add logic to emit book object when clicked
@@ -49,20 +66,7 @@ export function HighlightsList() {
             <h3>
                 {chapterData.title}
             </h3>
-            <h4>
-                <span
-                    className={"no-tests tree-item-flair sr-test-counts"}
-                    aria-label={"Cards without tests"}
-                >
-                    {chapterData.notesWithoutTests}
-                </span>
-                <span
-                    className={"no-tests tree-item-flair sr-test-counts"}
-                    aria-label={"Cards without tests"}
-                >
-                    {chapterData.notesWithTests}
-                </span>
-            </h4>
+            <HeaderWithCounts chapterData={chapterData}/>
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
                 {chapterData.highlights.map((highlight: any) => (
@@ -79,7 +83,7 @@ export function HighlightsList() {
                             </li>
                         </Link>
                     </div>
-                    ))}
+                ))}
             </ul>
         </>
     );
