@@ -63,7 +63,7 @@ function CardCreationForm(props: { defaultQuestionValue: string, defaultAnswerVa
 // TODO: think of a better name since this also edits cards
 // The path is basically being used as a bit of state but not explicitly so.
 // Is there a better way of doing this?
-export function CreateCard() {
+export function UpsertCard() {
     const highlight: any = useLoaderData();
     const [cardType, setCardType] = useState(null);
     const {pathname} = useLocation();
