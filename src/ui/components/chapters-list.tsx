@@ -4,9 +4,7 @@ import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
 import {routes} from "src/ui/modals/flashcard-modal";
 
-// export function ChapterList({chapterList}: { chapterList: any }) {
 export function ChapterList() {
-    //TODO: add logic to emit book object when clicked
     const chapterList = [
         {id: 1, title: "Chapter 1", notesWithoutTests: 20, notesWithTests: 11},
         {id: 2, title: "Chapter 2", notesWithoutTests: 12, notesWithTests: 15},
