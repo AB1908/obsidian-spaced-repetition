@@ -44,8 +44,8 @@ export const routes = {
     // specificHighlight: "notes/books/1/chapters/1/highlights/1",
     flashcardsList: "/notes/deck/chapters/1/highlights/1/flashcards",
     flashcard: "/notes/deck/chapters/1/highlights/1/flashcards/:flashcardId",
-    createCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
-    // createRegularCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
+    createCard: "/notes/deck/chapters/1/highlights/1/flashcards/type",
+    createRegularCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
 };
 
 /*
@@ -109,16 +109,17 @@ export class FlashcardModal extends Modal {
                     //todo: conditional logic for intermediate page where we display existing flashcards
                     loader: highlightLoader
                 },
+                // TODO: make these children and use layout routes?
                 {
                     path: routes.flashcardsList,
                     element: <PreviewExistingFlashcards/>,
                     loader: highlightLoader
                 },
-                // {
-                //     path: routes.createCard,
-                //     element: <ChooseCardType/>,
-                //     loader: highlightLoader
-                // },
+                {
+                    path: routes.createCard,
+                    element: <ChooseCardType/>,
+                    loader: highlightLoader
+                },
                 {
                     // TODO: this should be refactored into a single add with params for type of card
                     path: routes.flashcard,
