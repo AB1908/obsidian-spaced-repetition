@@ -3,6 +3,7 @@ import {Link} from "react-router-dom";
 import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
 import {routes} from "src/ui/modals/flashcard-modal";
+import {HeaderWithCounts} from "src/ui/components/highlights";
 
 export function ChapterList() {
     const chapterList = [
@@ -15,9 +16,10 @@ export function ChapterList() {
             <h3>
                 {deck1.deckName}
             </h3>
-            <h4>
-                <AllCardCounts deck={deck1}/>
-            </h4>
+            <HeaderWithCounts
+                withoutCount={chapterList.reduce((accumulator, currentValue) => accumulator + currentValue.notesWithoutTests, 0)}
+                withCount={chapterList.reduce((accumulator, currentValue) => accumulator + currentValue.notesWithTests, 0)}
+            />
             <p>Add flashcards from:</p>
             <ul className={"sr-chapter-tree"}>
                 {chapterList.map((chapter: any) => (
