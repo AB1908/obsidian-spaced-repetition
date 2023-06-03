@@ -105,9 +105,9 @@ export class FlashcardModal extends Modal {
                 },
                 {
                     path: routes.highlightList,
-                    element: true && <HighlightsList/>,
+                    element: <HighlightsList/>,
                     //todo: conditional logic for intermediate page where we display existing flashcards
-                    loader: highlightLoader
+                    loader: chapterLoaderData
                 },
                 // TODO: make these children and use layout routes?
                 {

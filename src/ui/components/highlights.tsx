@@ -1,10 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
+import {useLoaderData} from "react-router";
 
-// export function ChapterList({chapterList}: { chapterList: any }) {
-export function HighlightsList() {
-    //TODO: add logic to emit book object when clicked
+export function chapterLoaderData() {
     const chapterData = {
         id: 1,
         title: "Chapter 1",
@@ -34,7 +33,14 @@ export function HighlightsList() {
                 flashcards: []
             },
         ],
-    }
+    };
+    return chapterData;
+}
+
+// export function ChapterList({chapterList}: { chapterList: any }) {
+export function HighlightsList() {
+    //TODO: add logic to emit book object when clicked
+    const chapterData = useLoaderData();
     return (
         <>
             {/*
