@@ -14,6 +14,7 @@ export function DeckLandingPage() {
             <h4>
                 <AllCardCounts deck={deck1}/>
             </h4>
+            {/*    TODO: Add the untested highlight counts as well?*/}
             <p>
                 <Link to={routes.chapterList}>
                     <button>
