@@ -22,7 +22,7 @@ import {Notes, Root, Tabs, Tags} from "../../routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {ChapterList} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
-import {HighlightsList} from "src/ui/components/highlights";
+import {chapterLoaderData, HighlightsList} from "src/ui/components/highlights";
 import {
     highlightLoader,
     PreviewExistingFlashcards
@@ -42,10 +42,10 @@ export const routes = {
     // specificChapter: "/notes/books/1/chapters/1",
     highlightList: "/notes/deck/chapters/1/highlights",
     // specificHighlight: "notes/books/1/chapters/1/highlights/1",
-    flashcardsList: "/notes/deck/chapters/1/highlights/1/flashcards",
-    flashcard: "/notes/deck/chapters/1/highlights/1/flashcards/:flashcardId",
-    createCard: "/notes/deck/chapters/1/highlights/1/flashcards/type",
-    createRegularCard: "/notes/deck/chapters/1/highlights/1/flashcards/new",
+    flashcardsList: "/notes/deck/chapters/1/highlights/:highlightId/flashcards",
+    flashcard: "/notes/deck/chapters/1/highlights/:highlightId/flashcards/:flashcardId",
+    createCard: "/notes/deck/chapters/1/highlights/:highlightId/flashcards/type",
+    createRegularCard: "/notes/deck/chapters/1/highlights/:highlightId/flashcards/new",
 };
 
 /*
@@ -96,7 +96,7 @@ export class FlashcardModal extends Modal {
                     element: <DeckLandingPage/>
                 },
                 {
-                    path: "/deck/new",
+                    path: routes.chapterList,
                     element: <ChapterList/>
                 },
                 {
