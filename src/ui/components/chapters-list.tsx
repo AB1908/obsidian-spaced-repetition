@@ -1,16 +1,18 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
 import {routes} from "src/ui/modals/flashcard-modal";
 import {HeaderWithCounts} from "src/ui/components/highlights";
 
 export function ChapterList() {
-    const chapterList = [
-        {id: 1, title: "Chapter 1", notesWithoutTests: 20, notesWithTests: 11},
-        {id: 2, title: "Chapter 2", notesWithoutTests: 12, notesWithTests: 15},
-    ];
-    const deck1 = {dueFlashcardsCount: 10, newFlashcardsCount:20, totalFlashcards: 30, deckName: "Deck1"} as Deck;
+    const deck1 = {
+        deckName: "Deck1",
+        chapters: [
+            {id: 1, title: "Chapter 1", notesWithoutTests: 20, notesWithTests: 11},
+            {id: 2, title: "Chapter 2", notesWithoutTests: 12, notesWithTests: 15},
+        ]
+    };
+    const chapterList = deck1.chapters;
     return (
         <>
             <h3>
