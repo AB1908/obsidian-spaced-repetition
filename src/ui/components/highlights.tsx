@@ -37,26 +37,26 @@ export function chapterLoaderData() {
     return chapterData;
 }
 
-export function HeaderWithCounts(props: { chapterData: any }) {
-    return <h4>
-                <span
-                    className={"no-tests tree-item-flair sr-test-counts"}
-                    aria-label={"Cards without tests"}
-                >
-                    {props.chapterData.notesWithoutTests}
-                </span>
-        <span
-            className={"no-tests tree-item-flair sr-test-counts"}
-            aria-label={"Cards without tests"}
-        >
-                    {props.chapterData.notesWithTests}
-                </span>
-    </h4>;
+export function HeaderWithCounts(props: { withoutCount: number, withCount: number }) {
+    return (
+        <h4>
+            <span
+                className={"no-tests tree-item-flair sr-test-counts"}
+                aria-label={"Cards without tests"}
+            >
+                {props.withoutCount}
+            </span>
+            <span
+                className={"no-tests tree-item-flair sr-test-counts"}
+                aria-label={"Cards without tests"}
+            >
+                {props.withCount}
+            </span>
+        </h4>
+    );
 }
 
-// export function ChapterList({chapterList}: { chapterList: any }) {
 export function HighlightsList() {
-    //TODO: add logic to emit book object when clicked
     const chapterData = useLoaderData();
     return (
         <>
@@ -66,7 +66,7 @@ export function HighlightsList() {
             <h3>
                 {chapterData.title}
             </h3>
-            <HeaderWithCounts chapterData={chapterData}/>
+            <HeaderWithCounts withCount={chapterData.notesWithTests} withoutCount={chapterData.notesWithoutTests}/>
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
                 {chapterData.highlights.map((highlight: any) => (
