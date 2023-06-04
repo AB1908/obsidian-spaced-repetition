@@ -15,17 +15,23 @@ export function chapterLoader() {
     return deck1;
 }
 
+export function countKeyInArray(key: string, array: any) {
+    return array.reduce((accumulator: number, currentValue: any) => accumulator + currentValue[key], 0);
+}
+
 export function ChapterList() {
     const deck1 = useLoaderData();
     const chapterList = deck1.chapters;
+    const highlightsWithoutTests = countKeyInArray("notesWithoutTests", chapterList);
+    const highlightsWithTests = countKeyInArray("notesWithTests", chapterList);
     return (
         <>
             <h3>
                 {deck1.deckName}
             </h3>
             <HeaderWithCounts
-                withoutCount={chapterList.reduce((accumulator, currentValue) => accumulator + currentValue.notesWithoutTests, 0)}
-                withCount={chapterList.reduce((accumulator, currentValue) => accumulator + currentValue.notesWithTests, 0)}
+                withoutCount={highlightsWithoutTests}
+                withCount={highlightsWithTests}
             />
             <p>Add flashcards from:</p>
             <ul className={"sr-chapter-tree"}>
