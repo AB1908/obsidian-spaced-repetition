@@ -3,16 +3,10 @@ import {Link} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
 import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
+import {deck} from "src/api";
 
 export function chapterLoader() {
-    const deck1 = {
-        deckName: "Deck1",
-        chapters: [
-            {id: 1, title: "Chapter 1", notesWithoutTests: 20, notesWithTests: 11},
-            {id: 2, title: "Chapter 2", notesWithoutTests: 12, notesWithTests: 15},
-        ]
-    };
-    return deck1;
+    return deck;
 }
 
 export function countKeyInArray(key: string, array: any) {
