@@ -10,8 +10,8 @@ export const deck = {
             highlights: [
                 {
                     id: 1,
-                    highlightContent: "This is a sample highlight",
-                    highlightNote: "This is a note for that highlight",
+                    highlightContent: "This is a sample highlight from chapter 1",
+                    highlightNote: "Just another note here, testing",
                     flashcards: [
                         {
                             questionText: "This is a flashcard from question 1",
@@ -25,7 +25,7 @@ export const deck = {
                 },
                 {
                     id: 2,
-                    highlightContent: "This is a sample highlight but without a note",
+                    highlightContent: "This is a sample highlight but without a note but also in chapter 1",
                     //TODO: think about whether this should be a null or an empty string on the backend
                     highlightNote: "",
                     flashcards: []
@@ -38,8 +38,8 @@ export const deck = {
             highlights: [
                 {
                     id: 1,
-                    highlightContent: "This is a sample highlight",
-                    highlightNote: "This is a note for that highlight",
+                    highlightContent: "This is a sample highlight chapter 2",
+                    highlightNote: "This is a note for that highlight chapter 2",
                     flashcards: []
                 },
                 {
