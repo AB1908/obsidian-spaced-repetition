@@ -2,7 +2,6 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
 import {useLoaderData} from "react-router";
-import {countKeyInArray} from "src/ui/components/chapters-list";
 
 export function chapterLoaderData() {
     const chapterData = {
