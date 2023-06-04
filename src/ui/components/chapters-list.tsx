@@ -33,8 +33,8 @@ export function ChapterList() {
             />
             <p>Add flashcards from:</p>
             <ul className={"sr-chapter-tree"}>
-                {chapterList.map((chapter: any) => (
-                    <Link to={routes.highlightList}>
+                {chapterList.map((chapter: any, i: number) => (
+                    <Link to={`${i}/highlights`}>
                         <li key={chapter.id} className={"sr-chapter tree-item-self is-clickable"}>
                             <div className={"tree-item-inner"}>
                                 {chapter.title}
