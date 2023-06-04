@@ -20,29 +20,32 @@ export function PreviewExistingFlashcards() {
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <div>
-                <p>
-                    Existing questions:
-                </p>
-                <ul>
-                    {highlight.flashcards.map((t,i) => (
-                        <Link to={`${i}`}>
-                            <li key={i}>
-                                <p>
-                                    {t.questionText}
-                                </p>
-                                <p>
-                                    {t.answerText}
-                                </p>
-                            </li>
-                        </Link>
-                    ))}
-                    <Link to={routes.createCard}>
-                        <li>
-                            Add new card
-                        </li>
-
-                    </Link>
-                </ul>
+                { highlight.flashcards.length === 0 &&
+                    (<>
+                        <p>
+                            Existing questions:
+                        </p>
+                        <ul>
+                            {highlight.flashcards.map((t,i) => (
+                                <Link to={`${i}`}>
+                                    <li key={i}>
+                                        <p>
+                                            {t.questionText}
+                                        </p>
+                                        <p>
+                                            {t.answerText}
+                                        </p>
+                                    </li>
+                                </Link>
+                            ))}
+                        </ul>
+                    </>)
+                }
+                <Link to={routes.createCard}>
+                    <button>
+                        Create New Cards
+                    </button>
+                </Link>
             </div>
         </>
     )
