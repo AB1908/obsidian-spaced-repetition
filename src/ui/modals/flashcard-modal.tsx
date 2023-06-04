@@ -38,7 +38,7 @@ export enum FlashcardModalMode {
 
 export const routes = {
     bookList: "/notes/books",
-    chapterList: "/notes/books/:bookId/chapters",
+    chapterList: "/notes/deck/chapters",
     // specificChapter: "/notes/books/1/chapters/1",
     highlightList: "/notes/deck/chapters/:chapterId/highlights",
     // specificHighlight: "notes/books/1/chapters/1/highlights/1",
