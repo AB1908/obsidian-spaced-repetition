@@ -7,8 +7,6 @@ export function chapterLoaderData() {
     const chapterData = {
         id: 1,
         title: "Chapter 1",
-        notesWithoutTests: 20,
-        notesWithTests: 11,
         highlights: [
             {
                 id: 1,
