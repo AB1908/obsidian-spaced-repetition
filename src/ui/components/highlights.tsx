@@ -2,6 +2,7 @@ import React from "react";
 import {Link} from "react-router-dom";
 import {routes} from "src/ui/modals/flashcard-modal";
 import {useLoaderData} from "react-router";
+import {countKeyInArray} from "src/ui/components/chapters-list";
 
 export function chapterLoaderData() {
     const chapterData = {
@@ -57,7 +58,9 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 }
 
 export function HighlightsList() {
-    const chapterData = useLoaderData();
+    const chapterData: any = useLoaderData();
+    const chapterNotesWithTests = chapterData.highlights.reduce((accumulator, currentValue) => accumulator + (currentValue.flashcards.length ? 1 : 0), 0);
+    const chapterNotesWithoutTests = chapterData.highlights.length - chapterNotesWithTests;
     return (
         <>
             {/*
@@ -66,7 +69,7 @@ export function HighlightsList() {
             <h3>
                 {chapterData.title}
             </h3>
-            <HeaderWithCounts withCount={chapterData.notesWithTests} withoutCount={chapterData.notesWithoutTests}/>
+            <HeaderWithCounts withCount={chapterNotesWithTests} withoutCount={chapterNotesWithoutTests}/>
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
                 {chapterData.highlights.map((highlight: any) => (
