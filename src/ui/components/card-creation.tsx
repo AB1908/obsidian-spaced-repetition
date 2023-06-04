@@ -7,23 +7,10 @@ import {Link, useParams} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {routes} from "src/ui/modals/flashcard-modal";
+import {deck} from "src/api";
 
-export async function highlightLoader() {
-    const test = {
-        id: 1,
-        highlightContent: "This is a sample highlight",
-        highlightNote: "This is a note for that highlight",
-        flashcards: [
-            {
-                questionText: "This is a flashcard question that asks about highlight 1",
-                answerText: "This is the answer to that question"
-            },
-            {
-                questionText: "Flashcard 2",
-                answerText: "Answer 2"
-            },
-        ]
-    };
+export async function highlightLoader({params}) {
+    const test = deck.chapters[params.chapterId].highlights[params.highlightId];
     return test;
 }
 
