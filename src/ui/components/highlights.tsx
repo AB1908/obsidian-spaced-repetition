@@ -1,6 +1,5 @@
 import React from "react";
 import {Link} from "react-router-dom";
-import {routes} from "src/ui/modals/flashcard-modal";
 import {useLoaderData} from "react-router";
 import {deck} from "src/api";
 
@@ -48,9 +47,9 @@ export function HighlightsList() {
             <HeaderWithCounts withCount={chapterNotesWithTests} withoutCount={chapterNotesWithoutTests}/>
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
-                {chapterData.highlights.map((highlight: any) => (
+                {chapterData.highlights.map((highlight: any, i: number) => (
                     <div>
-                        <Link to={routes.flashcardsList}>
+                        <Link to={`${i}/flashcards`}>
                             <li key={highlight.id} className={"sr-highlight tree-item-self is-clickable"}>
                                 {highlight.highlightContent}
                                 <span>
