@@ -54,10 +54,15 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
     );
 }
 
-export function HighlightsList() {
-    const chapterData: any = useLoaderData();
+export function highlightCountReducer(chapterData: any) {
     const chapterNotesWithTests = chapterData.highlights.reduce((accumulator, currentValue) => accumulator + (currentValue.flashcards.length ? 1 : 0), 0);
     const chapterNotesWithoutTests = chapterData.highlights.length - chapterNotesWithTests;
+    return {chapterNotesWithTests, chapterNotesWithoutTests};
+}
+
+export function HighlightsList() {
+    const chapterData: any = useLoaderData();
+    const {chapterNotesWithTests, chapterNotesWithoutTests} = highlightCountReducer(chapterData);
     return (
         <>
             {/*
