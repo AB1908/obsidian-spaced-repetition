@@ -38,14 +38,14 @@ export enum FlashcardModalMode {
 
 export const routes = {
     bookList: "/notes/books",
-    chapterList: "/notes/books/1/chapters",
+    chapterList: "/notes/books/:bookId/chapters",
     // specificChapter: "/notes/books/1/chapters/1",
-    highlightList: "/notes/deck/chapters/1/highlights",
+    highlightList: "/notes/deck/chapters/:chapterId/highlights",
     // specificHighlight: "notes/books/1/chapters/1/highlights/1",
-    flashcardsList: "/notes/deck/chapters/1/highlights/:highlightId/flashcards",
-    flashcard: "/notes/deck/chapters/1/highlights/:highlightId/flashcards/:flashcardId",
-    createCard: "/notes/deck/chapters/1/highlights/:highlightId/flashcards/type",
-    createRegularCard: "/notes/deck/chapters/1/highlights/:highlightId/flashcards/new",
+    flashcardsList: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards",
+    flashcard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/:flashcardId",
+    createCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/type",
+    createRegularCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new",
 };
 
 /*
