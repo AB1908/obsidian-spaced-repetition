@@ -20,7 +20,7 @@ export function PreviewExistingFlashcards() {
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <div>
-                { highlight.flashcards.length === 0 &&
+                { highlight.flashcards.length != 0 &&
                     (<>
                         <p>
                             Existing questions:
