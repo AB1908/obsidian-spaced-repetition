@@ -1,17 +1,3 @@
-// INPR: add data loading logic
-// INPR: make routes dynamic
-// DONE: add missing page for previewing existing flashcards
-// KILL: make inputs dynamic and convert them into state?
-// TODO: Add tests?
-// TODO: reorganize components and pages
-// TODO: breadcrumbs
-// TODO: CSS and styling
-// TODO: animations?
-// DONE: single route paths across the pages/refactor into a single const or whatever
-// TODO: Back button
-// TODO: Breadcrumbs
-// TODO: Backend?
-// TODO: history management for back button
 import React from "react";
 import {App, Modal} from "obsidian";
 import {createRoot, Root as ReactDomRoot} from "react-dom/client";
