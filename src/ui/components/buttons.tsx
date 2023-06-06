@@ -3,6 +3,7 @@ import React, {useContext} from "react";
 import {FlashcardContext} from "src/contexts/FlashcardContext";
 import {AppContext} from "src/contexts/PluginContext";
 import {ReviewResponse, schedule, textInterval} from "src/scheduling";
+import {Link} from "react-router-dom";
 
 export function EditLaterButton({ editLaterHandler }: { editLaterHandler: Function }) {
     return <div className="sr-link" onClick={() => editLaterHandler()}>Edit Later</div>;
@@ -82,4 +83,16 @@ export function ResponseButtons() {
             <Button text={easyBtnText} id="sr-easy-btn" responseHandler={() => handleFlashcardResponse(ReviewResponse.Easy)} />
         </div>
     );
+}
+
+export function CancelButton() {
+    return <Link to={"./.."}>
+        <button>
+            Cancel
+        </button>
+    </Link>;
+}
+
+export function SubmitButton() {
+    return <button type="submit" className={"mod-cta"}>Submit</button>;
 }

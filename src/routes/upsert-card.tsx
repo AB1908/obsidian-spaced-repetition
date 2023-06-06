@@ -1,8 +1,8 @@
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {Form, Link, redirect, useLocation, useParams} from "react-router-dom";
-import React, {useState} from "react";
-import {routes} from "src/ui/modals/flashcard-modal";
+import React from "react";
+import {CancelButton, SubmitButton} from "src/ui/components/buttons";
 
 enum CardType {
     REGULAR,
@@ -67,14 +67,10 @@ function CardForm(props: { defaultQuestionValue: string, defaultAnswerValue: str
                       defaultValue={props.defaultAnswerValue} required/>
         </div>
 
-        <button type="submit" className={"mod-cta"}>Submit</button>
+        <SubmitButton/>
 
         {/*TODO: Replace with useNavigate and use history?*/}
-        <Link to={"./.."}>
-            <button>
-                Cancel
-            </button>
-        </Link>
+        <CancelButton/>
     </Form>;
 }
 
@@ -83,13 +79,8 @@ function CardForm(props: { defaultQuestionValue: string, defaultAnswerValue: str
 // Is there a better way of doing this?
 export function UpsertCard() {
     const highlight: any = useLoaderData();
-    // const [cardType, setCardType] = useState(null);
-    // const {pathname} = useLocation();
     const {flashcardId} = useParams();
     const flashcardIndex = Number(flashcardId);
-    // const pathFragments = pathname.split("/");
-    // const currentPath = pathFragments[pathFragments.length - 1];
-    debugger;
     let defaultQuestionValue = highlight.flashcards[flashcardIndex]?.questionText || "";
     let defaultAnswerValue = highlight.flashcards[flashcardIndex]?.answerText || "";
     return (
