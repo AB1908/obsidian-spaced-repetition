@@ -38,7 +38,7 @@ function CardTypePicker() {
 
 export function ChooseCardType() {
     const highlight = useLoaderData();
-    debugger;
+
     return (<>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <CardTypePicker />
@@ -46,7 +46,48 @@ export function ChooseCardType() {
     )
 }
 
-function CardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string}) {
+export function ClozeCardForm(props: any) {
+    const loader = {
+        "isDue": true,
+        "note": null,
+        "lineNo": 2,
+        "front": " i-Estel Edain, ú-chebin estel anim.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+        "back": "Onen",
+        "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+        "context": "",
+        "cardType": 4,
+        "siblings": [],
+        "siblingIdx": 0,
+        "clozeInsertionAt": 0,
+        "interval": 2,
+        "ease": 230,
+        "delayBeforeReview": 17662032301
+    };
+    return (
+        <>
+            <NoteAndHighlight highlightText={"Onen i estel edain"} noteText={"wat a beautiful note"}/>
+            <Form method="post">
+                <div className={"sr-cloze-input"}>
+                    <div className={"label-wrapper"}>
+                        <label htmlFor={"cloze"} className={"sr-cloze-input-label"}>
+                            Cloze
+                        </label>
+                    </div>
+                    <textarea id={"cloze"} name={"cloze"} className={"sr-cloze-input-text"}
+                              defaultValue={loader.cardText} required/>
+                </div>
+
+                <SubmitButton/>
+
+                {/*TODO: Replace with useNavigate and use history?*/}
+                <CancelButton/>
+            </Form>
+        </>
+    );
+}
+
+function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string}) {
+    // todo: add some sort of header signifying the type of card being added
     return <Form method="post">
         <div className={"sr-question-input"}>
             <div className={"label-wrapper"}>
@@ -87,7 +128,7 @@ export function UpsertCard() {
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
 
-            <CardForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue}/>
+            <DefaultCardForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue}/>
         </>
     );
 }
