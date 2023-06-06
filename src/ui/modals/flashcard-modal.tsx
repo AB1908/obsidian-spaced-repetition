@@ -44,8 +44,9 @@ export const routes = {
     // specificHighlight: "notes/books/1/chapters/1/highlights/1",
     flashcardsList: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards",
     flashcard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/:flashcardId",
-    createCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/type",
-    createRegularCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new",
+    createCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new",
+    createRegularCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new/regular",
+    createClozeCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new/cloze",
 };
 
 /*
