@@ -1,7 +1,3 @@
-// TODO: move each page to its own file
-// TODO: move data to loader functions
-// KILL: Figure out how to cache data between pages. may need subroutes
-// TODO: handle action for card submission. How to update plugin data?
 import React from "react";
 import {Link, useParams} from "react-router-dom";
 import {useLoaderData} from "react-router";
