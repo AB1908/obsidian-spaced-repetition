@@ -27,7 +27,7 @@ import {
     highlightLoader,
     PreviewExistingFlashcards
 } from "src/ui/components/card-creation";
-import {ChooseCardType, UpsertCard, creationAction} from "src/routes/upsert-card";
+import {ChooseCardType, UpsertCard, creationAction, ClozeCardForm} from "src/routes/upsert-card";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -133,6 +133,13 @@ export class FlashcardModal extends Modal {
                     // TODO: this should be refactored into a single add with params for type of card
                     path: routes.createRegularCard,
                     element: <UpsertCard/>,
+                    action: creationAction,
+                    loader: highlightLoader
+                },
+                {
+                    // TODO: this should be refactored into a single add with params for type of card
+                    path: routes.createClozeCard,
+                    element: <ClozeCardForm/>,
                     action: creationAction,
                     loader: highlightLoader
                 }
