@@ -1,13 +1,13 @@
-// TODO: add data loading logic
-// TODO: make routes dynamic
+// INPR: add data loading logic
+// INPR: make routes dynamic
 // DONE: add missing page for previewing existing flashcards
-// TODO: make inputs dynamic and convert them into state?
+// KILL: make inputs dynamic and convert them into state?
 // TODO: Add tests?
 // TODO: reorganize components and pages
 // TODO: breadcrumbs
 // TODO: CSS and styling
 // TODO: animations?
-// TODO: single route paths across the pages/refactor into a single const or whatever
+// DONE: single route paths across the pages/refactor into a single const or whatever
 // TODO: Back button
 // TODO: Breadcrumbs
 // TODO: Backend?
