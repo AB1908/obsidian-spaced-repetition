@@ -17,17 +17,17 @@ function CardTypePicker() {
         </p>
 
         <ol>
-            <Link to={routes.createRegularCard}>
+            <Link to={"regular"}>
                 <li>
                     Regular
                 </li>
             </Link>
-            <Link to={""}>
+            <Link to={"reversed"}>
                 <li>
                     Reversed
                 </li>
             </Link>
-            <Link to={""}>
+            <Link to={"cloze"}>
                 <li>
                     Cloze
                 </li>
@@ -105,5 +105,5 @@ export async function creationAction(): Promise<Response> {
     // TODO: Add logic to update the deck
     // TODO: call the right api instead, there shouldn' be any actual update logic
     console.log("Submitted!");
-    return redirect(routes.flashcardsList);
+    return redirect("./../..");
 }

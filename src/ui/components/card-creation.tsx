@@ -41,7 +41,7 @@ export function PreviewExistingFlashcards() {
                         </ul>
                     </>)
                 }
-                <Link to={routes.createCard}>
+                <Link to={"new"}>
                     <button>
                         Create New Cards
                     </button>
