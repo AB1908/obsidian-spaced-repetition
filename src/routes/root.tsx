@@ -11,15 +11,7 @@ import {ICON_LIST} from "src/constants";
 
 export type Icon = typeof ICON_LIST[number];
 
-
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
-    // const router = createBrowserRouter([
-    //     {
-    //         path: "/index.html",
-    //         element: <Root handleCloseButton={()=>this.close()}/>,
-    //         errorElement: <ErrorPage />,
-    //     },
-    // ]);
     const navigate = useNavigate();
     useEffect(() => {
         navigate("/home/tags");
@@ -43,11 +35,6 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     );
 }
 
-enum TabState {
-    Notes,
-    Tags
-}
-
 export function Tabs() {
     return (
         <>
@@ -61,7 +48,7 @@ export function Tabs() {
             </div>
             <Outlet/>
         </>
-);
+    );
 };
 
 // export function Notes({deck}:{deck: Deck}) {
@@ -122,14 +109,4 @@ export function Tags() {
                 // startReviewingDeck={(deck: Deck) => startReviewingDeck(deck)}
             />
     );
-}
-
-export function FlashcardReview() {
-    return (
-        <p>Well, this is a let down!</p>
-    );
-}
-
-export function Flashcard() {
-    return (<p>lol</p>);
 }
