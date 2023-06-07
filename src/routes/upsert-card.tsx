@@ -3,6 +3,7 @@ import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {Form, Link, redirect, useParams} from "react-router-dom";
 import React from "react";
 import {CancelButton, SubmitButton} from "src/ui/components/buttons";
+import {ClozeCardForm, TextInputWithLabel} from "src/ui/components/card-creation";
 
 enum CardType {
     REGULAR,
@@ -46,15 +47,6 @@ export function ChooseCardType() {
     )
 }
 
-function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
-    return <div className={props.className}>
-        <label htmlFor={props.htmlFor}>
-            Cloze
-        </label>
-        <textarea id={props.htmlFor} name={props.htmlFor} defaultValue={props.defaultValue} required/>
-    </div>;
-}
-
 export function ClozeCard(props: any) {
     const loader = {
         "isDue": true,
@@ -75,15 +67,7 @@ export function ClozeCard(props: any) {
     return (
         <>
             <NoteAndHighlight highlightText={"Onen i estel edain"} noteText={"wat a beautiful note"}/>
-            <Form method="post">
-                {/*TODO: fix default value*/}
-                <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={""}/>
-
-                <SubmitButton/>
-
-                {/*TODO: Replace with useNavigate and use history?*/}
-                <CancelButton/>
-            </Form>
+            <ClozeCardForm/>
         </>
     );
 }
