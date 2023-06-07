@@ -1,6 +1,6 @@
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
-import {Form, Link, redirect, useLocation, useParams} from "react-router-dom";
+import {Form, Link, redirect, useParams} from "react-router-dom";
 import React from "react";
 import {CancelButton, SubmitButton} from "src/ui/components/buttons";
 
@@ -46,6 +46,15 @@ export function ChooseCardType() {
     )
 }
 
+function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
+    return <div className={props.className}>
+        <label htmlFor={props.htmlFor}>
+            Cloze
+        </label>
+        <textarea id={props.htmlFor} name={props.htmlFor} defaultValue={props.defaultValue} required/>
+    </div>;
+}
+
 export function ClozeCard(props: any) {
     const loader = {
         "isDue": true,
@@ -63,18 +72,12 @@ export function ClozeCard(props: any) {
         "ease": 230,
         "delayBeforeReview": 17662032301
     };
-    const className = "sr-cloze-input";
-    const componentName = "cloze";
     return (
         <>
             <NoteAndHighlight highlightText={"Onen i estel edain"} noteText={"wat a beautiful note"}/>
             <Form method="post">
-                <div className={className}>
-                    <label htmlFor={componentName}>
-                        Cloze
-                    </label>
-                    <textarea id={componentName} name={componentName} defaultValue={loader.cardText} required/>
-                </div>
+                {/*TODO: fix default value*/}
+                <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={""}/>
 
                 <SubmitButton/>
 
@@ -88,24 +91,8 @@ export function ClozeCard(props: any) {
 function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string}) {
     // todo: add some sort of header signifying the type of card being added
     return <Form method="post">
-        <div className={"sr-question-input"}>
-            <div className={"label-wrapper"}>
-                <label htmlFor={"question"} className={"sr-question-input-label"}>
-                    Question
-                </label>
-            </div>
-            <textarea id={"question"} name={"question"} className={"sr-question-input-text"}
-                      defaultValue={props.defaultQuestionValue} required/>
-        </div>
-        <div className={"sr-answer-input"}>
-            <div className={"label-wrapper"}>
-                <label htmlFor={"answer"} className={"sr-answer-input-label"}>
-                    Answer
-                </label>
-            </div>
-            <textarea id={"answer"} name={"answer"} className={"sr-answer-input-text"}
-                      defaultValue={props.defaultAnswerValue} required/>
-        </div>
+        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"} defaultValue={props.defaultQuestionValue}/>
+        <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
 
         <SubmitButton/>
 
