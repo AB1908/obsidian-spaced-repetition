@@ -63,18 +63,17 @@ export function ClozeCard(props: any) {
         "ease": 230,
         "delayBeforeReview": 17662032301
     };
+    const className = "sr-cloze-input";
+    const componentName = "cloze";
     return (
         <>
             <NoteAndHighlight highlightText={"Onen i estel edain"} noteText={"wat a beautiful note"}/>
             <Form method="post">
-                <div className={"sr-cloze-input"}>
-                    <div className={"label-wrapper"}>
-                        <label htmlFor={"cloze"} className={"sr-cloze-input-label"}>
-                            Cloze
-                        </label>
-                    </div>
-                    <textarea id={"cloze"} name={"cloze"} className={"sr-cloze-input-text"}
-                              defaultValue={loader.cardText} required/>
+                <div className={className}>
+                    <label htmlFor={componentName}>
+                        Cloze
+                    </label>
+                    <textarea id={componentName} name={componentName} defaultValue={loader.cardText} required/>
                 </div>
 
                 <SubmitButton/>
