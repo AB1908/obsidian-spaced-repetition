@@ -1,40 +1,13 @@
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
-import {Form, Link, redirect, useParams} from "react-router-dom";
+import {redirect, useParams} from "react-router-dom";
 import React from "react";
-import {CancelButton, SubmitButton} from "src/ui/components/buttons";
-import {ClozeCardForm, TextInputWithLabel} from "src/ui/components/card-creation";
+import {CardTypePicker, ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
 
 enum CardType {
     REGULAR,
     REVERSED,
     CLOZE
-}
-
-function CardTypePicker() {
-    return (<>
-        <p>
-            Which type of flashcard?
-        </p>
-
-        <ol>
-            <Link to={"regular"}>
-                <li>
-                    Regular
-                </li>
-            </Link>
-            <Link to={"reversed"}>
-                <li>
-                    Reversed
-                </li>
-            </Link>
-            <Link to={"cloze"}>
-                <li>
-                    Cloze
-                </li>
-            </Link>
-        </ol>
-    </>);
 }
 
 export function ChooseCardType() {
@@ -48,6 +21,7 @@ export function ChooseCardType() {
 }
 
 export function ClozeCard(props: any) {
+    // TODO: add loader logic
     const loader = {
         "isDue": true,
         "note": null,
@@ -70,19 +44,6 @@ export function ClozeCard(props: any) {
             <ClozeCardForm/>
         </>
     );
-}
-
-function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string}) {
-    // todo: add some sort of header signifying the type of card being added
-    return <Form method="post">
-        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"} defaultValue={props.defaultQuestionValue}/>
-        <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
-
-        <SubmitButton/>
-
-        {/*TODO: Replace with useNavigate and use history?*/}
-        <CancelButton/>
-    </Form>;
 }
 
 // TODO: think of a better name since this also edits cards

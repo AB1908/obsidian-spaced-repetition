@@ -68,3 +68,43 @@ export function ClozeCardForm() {
         <CancelButton/>
     </Form>;
 }
+
+export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
+    // todo: add some sort of header signifying the type of card being added
+    return <Form method="post">
+        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
+                            defaultValue={props.defaultQuestionValue}/>
+        <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
+
+        <SubmitButton/>
+
+        {/*TODO: Replace with useNavigate and use history?*/}
+        <CancelButton/>
+    </Form>;
+}
+
+export function CardTypePicker() {
+    return (<>
+        <p>
+            Which type of flashcard?
+        </p>
+
+        <ol>
+            <Link to={"regular"}>
+                <li>
+                    Regular
+                </li>
+            </Link>
+            <Link to={"reversed"}>
+                <li>
+                    Reversed
+                </li>
+            </Link>
+            <Link to={"cloze"}>
+                <li>
+                    Cloze
+                </li>
+            </Link>
+        </ol>
+    </>);
+}
