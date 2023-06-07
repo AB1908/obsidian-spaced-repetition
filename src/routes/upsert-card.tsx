@@ -4,20 +4,15 @@ import {redirect, useParams} from "react-router-dom";
 import React from "react";
 import {CardTypePicker, ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
 
-enum CardType {
-    REGULAR,
-    REVERSED,
-    CLOZE
-}
-
 export function ChooseCardType() {
     const highlight = useLoaderData();
 
-    return (<>
+    return (
+        <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
             <CardTypePicker />
-    </>
-    )
+        </>
+    );
 }
 
 export function ClozeCard(props: any) {
