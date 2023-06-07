@@ -1,9 +1,9 @@
 import React from "react";
-import {Link, useParams} from "react-router-dom";
+import {Form, Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
-import {routes} from "src/ui/modals/flashcard-modal";
 import {deck} from "src/api";
+import {CancelButton, SubmitButton} from "src/ui/components/buttons";
 
 export async function highlightLoader({params}) {
     const test = deck.chapters[params.chapterId].highlights[params.highlightId];
@@ -37,6 +37,7 @@ export function PreviewExistingFlashcards() {
                         </ul>
                     </>)
                 }
+                {/*TODO: This shouldn't be here I guess*/}
                 <Link to={"new"}>
                     <button>
                         Create New Cards
@@ -47,3 +48,23 @@ export function PreviewExistingFlashcards() {
     )
 }
 
+export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
+    return <div className={props.className}>
+        <label htmlFor={props.htmlFor}>
+            Cloze
+        </label>
+        <textarea id={props.htmlFor} name={props.htmlFor} defaultValue={props.defaultValue} required/>
+    </div>;
+}
+
+export function ClozeCardForm() {
+    return <Form method="post">
+        {/*TODO: fix default value*/}
+        <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={""}/>
+
+        <SubmitButton/>
+
+        {/*TODO: Replace with useNavigate and use history?*/}
+        <CancelButton/>
+    </Form>;
+}
