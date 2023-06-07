@@ -46,7 +46,7 @@ export function ChooseCardType() {
     )
 }
 
-export function ClozeCardForm(props: any) {
+export function ClozeCard(props: any) {
     const loader = {
         "isDue": true,
         "note": null,
