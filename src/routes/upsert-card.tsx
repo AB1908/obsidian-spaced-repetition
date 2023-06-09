@@ -20,13 +20,16 @@ export function clozeLoader() {
     return deck.chapters[1].highlights[0];
 }
 
-export function ClozeCard(props: any) {
+export function ClozeCard() {
     // TODO: add loader logic
-    const data = useLoaderData();
+    const highlight = useLoaderData();
+    const {flashcardId} = useParams();
+    const flashcardIndex = Number(flashcardId);
+    const defaultClozeValue = highlight.flashcards[flashcardIndex]?.questionText || "";
     return (
         <>
-            <NoteAndHighlight highlightText={data.highlightContent} noteText={data.highlightNote}/>
-            <ClozeCardForm/>
+            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
+            <ClozeCardForm defaultClozeValue={defaultClozeValue}/>
         </>
     );
 }
@@ -38,8 +41,8 @@ export function UpsertCard() {
     const highlight: any = useLoaderData();
     const {flashcardId} = useParams();
     const flashcardIndex = Number(flashcardId);
-    let defaultQuestionValue = highlight.flashcards[flashcardIndex]?.questionText || "";
-    let defaultAnswerValue = highlight.flashcards[flashcardIndex]?.answerText || "";
+    const defaultQuestionValue = highlight.flashcards[flashcardIndex]?.questionText || "";
+    const defaultAnswerValue = highlight.flashcards[flashcardIndex]?.answerText || "";
     return (
         <>
             <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
