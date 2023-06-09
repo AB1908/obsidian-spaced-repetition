@@ -6,6 +6,7 @@ import {deck} from "src/api";
 import {CancelButton, SubmitButton} from "src/ui/components/buttons";
 
 export async function highlightLoader({params}) {
+    // todo: use redirect
     const test = deck.chapters[params.chapterId].highlights[params.highlightId];
     return test;
 }
@@ -49,9 +50,10 @@ export function PreviewExistingFlashcards() {
 }
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
+    const labelText = props.htmlFor[0].toUpperCase() + props.htmlFor.slice(1);
     return <div className={props.className}>
         <label htmlFor={props.htmlFor}>
-            Cloze
+            {labelText}
         </label>
         <textarea id={props.htmlFor} name={props.htmlFor} defaultValue={props.defaultValue} required/>
     </div>;
@@ -72,8 +74,7 @@ export function ClozeCardForm() {
 export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
     // todo: add some sort of header signifying the type of card being added
     return <Form method="post">
-        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
-                            defaultValue={props.defaultQuestionValue}/>
+        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"} defaultValue={props.defaultQuestionValue}/>
         <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
 
         <SubmitButton/>
