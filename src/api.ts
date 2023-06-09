@@ -10,7 +10,7 @@ export const deck = {
             highlights: [
                 {
                     id: 1,
-                    color: "",
+                    color: "#fda6ce",
                     highlightContent: "This is a sample highlight from chapter 1",
                     highlightNote: "Just another note here, testing",
                     flashcards: [
@@ -36,6 +36,7 @@ export const deck = {
                 },
                 {
                     id: 2,
+                    color: "#338122",
                     highlightContent: "This is a sample highlight but without a note but also in chapter 1",
                     //TODO: think about whether this should be a null or an empty string on the backend
                     highlightNote: "",
