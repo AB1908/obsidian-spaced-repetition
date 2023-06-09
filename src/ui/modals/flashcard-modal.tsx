@@ -13,7 +13,8 @@ import {
     highlightLoader,
     PreviewExistingFlashcards
 } from "src/ui/components/card-creation";
-import {ChooseCardType, UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/upsert-card";
+import {UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/upsert-card";
+import {ChooseCardType} from "src/routes/choose-card-type";
 
 export enum FlashcardModalMode {
     DecksList,
