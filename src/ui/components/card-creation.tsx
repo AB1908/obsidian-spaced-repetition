@@ -59,10 +59,10 @@ export function TextInputWithLabel(props: { className: string, htmlFor: string, 
     </div>;
 }
 
-export function ClozeCardForm() {
+export function ClozeCardForm(props: any) {
     return <Form method="post">
         {/*TODO: fix default value*/}
-        <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={""}/>
+        <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={props.defaultClozeValue}/>
 
         <SubmitButton/>
 
