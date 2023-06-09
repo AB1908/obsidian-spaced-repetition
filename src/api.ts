@@ -10,12 +10,23 @@ export const deck = {
             highlights: [
                 {
                     id: 1,
+                    color: "",
                     highlightContent: "This is a sample highlight from chapter 1",
                     highlightNote: "Just another note here, testing",
                     flashcards: [
                         {
-                            questionText: "This is a flashcard from question 1",
-                            answerText: "This is the answer to that question"
+                            "isDue": true,
+                            "note": null,
+                            "questionText": " i-Estel Edain, ú-chebin estel anim.",
+                            "answerText": "Onen",
+                            "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+                            "context": "",
+                            "cardType": 4,
+                            "siblings": [],
+                            "clozeInsertionAt": 0,
+                            "interval": 2,
+                            "ease": 230,
+                            "delayBeforeReview": 17662032301
                         },
                         {
                             questionText: "Flashcard 2 from chapter 1",
@@ -38,9 +49,25 @@ export const deck = {
             highlights: [
                 {
                     id: 1,
-                    highlightContent: "This is a sample highlight chapter 2",
-                    highlightNote: "This is a note for that highlight chapter 2",
-                    flashcards: []
+                    color: "",
+                    highlightContent: "Onen i-Estel Edain, ú-chebin estel anim.",
+                    highlightNote: "What a beautiful line by Tolkien",
+                    flashcards: [
+                        {
+                            "isDue": true,
+                            "note": null,
+                            "questionText": " i-Estel Edain, ú-chebin estel anim.",
+                            "answerText": "Onen",
+                            "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+                            "context": "",
+                            "cardType": 4,
+                            "siblings": [],
+                            "clozeInsertionAt": 0,
+                            "interval": 2,
+                            "ease": 230,
+                            "delayBeforeReview": 17662032301
+                        }
+                    ]
                 },
                 {
                     id: 2,
