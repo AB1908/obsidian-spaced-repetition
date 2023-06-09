@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {deck} from "src/api";
 
-export function chapterLoaderData({params}) {
+export function chapterLoaderData({params}: {params: any}) {
     const chapterData = deck.chapters[params.chapterId];
     return chapterData;
 }
@@ -36,9 +36,20 @@ export function highlightCountReducer(chapterData: any) {
 export function HighlightsList() {
     const chapterData: any = useLoaderData();
     const [color, setColor] = useState(null);
-    const uniqueHighlightColors = [...new Set(chapterData.highlights.map(t=>t.color))];
+    const uniqueHighlightColors = [...new Set(chapterData.highlights.map((t: any) => t.color))];
     const {chapterNotesWithTests, chapterNotesWithoutTests} = highlightCountReducer(chapterData);
     let filteredHighlights = color === null ? chapterData.highlights : chapterData.highlights.filter(t=>t.color === color);
+
+    function colorFilterHandler(t: string) {
+       setColor((currentState: string) =>{
+           if (currentState != t) {
+               return t;
+           } else {
+               return null;
+           }
+       });
+    }
+
     return (
         <>
             {/*
@@ -50,11 +61,11 @@ export function HighlightsList() {
             <HeaderWithCounts withCount={chapterNotesWithTests} withoutCount={chapterNotesWithoutTests}/>
 
             <>
-                {uniqueHighlightColors.map(t=>(
+                {uniqueHighlightColors.map((t: string)=>(
                     <button
-                        className={"sr-highlight-filter"}
+                        className={`sr-highlight-filter${color == t ? " active" : ""}`}
                         style={{"backgroundColor": `${t}`}}
-                        onClick={()=>setColor(t)}
+                        onClick={() => colorFilterHandler(t)}
                     />
                 ))}
             </>
