@@ -1,4 +1,4 @@
-import React from "react";
+import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {deck} from "src/api";
@@ -35,6 +35,7 @@ export function highlightCountReducer(chapterData: any) {
 
 export function HighlightsList() {
     const chapterData: any = useLoaderData();
+    const [color, setColor] = useState(null);
     const {chapterNotesWithTests, chapterNotesWithoutTests} = highlightCountReducer(chapterData);
     return (
         <>
@@ -45,6 +46,13 @@ export function HighlightsList() {
                 {chapterData.title}
             </h3>
             <HeaderWithCounts withCount={chapterNotesWithTests} withoutCount={chapterNotesWithoutTests}/>
+
+            <>
+                <button style={{"backgroundColor": "#fea92a"}} onClick={()=>console.log("Button clicked!")}/>
+                <button style={{"backgroundColor": "#4362aa"}} onClick={()=>console.log("Button clicked!")}/>
+                <button style={{"backgroundColor": "#aa112a"}} onClick={()=>console.log("Button clicked!")}/>
+            </>
+
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
                 {chapterData.highlights.map((highlight: any, i: number) => (
