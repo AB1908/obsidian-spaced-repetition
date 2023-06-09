@@ -36,6 +36,7 @@ export function highlightCountReducer(chapterData: any) {
 export function HighlightsList() {
     const chapterData: any = useLoaderData();
     const [color, setColor] = useState(null);
+    const uniqueHighlightColors = [...new Set(chapterData.highlights.map(t=>t.color))];
     const {chapterNotesWithTests, chapterNotesWithoutTests} = highlightCountReducer(chapterData);
     return (
         <>
@@ -48,9 +49,13 @@ export function HighlightsList() {
             <HeaderWithCounts withCount={chapterNotesWithTests} withoutCount={chapterNotesWithoutTests}/>
 
             <>
-                <button style={{"backgroundColor": "#fea92a"}} onClick={()=>console.log("Button clicked!")}/>
-                <button style={{"backgroundColor": "#4362aa"}} onClick={()=>console.log("Button clicked!")}/>
-                <button style={{"backgroundColor": "#aa112a"}} onClick={()=>console.log("Button clicked!")}/>
+                {uniqueHighlightColors.map(t=>(
+                    <button
+                        className={"sr-highlight-filter"}
+                        style={{"backgroundColor": `${t}`}}
+                        onClick={()=>console.log(t)}
+                    />
+                ))}
             </>
 
             <p>Add flashcards from:</p>
