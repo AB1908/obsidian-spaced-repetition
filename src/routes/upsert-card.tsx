@@ -3,6 +3,7 @@ import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {redirect, useParams} from "react-router-dom";
 import React from "react";
 import {CardTypePicker, ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
+import {deck} from "src/api";
 
 export function ChooseCardType() {
     const highlight = useLoaderData();
@@ -16,32 +17,7 @@ export function ChooseCardType() {
 }
 
 export function clozeLoader() {
-    return {
-        id: 1,
-        color: "",
-        highlightContent: "Onen i-Estel Edain, ú-chebin estel anim.",
-        highlightNote: "What a beautiful line by Tolkien",
-        flashcards: [
-            {
-                "isDue": true,
-                "note": null,
-                "questionText": " i-Estel Edain, ú-chebin estel anim.",
-                "answerText": "Onen",
-                "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
-                "context": "",
-                "cardType": 4,
-                "siblings": [],
-                "clozeInsertionAt": 0,
-                "interval": 2,
-                "ease": 230,
-                "delayBeforeReview": 17662032301
-            },
-            {
-                questionText: "Flashcard 2 from chapter 1",
-                answerText: "Answer 2"
-            },
-        ]
-    };
+    return deck.chapters[1].highlights[0];
 }
 
 export function ClozeCard(props: any) {
