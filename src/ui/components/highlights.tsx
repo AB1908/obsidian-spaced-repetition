@@ -38,6 +38,7 @@ export function HighlightsList() {
     const [color, setColor] = useState(null);
     const uniqueHighlightColors = [...new Set(chapterData.highlights.map(t=>t.color))];
     const {chapterNotesWithTests, chapterNotesWithoutTests} = highlightCountReducer(chapterData);
+    let filteredHighlights = color === null ? chapterData.highlights : chapterData.highlights.filter(t=>t.color === color);
     return (
         <>
             {/*
@@ -53,14 +54,14 @@ export function HighlightsList() {
                     <button
                         className={"sr-highlight-filter"}
                         style={{"backgroundColor": `${t}`}}
-                        onClick={()=>console.log(t)}
+                        onClick={()=>setColor(t)}
                     />
                 ))}
             </>
 
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
-                {chapterData.highlights.map((highlight: any, i: number) => (
+                {filteredHighlights.map((highlight: any, i: number) => (
                     <div>
                         <Link to={`${i}/flashcards`}>
                             <li key={highlight.id} className={"sr-highlight tree-item-self is-clickable"}>
