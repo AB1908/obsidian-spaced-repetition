@@ -2,19 +2,8 @@ import {useLoaderData} from "react-router";
 import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {redirect, useParams} from "react-router-dom";
 import React from "react";
-import {CardTypePicker, ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
+import {ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
 import {deck} from "src/api";
-
-export function ChooseCardType() {
-    const highlight = useLoaderData();
-
-    return (
-        <>
-            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-            <CardTypePicker />
-        </>
-    );
-}
 
 export function clozeLoader() {
     return deck.chapters[1].highlights[0];
