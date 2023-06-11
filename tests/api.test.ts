@@ -1,5 +1,5 @@
 import {getFlashcardById} from "src/controller";
 
 test("retrieves a flashcard successfully", () => {
-   expect(getFlashcardById()).toBe(false);
+   expect(getFlashcardById("yjlML2s9W")).toBe(false);
 });
