@@ -12,8 +12,7 @@ export interface Flashcard {
     delayBeforeReview: number,
 }
 
-export function getFlashcardById(id: string) {
-    const flashcard: Flashcard = {
+const flashcards: Flashcard[] = [{
         "id": "yjlML2s9W",
         "isDue": true,
         "questionText": " i-Estel Edain, ú-chebin estel anim.",
@@ -25,6 +24,35 @@ export function getFlashcardById(id: string) {
         "interval": 2,
         "ease": 230,
         "delayBeforeReview": 17662032301
-    };
-    return flashcard;
+    },
+    {
+        "id": "isf92c",
+        "isDue": true,
+        "questionText": " i-Estel Edain, ú-chebin estel anim.",
+        "answerText": "Onen",
+        "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+        "context": "",
+        "cardType": 4,
+        "siblings": [],
+        "interval": 2,
+        "ease": 230,
+        "delayBeforeReview": 17662032301
+    },
+    {
+        "id": "aaalkdfa9a",
+        "isDue": true,
+        "questionText": " i-Estel Edain, ú-chebin estel anim.",
+        "answerText": "Onen",
+        "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.\n<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+        "context": "",
+        "cardType": 4,
+        "siblings": [],
+        "interval": 2,
+        "ease": 230,
+        "delayBeforeReview": 17662032301
+    },
+];
+
+export function getFlashcardById(id: string) {
+    return flashcards.filter(t=>t.id===id)[0] ?? null;
 }
