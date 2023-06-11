@@ -15,4 +15,5 @@ test("retrieves a flashcard successfully", () => {
       "delayBeforeReview": 17662032301
    };
    expect(getFlashcardById("yjlML2s9W")).toStrictEqual(flashcard);
+   expect(getFlashcardById("aaaa")).toEqual(null);
 });
