@@ -7,8 +7,7 @@ import {CancelButton, SubmitButton} from "src/ui/components/buttons";
 
 export async function highlightLoader({params}) {
     // todo: use redirect
-    const test = deck.chapters[params.chapterId].highlights[params.highlightId];
-    return test;
+    return deck.chapters[params.chapterId].highlights[params.highlightId];
 }
 
 export function PreviewExistingFlashcards() {
@@ -61,7 +60,7 @@ export function TextInputWithLabel(props: { className: string, htmlFor: string, 
 
 export function ClozeCardForm(props: any) {
     return <Form method="post">
-        {/*TODO: fix default value*/}
+        {/*Done: fix default value*/}
         <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={props.defaultClozeValue}/>
 
         <SubmitButton/>
