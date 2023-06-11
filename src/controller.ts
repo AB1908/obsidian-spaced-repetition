@@ -1,3 +1,3 @@
-export function getFlashcardById() {
+export function getFlashcardById(id: string) {
     return false;
 }
