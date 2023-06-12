@@ -15,3 +15,12 @@ export interface Flashcard {
 export function getFlashcardById(id: string) {
     return this.flashcards.filter((t: Flashcard) => t.id===id)[0] ?? null;
 }
+
+export function updateFlashcardQuestion(id: string, question: string) {
+    const card = this.flashcards.filter(t => t.id === id)[0];
+    if (card === undefined) {
+        return false;
+    }
+    card.questionText = question;
+    return true;
+}
