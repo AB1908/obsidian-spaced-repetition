@@ -31,3 +31,30 @@ describe('getFlashcardById', () => {
         expect(boundGet("aaaa")).toEqual(null);
     });
 });
+
+describe('updateFlashcardQuestion', () => {
+    let mockThis: { flashcards: Flashcard[] };
+    let boundUpdate: any;
+
+    beforeEach(() => {
+        mockThis = {
+            flashcards: flashcards
+        };
+        boundUpdate = updateFlashcardQuestion.bind(mockThis);
+    });
+
+    test('should update the questionText of the flashcard with the given id', () => {
+        const updatedQuestion = 'What is your age?';
+        const id = "yjlML2s9W";
+
+        expect(boundUpdate(id, updatedQuestion)).toBe(true);
+        expect(mockThis.flashcards[0].questionText).toBe(updatedQuestion);
+    });
+
+    test('should return false if the flashcard with the given id does not exist', () => {
+        const nonExistingId = '3';
+        const updatedQuestion = 'What is your age?';
+
+        expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
+    });
+});
