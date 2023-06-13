@@ -40,10 +40,16 @@ export function getFlashcardById(id: string) {
 }
 
 export function updateFlashcardQuestion(id: string, question: string) {
-    const card = this.flashcards.filter(t => t.id === id)[0];
+    const card = this.flashcards.filter((t: Flashcard) => t.id === id)[0];
     if (card === undefined) {
         return false;
     }
     card.questionText = question;
+    return true;
+}
+
+export function createFlashcard(question: string, answer: string, highlightId: string) {
+    const card = new Flashcard(question, answer, highlightId);
+    this.flashcards.push(card);
     return true;
 }
