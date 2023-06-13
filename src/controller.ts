@@ -10,6 +10,29 @@ export interface Flashcard {
     interval:          number,
     ease:              number,
     delayBeforeReview: number,
+    highlightId:       string,
+}
+
+export class Flashcard implements Flashcard {
+    answerText: string;
+    cardText: string;
+    cardType: number;
+    context: string;
+    delayBeforeReview: number;
+    ease: number;
+    id: string;
+    interval: number;
+    isDue: boolean;
+    questionText: string;
+    siblings: string[];
+
+    constructor(questionText: string, answerText: string, highlightId: string) {
+        this.questionText = questionText;
+        this.answerText = answerText;
+        this.highlightId = highlightId;
+        // todo: replace with uuid generation
+        this.id = "uuid here";
+    }
 }
 
 export function getFlashcardById(id: string) {
