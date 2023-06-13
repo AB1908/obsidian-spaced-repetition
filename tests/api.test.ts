@@ -1,5 +1,6 @@
-import {getFlashcardById, updateFlashcardQuestion} from "src/controller";
+import {createFlashcard, getFlashcardById, updateFlashcardQuestion} from "src/controller";
 import type {Flashcard} from "src/controller";
+import mock = jest.mock;
 
 const flashcards: Flashcard[] = [{
     "id": "yjlML2s9W",
@@ -12,7 +13,8 @@ const flashcards: Flashcard[] = [{
     "siblings": [],
     "interval": 2,
     "ease": 230,
-    "delayBeforeReview": 17662032301
+    "delayBeforeReview": 17662032301,
+    highlightId: "d9fasdkf9",
 }];
 
 describe('getFlashcardById', () => {
@@ -56,5 +58,26 @@ describe('updateFlashcardQuestion', () => {
         const updatedQuestion = 'What is your age?';
 
         expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
+    });
+});
+
+describe("createFlashcard", () => {
+    let mockThis: { flashcards: Flashcard[] };
+    let boundCreate: typeof createFlashcard;
+
+    beforeEach(() => {
+        mockThis = {
+            flashcards: flashcards
+        };
+        boundCreate = createFlashcard.bind(mockThis);
+    });
+
+    test('should create a new flashcard', () => {
+        const question = 'What is your age?';
+        const answer = "test answer";
+        const id = "yjlML2s9W";
+        const highlightId = "9asdfkn23k";
+        boundCreate(question, answer, highlightId);
+        expect(mockThis.flashcards[1].questionText).toBe(question);
     });
 });
