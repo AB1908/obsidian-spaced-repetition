@@ -3,7 +3,6 @@ export interface Flashcard {
     isDue:             boolean,
     questionText:      string,
     answerText:        string,
-    cardText:          string,
     context:           string,
     cardType:          number,
     siblings:          string[],
@@ -15,7 +14,6 @@ export interface Flashcard {
 
 export class Flashcard implements Flashcard {
     answerText: string;
-    cardText: string;
     cardType: number;
     context: string;
     delayBeforeReview: number;
@@ -32,6 +30,14 @@ export class Flashcard implements Flashcard {
         this.highlightId = highlightId;
         // todo: replace with uuid generation
         this.id = "uuid here";
+        this.answerText = null;
+        this.cardType = null;
+        this.context = null;
+        this.delayBeforeReview = null;
+        this.ease = null;
+        this.interval = null;
+        this.isDue = null;
+        this.siblings = [];
     }
 }
 
