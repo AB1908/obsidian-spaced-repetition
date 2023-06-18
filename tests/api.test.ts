@@ -97,4 +97,17 @@ describe("deleteFlashcard", () => {
         expect(boundDelete(id)).toBe(true);
         expect(mockThis.flashcards).toStrictEqual([]);
     });
+
+    test('should return false if flashcard doesn\'t exist', () => {
+        const id = "aaaa";
+        expect(boundDelete(id)).toBe(false);
+        expect(mockThis.flashcards).toStrictEqual(flashcards());
+    });
+
+    test('should throw an error when trying to delete from an empty flashcard array', () => {
+        mockThis.flashcards = [];
+        boundDelete = deleteFlashcardById.bind(mockThis);
+        const id = "aaaa";
+        expect(() => boundDelete(id)).toThrow();
+    });
 });
