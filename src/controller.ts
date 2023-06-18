@@ -54,6 +54,15 @@ export function updateFlashcardQuestion(id: string, question: string) {
     return true;
 }
 
+export function updateFlashcardAnswer(id: string, answer: string) {
+    const card = this.flashcards.filter((t: Flashcard) => t.id === id)[0];
+    if (card === undefined) {
+        return false;
+    }
+    card.answerText = answer;
+    return true;
+}
+
 export function createFlashcard(question: string, answer: string, highlightId: string) {
     const card = new Flashcard(question, answer, highlightId);
     this.flashcards.push(card);
