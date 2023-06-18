@@ -59,3 +59,9 @@ export function createFlashcard(question: string, answer: string, highlightId: s
     this.flashcards.push(card);
     return true;
 }
+
+export function deleteFlashcardById(id: string) {
+    this.flashcards = this.flashcards.filter((f: Flashcard) => f.id !== id);
+    console.log(this.flashcards);
+    return true;
+}

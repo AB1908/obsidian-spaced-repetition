@@ -1,4 +1,4 @@
-import {createFlashcard, getFlashcardById, updateFlashcardQuestion, deleteFlashcard} from "src/controller";
+import {createFlashcard, getFlashcardById, updateFlashcardQuestion, deleteFlashcardById} from "src/controller";
 import type {Flashcard} from "src/controller";
 import mock = jest.mock;
 
@@ -83,13 +83,13 @@ describe("createFlashcard", () => {
 
 describe("deleteFlashcard", () => {
     let mockThis: { flashcards: Flashcard[] };
-    let boundDelete: typeof deleteFlashcard;
+    let boundDelete: typeof deleteFlashcardById;
 
     beforeEach(() => {
         mockThis = {
             flashcards: flashcards()
         };
-        boundDelete = deleteFlashcard.bind(mockThis);
+        boundDelete = deleteFlashcardById.bind(mockThis);
     });
 
     test('should delete an existing flashcard', () => {
