@@ -241,7 +241,7 @@ async function findFlashcardsInNote(
             ? getCardContext(lineNo, headings)
             : "";
         const siblings: Card[] = [];
-        ({ totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards } = createCards(
+        ({ totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards } = addSiblings(
             siblingMatches,
             scheduling,
             note,
@@ -324,7 +324,7 @@ function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNum
     return {due: dueUnix, interval, ease};
 }
 
-function createCards(
+function addSiblings(
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,
