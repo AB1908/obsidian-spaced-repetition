@@ -61,7 +61,12 @@ export function createFlashcard(question: string, answer: string, highlightId: s
 }
 
 export function deleteFlashcardById(id: string) {
+    if (this.flashcards.length == 0) {
+        throw new Error("Array of flashcards is empty!")
+    }
+    if (this.flashcards.findIndex((f: Flashcard) => f.id === id) == -1) {
+        return false;
+    }
     this.flashcards = this.flashcards.filter((f: Flashcard) => f.id !== id);
-    console.log(this.flashcards);
     return true;
 }
