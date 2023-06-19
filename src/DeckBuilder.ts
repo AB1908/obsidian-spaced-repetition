@@ -155,7 +155,7 @@ function doExtraSchedulingDatesExist(scheduling: RegExpMatchArray[], siblingMatc
     return scheduling.length > siblingMatches.length;
 }
 
-function generateSiblingsFromCardType(cardType: CardType | CardType.SingleLineBasic | CardType.SingleLineReversed | CardType.MultiLineBasic | CardType.MultiLineReversed, settings: SRSettings, cardText: string) {
+function generateSiblingsFromCardType(cardType: CardType, settings: SRSettings, cardText: string) {
     const siblingMatches: CardSides[] = [];
     if (cardType === CardType.Cloze) {
         siblingMatches.push(...(generateClozeSiblingMatches(settings, cardText)))
@@ -207,7 +207,7 @@ async function findFlashcardsInNote(
     const parsedCards: parsedCard[] = parse(fileText, settings);
     for (const parsedCard of parsedCards) {
         deckPath = noteDeckPath;
-        let {cardText, cardType, lineNo} = parsedCard;
+        let {cardText, cardType, lineNo, metadataText: cardMetadata} = parsedCard;
 
         if (!settings.convertFoldersToDecks) {
             const tagInCardRegEx = /^#[^\s#]+/gi;
@@ -240,8 +240,7 @@ async function findFlashcardsInNote(
         const context: string = settings.showContextInCards
             ? getCardContext(lineNo, headings)
             : "";
-        const siblings: Card[] = [];
-        ({ totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards } = addSiblings(
+        ({ totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards } = insertSiblingsIntoDeck(
             siblingMatches,
             scheduling,
             note,
@@ -249,7 +248,6 @@ async function findFlashcardsInNote(
             cardText,
             context,
             cardType,
-            siblings,
             ignoreStats,
             deckPath,
             now,
@@ -324,7 +322,7 @@ function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNum
     return {due: dueUnix, interval, ease};
 }
 
-function addSiblings(
+function insertSiblingsIntoDeck(
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,
@@ -332,7 +330,6 @@ function addSiblings(
     cardText: string,
     context: string,
     cardType: CardType,
-    siblings: Card[],
     ignoreStats: boolean,
     deckPath: string[],
     now: number,
@@ -344,6 +341,7 @@ function addSiblings(
     dueDatesFlashcards: Record<number, number>,
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
+    const siblings: Card[] = [];
     for (let i = 0; i < siblingMatches.length; i++) {
         const {front, back, clozeInsertionAt} = queryCardSide(siblingMatches[i]);
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings, clozeInsertionAt);
@@ -353,6 +351,8 @@ function addSiblings(
             cardStats.newCount++;
             cardObj.isDue = true;
             deckTree.insertFlashcard([...deckPath], cardObj);
+            siblings.push(cardObj);
+            continue;
         } else if (i < scheduling.length) {
             const {interval, ease, due: dueUnix} = generateParsedSchedulingInfo(scheduling, i);
             const nDays: number = Math.ceil((dueUnix - now) / (24 * 3600 * 1000));
