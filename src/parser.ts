@@ -12,7 +12,7 @@ export interface parsedCard {
  * Returns flashcards found in `text`
  *
  * @param text - The text to extract flashcards from
- * @param settings SRSettings - The plugin's settings
+ * @param settings - The plugin's settings
  * @returns An array of [CardType, card text, line number] tuples
  */
 export function parse(text: string, settings: SRSettings) : parsedCard[] {
