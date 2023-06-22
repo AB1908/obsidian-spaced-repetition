@@ -1,13 +1,11 @@
 import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
 import React, {useContext, useEffect, useRef, useState} from "react";
-import {DeckTreeView} from "src/ui/views/deck";
-import {sync} from "src/DeckBuilder";
-import {AppContext} from "src/contexts/PluginContext";
 import {Outlet, useNavigate} from "react-router";
 import {Link, NavLink} from "react-router-dom";
 import {setIcon} from "obsidian";
 import {ICON_LIST} from "src/constants";
+import {ModalContent} from "src/ui/views/modal";
 
 export type Icon = typeof ICON_LIST[number];
 
@@ -89,24 +87,5 @@ export function Notes() {
 }
 
 export function Tags() {
-    const deckTree = useRef(new Deck("root", null));
-    const [syncLock, setSyncLock] = useState(false);
-    const { data } = useContext(AppContext);
-
-    useEffect(() => {
-        const syncDeck = async () => {
-                deckTree.current = await sync(syncLock, setSyncLock, data);
-        }
-        syncDeck();
-    }, []);
-
-
-    console.log(deckTree.current);
-    return (
-            <DeckTreeView
-                subdecksArray={deckTree.current.subdecks}
-                deckName={deckTree.current.deckName}
-                // startReviewingDeck={(deck: Deck) => startReviewingDeck(deck)}
-            />
-    );
+    return <ModalContent/>
 }
