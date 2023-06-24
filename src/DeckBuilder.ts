@@ -16,6 +16,7 @@ import {
     singleLineBasicSiblingMatches,
     singleLineReversedSiblingMatches
 } from "src/Sibling";
+import {logArgs} from "src/devUtils";
 // import {consoleStart, logArgs} from "src/devUtils";
 
 //TODO: Also include decks that don't have due flashcards
@@ -197,13 +198,11 @@ async function findFlashcardsInNote(
     let fileText: string = await app.vault.read(note);
     const fileCachedData = app.metadataCache.getFileCache(note) || {};
     const headings: HeadingCache[] = fileCachedData.headings || [];
-    let fileChanged = false,
-        totalNoteEase = 0,
-        scheduledCount = 0;
+    let fileChanged = false;
+    let scheduledCount = 0;
     const settings: SRSettings = data.settings;
     const noteDeckPath = deckPath;
 
-    const now: number = Date.now();
     const parsedCards: parsedCard[] = parse(fileText, settings);
     for (const parsedCard of parsedCards) {
         deckPath = noteDeckPath;
@@ -224,14 +223,12 @@ async function findFlashcardsInNote(
 
         deckTree.createDeck([...deckPath]);
 
-        const cardTextHash: string = cyrb53(cardText);
-
         if (buryOnly) {
-            data.buryList.push(cardTextHash);
+            data.buryList.push(cyrb53(cardText));
             continue;
         }
         const siblingMatches = generateSiblingsFromCardType(cardType, settings, cardText);
-        let scheduling = extractSchedulingArray(cardText);
+        let scheduling = extractSchedulingArray(cardMetadata);
 
         if (doExtraSchedulingDatesExist(scheduling, siblingMatches)) {
             ({fileText, fileChanged} = deleteSchedulingDates(cardText, scheduling, fileText, fileChanged, siblingMatches.length));
@@ -240,25 +237,27 @@ async function findFlashcardsInNote(
         const context: string = settings.showContextInCards
             ? getCardContext(lineNo, headings)
             : "";
-        ({ totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards } = insertSiblingsIntoDeck(
+        let totalNoteEase;
+        let scheduleIncrease;
+        const cardTextHash: string = cyrb53(parsedCard.cardText);
+        ({ totalNoteEase, scheduledCount: scheduleIncrease, cardStats, dueDatesFlashcards } = insertSiblingsIntoDeck(
             siblingMatches,
             scheduling,
             note,
-            lineNo,
-            cardText,
+            parsedCard.lineNo,
+            parsedCard.cardText,
             context,
             cardType,
             ignoreStats,
             deckPath,
-            now,
-            totalNoteEase,
-            scheduledCount,
+            0,
             cardTextHash,
             deckTree,
             cardStats,
             dueDatesFlashcards,
             data
         ));
+        scheduledCount += scheduleIncrease;
     }
 
     if (fileChanged) {
@@ -266,7 +265,7 @@ async function findFlashcardsInNote(
     }
 
     if (scheduledCount > 0) {
-        const flashcardsInNoteAvgEase: number = totalNoteEase / scheduledCount;
+        const flashcardsInNoteAvgEase: number = 0 / scheduledCount;
         const flashcardContribution: number = Math.min(
             1.0,
             Math.log(scheduledCount + 0.5) / Math.log(64)
@@ -322,7 +321,7 @@ function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNum
     return {due: dueUnix, interval, ease};
 }
 
-function insertSiblingsIntoDeck(
+export function insertSiblingsIntoDeck(
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,
@@ -332,8 +331,6 @@ function insertSiblingsIntoDeck(
     cardType: CardType,
     ignoreStats: boolean,
     deckPath: string[],
-    now: number,
-    totalNoteEase: number,
     scheduledCount: number,
     cardTextHash: string,
     deckTree: Deck,
@@ -341,7 +338,9 @@ function insertSiblingsIntoDeck(
     dueDatesFlashcards: Record<number, number>,
     data: PluginData
 ): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
+    const now: number = Date.now();
     const siblings: Card[] = [];
+    let totalNoteEase = 0;
     for (let i = 0; i < siblingMatches.length; i++) {
         const {front, back, clozeInsertionAt} = queryCardSide(siblingMatches[i]);
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings, clozeInsertionAt);
@@ -352,7 +351,6 @@ function insertSiblingsIntoDeck(
             cardObj.isDue = true;
             deckTree.insertFlashcard([...deckPath], cardObj);
             siblings.push(cardObj);
-            continue;
         } else if (i < scheduling.length) {
             const {interval, ease, due: dueUnix} = generateParsedSchedulingInfo(scheduling, i);
             const nDays: number = Math.ceil((dueUnix - now) / (24 * 3600 * 1000));
@@ -388,20 +386,19 @@ function insertSiblingsIntoDeck(
                 cardObj.ease = ease;
                 cardObj.delayBeforeReview = now - dueUnix;
                 deckTree.insertFlashcard([...deckPath], cardObj);
+                siblings.push(cardObj);
             } else {
                 deckTree.countFlashcard([...deckPath]);
-                continue;
             }
         } else {
             cardStats.newCount++;
-            if (data.buryList.includes(cyrb53(cardText))) {
+            if (data.buryList.includes(cardTextHash)) {
                 deckTree.countFlashcard([...deckPath]);
-                continue;
+            } else {
+                deckTree.insertFlashcard([...deckPath], cardObj);
+                siblings.push(cardObj);
             }
-            deckTree.insertFlashcard([...deckPath], cardObj);
         }
-
-        siblings.push(cardObj);
     }
     return { totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards };
 }
