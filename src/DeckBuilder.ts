@@ -23,7 +23,6 @@ import {logArgs} from "src/devUtils";
 export async function sync(syncLock: boolean, setSyncLock: Function, data: PluginData): Promise<Deck> {
     let incomingLinks: Record<string, LinkStat[]> = {};
     let dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
-    let easeByPath: Record<string, number> = {};
 
     if (syncLock) {
         return;
@@ -74,7 +73,7 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
 
         const deckPath: string[] = findDeckPath(note, data);
         if (deckPath.length !== 0) {
-            const flashcardsInNoteAvgEase: number = await findFlashcardsInNote(
+            await findFlashcardsInNote(
                 note,
                 deckPath,
                 data,
@@ -82,10 +81,6 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
                 cardStats,
                 dueDatesFlashcards
             );
-
-            if (flashcardsInNoteAvgEase > 0) {
-                easeByPath[note.path] = flashcardsInNoteAvgEase;
-            }
         }
 
         const fileCachedData = app.metadataCache.getFileCache(note) || {};
@@ -105,15 +100,11 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
                 break;
             }
         }
-        if (shouldIgnore) {
-            continue;
-        }
     }
 
     // sort the deck names
     deckTree.sortSubdecksList();
     if (data.settings.showDebugMessages) {
-        console.log(`SR: ${t("EASES")}`, easeByPath);
         console.log(`SR: ${t("DECKS")}`, deckTree);
     }
 
@@ -135,7 +126,6 @@ export async function sync(syncLock: boolean, setSyncLock: Function, data: Plugi
     // reviewQueueView.redraw();
 
     setSyncLock(false);
-    console.log(deckTree);
     return deckTree;
 }
 
@@ -196,10 +186,7 @@ async function findFlashcardsInNote(
     ignoreStats = false
 ): Promise<number> {
     let fileText: string = await app.vault.read(note);
-    const fileCachedData = app.metadataCache.getFileCache(note) || {};
-    const headings: HeadingCache[] = fileCachedData.headings || [];
     let fileChanged = false;
-    let scheduledCount = 0;
     const settings: SRSettings = data.settings;
     const noteDeckPath = deckPath;
 
@@ -234,46 +221,21 @@ async function findFlashcardsInNote(
             ({fileText, fileChanged} = deleteSchedulingDates(cardText, scheduling, fileText, fileChanged, siblingMatches.length));
         }
 
-        const context: string = settings.showContextInCards
-            ? getCardContext(lineNo, headings)
-            : "";
-        let totalNoteEase;
-        let scheduleIncrease;
-        const cardTextHash: string = cyrb53(parsedCard.cardText);
-        ({ totalNoteEase, scheduledCount: scheduleIncrease, cardStats, dueDatesFlashcards } = insertSiblingsIntoDeck(
+        ({ dueDatesFlashcards } = insertSiblingsIntoDeck(
+            parsedCard,
             siblingMatches,
             scheduling,
             note,
-            parsedCard.lineNo,
-            parsedCard.cardText,
-            context,
-            cardType,
             ignoreStats,
             deckPath,
-            0,
-            cardTextHash,
             deckTree,
-            cardStats,
             dueDatesFlashcards,
             data
         ));
-        scheduledCount += scheduleIncrease;
     }
 
     if (fileChanged) {
         await app.vault.modify(note, fileText);
-    }
-
-    if (scheduledCount > 0) {
-        const flashcardsInNoteAvgEase: number = 0 / scheduledCount;
-        const flashcardContribution: number = Math.min(
-            1.0,
-            Math.log(scheduledCount + 0.5) / Math.log(64)
-        );
-        return (
-            flashcardsInNoteAvgEase * flashcardContribution +
-            settings.baseEase * (1.0 - flashcardContribution)
-        );
     }
 
     return 0;
@@ -322,32 +284,31 @@ function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNum
 }
 
 export function insertSiblingsIntoDeck(
+    parsedCard: parsedCard,
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,
-    lineNo: number,
-    cardText: string,
-    context: string,
-    cardType: CardType,
     ignoreStats: boolean,
     deckPath: string[],
-    scheduledCount: number,
-    cardTextHash: string,
     deckTree: Deck,
-    cardStats: Stats,
     dueDatesFlashcards: Record<number, number>,
     data: PluginData
-): { totalNoteEase: number; scheduledCount: number, cardStats: Stats, dueDatesFlashcards: Record<number, number> } {
+): { dueDatesFlashcards: Record<number, number> } {
+    const cardTextHash: string = cyrb53(parsedCard.cardText);
+    let {cardText, cardType, lineNo, metadataText: cardMetadata} = parsedCard;
+    const fileCachedData = app.metadataCache.getFileCache(note) || {};
+    const headings: HeadingCache[] = fileCachedData.headings || [];
+    const context: string = data.settings.showContextInCards
+        ? getCardContext(lineNo, headings)
+        : "";
     const now: number = Date.now();
     const siblings: Card[] = [];
-    let totalNoteEase = 0;
     for (let i = 0; i < siblingMatches.length; i++) {
         const {front, back, clozeInsertionAt} = queryCardSide(siblingMatches[i]);
         const cardObj = new Card(i, scheduling, note, lineNo, front, back, cardText, context, cardType, siblings, clozeInsertionAt);
 
         // card scheduled
         if (ignoreStats) {
-            cardStats.newCount++;
             cardObj.isDue = true;
             deckTree.insertFlashcard([...deckPath], cardObj);
             siblings.push(cardObj);
@@ -358,23 +319,6 @@ export function insertSiblingsIntoDeck(
                 dueDatesFlashcards[nDays] = 0;
             }
             dueDatesFlashcards[nDays]++;
-
-            if (!Object.prototype.hasOwnProperty.call(cardStats.intervals, interval)) {
-                cardStats.intervals[interval] = 0;
-            }
-            cardStats.intervals[interval]++;
-            if (!Object.prototype.hasOwnProperty.call(cardStats.eases, ease)) {
-                cardStats.eases[ease] = 0;
-            }
-            cardStats.eases[ease]++;
-            totalNoteEase += ease;
-            scheduledCount++;
-
-            if (interval >= 32) {
-                cardStats.matureCount++;
-            } else {
-                cardStats.youngCount++;
-            }
 
             if (data.buryList.includes(cardTextHash)) {
                 deckTree.countFlashcard([...deckPath]);
@@ -391,7 +335,6 @@ export function insertSiblingsIntoDeck(
                 deckTree.countFlashcard([...deckPath]);
             }
         } else {
-            cardStats.newCount++;
             if (data.buryList.includes(cardTextHash)) {
                 deckTree.countFlashcard([...deckPath]);
             } else {
@@ -400,7 +343,7 @@ export function insertSiblingsIntoDeck(
             }
         }
     }
-    return { totalNoteEase, scheduledCount, cardStats, dueDatesFlashcards };
+    return { dueDatesFlashcards };
 }
 
 function findDeckPath(note: TFile, data: PluginData): string[] {
