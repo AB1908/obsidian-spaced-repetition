@@ -41,10 +41,10 @@ export abstract class AbstractFlashcard implements Flashcard {
         this.cardType = cardType;
         this.context = null;
         this.delayBeforeReview = null;
-        this.ease = cardMetadata.ease;
-        this.interval = cardMetadata.interval;
-        this.highlightId = cardMetadata.highlightId || highlightId;
-        this.flag = cardMetadata.flag;
+        this.ease = cardMetadata?.ease;
+        this.interval = cardMetadata?.interval;
+        this.highlightId = cardMetadata?.highlightId || highlightId;
+        this.flag = cardMetadata?.flag;
         this.isDue = false;
         this.siblings = [];
         this.parsedCardId = parsedCardId;
