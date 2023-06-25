@@ -26,11 +26,11 @@ export function getHighlightById(id: string) {
 }
 
 export function getFlashcardById(id: string) {
-    return this.flashcards.filter((t: Flashcard) => t.id===id)[0] ?? null;
+    return this.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0] ?? null;
 }
 
 export function updateFlashcardQuestion(id: string, question: string) {
-    const card = this.flashcards.filter((t: Flashcard) => t.id === id)[0];
+    const card = this.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
     if (card === undefined) {
         return false;
     }
@@ -39,7 +39,7 @@ export function updateFlashcardQuestion(id: string, question: string) {
 }
 
 export function updateFlashcardAnswer(id: string, answer: string) {
-    const card = this.flashcards.filter((t: Flashcard) => t.id === id)[0];
+    const card = this.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
     if (card === undefined) {
         return false;
     }
@@ -77,9 +77,9 @@ export function deleteFlashcardById(id: string) {
     if (this.flashcards.length == 0) {
         throw new Error("Array of flashcards is empty!")
     }
-    if (this.flashcards.findIndex((f: Flashcard) => f.id === id) == -1) {
+    if (this.flashcards.findIndex((f: AbstractFlashcard) => f.id === id) == -1) {
         return false;
     }
-    this.flashcards = this.flashcards.filter((f: Flashcard) => f.id !== id);
+    this.flashcards = this.flashcards.filter((f: AbstractFlashcard) => f.id !== id);
     return true;
 }
