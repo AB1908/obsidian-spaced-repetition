@@ -64,7 +64,7 @@ function generateSiblings(settings: SRSettings, cardText: string) {
 
 export function generateClozeFront(cardText: string, deletionStart: number, deletionEnd: number) {
     let front =
-        [`${cardText.substring(0, deletionStart)}`,`${cardText.substring(deletionEnd)}`].map(t=> removeOtherClozes(t));;
+        [`${cardText.substring(0, deletionStart)}`,`${cardText.substring(deletionEnd)}`].map(t=> removeOtherClozes(t));
     // todo: add comment about why front0len
     return {frontArray: front, insertAt: front[0].length};
 }
