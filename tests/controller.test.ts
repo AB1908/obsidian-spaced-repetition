@@ -1,14 +1,28 @@
 import {
     createFlashcardForHighlight,
-    getFlashcardById,
-    updateFlashcardQuestion,
     deleteFlashcardById,
-    updateFlashcardAnswer
+    getFlashcardById,
+    updateFlashcardAnswer,
+    updateFlashcardQuestion
 } from "src/controller";
-import mock = jest.mock;
-import {AbstractFlashcard} from "src/data/models/flashcard";
+import {CardType} from "src/scheduling";
+const mockParsedCard = {
+    id: "test1234",
+    note: null,
+    cardText: "anything",
+    metadataText: "whatever",
+    // TODO: remove lineno
+    lineNo: 0,
+    cardType: null,
+};
+jest.mock('nanoid', () => ({
+    nanoid: (number: number) => "293nf82b"
+}))
+jest.mock('../src/data/models/parsedCard', () => ({
+    createParsedCard: (...args) => mockParsedCard
+}));
 
-const flashcards: () => AbstractFlashcard[] = () => [{
+const flashcards = () => [{
     "id": "yjlML2s9W",
     "isDue": true,
     "questionText": " i-Estel Edain, ú-chebin estel anim.",
@@ -19,11 +33,13 @@ const flashcards: () => AbstractFlashcard[] = () => [{
     "interval": 2,
     "ease": 230,
     "delayBeforeReview": 17662032301,
-    highlightId: "d9fasdkf9",
+    "highlightId": "d9fasdkf9",
+    "flag": null,
+    "parsedCardId": "d9sakj32",
 }];
 
 describe('getFlashcardById', () => {
-    let mockThis: { flashcards: AbstractFlashcard[] };
+    let mockThis: any;
     let boundGet: any;
 
     beforeEach(() => {
@@ -40,7 +56,7 @@ describe('getFlashcardById', () => {
 });
 
 describe('updateFlashcardQuestion', () => {
-    let mockThis: { flashcards: AbstractFlashcard[] };
+    let mockThis: any;
     let boundUpdate: any;
 
     beforeEach(() => {
@@ -67,7 +83,7 @@ describe('updateFlashcardQuestion', () => {
 });
 
 describe('updateFlashcardAnswer', () => {
-    let mockThis: { flashcards: AbstractFlashcard[] };
+    let mockThis: any;
     let boundUpdate: any;
 
     beforeEach(() => {
@@ -94,7 +110,7 @@ describe('updateFlashcardAnswer', () => {
 });
 
 describe("createFlashcard", () => {
-    let mockThis: { flashcards: AbstractFlashcard[] };
+    let mockThis: any;
     let boundCreate: typeof createFlashcardForHighlight;
 
     beforeEach(() => {
@@ -104,18 +120,18 @@ describe("createFlashcard", () => {
         boundCreate = createFlashcardForHighlight.bind(mockThis);
     });
 
-    test('should create a new flashcard', () => {
+    test('should create a new flashcard', async () => {
         const question = 'What is your age?';
         const answer = "test answer";
         const id = "yjlML2s9W";
         const highlightId = "9asdfkn23k";
-        boundCreate(question, answer, highlightId);
+        await boundCreate(question, answer, highlightId, CardType.MultiLineBasic);
         expect(mockThis.flashcards[1].questionText).toBe(question);
     });
 });
 
 describe("deleteFlashcard", () => {
-    let mockThis: { flashcards: AbstractFlashcard[] };
+    let mockThis: any;
     let boundDelete: typeof deleteFlashcardById;
 
     beforeEach(() => {
