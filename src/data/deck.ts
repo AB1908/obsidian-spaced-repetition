@@ -1,26 +1,26 @@
 import {parse, ParsedCard} from "src/parser";
 import {SRSettings} from "src/settings";
-import {AbstractFlashcard} from "src/data/models/flashcard";
+import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 
-export function createFlashcardsFromText(parsedCards: ParsedCard[]): AbstractFlashcard[] {
-    const flashcards: AbstractFlashcard[] = [];
+export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]): AbstractFlashcard[] {
     for (let card of parsedCards) {
-        // const flashcard = new Flashcard(card.questionText, card.answerText, )
-        // flashcards.push()
+        const [questionText, answerText] = parseCardText(card.cardText);
+        const flashcard = new Flashcard(card.id, questionText, answerText, parseMetadata(card.metadataText))
+        this.flashcards.push(flashcard)
     }
     return;
 }
 
+export function parseCardText(text: string): [string, string] {
+    let sides = text.split("?").map(t => t.trim());
+    if (sides.length < 2) {
+        return;
+    }
+    return [sides[0], sides[1]];
+}
+
 export function createParsedCardsArray(fileText: string, settings: SRSettings) {
     this.parsedCards = [...parse(fileText, settings)]
-}
-
-export function createFlashcardsArray() {
-
-}
-
-export function parseFlashcardText(text: string) {
-    return;
 }
 
 export enum FLAG {
