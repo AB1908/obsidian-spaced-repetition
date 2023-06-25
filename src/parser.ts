@@ -1,5 +1,7 @@
 import {CardType} from "src/scheduling";
 import type {SRSettings} from "src/settings";
+import {nanoid} from "nanoid";
+import {AbstractFlashcard} from "src/controller";
 
 export interface ParsedCard {
     id: string,
@@ -36,7 +38,7 @@ export function parse(text: string, settings: SRSettings) : ParsedCard[] {
     for (let i = 0; i < lines.length; i++) {
         if (lines[i].length === 0) {
             if (cardType) {
-                parsedCards.push({cardType, cardText, lineNo, metadataText})
+                parsedCards.push({id: nanoid(8), cardType, cardText, lineNo, metadataText})
                 cardType = null;
             }
 
@@ -71,7 +73,7 @@ export function parse(text: string, settings: SRSettings) : ParsedCard[] {
                 metadataText = lines[i+1];
                 i++;
             }
-            parsedCards.push({cardType, cardText, lineNo, metadataText})
+            parsedCards.push({id: nanoid(8), cardType, cardText, lineNo, metadataText})
             cardType = null;
             cardText = "";
         } else if (
@@ -100,7 +102,7 @@ export function parse(text: string, settings: SRSettings) : ParsedCard[] {
     }
 
     if (cardType && cardText) {
-        parsedCards.push({cardType, cardText, lineNo, metadataText: metadataText})
+        parsedCards.push({id: nanoid(8), cardType, cardText, lineNo, metadataText: metadataText})
     }
 
     return parsedCards;
