@@ -24,7 +24,7 @@ export function schedule(
     delayBeforeReview: number,
     settingsObj: SRSettings,
     dueDates?: Record<number, number>
-): Record<string, number> {
+): { ease: number; interval: number } {
     delayBeforeReview = Math.max(0, Math.floor(delayBeforeReview / (24 * 3600 * 1000)));
     if (isNaN(interval)) {
         throw Error("invalid interval");
