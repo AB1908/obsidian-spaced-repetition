@@ -63,7 +63,22 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     return true;
 }
 
-export function createFlashcardForHighlight(question: string, answer: string, highlightId: string, cardType: CardType) {
+export async function createParsedCard(questionText: string, answerText: string, cardType: CardType, path: string, highlightId: string): Promise<ParsedCard> {
+    const parsedCard = {
+        id: nanoid(8),
+        note: getTFileForPath(path),
+        cardText: cardTextGenerator(questionText, answerText, cardType),
+        metadataText: metadataTextGenerator(highlightId, null),
+        // TODO: remove lineno
+        lineNo: 0,
+        cardType: cardType,
+    };
+    await writeCardToDisk(parsedCard.note, generateCardAsStorageFormat(parsedCard));
+    this.parsedCards.push(parsedCard);
+    return parsedCard;
+}
+
+export async function createFlashcardForHighlight(question: string, answer: string, highlightId: string, cardType: CardType) {
     let card;
     if (cardType == CardType.MultiLineBasic) {
         card = new Flashcard(question, answer, highlightId);
