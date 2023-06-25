@@ -1,6 +1,8 @@
-import {parse, ParsedCard} from "src/parser";
+import {parse} from "src/parser";
 import {SRSettings} from "src/settings";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
+
+import {ParsedCard} from "src/data/models/parsedCard";
 
 export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]): AbstractFlashcard[] {
     for (let card of parsedCards) {

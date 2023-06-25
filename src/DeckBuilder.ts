@@ -3,7 +3,7 @@ import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "./constan
 import {Deck} from "./Deck";
 import {t} from "./lang/helpers";
 import {LinkStat, PluginData} from "./main";
-import {parse, ParsedCard} from "./parser";
+import {parse} from "./parser";
 import {CardType} from "./scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
@@ -17,6 +17,8 @@ import {
     singleLineReversedSiblingMatches
 } from "src/Sibling";
 import {logArgs} from "src/devUtils";
+
+import {ParsedCard} from "src/data/models/parsedCard";
 // import {consoleStart, logArgs} from "src/devUtils";
 
 //TODO: Also include decks that don't have due flashcards
