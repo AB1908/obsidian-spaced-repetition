@@ -62,5 +62,7 @@ export class Flashcard extends AbstractFlashcard {
         } else {
             super(cardType, parsedCardId, null, highlightId);
         }
+        this.questionText = questionText;
+        this.answerText = answerText;
     }
 }
