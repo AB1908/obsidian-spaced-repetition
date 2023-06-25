@@ -1,16 +1,8 @@
 import {CardType} from "src/scheduling";
 import type {SRSettings} from "src/settings";
 import {nanoid} from "nanoid";
-import {TFile} from "obsidian";
 
-export interface ParsedCard {
-    id: string,
-    cardType: CardType,
-    cardText: string,
-    metadataText: string,
-    lineNo: number,
-    note?: TFile,
-}
+import {ParsedCard} from "src/data/models/parsedCard";
 
 /**
  * Returns flashcards found in `text`
