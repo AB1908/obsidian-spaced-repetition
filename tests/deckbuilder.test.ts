@@ -1,6 +1,8 @@
 // Given some string text, I should be able to make a deck from it
 
-import {parseAnnotations} from "src/data";
+import {parseAnnotations} from "src/data/import/annotations";
+import {FLAG, parseMetadata} from "src/data/deck";
+import {CardType} from "src/scheduling";
 
 describe("parseAnnotations should parse an annotation with ", () => {
     test("a single line note and single line highlight", () => {
