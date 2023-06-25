@@ -322,10 +322,7 @@ export function insertSiblingsIntoDeck(
 
             if (data.buryList.includes(cardTextHash)) {
                 deckTree.countFlashcard([...deckPath]);
-                continue;
-            }
-
-            if (dueUnix <= now) {
+            } else if (dueUnix <= now) {
                 cardObj.interval = interval;
                 cardObj.ease = ease;
                 cardObj.delayBeforeReview = now - dueUnix;
