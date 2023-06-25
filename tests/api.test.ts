@@ -1,14 +1,14 @@
 import {
-    createFlashcard,
+    createFlashcardForHighlight,
     getFlashcardById,
     updateFlashcardQuestion,
     deleteFlashcardById,
     updateFlashcardAnswer
 } from "src/controller";
-import type {Flashcard} from "src/controller";
 import mock = jest.mock;
+import {AbstractFlashcard} from "src/data/models/flashcard";
 
-const flashcards: () => Flashcard[] = () => [{
+const flashcards: () => AbstractFlashcard[] = () => [{
     "id": "yjlML2s9W",
     "isDue": true,
     "questionText": " i-Estel Edain, ú-chebin estel anim.",
@@ -23,7 +23,7 @@ const flashcards: () => Flashcard[] = () => [{
 }];
 
 describe('getFlashcardById', () => {
-    let mockThis: { flashcards: Flashcard[] };
+    let mockThis: { flashcards: AbstractFlashcard[] };
     let boundGet: any;
 
     beforeEach(() => {
@@ -40,7 +40,7 @@ describe('getFlashcardById', () => {
 });
 
 describe('updateFlashcardQuestion', () => {
-    let mockThis: { flashcards: Flashcard[] };
+    let mockThis: { flashcards: AbstractFlashcard[] };
     let boundUpdate: any;
 
     beforeEach(() => {
@@ -67,7 +67,7 @@ describe('updateFlashcardQuestion', () => {
 });
 
 describe('updateFlashcardAnswer', () => {
-    let mockThis: { flashcards: Flashcard[] };
+    let mockThis: { flashcards: AbstractFlashcard[] };
     let boundUpdate: any;
 
     beforeEach(() => {
@@ -94,14 +94,14 @@ describe('updateFlashcardAnswer', () => {
 });
 
 describe("createFlashcard", () => {
-    let mockThis: { flashcards: Flashcard[] };
-    let boundCreate: typeof createFlashcard;
+    let mockThis: { flashcards: AbstractFlashcard[] };
+    let boundCreate: typeof createFlashcardForHighlight;
 
     beforeEach(() => {
         mockThis = {
             flashcards: flashcards()
         };
-        boundCreate = createFlashcard.bind(mockThis);
+        boundCreate = createFlashcardForHighlight.bind(mockThis);
     });
 
     test('should create a new flashcard', () => {
@@ -115,7 +115,7 @@ describe("createFlashcard", () => {
 });
 
 describe("deleteFlashcard", () => {
-    let mockThis: { flashcards: Flashcard[] };
+    let mockThis: { flashcards: AbstractFlashcard[] };
     let boundDelete: typeof deleteFlashcardById;
 
     beforeEach(() => {
