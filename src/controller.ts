@@ -1,9 +1,7 @@
-import {nanoid} from "nanoid";
 import {CardType} from "src/scheduling";
 import {ParsedCard} from "src/parser";
-import {getTFileForPath, writeCardToDisk} from "src/disk";
-import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
+import {createParsedCard} from "src/data/models/parsedCard";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -45,21 +43,6 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     }
     card.answerText = answer;
     return true;
-}
-
-export async function createParsedCard(questionText: string, answerText: string, cardType: CardType, path: string, highlightId: string): Promise<ParsedCard> {
-    const parsedCard = {
-        id: nanoid(8),
-        note: getTFileForPath(path),
-        cardText: cardTextGenerator(questionText, answerText, cardType),
-        metadataText: metadataTextGenerator(highlightId, null),
-        // TODO: remove lineno
-        lineNo: 0,
-        cardType: cardType,
-    };
-    await writeCardToDisk(parsedCard.note, generateCardAsStorageFormat(parsedCard));
-    this.parsedCards.push(parsedCard);
-    return parsedCard;
 }
 
 export async function createFlashcardForHighlight(question: string, answer: string, highlightId: string, cardType: CardType) {
