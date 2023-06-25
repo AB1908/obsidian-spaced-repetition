@@ -1,44 +1,28 @@
-export interface Flashcard {
-    id:                string,
-    isDue:             boolean,
-    questionText:      string,
-    answerText:        string,
-    context:           string,
-    cardType:          number,
-    siblings:          string[],
-    interval:          number,
-    ease:              number,
-    delayBeforeReview: number,
-    highlightId:       string,
-}
+import {nanoid} from "nanoid";
+import {CardType} from "src/scheduling";
+import {ParsedCard} from "src/parser";
+import {getTFileForPath, writeCardToDisk} from "src/disk";
+import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
+import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 
-export class Flashcard implements Flashcard {
-    answerText: string;
-    cardType: number;
-    context: string;
-    delayBeforeReview: number;
-    ease: number;
-    id: string;
-    interval: number;
-    isDue: boolean;
-    questionText: string;
-    siblings: string[];
+// TODO: Cloze cards
+// export class ClozeFlashcard extends AbstractFlashcard {
+//     // cardMetadata and highlight ID are mutually exclusive properties. Given that there is no constructor overloading
+//     // probably should change this to be a union type
+//     constructor(parsedCardId: string, clozeText: string, cardMetadata?: FlashcardMetadata, highlightId?: string) {
+//         const cardType = CardType.Cloze;
+//         if (cardMetadata) {
+//             super(cardType, parsedCardId, cardMetadata);
+//         } else {
+//             super(cardType, parsedCardId, null, highlightId);
+//         }
+//         // todo: in cloze card, we actually get cardText and need to generate question and answer
+//         // todo: add siblings
+//     }
+// }
 
-    constructor(questionText: string, answerText: string, highlightId: string) {
-        this.questionText = questionText;
-        this.answerText = answerText;
-        this.highlightId = highlightId;
-        // todo: replace with uuid generation
-        this.id = "uuid here";
-        this.answerText = null;
-        this.cardType = null;
-        this.context = null;
-        this.delayBeforeReview = null;
-        this.ease = null;
-        this.interval = null;
-        this.isDue = null;
-        this.siblings = [];
-    }
+export function getHighlightById(id: string) {
+    return;
 }
 
 export function getFlashcardById(id: string) {
