@@ -1,14 +1,15 @@
 import {CardType} from "src/scheduling";
 import type {SRSettings} from "src/settings";
 import {nanoid} from "nanoid";
-import {AbstractFlashcard} from "src/controller";
+import {TFile} from "obsidian";
 
 export interface ParsedCard {
     id: string,
     cardType: CardType,
     cardText: string,
     metadataText: string,
-    lineNo: number
+    lineNo: number,
+    note?: TFile,
 }
 
 /**
