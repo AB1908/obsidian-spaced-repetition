@@ -3,7 +3,7 @@ import {LEGACY_SCHEDULING_EXTRACTOR, MULTI_SCHEDULING_EXTRACTOR} from "./constan
 import {Deck} from "./Deck";
 import {t} from "./lang/helpers";
 import {LinkStat, PluginData} from "./main";
-import {parse, parsedCard} from "./parser";
+import {parse, ParsedCard} from "./parser";
 import {CardType} from "./scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
@@ -190,7 +190,7 @@ async function findFlashcardsInNote(
     const settings: SRSettings = data.settings;
     const noteDeckPath = deckPath;
 
-    const parsedCards: parsedCard[] = parse(fileText, settings);
+    const parsedCards: ParsedCard[] = parse(fileText, settings);
     for (const parsedCard of parsedCards) {
         deckPath = noteDeckPath;
         let {cardText, cardType, lineNo, metadataText: cardMetadata} = parsedCard;
@@ -284,7 +284,7 @@ function generateParsedSchedulingInfo(scheduling: RegExpMatchArray[], siblingNum
 }
 
 export function insertSiblingsIntoDeck(
-    parsedCard: parsedCard,
+    parsedCard: ParsedCard,
     siblingMatches: CardSides[],
     scheduling: RegExpMatchArray[],
     note: TFile,

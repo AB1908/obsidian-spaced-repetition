@@ -1,7 +1,8 @@
 import {CardType} from "src/scheduling";
 import type {SRSettings} from "src/settings";
 
-export interface parsedCard {
+export interface ParsedCard {
+    id: string,
     cardType: CardType,
     cardText: string,
     metadataText: string,
@@ -15,11 +16,11 @@ export interface parsedCard {
  * @param settings - The plugin's settings
  * @returns An array of [CardType, card text, line number] tuples
  */
-export function parse(text: string, settings: SRSettings) : parsedCard[] {
+export function parse(text: string, settings: SRSettings) : ParsedCard[] {
     let cardText = "";
     let cardType: CardType | null = null;
     let lineNo = 0;
-    let parsedCards: parsedCard[] = [];
+    let parsedCards: ParsedCard[] = [];
     const {
         singlelineCardSeparator,
         singlelineReversedCardSeparator,
