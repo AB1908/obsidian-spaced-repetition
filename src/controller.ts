@@ -81,7 +81,9 @@ export async function createParsedCard(questionText: string, answerText: string,
 export async function createFlashcardForHighlight(question: string, answer: string, highlightId: string, cardType: CardType) {
     let card;
     if (cardType == CardType.MultiLineBasic) {
-        card = new Flashcard(question, answer, highlightId);
+        // TODO: Fix path
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "", highlightId);
+        card = new Flashcard(parsedCard.id, question, answer, null, highlightId);
     }
     this.flashcards.push(card);
     return true;
