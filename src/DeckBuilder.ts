@@ -295,7 +295,7 @@ export function insertSiblingsIntoDeck(
     data: PluginData
 ): { dueDatesFlashcards: Record<number, number> } {
     const cardTextHash: string = cyrb53(parsedCard.cardText);
-    let {cardText, cardType, lineNo, metadataText: cardMetadata} = parsedCard;
+    let {id, cardText, cardType, lineNo, metadataText: cardMetadata} = parsedCard;
     const fileCachedData = app.metadataCache.getFileCache(note) || {};
     const headings: HeadingCache[] = fileCachedData.headings || [];
     const context: string = data.settings.showContextInCards

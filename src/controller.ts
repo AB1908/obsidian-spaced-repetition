@@ -63,8 +63,11 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     return true;
 }
 
-export function createFlashcard(question: string, answer: string, highlightId: string) {
-    const card = new Flashcard(question, answer, highlightId);
+export function createFlashcardForHighlight(question: string, answer: string, highlightId: string, cardType: CardType) {
+    let card;
+    if (cardType == CardType.MultiLineBasic) {
+        card = new Flashcard(question, answer, highlightId);
+    }
     this.flashcards.push(card);
     return true;
 }
