@@ -40,6 +40,7 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     if (card === undefined) {
         return false;
     }
+    // TODO: add logic to update parsed card as well
     card.answerText = answer;
     return true;
 }
