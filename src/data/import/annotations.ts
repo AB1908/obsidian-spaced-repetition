@@ -1,15 +1,19 @@
+import {getFileContents, getHeadersForFile} from "src/disk";
+
 export interface annotation {
     id:             number;
     type:           string;
     highlight:      string;
     note:           string;
+    heading:        string;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
 const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)(?<highlight>(\n> .*)+)\n> \*\*\*(?<note>(\n> .*)+)/g;
 
 // TODO: also use line for match since we need to correlate with markdown headers later
-export function parseAnnotations(fileContents: string): annotation[] {
+// todo: think of header representation
+export function parseAnnotations(fileContents: string, heading: string): annotation[] {
     const parsedAnnotations: annotation[] = [];
     const annotationMatches = fileContents.matchAll(ANNOTATION_REGEX);
     for (let match of annotationMatches) {
@@ -19,7 +23,20 @@ export function parseAnnotations(fileContents: string): annotation[] {
             type: match.groups.type,
             highlight: match.groups.highlight.trim(),
             note: match.groups.note.trim(),
+            // todo: fix
+            heading: heading,
         })
     }
     return parsedAnnotations;
+}
+
+export async function extractAnnotations(path: string) {
+    const fileContents = (await getFileContents(path)).split("\n");
+    const fileHeaders = getHeadersForFile(path);
+    // todo: last iteration
+    for (let i = 0; i < fileHeaders.length-1; i++) {
+        // header.level
+        // header.position.start
+        parseAnnotations(fileContents.slice(fileHeaders[i].position.start.line, fileHeaders[i+1]?.position.start.line ?? fileContents.length).join("\n"), fileHeaders[i].heading)
+    }
 }
