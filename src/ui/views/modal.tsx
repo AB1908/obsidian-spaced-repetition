@@ -38,8 +38,7 @@ export function ModalContent() {
     } else if (deckTree && modalState == ModalStates.DECK_NOT_IN_REVIEW) {
         return (
             <DeckTreeView
-                subdecksArray={deckTree.current.subdecks}
-                deckName={deckTree.current.deckName}
+                deck={deckTree.current}
                 startReviewingDeck={(deck: Deck) => {
                     if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0)
                         setModalState(ModalStates.DECK_IN_REVIEW);

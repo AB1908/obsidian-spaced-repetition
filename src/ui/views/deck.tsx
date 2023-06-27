@@ -3,9 +3,8 @@ import {Deck} from "src/Deck";
 import {AllCardCounts} from "../components/card-counts";
 
 export interface DeckModalProps {
-    deckName: string;
-    subdecksArray: Deck[];
-    startReviewingDeck?: Function;
+    deck: Deck;
+    startReviewingDeck: Function;
 }
 
 interface SubDeckProps {
@@ -75,8 +74,7 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
                 </summary>
                 <div className="tree-item-children">
                     <DeckTreeView
-                        subdecksArray={props.deck.subdecks}
-                        deckName={props.deck.deckName}
+                        deck={props.deck}
                         startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
                     />
                 </div>
@@ -118,7 +116,7 @@ function DeckTreeEntry(props: SubDeckProps) {
 }
 
 export function DeckTreeView(props: DeckModalProps) {
-    return <>{props.subdecksArray.map((deck: Deck, i: number) => (
+    return <>{props.deck.subdecks.map((deck: Deck, i: number) => (
         <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>
     ))}</>;
 }
