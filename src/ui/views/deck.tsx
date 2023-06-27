@@ -78,15 +78,21 @@ function CollapsibleDeckTreeEntry(props: DeckModalProps) {
     );
 }
 
+function DeckEntry(props: { deck: Deck, startReviewingDeck: (d: Deck) => any }) {
+    return <>
+        <InnerTreeItem
+            deck={props.deck}
+            startReviewingDeck={props.startReviewingDeck}
+        />
+        <AllCardCounts deck={props.deck}/>
+    </>;
+}
+
 function NonCollapsibleDeckTreeEntry(props: DeckModalProps) {
     return (
         <div className="tree-item">
             <div className="tree-item-self tag-pane-tag is-clickable">
-                <InnerTreeItem
-                    deck={props.deck}
-                    startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
-                />
-                <AllCardCounts deck={props.deck} />
+                <DeckEntry deck={props.deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>
             </div>
         </div>
     );
