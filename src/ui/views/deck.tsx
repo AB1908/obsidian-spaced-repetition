@@ -56,16 +56,14 @@ function CollapsibleDeckTreeEntry(props: DeckModalProps) {
                     className="sr-deck tree-item-self is-clickable"
                     onClick={(e) => e.preventDefault()}
                 >
-                    {/* tree-item-self*/}
                     <CollapseIcon
                         isDeckTreeOpen={isDeckTreeOpen}
                         handleTriangleClick={(e: MouseEvent) => handleTriangleClick(e)}
                     />
-                    <InnerTreeItem
+                    <DeckEntry
                         deck={props.deck}
                         startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
                     />
-                    <AllCardCounts deck={props.deck} />
                 </summary>
                 <div className="tree-item-children">
                     <DeckTreeView
