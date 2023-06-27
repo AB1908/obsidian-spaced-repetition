@@ -1,6 +1,6 @@
-import React, { useState } from "react";
-import { Deck } from "src/Deck";
-import { AllCardCounts } from "../components/card-counts";
+import React, {useState} from "react";
+import {Deck} from "src/Deck";
+import {AllCardCounts} from "../components/card-counts";
 
 export interface DeckModalProps {
     deckName: string;
@@ -88,15 +88,13 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
 function NonCollapsibleDeckTreeEntry(props: SubDeckProps) {
     return (
         <div className="tree-item">
-            <li style={{ display: "contents" }}>
-                <div className="tree-item-self tag-pane-tag is-clickable">
-                    <InnerTreeItem
-                        deck={props.deck}
-                        startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
-                    />
-                    <AllCardCounts deck={props.deck} />
-                </div>
-            </li>
+            <div className="tree-item-self tag-pane-tag is-clickable">
+                <InnerTreeItem
+                    deck={props.deck}
+                    startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
+                />
+                <AllCardCounts deck={props.deck} />
+            </div>
         </div>
     );
 }
@@ -120,8 +118,7 @@ function DeckTreeEntry(props: SubDeckProps) {
 }
 
 export function DeckTreeView(props: DeckModalProps) {
-    const listItems = props.subdecksArray.map((deck: Deck, i: number) => (
-        <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)} />
-    ));
-    return <>{listItems}</>;
+    return <>{props.subdecksArray.map((deck: Deck, i: number) => (
+        <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>
+    ))}</>;
 }
