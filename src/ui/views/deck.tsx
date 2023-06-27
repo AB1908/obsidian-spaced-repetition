@@ -41,7 +41,7 @@ function CollapseIcon({ isDeckTreeOpen, handleTriangleClick }: { isDeckTreeOpen:
     );
 }
 
-function CollapsibleDeckTreeEntry(props: DeckModalProps) {
+function CollapsibleDeckTreeEntry({renderItem, renderRest}: { renderItem: () => JSX.Element; renderRest: () => ReactNode }) {
     const [isDeckTreeOpen, setDeckTreeOpen] = useState(false);
 
     function handleTriangleClick(e: MouseEvent): void {
@@ -60,16 +60,10 @@ function CollapsibleDeckTreeEntry(props: DeckModalProps) {
                         isDeckTreeOpen={isDeckTreeOpen}
                         handleTriangleClick={(e: MouseEvent) => handleTriangleClick(e)}
                     />
-                    <DeckEntry
-                        deck={props.deck}
-                        startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
-                    />
+                    {renderItem()}
                 </summary>
                 <div className="tree-item-children">
-                    <DeckTreeView
-                        deck={props.deck}
-                        startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
-                    />
+                    {renderRest()}
                 </div>
             </details>
         </div>
@@ -96,25 +90,27 @@ function NonCollapsibleDeckTreeEntry({render}: {render: () => ReactNode}) {
     );
 }
 
-function DeckTreeEntry(props: DeckModalProps) {
-    if (props.deck.subdecks.length) {
-        return (
-            <CollapsibleDeckTreeEntry
-                deck={props.deck}
-                startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
-            />
-        );
-    } else {
-        return (
-            <NonCollapsibleDeckTreeEntry
-                render={()=><DeckEntry deck={props.deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>}
-            />
-        );
-    }
-}
-
-export function DeckTreeView(props: DeckModalProps) {
-    return <>{props.deck.subdecks.map((deck: Deck, i: number) => (
-        <DeckTreeEntry key={i} deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>
-    ))}</>;
+export function DeckTreeView(props: {
+    deck: Deck;
+    startReviewingDeck: Function;
+}) {
+    return <>{props.deck.subdecks.map((deck: Deck, i: number) => {
+        let deckEntry = <DeckEntry deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>;
+        if (deck.subdecks.length) {
+            return (
+                <CollapsibleDeckTreeEntry
+                    key={i}
+                    renderItem={() => deckEntry}
+                    renderRest={() => <DeckTreeView deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>}
+                />
+            );
+        } else {
+            return (
+                <NonCollapsibleDeckTreeEntry
+                    key={i}
+                    render={() => deckEntry}
+                />
+            );
+        }
+    })}</>;
 }
