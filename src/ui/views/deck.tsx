@@ -7,12 +7,7 @@ export interface DeckModalProps {
     startReviewingDeck: Function;
 }
 
-interface SubDeckProps {
-    deck: Deck;
-    startReviewingDeck?: Function;
-}
-
-function InnerTreeItem(props: SubDeckProps) {
+function InnerTreeItem(props: DeckModalProps) {
     return (
         <div
             className="sr-deck tree-item-inner"
@@ -46,7 +41,7 @@ function CollapseIcon({ isDeckTreeOpen, handleTriangleClick }: { isDeckTreeOpen:
     );
 }
 
-function CollapsibleDeckTreeEntry(props: SubDeckProps) {
+function CollapsibleDeckTreeEntry(props: DeckModalProps) {
     const [isDeckTreeOpen, setDeckTreeOpen] = useState(false);
 
     function handleTriangleClick(e: MouseEvent): void {
@@ -83,7 +78,7 @@ function CollapsibleDeckTreeEntry(props: SubDeckProps) {
     );
 }
 
-function NonCollapsibleDeckTreeEntry(props: SubDeckProps) {
+function NonCollapsibleDeckTreeEntry(props: DeckModalProps) {
     return (
         <div className="tree-item">
             <div className="tree-item-self tag-pane-tag is-clickable">
@@ -97,7 +92,7 @@ function NonCollapsibleDeckTreeEntry(props: SubDeckProps) {
     );
 }
 
-function DeckTreeEntry(props: SubDeckProps) {
+function DeckTreeEntry(props: DeckModalProps) {
     if (props.deck.subdecks.length) {
         return (
             <CollapsibleDeckTreeEntry
