@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {ReactNode, useState} from "react";
 import {Deck} from "src/Deck";
 import {AllCardCounts} from "../components/card-counts";
 
@@ -88,11 +88,11 @@ function DeckEntry(props: { deck: Deck, startReviewingDeck: (d: Deck) => any }) 
     </>;
 }
 
-function NonCollapsibleDeckTreeEntry(props: DeckModalProps) {
+function NonCollapsibleDeckTreeEntry({render}: {render: () => ReactNode}) {
     return (
         <div className="tree-item">
             <div className="tree-item-self tag-pane-tag is-clickable">
-                <DeckEntry deck={props.deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>
+                {render()}
             </div>
         </div>
     );
@@ -109,8 +109,7 @@ function DeckTreeEntry(props: DeckModalProps) {
     } else {
         return (
             <NonCollapsibleDeckTreeEntry
-                deck={props.deck}
-                startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}
+                render={()=><DeckEntry deck={props.deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>}
             />
         );
     }
