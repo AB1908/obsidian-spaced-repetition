@@ -1,9 +1,11 @@
 import React, {useContext, useEffect, useRef, useState} from "react";
 import {sync} from "src/DeckBuilder";
 import {Deck} from "src/Deck";
-import {DeckEntry, DeckTreeView as DeckTreeView} from "./deck";
+import {DeckEntry} from "./deck";
 import {FlashcardView} from "./flashcard";
 import {AppContext} from "src/contexts/PluginContext";
+
+import {Tree as DeckTreeView} from "src/ui/components/tree";
 
 export enum ModalStates {
     DECK_IN_REVIEW,
