@@ -91,20 +91,19 @@ function NonCollapsibleDeckTreeEntry({render}: {render: () => ReactNode}) {
 }
 
 export function DeckTreeView(props: {
-    data: Deck;
-    startReviewingDeck: Function;
+    data: any;
+    apply: Function;
     render: (t: any) => ReactNode;
+    childKey: string;
 }) {
-    const childKey = "subdecks";
-    const children = props.data[childKey];
-    return <>{children.map((child: Deck, i: number) => {
-        // let deckEntry = <DeckEntry deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>;
-        if (child[childKey].length) {
+    const children = props.data[props.childKey];
+    return <>{children.map((child: any, i: number) => {
+        if (child[props.childKey].length) {
             return (
                 <CollapsibleDeckTreeEntry
                     key={i}
                     renderItem={()=>props.render(child)}
-                    renderRest={() => <DeckTreeView data={child} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)} render={props.render}/>}
+                    renderRest={() => <DeckTreeView data={child} childKey={props.childKey} apply={(d: any) => props.apply(d)} render={props.render}/>}
                 />
             );
         } else {
