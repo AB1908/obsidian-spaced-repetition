@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useRef, useState } from "react";
 import { sync } from "src/DeckBuilder";
 import { Deck } from "src/Deck";
-import { DeckTreeView as DeckTreeView } from "./deck";
+import {DeckEntry, DeckTreeView as DeckTreeView} from "./deck";
 import { FlashcardView } from "./flashcard";
 import { AppContext } from "src/contexts/PluginContext";
 
@@ -44,10 +44,12 @@ export function ModalContent() {
             />
         );
     } else if (deckTree && modalState == ModalStates.DECK_NOT_IN_REVIEW) {
+        let deckEntry = (deck: Deck) => <DeckEntry deck={deck} startReviewingDeck={getStartReviewingDeck()}/>;
         return (
             <DeckTreeView
                 deck={deckTree.current}
                 startReviewingDeck={getStartReviewingDeck()}
+                render={(deck) => deckEntry(deck)}
             />
         );
     } else {

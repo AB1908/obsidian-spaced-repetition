@@ -93,22 +93,23 @@ function NonCollapsibleDeckTreeEntry({render}: {render: () => ReactNode}) {
 export function DeckTreeView(props: {
     deck: Deck;
     startReviewingDeck: Function;
+    render: (t: any) => ReactNode;
 }) {
     return <>{props.deck.subdecks.map((deck: Deck, i: number) => {
-        let deckEntry = <DeckEntry deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>;
+        // let deckEntry = <DeckEntry deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>;
         if (deck.subdecks.length) {
             return (
                 <CollapsibleDeckTreeEntry
                     key={i}
-                    renderItem={() => deckEntry}
-                    renderRest={() => <DeckTreeView deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)}/>}
+                    renderItem={()=>props.render(deck)}
+                    renderRest={() => <DeckTreeView deck={deck} startReviewingDeck={(d: Deck) => props.startReviewingDeck(d)} render={props.render}/>}
                 />
             );
         } else {
             return (
                 <NonCollapsibleDeckTreeEntry
                     key={i}
-                    render={() => deckEntry}
+                    render={() => props.render(deck)}
                 />
             );
         }
