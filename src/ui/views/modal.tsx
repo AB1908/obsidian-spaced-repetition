@@ -27,6 +27,14 @@ export function ModalContent() {
         syncDeck();
     }, [modalState]);
 
+    function getStartReviewingDeck() {
+        return (deck: Deck) => {
+            if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0)
+                setModalState(ModalStates.DECK_IN_REVIEW);
+            deckBeingReviewed.current = deck;
+        };
+    }
+
     if (modalState == ModalStates.DECK_IN_REVIEW) {
         // TODO: Fix
         return (
@@ -39,11 +47,7 @@ export function ModalContent() {
         return (
             <DeckTreeView
                 deck={deckTree.current}
-                startReviewingDeck={(deck: Deck) => {
-                    if (deck.dueFlashcardsCount + deck.newFlashcardsCount > 0)
-                        setModalState(ModalStates.DECK_IN_REVIEW);
-                    deckBeingReviewed.current = deck;
-                }}
+                startReviewingDeck={getStartReviewingDeck()}
             />
         );
     } else {
