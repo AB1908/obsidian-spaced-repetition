@@ -47,7 +47,7 @@ export function ModalContent() {
         let deckEntry = (deck: Deck) => <DeckEntry deck={deck} startReviewingDeck={getStartReviewingDeck()}/>;
         return (
             <DeckTreeView
-                deck={deckTree.current}
+                data={deckTree.current}
                 startReviewingDeck={getStartReviewingDeck()}
                 render={(deck) => deckEntry(deck)}
             />
