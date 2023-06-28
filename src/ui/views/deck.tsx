@@ -41,7 +41,7 @@ function CollapseIcon({ isDeckTreeOpen, handleTriangleClick }: { isDeckTreeOpen:
     );
 }
 
-function CollapsibleDeckTreeEntry({renderItem, renderRest}: { renderItem: () => JSX.Element; renderRest: () => ReactNode }) {
+function CollapsibleDeckTreeEntry({renderItem, renderRest}: { renderItem: () => ReactNode; renderRest: () => ReactNode }) {
     const [isDeckTreeOpen, setDeckTreeOpen] = useState(false);
 
     function handleTriangleClick(e: MouseEvent): void {
