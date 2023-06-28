@@ -70,7 +70,7 @@ function CollapsibleDeckTreeEntry({renderItem, renderRest}: { renderItem: () => 
     );
 }
 
-function DeckEntry(props: { deck: Deck, startReviewingDeck: (d: Deck) => any }) {
+export function DeckEntry(props: { deck: Deck, startReviewingDeck: (d: Deck) => any }) {
     return <>
         <InnerTreeItem
             deck={props.deck}
