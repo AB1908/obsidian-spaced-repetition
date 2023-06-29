@@ -73,7 +73,7 @@ export function Tree(props: {
 }) {
     const children = props.data[props.childKey];
     return <>{children.map((child: any, i: number) => {
-        if (child[props.childKey].length) {
+        if (child[props.childKey]?.length) {
             return (
                 <CollapsibleTreeEntry
                     key={i}
