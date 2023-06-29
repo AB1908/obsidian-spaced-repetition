@@ -5,7 +5,7 @@ import {DeckEntry} from "./deck";
 import {FlashcardView} from "./flashcard";
 import {AppContext} from "src/contexts/PluginContext";
 
-import {Tree as DeckTreeView} from "src/ui/components/tree";
+import {Tree} from "src/ui/components/tree";
 
 export enum ModalStates {
     DECK_IN_REVIEW,
@@ -47,7 +47,7 @@ export function ModalContent() {
         );
     } else if (deckTree && modalState == ModalStates.DECK_NOT_IN_REVIEW) {
         return (
-            <DeckTreeView
+            <Tree
                 childKey={"subdecks"}
                 data={deckTree.current}
                 apply={getStartReviewingDeck()}
