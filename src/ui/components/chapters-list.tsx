@@ -1,60 +1,42 @@
 import React from "react";
-import {Link} from "react-router-dom";
-import {routes} from "src/ui/modals/flashcard-modal";
-import {HeaderWithCounts, highlightCountReducer} from "src/ui/components/highlights";
+import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
-import {deck} from "src/api";
+import {Book, deck} from "src/data/models/book";
+import {Tree} from "src/ui/components/tree";
 
 export function chapterLoader() {
-    return deck;
+    return deck();
 }
 
-export function countKeyInArray(key: string, array: any) {
-    return array.reduce((accumulator: number, currentValue: any) => accumulator + currentValue[key], 0);
+function TreeItem({section}:{section: any}) {
+    if (section.hasOwnProperty("title"))
+        return <div className="sr-deck tree-item-inner" >
+            {section.title}
+        </div>;
+    else if (section.hasOwnProperty("highlight"))
+        return <div className="sr-deck tree-item-inner" >
+            {section.highlight}
+        </div>;
+    else console.log("lol")
 }
 
-// TODO: Fix reduce for counts
+// TODO: Fix counts
+// TODO: Fix state changes when clicking?
+// TODO: Actually allow clicking?
 export function ChapterList() {
-    const deck1 = useLoaderData();
-    let chapterList = deck1.chapters;
-
-    chapterList = chapterList.map(chapter=>{return {...highlightCountReducer(chapter),...chapter}});
-    console.log(chapterList)
-    const chapterHighlightsWithTests = chapterList.reduce((accumulator, initialValue) => accumulator + initialValue.chapterNotesWithTests,0)
-    const chapterHighlightsWithoutTests = chapterList.reduce((accumulator, initialValue) => accumulator + initialValue.chapterNotesWithoutTests,0)
+    const deck1: Book = useLoaderData() as Book;
     return (
         <>
             <h3>
-                {deck1.deckName}
+                {deck1.name}
             </h3>
             <HeaderWithCounts
-                withCount={chapterHighlightsWithTests}
-                withoutCount={chapterHighlightsWithoutTests}
+                withCount={9}
+                withoutCount={10}
             />
             <p>Add flashcards from:</p>
-            <ul className={"sr-chapter-tree"}>
-                {chapterList.map((chapter: any, i: number) => (
-                    <Link to={`${i}/highlights`}>
-                        <li key={chapter.id} className={"sr-chapter tree-item-self is-clickable"}>
-                            <div className={"tree-item-inner"}>
-                                {chapter.title}
-                            </div>
-                            <div className={"test-coverage tree-item-flair-outer"}>
-                                <span>
-                                    <span className={"no-tests tree-item-flair sr-test-counts"}
-                                          aria-label={"Cards without tests"}>
-                                        {chapter.chapterNotesWithTests}
-                                    </span>
-                                    <span className={"have-tests tree-item-flair sr-test-counts"}
-                                          aria-label={"Cards with tests"}>
-                                        {chapter.chapterNotesWithoutTests}
-                                    </span>
-                                </span>
-                            </div>
-                        </li>
-                    </Link>
-                ))}
-            </ul>
+
+            <Tree data={deck1} apply={null} render={(child) => <TreeItem section={child}/>} childKey={"sections"}/>
         </>
     );
 }
