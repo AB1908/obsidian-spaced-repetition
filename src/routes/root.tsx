@@ -12,7 +12,7 @@ export type Icon = typeof ICON_LIST[number];
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     const navigate = useNavigate();
     useEffect(() => {
-        navigate("/home/tags");
+        navigate("/home/notes");
     }, []);
 
     return (
