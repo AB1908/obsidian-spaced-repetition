@@ -27,7 +27,7 @@ function Section({section}: { section: any }) {
     </div>;
 }
 
-// TODO: Fix counts
+// TODO: Fix counts for header
 // TODO: Fix state changes when clicking?
 // TODO: Actually allow clicking?
 export function ChapterList() {
@@ -43,7 +43,7 @@ export function ChapterList() {
             />
             <p>Add flashcards from:</p>
 
-            <Tree data={deck1} apply={null} render={(child) => <TreeItem section={child}/>} childKey={"sections"}/>
+            <Tree data={deck1} apply={null} render={(child) => <Section section={child}/>} childKey={"sections"}/>
         </>
     );
 }
