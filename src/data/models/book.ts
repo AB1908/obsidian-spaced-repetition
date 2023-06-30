@@ -18,6 +18,49 @@ interface Annot {
     flashcards: string[]
 }
 
+function isSection(sections: any) {
+    return sections.hasOwnProperty("sections");
+}
+
+function isAnnotation(sections: any) {
+    return sections.hasOwnProperty("highlight");
+}
+
+// This is terrible. Save me.
+function writeCountToObj(mem: any, sectionId: string, count: number, key: string) {
+    Object.assign(mem, {[`${sectionId}`]: {...mem[sectionId], [key]: count}});
+}
+
+/*
+This function is invoked twice to do a section tree walk, to figure out how many annotations have flashcards associated
+with them and how many don't. I couldn't find a cleaner way of doing it without being too clever for myself.
+ */
+function countAnnotations(sections: any, mem: any, injectedCondition: (sections: any) => boolean, key: string) {
+    let count = 0;
+    if (isSection(sections)) {
+        for (let section of sections.sections) {
+            count += countAnnotations(section, mem, injectedCondition, key);
+        }
+        writeCountToObj(mem, sections.id, count, key);
+    } else if (isAnnotation(sections)) {
+        if (injectedCondition(sections)) {
+            count += 1
+        }
+    }
+    return count;
+}
+
+// TODO: switch to DFS/BFS?
+export function AnnotationCount(sections: any) {
+    let mem = {};
+    // @ts-ignore
+    mem[sections.id] = {
+        "without": countAnnotations(sections, mem, (sections: any) => sections.flashcards.length == 0, "without"),
+        "with": countAnnotations(sections, mem, (sections: any) => sections.flashcards.length != 0, "with")
+    }
+    return mem;
+}
+
 // export const deck: () => Book = () => {return {
 //     id: "ad9fm31s",
 //     name: "Book 1",
