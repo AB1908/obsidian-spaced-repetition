@@ -8,16 +8,23 @@ export function chapterLoader() {
     return deck();
 }
 
-function TreeItem({section}:{section: any}) {
-    if (section.hasOwnProperty("title"))
-        return <div className="sr-deck tree-item-inner" >
-            {section.title}
-        </div>;
-    else if (section.hasOwnProperty("highlight"))
-        return <div className="sr-deck tree-item-inner" >
-            {section.highlight}
-        </div>;
-    else console.log("lol")
+// TODO: extract spans
+// TODO: add labels
+function Section({section}: { section: any }) {
+    const clickHandler = () => console.log("Clicked!");
+    return <div className="sr-deck tree-item-inner" onClick={clickHandler}>
+        {section.title}
+        <span>
+            <span className={"no-tests tree-item-flair sr-test-counts"}>
+                {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
+                {section.without}
+            </span>
+            <span className={"no-tests tree-item-flair sr-test-counts"}>
+                {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
+                {section.with}
+            </span>
+        </span>
+    </div>;
 }
 
 // TODO: Fix counts
