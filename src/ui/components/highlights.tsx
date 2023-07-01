@@ -4,8 +4,53 @@ import {useLoaderData} from "react-router";
 import {deck} from "src/api";
 
 export function chapterLoaderData({params}: {params: any}) {
-    const chapterData = deck.chapters[params.chapterId];
-    return chapterData;
+    // const chapterData = deck.sections.filter(t=>t.id === params.chapterId)[0]
+    // return chapterData;
+    return {
+        id: "d01812ba",
+            title: "Chapter 1",
+        highlights: [
+        {
+            id: "d91maa3h",
+            color: "#339122",
+            highlightContent: "Onen i-Estel Edain, ú-chebin estel anim.",
+            highlightNote: "What a beautiful line by Tolkien",
+            flashcards: [
+                "ks991kna",
+            ]
+        },
+        {
+            id: "d91ms7d",
+            color: "#338122",
+            highlightContent: "This is a sample highlight but without a note",
+            //TODO: think about whether this should be a null or an empty string on the backend
+            highlightNote: "",
+            flashcards: []
+        },
+        {
+            // id: 'sadf89u',
+            // title: "Section 1",
+            // highlights: [
+            //     {
+                    id: "9dk1m3kg",
+                    color: "#338122",
+                    highlightContent: "This is a sample highlight but without a note but also in subsection 1",
+                    //TODO: think about whether this should be a null or an empty string on the backend
+                    highlightNote: "",
+                    flashcards: []
+            //     }
+            // ]
+        },
+        {
+            id: "9dk1m3jg",
+            color: "#246aaa",
+            highlightContent: "This is a sample highlight but without a note but also in chapter 1",
+            //TODO: think about whether this should be a null or an empty string on the backend
+            highlightNote: "",
+            flashcards: []
+        }
+    ],
+    };
 }
 
 export function HeaderWithCounts(props: { withoutCount: number, withCount: number }) {
@@ -27,17 +72,10 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
     );
 }
 
-export function highlightCountReducer(chapterData: any) {
-    const chapterNotesWithTests = chapterData.highlights.reduce((accumulator, currentValue) => accumulator + (currentValue.flashcards.length ? 1 : 0), 0);
-    const chapterNotesWithoutTests = chapterData.highlights.length - chapterNotesWithTests;
-    return {chapterNotesWithTests, chapterNotesWithoutTests};
-}
-
 export function HighlightsList() {
     const chapterData: any = useLoaderData();
     const [color, setColor] = useState(null);
     const uniqueHighlightColors = [...new Set(chapterData.highlights.map((t: any) => t.color))];
-    const {chapterNotesWithTests, chapterNotesWithoutTests} = highlightCountReducer(chapterData);
     let filteredHighlights = color === null ? chapterData.highlights : chapterData.highlights.filter(t=>t.color === color);
 
     function colorFilterHandler(t: string) {
@@ -58,7 +96,7 @@ export function HighlightsList() {
             <h3>
                 {chapterData.title}
             </h3>
-            <HeaderWithCounts withCount={chapterNotesWithTests} withoutCount={chapterNotesWithoutTests}/>
+            <HeaderWithCounts withCount={29} withoutCount={30}/>
 
             <>
                 {uniqueHighlightColors.map((t: string)=>(
@@ -80,7 +118,7 @@ export function HighlightsList() {
                                 <span>
                                     <span className={"no-tests tree-item-flair sr-test-counts"}>
                                         {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                                        {highlight.flashcards.length}
+                                        {20}
                                     </span>
                                 </span>
                             </li>
