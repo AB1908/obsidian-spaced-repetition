@@ -1,14 +1,11 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
-import {deck} from "src/api";
 
 export function chapterLoaderData({params}: {params: any}) {
-    // const chapterData = deck.sections.filter(t=>t.id === params.chapterId)[0]
-    // return chapterData;
     return {
         id: "d01812ba",
-            title: "Chapter 1",
+        title: "Chapter 1",
         highlights: [
         {
             id: "d91maa3h",
