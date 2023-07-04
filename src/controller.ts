@@ -66,3 +66,7 @@ export function deleteFlashcardById(id: string) {
     this.flashcards = this.flashcards.filter((f: AbstractFlashcard) => f.id !== id);
     return true;
 }
+
+export function getAnnotationsForChapter(chapterId: string) {
+
+}
