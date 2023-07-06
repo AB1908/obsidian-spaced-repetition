@@ -1,4 +1,4 @@
-const metadataCache = {
+export const metadataCache = {
     "tags": [{
         "position": {
             "start": {
