@@ -5,7 +5,6 @@ export interface annotation {
     type:           string;
     highlight:      string;
     note:           string;
-    heading:        string;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
@@ -13,9 +12,9 @@ const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)(?<highlight>(\n> .*)+)\n
 
 // TODO: also use line for match since we need to correlate with markdown headers later
 // todo: think of header representation
-export function parseAnnotations(fileContents: string, heading: string): annotation[] {
+export function parseAnnotations(text: string): annotation {
     const parsedAnnotations: annotation[] = [];
-    const annotationMatches = fileContents.matchAll(ANNOTATION_REGEX);
+    const annotationMatches = text.matchAll(ANNOTATION_REGEX);
     for (let match of annotationMatches) {
         parsedAnnotations.push({
             // TODO: potentially switch to string that also contains a short UUID?
@@ -24,10 +23,9 @@ export function parseAnnotations(fileContents: string, heading: string): annotat
             highlight: match.groups.highlight.trim(),
             note: match.groups.note.trim(),
             // todo: fix
-            heading: heading,
         })
     }
-    return parsedAnnotations;
+    return parsedAnnotations[0];
 }
 
 export async function extractAnnotations(path: string) {
