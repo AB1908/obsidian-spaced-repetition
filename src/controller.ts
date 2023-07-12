@@ -67,6 +67,6 @@ export function deleteFlashcardById(id: string) {
     return true;
 }
 
-export function getAnnotationsForChapter(chapterId: string) {
+export function getAnnotationsForSection(sectionId: string) {
 
 }
