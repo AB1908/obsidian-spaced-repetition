@@ -1,4 +1,8 @@
-export interface Book {
+import {getFileContents} from "src/disk";
+import {parseAnnotations} from "src/data/import/annotations";
+import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
+
+export interface book {
     id: string;
     name: string;
     sections: Section[];
@@ -10,7 +14,7 @@ interface Section {
     sections: (Section|Annot)[];
 }
 
-interface Annot {
+export interface Annot {
     id: string;
     color: string;
     highlight: string;
@@ -118,7 +122,7 @@ export function AnnotationCount(sections: any) {
 //         },
 //     ]
 // }};
-export const deck: () => Book = () => {return {
+export const deck: () => book = () => {return {
     id: "ad9fm31s",
     name: "Book 1",
     sections: [
