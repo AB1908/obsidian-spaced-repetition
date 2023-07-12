@@ -70,3 +70,7 @@ export function deleteFlashcardById(id: string) {
 export function getAnnotationsForSection(sectionId: string) {
 
 }
+
+export function getFlashcardsForAnnotation(annotationId: string) {
+
+}
