@@ -1,6 +1,7 @@
 import {CardType} from "src/scheduling";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
+import {Annot} from "src/data/models/book";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
