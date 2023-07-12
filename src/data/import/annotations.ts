@@ -35,6 +35,6 @@ export async function extractAnnotations(path: string) {
     for (let i = 0; i < fileHeaders.length-1; i++) {
         // header.level
         // header.position.start
-        parseAnnotations(fileContents.slice(fileHeaders[i].position.start.line, fileHeaders[i+1]?.position.start.line ?? fileContents.length).join("\n"), fileHeaders[i].heading)
+        parseAnnotations(fileContents.slice(fileHeaders[i].position.start.line, fileHeaders[i + 1]?.position.start.line ?? fileContents.length).join("\n"))
     }
 }
