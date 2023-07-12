@@ -152,3 +152,21 @@ export const deck: () => book = () => {return {
         },
     ]
 }};
+
+export function bookSections(metadata: CachedMetadata, fileText: string) {
+    const output = [];
+    const fileTextArray = fileText.split("\n");
+    let headingIndex = 0;
+    for (let cacheItem of metadata.sections) {
+        if (cacheItem.type === "callout") {
+            let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
+            output.push(annotation);
+        } else if (cacheItem.type === "heading") {
+            output.push(metadata.headings[headingIndex]);
+            headingIndex++;
+        } else {
+            // TODO: Any edge cases?
+        }
+    }
+    return output;
+}
