@@ -59,3 +59,11 @@ export function getHeadersForFile(path: string) {
     }
     return app.metadataCache.getFileCache(tfile).headings;
 }
+
+export function getMetadataForFile(path: string) {
+    const tfile = getTFileForPath(path);
+    if (tfile === null) {
+        return;
+    }
+    return app.metadataCache.getFileCache(tfile);
+}
