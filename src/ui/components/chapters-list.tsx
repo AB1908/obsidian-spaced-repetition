@@ -1,7 +1,7 @@
 import React from "react";
 import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
-import {Book, deck} from "src/data/models/book";
+import {book, deck} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
 
 export function chapterLoader() {
@@ -31,7 +31,7 @@ function Section({section}: { section: any }) {
 // TODO: Fix state changes when clicking?
 // TODO: Actually allow clicking?
 export function ChapterList() {
-    const deck1: Book = useLoaderData() as Book;
+    const deck1: book = useLoaderData() as book;
     return (
         <>
             <h3>
