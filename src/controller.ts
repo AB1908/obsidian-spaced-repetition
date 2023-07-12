@@ -18,8 +18,8 @@ import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
 //     }
 // }
 
-export function getHighlightById(id: string) {
-    return;
+export function getAnnotationById(id: string) {
+    return this.annotations.filter((t: Annot)=>t.id === id)[0];
 }
 
 export function getFlashcardById(id: string) {
