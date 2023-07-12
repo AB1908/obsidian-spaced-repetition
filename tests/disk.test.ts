@@ -1,3 +1,5 @@
+import {CachedMetadata} from "obsidian";
+
 export const metadataCache = {
     "tags": [{
         "position": {
