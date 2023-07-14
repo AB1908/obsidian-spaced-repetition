@@ -1,5 +1,9 @@
-import { AnnotationCount, bookSections } from "src/data/models/book";
-import { metadataCache, sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
+import { AnnotationCount, bookSections, getAnnotations } from "src/data/models/book";
+import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
+const { nanoid } = jest.requireActual("nanoid");
+jest.doMock("nanoid", () => ({
+    nanoid: nanoid,
+}));
 
 test("recursive counter", () => {
     let deck = {
