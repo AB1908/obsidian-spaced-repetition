@@ -17,4 +17,21 @@ module.exports = {
         "src/declarations.d.ts",
     ],
     coverageDirectory: "coverage",
+    maxWorkers: 1,
+    globals: {
+        'ts-jest': {
+            isolatedModules: true
+        }
+    },
+    transform: {
+        '\\.[jt]sx?$': 'ts-jest',
+    },
+    snapshotFormat: {
+        escapeString: true,
+        printBasicPrototype: false,
+        callToJSON: true,
+    },
+    "transformIgnorePatterns": [
+        "node_modules/(?!(nanoid)/)"
+    ]
 };
