@@ -1,6 +1,7 @@
 import {getFileContents} from "src/disk";
-import {parseAnnotations} from "src/data/import/annotations";
-import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
+import {annotation, parseAnnotations} from "src/data/import/annotations";
+import {CachedMetadata, HeadingCache, Pos} from "obsidian";
+import { nanoid } from "nanoid";
 
 export interface book {
     id: string;
@@ -158,11 +159,13 @@ export function bookSections(metadata: CachedMetadata, fileText: string) {
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
     for (let cacheItem of metadata.sections) {
+        // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
             let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
             output.push(annotation);
         } else if (cacheItem.type === "heading") {
-            output.push(metadata.headings[headingIndex]);
+            //todo: fix casting
+            output.push(new Heading(metadata.headings[headingIndex]));
             headingIndex++;
         } else {
             // TODO: Any edge cases?
