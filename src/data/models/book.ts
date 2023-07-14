@@ -154,7 +154,7 @@ export const deck: () => book = () => {return {
 }};
 
 export function bookSections(metadata: CachedMetadata, fileText: string) {
-    const output = [];
+    const output: (annotation|HeadingCache)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
     for (let cacheItem of metadata.sections) {
@@ -169,4 +169,19 @@ export function bookSections(metadata: CachedMetadata, fileText: string) {
         }
     }
     return output;
+}
+
+class Heading implements HeadingCache {
+    display: string;
+    heading: string;
+    id: string;
+    level: number;
+    position: Pos;
+
+    constructor(heading: HeadingCache) {
+        // might be too clever
+        ({display: this.display, heading: this.heading, level: this.level, position: this.position} = heading);
+        this.id = nanoid(8);
+    }
+
 }
