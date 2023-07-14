@@ -192,7 +192,8 @@ class Heading implements HeadingCache {
 // TODO rewrite to use ids instead of doing object equality
 export function getAnnotations(section: string, bookSections: (Heading|annotation)[]) {
     const index = bookSections.findIndex(t => t.id === section);
-    let x = bookSections.findIndex((t,i) => i > index && "level" in t);
+    // TODO: how do I fix this? I'm already doing a level check
+    let x = bookSections.findIndex((t,i) => i > index && "level" in t && t.level == bookSections[index].level);
     if (x == -1) {
         x = bookSections.length;
     }
