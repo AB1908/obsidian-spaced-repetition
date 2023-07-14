@@ -188,3 +188,13 @@ class Heading implements HeadingCache {
     }
 
 }
+
+// TODO rewrite to use ids instead of doing object equality
+export function getAnnotations(section: string, bookSections: (Heading|annotation)[]) {
+    const index = bookSections.findIndex(t => t.id === section);
+    let x = bookSections.findIndex((t,i) => i > index && "level" in t);
+    if (x == -1) {
+        x = bookSections.length;
+    }
+    return bookSections.slice(index+1, x).filter(t => "highlight" in t);
+}
