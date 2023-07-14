@@ -76,3 +76,140 @@ test("recursive counter", () => {
 test("bookSections", () => {
     expect(bookSections(sampleAnnotationMetadata, sampleAnnotationText)).toMatchSnapshot();
 });
+
+let bookSections1 = [
+    {
+        "display": "Header 1",
+        "heading": "Header 1",
+        "id": "-g4c-q2S",
+        "level": 1,
+        "position": {
+            "end": {
+                "col": 10,
+                "line": 10,
+                "offset": 102,
+            },
+            "start": {
+                "col": 0,
+                "line": 10,
+                "offset": 92,
+            },
+        },
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+        "id": 93813,
+        "note": ">",
+        "type": "notes",
+    },
+    {
+        "display": "SubHeader 1",
+        "heading": "SubHeader 1",
+        "id": "xHev-sAx",
+        "level": 2,
+        "position": {
+            "end": {
+                "col": 14,
+                "line": 18,
+                "offset": 212,
+            },
+            "start": {
+                "col": 0,
+                "line": 18,
+                "offset": 198,
+            },
+        },
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien",
+        "type": "notes",
+    },
+    {
+        "display": "Header 2",
+        "heading": "Header 2",
+        "id": "eLy47ZoN",
+        "level": 1,
+        "position": {
+            "end": {
+                "col": 10,
+                "line": 25,
+                "offset": 326,
+            },
+            "start": {
+                "col": 0,
+                "line": 25,
+                "offset": 316,
+            },
+        },
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien\n> This is another line.",
+        "type": "notes",
+    },
+    {
+        "display": "Last header",
+        "heading": "Last header",
+        "id": "WVcwnuIQ",
+        "level": 1,
+        "position": {
+            "end": {
+                "col": 13,
+                "line": 33,
+                "offset": 467,
+            },
+            "start": {
+                "col": 0,
+                "line": 33,
+                "offset": 454,
+            },
+        },
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien",
+        "type": "notes",
+    },
+];
+
+test("getAnnotations", () => {
+    expect(
+        getAnnotations(
+            "WVcwnuIQ",
+            bookSections1
+        )
+    ).toEqual([
+        {
+            highlight: `> Onen i estel Edain, u-chebin estel anim.\n> This is another line.`,
+            id: 93813,
+            note: "> What a beautiful line by Tolkien",
+            type: "notes",
+        },
+    ]);
+});
+
+test("successfully gets nested annotations", () => {
+    expect(
+        getAnnotations(
+            "-g4c-q2S",
+            bookSections1
+        )
+    ).toEqual([
+        {
+            "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+            "id": 93813,
+            "note": ">",
+            "type": "notes",
+        },
+        {
+            "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+            "id": 93813,
+            "note": "> What a beautiful line by Tolkien",
+            "type": "notes",
+        },
+    ]);
+});
