@@ -174,7 +174,7 @@ export function bookSections(metadata: CachedMetadata, fileText: string) {
     return output;
 }
 
-class Heading implements HeadingCache {
+export class Heading implements HeadingCache {
     display: string;
     heading: string;
     id: string;
@@ -193,9 +193,12 @@ class Heading implements HeadingCache {
 export function getAnnotations(section: string, bookSections: (Heading|annotation)[]) {
     const index = bookSections.findIndex(t => t.id === section);
     // TODO: how do I fix this? I'm already doing a level check
-    let x = bookSections.findIndex((t,i) => i > index && "level" in t && t.level == bookSections[index].level);
-    if (x == -1) {
-        x = bookSections.length;
+    let x = index + 1;
+    while (x < bookSections.length) {
+        if ("level" in bookSections[x] && bookSections[x].level <= bookSections[index].level) {
+            break;
+        }
+        x++;
     }
     return bookSections.slice(index+1, x).filter(t => "highlight" in t);
 }
