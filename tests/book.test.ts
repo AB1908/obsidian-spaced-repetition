@@ -1,6 +1,8 @@
-import { AnnotationCount, bookSections, getAnnotations } from "src/data/models/book";
-import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
-const { nanoid } = jest.requireActual("nanoid");
+import {AnnotationCount, bookSections, getAnnotations, Heading} from "src/data/models/book";
+import {sampleAnnotationMetadata, sampleAnnotationText} from "./disk.test";
+import {annotation} from "src/data/import/annotations";
+
+const {nanoid} = jest.requireActual("nanoid");
 jest.doMock("nanoid", () => ({
     nanoid: nanoid,
 }));
@@ -66,10 +68,10 @@ test("recursive counter", () => {
 
     let counter1 = AnnotationCount(deck);
     expect(counter1).toStrictEqual({
-        sadf89u: { with: 1, without: 0 },
-        lasdkf8k: { with: 1, without: 3 },
-        "9dn319d": { with: 0, without: 0 },
-        alksdfj9: { with: 1, without: 3 },
+        sadf89u: {with: 1, without: 0},
+        lasdkf8k: {with: 1, without: 3},
+        "9dn319d": {with: 0, without: 0},
+        alksdfj9: {with: 1, without: 3},
     });
 });
 
@@ -176,40 +178,175 @@ let bookSections1 = [
     },
 ];
 
-test("getAnnotations", () => {
-    expect(
-        getAnnotations(
-            "WVcwnuIQ",
-            bookSections1
-        )
-    ).toEqual([
-        {
-            highlight: `> Onen i estel Edain, u-chebin estel anim.\n> This is another line.`,
-            id: 93813,
-            note: "> What a beautiful line by Tolkien",
-            type: "notes",
-        },
-    ]);
-});
 
-test("successfully gets nested annotations", () => {
-    expect(
-        getAnnotations(
-            "-g4c-q2S",
-            bookSections1
-        )
-    ).toEqual([
-        {
-            "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
-            "id": 93813,
-            "note": ">",
-            "type": "notes",
-        },
-        {
-            "highlight": "> Onen i estel Edain, u-chebin estel anim.",
-            "id": 93813,
-            "note": "> What a beautiful line by Tolkien",
-            "type": "notes",
-        },
-    ]);
+let bookSectionsArray = [
+    {
+        "display": "Header 1",
+        "heading": "Header 1",
+        "id": "-g4c-q2S",
+        "level": 1,
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+        "id": 93813,
+        "note": ">",
+        "type": "notes",
+    },
+    {
+        "display": "SubHeader 1",
+        "heading": "SubHeader 1",
+        "id": "xHev-sAx",
+        "level": 2,
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien",
+        "type": "notes",
+    },
+    {
+        "display": "SubHeader 2",
+        "heading": "SubHeader 2",
+        "id": "xHev-sA1",
+        "level": 2,
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien 2",
+        "type": "notes",
+    },
+    {
+        "display": "Header 2",
+        "heading": "Header 2",
+        "id": "eLy47ZoN",
+        "level": 1,
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien\n> This is another line.",
+        "type": "notes",
+    },
+    {
+        "display": "Last header",
+        "heading": "Last header",
+        "id": "WVcwnuIQ",
+        "level": 1,
+    },
+    {
+        "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+        "id": 93813,
+        "note": "> What a beautiful line by Tolkien",
+        "type": "notes",
+    },
+    {
+        "display": "Last subheader",
+        "heading": "Last subheader",
+        "id": "WVc23uIQ",
+        "level": 2,
+    },
+    {
+        "highlight": "> New highlight here.\n> This is another line.",
+        "id": 93813,
+        "note": "> Test",
+        "type": "notes",
+    },
+] as (annotation|Heading)[];
+
+describe("getAnnotations", () => {
+    test("successfully gets nested annotations", () => {
+        expect(
+            getAnnotations(
+                "-g4c-q2S",
+                bookSectionsArray
+            )
+        ).toEqual([
+            {
+                "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+                "id": 93813,
+                "note": ">",
+                "type": "notes",
+            },
+            {
+                "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+                "id": 93813,
+                "note": "> What a beautiful line by Tolkien",
+                "type": "notes",
+            },
+            {
+                "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+                "id": 93813,
+                "note": "> What a beautiful line by Tolkien 2",
+                "type": "notes"
+            }
+        ]);
+    });
+
+    test("successfully gets annotations from subsection", () => {
+        expect(getAnnotations("xHev-sAx", bookSectionsArray))
+            .toEqual([
+                {
+                    "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+                    "id": 93813,
+                    "note": "> What a beautiful line by Tolkien",
+                    "type": "notes",
+                },
+            ]);
+    });
+
+    test("gets annotations from first subheader under heading 1", () => {
+        expect(getAnnotations("xHev-sAx", bookSectionsArray))
+            .toEqual([
+                {
+                    "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+                    "id": 93813,
+                    "note": "> What a beautiful line by Tolkien",
+                    "type": "notes",
+                },
+            ]);
+    });
+
+    test("gets annotations from second subheader under heading 1", () => {
+
+        expect(getAnnotations("xHev-sA1", bookSectionsArray))
+            .toEqual([
+                {
+                    "highlight": "> Onen i estel Edain, u-chebin estel anim.",
+                    "id": 93813,
+                    "note": "> What a beautiful line by Tolkien 2",
+                    "type": "notes",
+                },
+            ]);
+    });
+
+    test("gets all nested annotations under last header", () => {
+        expect(getAnnotations("WVcwnuIQ", bookSectionsArray))
+            .toEqual([
+                {
+                    "highlight": "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+                    "id": 93813,
+                    "note": "> What a beautiful line by Tolkien",
+                    "type": "notes",
+                },
+                {
+                    "highlight": "> New highlight here.\n> This is another line.",
+                    "id": 93813,
+                    "note": "> Test",
+                    "type": "notes",
+                },
+            ]);
+    });
+
+    test("gets all nested annotations under last subheader", () => {
+        expect(getAnnotations("WVc23uIQ", bookSectionsArray))
+            .toEqual([
+                {
+                    "highlight": "> New highlight here.\n> This is another line.",
+                    "id": 93813,
+                    "note": "> Test",
+                    "type": "notes",
+                },
+            ]);
+    });
 });
