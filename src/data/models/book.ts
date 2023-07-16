@@ -168,8 +168,7 @@ export function getAnnotations(section: string, bookSections: (Heading|annotatio
     let x = index + 1;
     while (x < bookSections.length) {
         if ("level" in bookSections[x] && bookSections[x].level <= bookSections[index].level) {
-                break;
-            }
+            break;
         }
         x++;
     }
