@@ -39,6 +39,7 @@
         "jest": "^27.4.5",
         "jest-27-expect-message": "^1.1.0",
         "json-circular-stringify": "^1.0.1",
+        "json-server": "^0.17.3",
         "moment": "^2.29.4",
         "obsidian": "^0.15.4",
         "prettier": "^2.5.1",
