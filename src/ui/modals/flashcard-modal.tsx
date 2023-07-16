@@ -15,7 +15,7 @@ import {
 } from "src/ui/components/card-creation";
 import {UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/upsert-card";
 import {ChooseCardType} from "src/routes/choose-card-type";
-import {Notes} from "src/routes/notes-home-page";
+import {Notes, notesLoader} from "src/routes/notes-home-page";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -77,6 +77,7 @@ export class FlashcardModal extends Modal {
                         {
                             path: "/home/notes",
                             element: <Notes />,
+                            loader: notesLoader,
                         },
                     ]
                 },
