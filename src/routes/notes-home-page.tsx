@@ -1,17 +1,22 @@
-// export function Notes({deck}:{deck: Deck}) {
 import {Deck} from "src/Deck";
+import {useLoaderData} from "react-router";
 import React, {useEffect, useRef} from "react";
 import {setIcon} from "obsidian";
 import {Link} from "react-router-dom";
 import {AllCardCounts} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
 
-export function Notes() {
-    // TODO: rewrite to use props
+// TODO: Fix types
+export function notesLoader({params}: {params: any}) {
     const deck1 = {dueFlashcardsCount: 10, newFlashcardsCount: 20, totalFlashcards: 30, deckName: "Deck1"} as Deck;
     const deck2 = {dueFlashcardsCount: 40, newFlashcardsCount: 40, totalFlashcards: 40, deckName: "Deck2"} as Deck;
-    const deckArray = [deck1, deck2];
+    return [deck1, deck2];
+}
+
+export function Notes() {
+    // TODO: rewrite to use props
     const iconRef = useRef(null);
+    const deckArray = useLoaderData() as Deck[];
 
     useEffect(() => {
         const plus: Icon = 'plus-circle';
