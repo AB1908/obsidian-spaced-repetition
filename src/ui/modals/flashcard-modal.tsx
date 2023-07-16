@@ -4,7 +4,7 @@ import {createRoot, Root as ReactDomRoot} from "react-dom/client";
 import type SRPlugin from "src/main";
 import {AppContext} from "src/contexts/PluginContext";
 import {createMemoryRouter, RouterProvider} from "react-router-dom";
-import {Notes, Root, Tabs, Tags} from "../../routes/root";
+import {Root, Tabs, Tags} from "../../routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/ui/components/chapters-list";
 import {DeckLandingPage} from "src/routes/flashcard-review";
@@ -15,6 +15,7 @@ import {
 } from "src/ui/components/card-creation";
 import {UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/upsert-card";
 import {ChooseCardType} from "src/routes/choose-card-type";
+import {Notes} from "src/routes/notes-home-page";
 
 export enum FlashcardModalMode {
     DecksList,
