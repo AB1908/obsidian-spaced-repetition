@@ -2,7 +2,7 @@
 import {getFileContents} from "src/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, Pos} from "obsidian";
-import { nanoid } from "nanoid";
+import {nanoid} from "nanoid";
 
 export interface book {
     id: string;
@@ -189,4 +189,13 @@ export function getAnnotations(section: string, bookSections: BookMetadataSectio
         x++;
     }
     return bookSections.slice(index+1, x).filter(t => "highlight" in t);
+}
+
+// Need this to be able to call countAnnotations
+export function bookTree(id: string, name: string, bookSections: BookMetadataSections) {
+    return {
+        id,
+        name,
+        children: bookSections
+    };
 }
