@@ -7,6 +7,7 @@ import {AllCardCounts} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
 
 // TODO: Fix types
+// TODO: use more realistic data??
 export function notesLoader({params}: {params: any}) {
     const deck1 = {dueFlashcardsCount: 10, newFlashcardsCount: 20, totalFlashcards: 30, deckName: "Deck1"} as Deck;
     const deck2 = {dueFlashcardsCount: 40, newFlashcardsCount: 40, totalFlashcards: 40, deckName: "Deck2"} as Deck;
