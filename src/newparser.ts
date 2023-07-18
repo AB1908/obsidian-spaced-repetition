@@ -1,4 +1,6 @@
 import {HeadingCache, SectionCache} from "obsidian";
+import {Flashcard} from "src/data/models/flashcard";
+import {AnnotationWithFlashcard, BookMetadataSections, Heading} from "src/data/models/book";
 
 // TODO: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
@@ -23,6 +25,8 @@ export function generateTree(sections: any[]) {
     }
 
     // successively attach lower level headers to higher ones
+    // TODO: remove hardcoded headers and find the deepest header dynamically?
+    // May be unnecessary since no book is going to have like a 5 level header... right??
     for (let headingLevel = 4; headingLevel > 1; headingLevel--) {
         let sectionIndex = 0;
         while (sectionIndex<sections.length) {
@@ -52,4 +56,14 @@ export function findPreviousHeader(sections: (SectionCache|HeadingCache)[], sect
         start--;
     }
     return null;
+}
+
+export function isHeading(section: (AnnotationWithFlashcard|Heading)): section is Heading {
+    return "level" in section;
+}
+
+// TODO: why did I make this? Where do I need it?
+export function generateSectionsTree(sections: (AnnotationWithFlashcard|Heading)[]) {
+    const headings: Heading[] = sections.filter((t): t is Heading => isHeading(t));
+    return generateTree(headings);
 }
