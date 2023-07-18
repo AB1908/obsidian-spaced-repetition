@@ -4,6 +4,7 @@ import {useLoaderData} from "react-router";
 import {book, deck} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
 
+// TODO: more realistic data
 export function chapterLoader() {
     return deck();
 }
@@ -15,7 +16,8 @@ function Section({section}: { section: any }) {
     return <div className="sr-deck tree-item-inner" onClick={clickHandler}>
         {section.title}
         <span>
-            <span className={"no-tests tree-item-flair sr-test-counts"}>
+            {/*TODO: look into changing these class names? These ugly yo*/}
+            <span className={"yes-tests tree-item-flair sr-test-counts"}>
                 {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
                 {section.without}
             </span>
