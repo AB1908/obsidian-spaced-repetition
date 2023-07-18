@@ -44,8 +44,8 @@ with them and how many don't. I couldn't find a cleaner way of doing it without 
 function countAnnotations(sections: any, mem: any, injectedCondition: (sections: any) => boolean, key: string) {
     let count = 0;
     if (isSection(sections)) {
-        for (let section of sections.sections) {
-            count += countAnnotations(section, mem, injectedCondition, key);
+        for (let child of sections.children) {
+            count += countAnnotations(child, mem, injectedCondition, key);
         }
         writeCountToObj(mem, sections.id, count, key);
     } else if (isAnnotation(sections)) {
@@ -61,8 +61,8 @@ export function AnnotationCount(sections: any) {
     let mem = {};
     // @ts-ignore
     mem[sections.id] = {
-        "without": countAnnotations(sections, mem, (sections: any) => sections.flashcards.length == 0, "without"),
-        "with": countAnnotations(sections, mem, (sections: any) => sections.flashcards.length != 0, "with")
+        "without": countAnnotations(sections, mem, (sections: any) => sections.hasFlashcards == false, "without"),
+        "with": countAnnotations(sections, mem, (sections: any) => sections.hasFlashcards == true, "with")
     }
     return mem;
 }
