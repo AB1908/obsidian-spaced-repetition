@@ -58,6 +58,20 @@ export function findPreviousHeader(sections: (SectionCache|HeadingCache)[], sect
     return null;
 }
 
+// adds a hasFlashcard:true for every annotation that has a flashcard
+// TODO: logic for this is incorrect, should be checking against metadata. Fix
+export function addFlashcardState(flashcards: Flashcard[], bookSections: BookMetadataSections) {
+    const out = [];
+    for (let metadataSection of bookSections) {
+        // if (flashcards.filter(t=> metadataSection.id === t.id) !== undefined)
+        //     out.push({...bookSections, hasFlashcard: true})
+        // else
+        //     out.push({...bookSections, hasFlashcard: false})
+        out.push({...bookSections, hasFlashcard: flashcards.some(t=>t.id === metadataSection.id)})
+    }
+    return out;
+}
+
 export function isHeading(section: (AnnotationWithFlashcard|Heading)): section is Heading {
     return "level" in section;
 }
