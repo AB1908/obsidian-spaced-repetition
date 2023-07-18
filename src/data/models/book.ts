@@ -25,7 +25,7 @@ export interface Annot {
 }
 
 function isSection(sections: any) {
-    return sections.hasOwnProperty("sections");
+    return sections.hasOwnProperty("children");
 }
 
 function isAnnotation(sections: any) {
