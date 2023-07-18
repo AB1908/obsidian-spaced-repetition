@@ -161,14 +161,30 @@ export class Heading implements HeadingCache {
 
 }
 
+export type BookMetadataSections = (Heading | annotation)[];
+
+export interface AnnotationWithFlashcard extends annotation {
+    hasFlashcard: boolean;
+}
+
+function isAnnotatType(section: annotation|Heading): section is Heading {
+    return (section as Heading).level !== undefined;
+}
+
 // DONE rewrite to use ids instead of doing object equality
 // TODO: fix types, narrowing doesn't work here somehow
-export function getAnnotations(section: string, bookSections: (Heading|annotation)[]) {
+export function getAnnotations(section: string, bookSections: BookMetadataSections) {
     const index = bookSections.findIndex(t => t.id === section);
+    // todo: it feels like there should be a better way to do this
+    const currentHeading = (bookSections[index] as Heading);
     let x = index + 1;
     while (x < bookSections.length) {
-        if ("level" in bookSections[x] && bookSections[x].level <= bookSections[index].level) {
-            break;
+        const item = bookSections[x];
+        // apparently, can't pass bookSections[x] in directly, see: https://stackoverflow.com/a/73666912
+        if (isAnnotatType(item)) {
+            if (item.level <= currentHeading.level) {
+                break;
+            }
         }
         x++;
     }
