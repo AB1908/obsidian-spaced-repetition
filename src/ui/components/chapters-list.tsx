@@ -85,7 +85,7 @@ export function chapterLoader() {
 function Section({section}: { section: any }) {
     const clickHandler = () => console.log("Clicked!");
     return <div className="sr-deck tree-item-inner" onClick={clickHandler}>
-        {section.title}
+        {section.name}
         <span>
             {/*TODO: look into changing these class names? These ugly yo*/}
             <span className={"yes-tests tree-item-flair sr-test-counts"}>
