@@ -82,7 +82,7 @@ export function chapterLoader() {
 
 // TODO: extract spans
 // TODO: add labels
-function Section({section}: { section: any }) {
+function Section({section, counts}: { section: any, counts: any }) {
     const clickHandler = () => console.log("Clicked!");
     return <div className="sr-deck tree-item-inner" onClick={clickHandler}>
         {section.name}
@@ -90,11 +90,12 @@ function Section({section}: { section: any }) {
             {/*TODO: look into changing these class names? These ugly yo*/}
             <span className={"yes-tests tree-item-flair sr-test-counts"}>
                 {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                {section.without}
+                {counts[section.id].with}
             </span>
             <span className={"no-tests tree-item-flair sr-test-counts"}>
                 {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                {section.with}
+                {/*{section.with}*/}
+                {counts[section.id].without}
             </span>
         </span>
     </div>;
@@ -105,6 +106,8 @@ function Section({section}: { section: any }) {
 // TODO: Actually allow clicking?
 export function ChapterList() {
     const deck1: book = useLoaderData() as book;
+    // @ts-ignore
+    const {counts} = deck1;
     return (
         <>
             <h3>
@@ -116,7 +119,7 @@ export function ChapterList() {
             />
             <p>Add flashcards from:</p>
 
-            <Tree data={deck1} apply={null} render={(child) => <Section section={child}/>} childKey={"children"}/>
+            <Tree data={deck1} apply={null} render={(child) => <Section section={child} counts={counts}/>} childKey={"children"}/>
         </>
     );
 }
