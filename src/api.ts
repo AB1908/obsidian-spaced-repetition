@@ -96,3 +96,101 @@ export const deck = {
         },
     ]
 };
+export let bookWithCounts = {
+    id: "alksdfj9",
+    name: "Book 1",
+    children: [
+        {
+            display: "Header 1",
+            heading: "Header 1",
+            id: "-g4c-q2S",
+            level: 1,
+            children: [
+                {
+                    highlight:
+                        "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+                    id: 93813,
+                    note: ">",
+                    type: "notes",
+                    hasFlashcards: true,
+                },
+                {
+                    display: "SubHeader 1",
+                    heading: "SubHeader 1",
+                    id: "xHev-sAx",
+                    level: 2,
+                    children: [
+                        {
+                            highlight: "> Onen i estel Edain, u-chebin estel anim.",
+                            id: 93813,
+                            note: "> What a beautiful line by Tolkien",
+                            type: "notes",
+                            hasFlashcards: false,
+                        },
+                    ],
+                },
+                {
+                    display: "SubHeader 2",
+                    heading: "SubHeader 2",
+                    id: "xHev-sA1",
+                    level: 2,
+                    children: [
+                        {
+                            highlight: "> Onen i estel Edain, u-chebin estel anim.",
+                            id: 93813,
+                            note: "> What a beautiful line by Tolkien 2",
+                            type: "notes",
+                            hasFlashcards: false,
+                        },
+                    ],
+                },
+            ],
+        },
+        {
+            display: "Header 2",
+            heading: "Header 2",
+            id: "eLy47ZoN",
+            level: 1,
+            children: [
+                {
+                    highlight: "> Onen i estel Edain, u-chebin estel anim.",
+                    id: 93813,
+                    note: "> What a beautiful line by Tolkien\n> This is another line.",
+                    type: "notes",
+                    hasFlashcards: false,
+                },
+            ],
+        },
+        {
+            display: "Last header",
+            heading: "Last header",
+            id: "WVcwnuIQ",
+            level: 1,
+            children: [
+                {
+                    highlight:
+                        "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
+                    id: 93813,
+                    note: "> What a beautiful line by Tolkien",
+                    type: "notes",
+                    hasFlashcards: true,
+                },
+                {
+                    display: "Last subheader",
+                    heading: "Last subheader",
+                    id: "WVc23uIQ",
+                    level: 2,
+                    children: [
+                        {
+                            highlight: "> New highlight here.\n> This is another line.",
+                            id: 93813,
+                            note: "> Test",
+                            type: "notes",
+                            hasFlashcards: false,
+                        },
+                    ],
+                },
+            ],
+        },
+    ],
+};
