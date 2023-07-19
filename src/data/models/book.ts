@@ -7,7 +7,7 @@ import {nanoid} from "nanoid";
 export interface book {
     id: string;
     name: string;
-    sections: Section[];
+    children: Section[];
 }
 
 interface Section {
@@ -70,7 +70,7 @@ export function AnnotationCount(sections: any) {
 export const deck: () => book = () => {return {
     id: "ad9fm31s",
     name: "Book 1",
-    sections: [
+    children: [
         {
             id: "d01812ba",
             title: "Chapter 1",

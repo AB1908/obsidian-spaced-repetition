@@ -45,7 +45,7 @@ export function ChapterList() {
             />
             <p>Add flashcards from:</p>
 
-            <Tree data={deck1} apply={null} render={(child) => <Section section={child}/>} childKey={"sections"}/>
+            <Tree data={deck1} apply={null} render={(child) => <Section section={child}/>} childKey={"children"}/>
         </>
     );
 }
