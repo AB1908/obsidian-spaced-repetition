@@ -10,12 +10,14 @@ export interface book {
     children: Section[];
 }
 
+// TODO: is this necessary? We have Heading now.
 interface Section {
     id: string;
     title: string;
     sections: (Section|Annot)[];
 }
 
+// TODO: fix duplicate interface
 export interface Annot {
     id: string;
     color: string;
@@ -24,12 +26,12 @@ export interface Annot {
     flashcards: string[]
 }
 
-function isSection(sections: any) {
-    return sections.hasOwnProperty("children");
+function isHeading(section: annotation|Heading): section is Heading {
+    return (section as Heading).level !== undefined;
 }
 
-function isAnnotation(sections: any) {
-    return sections.hasOwnProperty("highlight");
+function isAnnotation(section: annotation|Heading): section is annotation {
+    return (section as annotation).highlight !== undefined;
 }
 
 // This is terrible. Save me.
@@ -43,7 +45,7 @@ with them and how many don't. I couldn't find a cleaner way of doing it without 
  */
 function countAnnotations(sections: any, mem: any, injectedCondition: (sections: any) => boolean, key: string) {
     let count = 0;
-    if (isSection(sections)) {
+    if (isHeading(sections)) {
         for (let child of sections.children) {
             count += countAnnotations(child, mem, injectedCondition, key);
         }
@@ -167,12 +169,8 @@ export interface AnnotationWithFlashcard extends annotation {
     hasFlashcard: boolean;
 }
 
-function isAnnotatType(section: annotation|Heading): section is Heading {
-    return (section as Heading).level !== undefined;
-}
-
 // DONE rewrite to use ids instead of doing object equality
-// TODO: fix types, narrowing doesn't work here somehow
+// DONE: fix types, narrowing doesn't work here somehow
 export function getAnnotations(section: string, bookSections: BookMetadataSections) {
     const index = bookSections.findIndex(t => t.id === section);
     // todo: it feels like there should be a better way to do this
@@ -181,7 +179,7 @@ export function getAnnotations(section: string, bookSections: BookMetadataSectio
     while (x < bookSections.length) {
         const item = bookSections[x];
         // apparently, can't pass bookSections[x] in directly, see: https://stackoverflow.com/a/73666912
-        if (isAnnotatType(item)) {
+        if (isHeading(item)) {
             if (item.level <= currentHeading.level) {
                 break;
             }
