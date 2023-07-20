@@ -7,7 +7,8 @@ import {nanoid} from "nanoid";
 export interface book {
     id: string;
     name: string;
-    children: Section[];
+    children: Heading[];
+    counts: any;
 }
 
 // TODO: is this necessary? We have Heading now.
@@ -138,7 +139,7 @@ export function bookSections(metadata: CachedMetadata, fileText: string) {
             let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
             output.push(annotation);
         } else if (cacheItem.type === "heading") {
-            //todo: fix casting
+            //done: fix casting
             output.push(new Heading(metadata.headings[headingIndex]));
             headingIndex++;
         } else {
