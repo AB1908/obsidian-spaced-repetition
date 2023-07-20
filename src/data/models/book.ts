@@ -127,7 +127,7 @@ export async function createBook(path: string) {
 }
 
 export function bookSections(metadata: CachedMetadata, fileText: string) {
-    const output: (annotation|HeadingCache)[] = [];
+    const output: (annotation|Heading)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
     for (let cacheItem of metadata.sections) {
@@ -146,17 +146,17 @@ export function bookSections(metadata: CachedMetadata, fileText: string) {
     return output;
 }
 
-export class Heading implements HeadingCache {
-    display: string;
-    heading: string;
+export class Heading {
     id: string;
     level: number;
-    position: Pos;
+    name: string;
+    children: Heading[];
 
     constructor(heading: HeadingCache) {
         // might be too clever
-        ({display: this.display, heading: this.heading, level: this.level, position: this.position} = heading);
+        ({heading: this.name, level: this.level} = heading);
         this.id = nanoid(8);
+        this.children = [];
     }
 
 }
