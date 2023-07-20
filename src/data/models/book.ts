@@ -11,13 +11,6 @@ export interface book {
     counts: any;
 }
 
-// TODO: is this necessary? We have Heading now.
-interface Section {
-    id: string;
-    title: string;
-    sections: (Section|Annot)[];
-}
-
 // TODO: fix duplicate interface
 export interface Annot {
     id: string;
