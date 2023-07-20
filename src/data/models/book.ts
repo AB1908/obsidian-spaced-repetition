@@ -70,37 +70,6 @@ export function AnnotationCount(sections: any) {
     return mem;
 }
 
-export const deck: () => book = () => {return {
-    id: "ad9fm31s",
-    name: "Book 1",
-    children: [
-        {
-            id: "d01812ba",
-            title: "Chapter 1",
-            with: 1,
-            without: 3,
-            sections: [
-                {
-                    id: 'sadf89u',
-                    title: "Section 1",
-                    with: 0,
-                    without: 1,
-                    sections: [
-                    ]
-                },
-            ],
-        },
-        {
-            id: "nw81ng73",
-            title: "Chapter 2",
-            with: 0,
-            without: 0,
-            sections: [
-            ],
-        },
-    ]
-}};
-
 export async function createBook(path: string) {
     // some assumptions: one book note or multiple?
     const book = {
