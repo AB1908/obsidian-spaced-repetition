@@ -1,7 +1,7 @@
 import React from "react";
 import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
-import {book, deck} from "src/data/models/book";
+import {book} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
 
 // TODO: more realistic data
@@ -75,7 +75,7 @@ export function chapterLoader() {
                 "without": 1,
             },
         }
-    };
+    } as book;
 }
 
 // TODO: extract spans
@@ -104,7 +104,6 @@ function Section({section, counts}: { section: any, counts: any }) {
 // TODO: Actually allow clicking?
 export function ChapterList() {
     const deck1: book = useLoaderData() as book;
-    // @ts-ignore
     const {counts} = deck1;
     return (
         <>
