@@ -34,12 +34,10 @@ export function chapterLoader() {
             },
             {
                 name: "Last header",
-                heading: "Last header",
                 id: "WVcwnuIQ",
                 children: [
                     {
                         name: "Last subheader",
-                        heading: "Last subheader",
                         id: "WVc23uIQ",
                         children: [
                         ],
