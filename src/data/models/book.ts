@@ -186,7 +186,7 @@ export function getAnnotations(section: string, bookSections: BookMetadataSectio
         }
         x++;
     }
-    return bookSections.slice(index+1, x).filter(t => "highlight" in t);
+    return bookSections.slice(index+1, x).filter(t => isAnnotation(t));
 }
 
 // Need this to be able to call countAnnotations
