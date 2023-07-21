@@ -17,7 +17,7 @@ export function DeckLandingPage() {
                 {deck1.deckName}
             </h3>
             <h4>
-                <AllCardCounts deck={deck1}/>
+                {/*<AllCardCounts deck={deck1}/>*/}
             </h4>
             {/*    TODO: Add the untested highlight counts as well?*/}
             <p>
