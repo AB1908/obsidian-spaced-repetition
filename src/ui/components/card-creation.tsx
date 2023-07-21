@@ -28,22 +28,23 @@ export async function highlightLoader({params}) {
                 "ease": 230,
                 "delayBeforeReview": 17662032301
             },
-        {
-            "id": "ks991kw1",
-            "note": null,
-            "questionText": "Onen i-Estel Edain,  estel anim.",
-            "answerText": "ú-chebin",
-            "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.",
-            "metadataText": "<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
-            "context": "",
-            "cardType": 4,
-            "siblings": ["ks991kna"],
-            "clozeInsertionAt": 19,
-            "interval": 2,
-            "ease": 210,
-            "delayBeforeReview": 17662032301
-        }
-    ]};
+            {
+                "id": "ks991kw1",
+                "note": null,
+                "questionText": "Onen i-Estel Edain,  estel anim.",
+                "answerText": "ú-chebin",
+                "cardText": "==Onen== i-Estel Edain, ==ú-chebin== estel ==anim==.",
+                "metadataText": "<!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->",
+                "context": "",
+                "cardType": 4,
+                "siblings": ["ks991kna"],
+                "clozeInsertionAt": 19,
+                "interval": 2,
+                "ease": 210,
+                "delayBeforeReview": 17662032301
+            }
+        ]
+    };
 }
 
 export function PreviewExistingFlashcards() {
@@ -52,13 +53,13 @@ export function PreviewExistingFlashcards() {
         <>
             <NoteAndHighlight highlightText={highlight.highlight} noteText={highlight.note}/>
             <div>
-                { highlight.flashcards.length != 0 &&
+                {highlight.flashcards.length != 0 &&
                     (<>
                         <p>
                             Existing questions:
                         </p>
                         <ul>
-                            {highlight.flashcards.map((t,i) => (
+                            {highlight.flashcards.map((t, i) => (
                                 <Link to={`${i}`}>
                                     <li key={i}>
                                         <p>
@@ -109,7 +110,8 @@ export function ClozeCardForm(props: any) {
 export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
     // todo: add some sort of header signifying the type of card being added
     return <Form method="post">
-        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"} defaultValue={props.defaultQuestionValue}/>
+        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
+                            defaultValue={props.defaultQuestionValue}/>
         <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
 
         <SubmitButton/>
