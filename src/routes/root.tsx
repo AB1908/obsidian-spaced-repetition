@@ -9,7 +9,7 @@ export type Icon = typeof ICON_LIST[number];
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     const navigate = useNavigate();
     useEffect(() => {
-        navigate("/home/notes");
+        navigate("/home/books");
     }, []);
 
     return (
@@ -37,7 +37,7 @@ export function Tabs() {
                 <NavLink to="/home/tags" className={"sr-nav-link is-clickable"} >
                     Tags
                 </NavLink>
-                <NavLink to="/home/notes" className={"sr-nav-link is-clickable"}>
+                <NavLink to="/home/books" className={"sr-nav-link is-clickable"}>
                     Notes
                 </NavLink>
             </div>
