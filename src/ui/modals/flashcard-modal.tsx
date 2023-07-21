@@ -28,7 +28,7 @@ export const routes = {
     // bookList: "/notes/books",
     book: "/books/:bookId",
     chapterList: "/books/:bookId/chapters",
-    highlightList: "/books/:bookId/chapters/:chapterId/highlights",
+    highlightList: "/books/:bookId/chapters/:sectionId/highlights",
     flashcardsList: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards",
     flashcard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/:flashcardId",
     createCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new",
