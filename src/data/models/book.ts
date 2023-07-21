@@ -21,7 +21,7 @@ export interface Count {
 // TODO: fix duplicate interface
 export interface Annot {
     id: string;
-    color: string;
+    type: string;
     highlight: string;
     note: string;
     flashcards: Flashcard[]
