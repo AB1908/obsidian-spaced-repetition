@@ -27,7 +27,8 @@ export function createParsedCardsArray(fileText: string, settings: SRSettings) {
 
 export enum FLAG {
     SUSPEND,
-    BURY
+    BURY,
+    LEARNING
 }
 
 const SCHEDULING_REGEX = /(!(?<flag>[BS]),(?<dueDate>.{10}),(?<interval>\d),(?<ease>\d+))/g;
@@ -44,10 +45,11 @@ export interface FlashcardMetadata {
 export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
     const highlightId = text.matchAll(HIGHLIGHTID_REGEX).next().value;
-    if (highlightId === undefined) return null;
+    const flag = stringToFlag(highlightId.groups.flag);
+    if (!(highlightId)) return null;
     if (scheduling === undefined)
         return {
-            flag: null,
+            flag: flag,
             highlightId: highlightId.groups.highlightId,
             dueDate: null,
             interval: null,
@@ -55,7 +57,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
         };
     else
         return {
-            flag: scheduling.groups.flag === "S" ? FLAG.SUSPEND : FLAG.BURY,
+            flag: flag,
             highlightId: highlightId.groups.highlightId,
             dueDate: scheduling.groups.dueDate,
             interval: Number(scheduling.groups.interval),
