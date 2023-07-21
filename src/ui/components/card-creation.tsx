@@ -48,18 +48,18 @@ export async function highlightLoader({params}) {
 }
 
 export function PreviewExistingFlashcards() {
-    const highlight = useLoaderData();
+    const annotation = useLoaderData() as Annot;
     return (
         <>
-            <NoteAndHighlight highlightText={highlight.highlight} noteText={highlight.note}/>
+            <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note}/>
             <div>
-                {highlight.flashcards.length != 0 &&
+                {annotation.flashcards.length != 0 &&
                     (<>
                         <p>
                             Existing questions:
                         </p>
                         <ul>
-                            {highlight.flashcards.map((t, i) => (
+                            {annotation.flashcards.map((t, i) => (
                                 <Link to={`${i}`}>
                                     <li key={i}>
                                         <p>
