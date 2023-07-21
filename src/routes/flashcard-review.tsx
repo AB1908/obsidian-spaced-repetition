@@ -5,7 +5,6 @@ import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 
 export function deckLoader({params}: {params: any}) {
-    console.log(params);
     return fetch(`http://localhost:3000/books/${params.bookId}`);
 }
 
