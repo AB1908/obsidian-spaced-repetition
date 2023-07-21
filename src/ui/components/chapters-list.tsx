@@ -15,7 +15,7 @@ export function chapterLoader({params}: {params: any}) {
 // TODO: add labels
 function Section({section, counts}: { section: any, counts: any }) {
     // const clickHandler = () => console.log("Clicked!");
-    return <Link to={`${section.id}/highlights`}>
+    return <Link to={`${section.id}/annotations`}>
         <div className="sr-deck tree-item-inner">
         {section.name}
             <span>
