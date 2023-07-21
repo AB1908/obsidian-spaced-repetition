@@ -32,13 +32,13 @@ export enum FLAG {
 }
 
 const SCHEDULING_REGEX = /(!(?<flag>[BS]),(?<dueDate>.{10}),(?<interval>\d),(?<ease>\d+))/g;
-const HIGHLIGHTID_REGEX = /SR:(?<highlightId>[A-Za-z0-9]{8})/g;
+const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{8})/g;
 
 export interface FlashcardMetadata {
     ease: number;
     dueDate: string;
     interval: number;
-    highlightId: string;
+    annotationId: string;
     flag: FLAG;
 }
 
@@ -53,13 +53,13 @@ function stringToFlag(flag: string): FLAG {
 
 export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
-    const highlightId = text.matchAll(HIGHLIGHTID_REGEX).next().value;
-    const flag = stringToFlag(highlightId.groups.flag);
-    if (!(highlightId)) return null;
+    const annotationId = text.matchAll(ANNOTATION_ID_REGEX).next().value;
+    const flag = stringToFlag(annotationId.groups.flag);
+    if (!(annotationId)) return null;
     if (scheduling === undefined)
         return {
             flag: flag,
-            highlightId: highlightId.groups.highlightId,
+            annotationId: annotationId.groups.annotationId,
             dueDate: null,
             interval: null,
             ease: null
@@ -67,7 +67,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
     else
         return {
             flag: flag,
-            highlightId: highlightId.groups.highlightId,
+            annotationId: annotationId.groups.annotationId,
             dueDate: scheduling.groups.dueDate,
             interval: Number(scheduling.groups.interval),
             ease: Number(scheduling.groups.ease),
