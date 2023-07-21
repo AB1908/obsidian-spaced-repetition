@@ -25,16 +25,15 @@ export enum FlashcardModalMode {
 }
 
 export const routes = {
-    bookList: "/notes/books",
-    chapterList: "/notes/deck/chapters",
-    // specificChapter: "/notes/books/1/chapters/1",
-    highlightList: "/notes/deck/chapters/:chapterId/highlights",
-    // specificHighlight: "notes/books/1/chapters/1/highlights/1",
-    flashcardsList: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards",
-    flashcard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/:flashcardId",
-    createCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new",
-    createRegularCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new/regular",
-    createClozeCard: "/notes/deck/chapters/:chapterId/highlights/:highlightId/flashcards/new/cloze",
+    // bookList: "/notes/books",
+    book: "/books/:bookId",
+    chapterList: "/books/:bookId/chapters",
+    highlightList: "/books/:bookId/chapters/:chapterId/highlights",
+    flashcardsList: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards",
+    flashcard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/:flashcardId",
+    createCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new",
+    createRegularCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new/regular",
+    createClozeCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new/cloze",
 };
 
 /*
@@ -75,25 +74,26 @@ export class FlashcardModal extends Modal {
                             // index: true
                         },
                         {
-                            path: "/home/notes",
+                            path: "/home/books",
                             element: <Notes />,
                             loader: notesLoader,
                         },
                     ]
                 },
                 {
-                    path: "/notes/deck",
-                    element: <DeckLandingPage/>
+                    path: "/books/:bookId",
+                    element: <DeckLandingPage/>,
+                    loader: deckLoader,
                 },
                 {
                     path: routes.chapterList,
                     element: <ChapterList/>,
                     loader: chapterLoader,
                 },
-                {
-                    path: "/notes/deck/chapters",
-                    element: <ChapterList/>
-                },
+                // {
+                //     path: "/notes/books/:bookId/chapters",
+                //     element: <ChapterList/>
+                // },
                 {
                     path: routes.highlightList,
                     element: <HighlightsList/>,
