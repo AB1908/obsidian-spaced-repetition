@@ -6,6 +6,18 @@ import {Link} from "react-router-dom";
 import {AllCardCounts} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
 
+export interface ReviewBook {
+    id:         string;
+    name:       string;
+    flashcards: FlashCount;
+}
+
+export interface FlashCount {
+    mature: number;
+    new:    number;
+    young:  number;
+}
+
 // TODO: Fix types
 // TODO: use more realistic data??
 export function notesLoader({params}: {params: any}) {
@@ -15,7 +27,7 @@ export function notesLoader({params}: {params: any}) {
 export function Notes() {
     // TODO: rewrite to use props
     const iconRef = useRef(null);
-    const deckArray = useLoaderData() as Deck[];
+    const deckArray = useLoaderData() as ReviewBook[];
 
     useEffect(() => {
         const plus: Icon = 'plus-circle';
