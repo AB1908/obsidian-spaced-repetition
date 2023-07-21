@@ -13,7 +13,7 @@ export interface Flashcard {
     interval: number,
     ease: number,
     delayBeforeReview: number,
-    highlightId: string,
+    annotationId: string,
     parsedCardId: string,
 }
 
@@ -28,13 +28,13 @@ export abstract class AbstractFlashcard implements Flashcard {
     isDue: boolean;
     questionText: string;
     siblings: string[];
-    highlightId: string;
+    annotationId: string;
     flag: FLAG;
     parsedCardId: string;
 
     // cardMetadata and highlight ID are mutually exclusive properties. Given that there is no constructor overloading
     // probably should change this to be a union type
-    protected constructor(cardType: CardType, parsedCardId: string, cardMetadata?: FlashcardMetadata, highlightId?: string) {
+    protected constructor(cardType: CardType, parsedCardId: string, cardMetadata?: FlashcardMetadata, annotationId?: string) {
         // this.questionText = questionText;
         // this.answerText = answerText;
         this.id = nanoid(8);
@@ -43,7 +43,7 @@ export abstract class AbstractFlashcard implements Flashcard {
         this.delayBeforeReview = null;
         this.ease = cardMetadata?.ease;
         this.interval = cardMetadata?.interval;
-        this.highlightId = cardMetadata?.highlightId || highlightId;
+        this.annotationId = cardMetadata?.annotationId || annotationId;
         this.flag = cardMetadata?.flag;
         this.isDue = false;
         this.siblings = [];
