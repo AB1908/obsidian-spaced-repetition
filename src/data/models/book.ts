@@ -4,6 +4,7 @@ import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, Pos} from "obsidian";
 import {nanoid} from "nanoid";
 
+// TODO: this is not really a "book" per se
 export interface book {
     id:       string;
     name:     string;
