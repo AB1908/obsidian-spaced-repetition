@@ -42,6 +42,15 @@ export interface FlashcardMetadata {
     flag: FLAG;
 }
 
+function stringToFlag(flag: string): FLAG {
+    switch (flag) {
+        case "S": return FLAG.SUSPEND;
+        case "B": return FLAG.BURY;
+        case "L": return FLAG.LEARNING;
+        default: throw new Error("stringToFlag: incorrect character encountered");
+    }
+}
+
 export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
     const highlightId = text.matchAll(HIGHLIGHTID_REGEX).next().value;
