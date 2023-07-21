@@ -28,8 +28,8 @@ export function Notes() {
     return (
         <div className={"Notes"}>
             <ul className={"sr-deck-tree"}>
-                {deckArray.map((deck, i) => (
-                        <Link to={'/notes/deck'}>
+                {deckArray.map((book, i) => (
+                        <Link to={`/books/${book.id}`}>
                             <li className={"sr-deck tree-item-self is-clickable"} key={i}>
                                 <div className={"tree-item-inner"}>
                                     {deck.deckName}

@@ -16,7 +16,7 @@ export function DeckLandingPage() {
             </h4>
             {/*    TODO: Add the untested highlight counts as well?*/}
             <p>
-                <Link to={routes.chapterList}>
+                <Link to={`chapters`}>
                     <button>
                         Create New Cards
                     </button>
