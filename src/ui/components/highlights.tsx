@@ -32,20 +32,20 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 }
 
 export function HighlightsList() {
-    const chapterData: any = useLoaderData();
-    const [color, setColor] = useState(null);
-    const uniqueHighlightColors = [...new Set(chapterData.highlights.map((t: any) => t.color))];
-    let filteredHighlights = color === null ? chapterData.highlights : chapterData.highlights.filter(t=>t.color === color);
+    const chapterData: any = useLoaderData() as SectionAnnotations;
+    // const [color, setColor] = useState(null);
+    // const uniqueHighlightColors = [...new Set(chapterData.highlights.map((t: any) => t.color))];
+    // let filteredHighlights = color === null ? chapterData.highlights : chapterData.highlights.filter(t=>t.color === color);
 
-    function colorFilterHandler(t: string) {
-       setColor((currentState: string) =>{
-           if (currentState != t) {
-               return t;
-           } else {
-               return null;
-           }
-       });
-    }
+    // function colorFilterHandler(t: string) {
+    //    setColor((currentState: string) =>{
+    //        if (currentState != t) {
+    //            return t;
+    //        } else {
+    //            return null;
+    //        }
+    //    });
+    // }
 
     return (
         <>
@@ -57,23 +57,23 @@ export function HighlightsList() {
             </h3>
             <HeaderWithCounts withCount={29} withoutCount={30}/>
 
-            <>
-                {uniqueHighlightColors.map((t: string)=>(
-                    <button
-                        className={`sr-highlight-filter${color == t ? " active" : ""}`}
-                        style={{"backgroundColor": `${t}`}}
-                        onClick={() => colorFilterHandler(t)}
-                    />
-                ))}
-            </>
+            {/*<>*/}
+            {/*    {uniqueHighlightColors.map((t: string)=>(*/}
+            {/*        <button*/}
+            {/*            className={`sr-highlight-filter${color == t ? " active" : ""}`}*/}
+            {/*            style={{"backgroundColor": `${t}`}}*/}
+            {/*            onClick={() => colorFilterHandler(t)}*/}
+            {/*        />*/}
+            {/*    ))}*/}
+            {/*</>*/}
 
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
-                {filteredHighlights.map((highlight: any, i: number) => (
+                {chapterData.annotations.map((annotation: annotation, i: number) => (
                     <div>
                         <Link to={`${i}/flashcards`}>
-                            <li key={highlight.id} className={"sr-highlight tree-item-self is-clickable"}>
-                                {highlight.highlightContent}
+                            <li key={annotation.id} className={"sr-highlight tree-item-self is-clickable"}>
+                                {annotation.highlight}
                                 <span>
                                     <span className={"no-tests tree-item-flair sr-test-counts"}>
                                         {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
