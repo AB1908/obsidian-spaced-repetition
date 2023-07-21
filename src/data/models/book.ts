@@ -3,6 +3,7 @@ import {getFileContents} from "src/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, Pos} from "obsidian";
 import {nanoid} from "nanoid";
+import {Flashcard} from "src/data/models/flashcard";
 
 // TODO: this is not really a "book" per se
 export interface book {
@@ -23,7 +24,7 @@ export interface Annot {
     color: string;
     highlight: string;
     note: string;
-    flashcards: string[]
+    flashcards: Flashcard[]
 }
 
 function isHeading(section: annotation|Heading): section is Heading {
