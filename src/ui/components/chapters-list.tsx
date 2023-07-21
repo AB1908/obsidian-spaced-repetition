@@ -3,6 +3,7 @@ import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
 import {book} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
+import {Link} from "react-router-dom";
 
 // TODO: more realistic data
 // TODO: think of a better data structure for this, this is terrible
@@ -14,21 +15,23 @@ export function chapterLoader({params}: {params: any}) {
 // TODO: add labels
 function Section({section, counts}: { section: any, counts: any }) {
     // const clickHandler = () => console.log("Clicked!");
-    return <div className="sr-deck tree-item-inner" >
+    return <Link to={`${section.id}/highlights`}>
+        <div className="sr-deck tree-item-inner">
         {section.name}
-        <span>
-            {/*TODO: look into changing these class names? These ugly yo*/}
-            <span className={"yes-tests tree-item-flair sr-test-counts"}>
-                {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                {counts[section.id].with}
+            <span>
+                {/*TODO: look into changing these class names? These ugly yo*/}
+                <span className={"yes-tests tree-item-flair sr-test-counts"}>
+                    {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
+                    {counts[section.id].with}
+                </span>
+                <span className={"no-tests tree-item-flair sr-test-counts"}>
+                    {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
+                    {/*{section.with}*/}
+                    {counts[section.id].without}
+                </span>
             </span>
-            <span className={"no-tests tree-item-flair sr-test-counts"}>
-                {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                {/*{section.with}*/}
-                {counts[section.id].without}
-            </span>
-        </span>
-    </div>;
+        </div>
+    </Link>;
 }
 
 // TODO: Fix counts for header
