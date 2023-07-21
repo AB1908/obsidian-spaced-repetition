@@ -1,9 +1,15 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
+import {annotation} from "src/data/import/annotations";
 
 export function chapterLoaderData({params}: {params: any}) {
     return fetch(`http://localhost:3000/annotationsBySection/${params.sectionId}`);
+}
+
+export interface SectionAnnotations {
+    id:          string;
+    annotations: annotation[];
 }
 
 export function HeaderWithCounts(props: { withoutCount: number, withCount: number }) {
