@@ -7,7 +7,7 @@ import {createMemoryRouter, RouterProvider} from "react-router-dom";
 import {Root, Tabs, Tags} from "src/routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/ui/components/chapters-list";
-import {DeckLandingPage} from "src/routes/flashcard-review";
+import {DeckLandingPage, deckLoader} from "src/routes/flashcard-review";
 import {chapterLoaderData, HighlightsList} from "src/ui/components/highlights";
 import {
     highlightLoader,
