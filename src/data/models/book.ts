@@ -5,10 +5,15 @@ import {CachedMetadata, HeadingCache, Pos} from "obsidian";
 import {nanoid} from "nanoid";
 
 export interface book {
-    id: string;
-    name: string;
-    children: Heading[];
-    counts: any;
+    id:       string;
+    name:     string;
+    children: book[];
+    counts?:  { [key: string]: Count };
+}
+
+export interface Count {
+    with:    number;
+    without: number;
 }
 
 // TODO: fix duplicate interface
