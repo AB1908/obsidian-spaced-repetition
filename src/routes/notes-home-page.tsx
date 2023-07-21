@@ -44,7 +44,7 @@ export function Notes() {
                                 <div className={"tree-item-inner"}>
                                     {book.name}
                                 </div>
-                                <AllCardCounts deck={deck}/>
+                                {/*<AllCardCounts deck={book}/>*/}
                             </li>
                         </Link>
                     )
