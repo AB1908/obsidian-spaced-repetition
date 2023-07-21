@@ -71,7 +71,7 @@ export function HighlightsList() {
             <ul className={"sr-highlight-tree"}>
                 {chapterData.annotations.map((annotation: annotation, i: number) => (
                     <div>
-                        <Link to={`${i}/flashcards`}>
+                        <Link to={`${annotation.id}/flashcards`}>
                             <li key={annotation.id} className={"sr-highlight tree-item-self is-clickable"}>
                                 {annotation.highlight}
                                 <span>
