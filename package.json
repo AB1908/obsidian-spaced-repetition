@@ -10,7 +10,8 @@
         "lint": "yarn prettier --check .",
         "test": "jest",
         "watch": "jest --watch",
-        "release": "standard-version"
+        "release": "standard-version",
+        "mock-server": "json-server --watch db.json"
     },
     "standard-version": {
         "skip": {
