@@ -28,12 +28,12 @@ export const routes = {
     // bookList: "/notes/books",
     book: "/books/:bookId",
     chapterList: "/books/:bookId/chapters",
-    highlightList: "/books/:bookId/chapters/:sectionId/highlights",
-    flashcardsList: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards",
-    flashcard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/:flashcardId",
-    createCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new",
-    createRegularCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new/regular",
-    createClozeCard: "/books/:bookId/chapters/:chapterId/highlights/:highlightId/flashcards/new/cloze",
+    highlightList: "/books/:bookId/chapters/:sectionId/annotations",
+    flashcardsList: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards",
+    flashcard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/:flashcardId",
+    createCard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/new",
+    createRegularCard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/new/regular",
+    createClozeCard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/new/cloze",
 };
 
 /*
