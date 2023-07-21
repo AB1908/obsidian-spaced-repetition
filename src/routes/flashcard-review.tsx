@@ -2,10 +2,15 @@ import {AllCardCounts} from "src/ui/components/card-counts";
 import {Deck} from "src/Deck";
 import React from "react";
 import {Link} from "react-router-dom";
-import {routes} from "src/ui/modals/flashcard-modal";
+import {useLoaderData} from "react-router";
+
+export function deckLoader({params}: {params: any}) {
+    console.log(params);
+    return fetch(`http://localhost:3000/books/${params.bookId}`);
+}
 
 export function DeckLandingPage() {
-    const deck1 = {dueFlashcardsCount: 10, newFlashcardsCount:20, totalFlashcards: 30, deckName: "Deck1"} as Deck;
+    const deck1 = useLoaderData() as Deck;
     return (
         <>
             <h3>
