@@ -3,51 +3,7 @@ import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 
 export function chapterLoaderData({params}: {params: any}) {
-    return {
-        id: "d01812ba",
-        title: "Chapter 1",
-        highlights: [
-        {
-            id: "d91maa3h",
-            color: "#339122",
-            highlightContent: "Onen i-Estel Edain, ú-chebin estel anim.",
-            highlightNote: "What a beautiful line by Tolkien",
-            flashcards: [
-                "ks991kna",
-            ]
-        },
-        {
-            id: "d91ms7d",
-            color: "#338122",
-            highlightContent: "This is a sample highlight but without a note",
-            //TODO: think about whether this should be a null or an empty string on the backend
-            highlightNote: "",
-            flashcards: []
-        },
-        {
-            // id: 'sadf89u',
-            // title: "Section 1",
-            // highlights: [
-            //     {
-                    id: "9dk1m3kg",
-                    color: "#338122",
-                    highlightContent: "This is a sample highlight but without a note but also in subsection 1",
-                    //TODO: think about whether this should be a null or an empty string on the backend
-                    highlightNote: "",
-                    flashcards: []
-            //     }
-            // ]
-        },
-        {
-            id: "9dk1m3jg",
-            color: "#246aaa",
-            highlightContent: "This is a sample highlight but without a note but also in chapter 1",
-            //TODO: think about whether this should be a null or an empty string on the backend
-            highlightNote: "",
-            flashcards: []
-        }
-    ],
-    };
+    return fetch(`http://localhost:3000/annotationsBySection/${params.sectionId}`);
 }
 
 export function HeaderWithCounts(props: { withoutCount: number, withCount: number }) {
