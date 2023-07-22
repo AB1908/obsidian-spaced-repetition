@@ -51,6 +51,7 @@ export async function createFlashcardForHighlight(question: string, answer: stri
     let card;
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path
+        // TODO: error handling
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "More flashcards.md", annotationId);
         card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
     }
