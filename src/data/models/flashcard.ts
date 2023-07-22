@@ -14,6 +14,7 @@ export interface Flashcard {
     ease: number,
     delayBeforeReview: number,
     annotationId: string,
+    // this is to update the card so I can keep this object simple
     parsedCardId: string,
 }
 
@@ -54,13 +55,13 @@ export abstract class AbstractFlashcard implements Flashcard {
 export class Flashcard extends AbstractFlashcard {
     // cardMetadata and highlight ID are mutually exclusive properties. Given that there is no constructor overloading
     // probably should change this to be a union type
-    constructor(parsedCardId: string, questionText: string, answerText: string, cardMetadata?: FlashcardMetadata, highlightId?: string) {
+    constructor(parsedCardId: string, questionText: string, answerText: string, cardMetadata?: FlashcardMetadata, annotationId?: string) {
         // todo: handle other types later
         const cardType = CardType.MultiLineBasic;
         if (cardMetadata) {
             super(cardType, parsedCardId, cardMetadata);
         } else {
-            super(cardType, parsedCardId, null, highlightId);
+            super(cardType, parsedCardId, null, annotationId);
         }
         this.questionText = questionText;
         this.answerText = answerText;
