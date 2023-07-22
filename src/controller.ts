@@ -2,6 +2,7 @@ import {CardType} from "src/scheduling";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
 import {Annot} from "src/data/models/book";
+import {plugin} from "src/main";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -20,15 +21,15 @@ import {Annot} from "src/data/models/book";
 // }
 
 export function getAnnotationById(id: string) {
-    return this.annotations.filter((t: Annot)=>t.id === id)[0];
+    return plugin.annotations.filter((t: Annot)=>t.id === id)[0];
 }
 
 export function getFlashcardById(id: string) {
-    return this.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0] ?? null;
+    return plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0] ?? null;
 }
 
 export function updateFlashcardQuestion(id: string, question: string) {
-    const card = this.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
+    const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
     if (card === undefined) {
         return false;
     }
@@ -37,7 +38,7 @@ export function updateFlashcardQuestion(id: string, question: string) {
 }
 
 export function updateFlashcardAnswer(id: string, answer: string) {
-    const card = this.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
+    const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
     if (card === undefined) {
         return false;
     }
@@ -53,18 +54,18 @@ export async function createFlashcardForHighlight(question: string, answer: stri
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "More flashcards.md", annotationId);
         card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
     }
-    this.flashcards.push(card);
+    plugin.flashcards.push(card);
     return true;
 }
 
 export function deleteFlashcardById(id: string) {
-    if (this.flashcards.length == 0) {
+    if (plugin.flashcards.length == 0) {
         throw new Error("Array of flashcards is empty!")
     }
-    if (this.flashcards.findIndex((f: AbstractFlashcard) => f.id === id) == -1) {
+    if (plugin.flashcards.findIndex((f: AbstractFlashcard) => f.id === id) == -1) {
         return false;
     }
-    this.flashcards = this.flashcards.filter((f: AbstractFlashcard) => f.id !== id);
+    plugin.flashcards = plugin.flashcards.filter((f: AbstractFlashcard) => f.id !== id);
     return true;
 }
 
