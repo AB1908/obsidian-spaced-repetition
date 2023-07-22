@@ -21,5 +21,5 @@ export function metadataTextGenerator(highlightId: string, schedulingMetadata: {
 
 // TODO: Allow templating?
 export function generateCardAsStorageFormat(parsedCard: ParsedCard) {
-    return `${parsedCard.cardText}\n${parsedCard.metadataText}\n`;
+    return `\n${parsedCard.cardText}\n${parsedCard.metadataText}\n`;
 }
