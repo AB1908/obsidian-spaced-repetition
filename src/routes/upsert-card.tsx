@@ -3,6 +3,8 @@ import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {redirect, useParams} from "react-router-dom";
 import React from "react";
 import {ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
+import {createFlashcardForHighlight} from "src/controller";
+import {CardType} from "src/scheduling";
 
 export function clozeLoader() {
     // TODO: Add redirect if we have cloze card
@@ -13,7 +15,7 @@ export function clozeLoader() {
 }
 
 export function ClozeCard() {
-    // TODO: add loader logic
+    // DONE: add loader logic
     const highlight = useLoaderData();
     const {flashcardId} = useParams();
     const flashcardIndex = Number(flashcardId);
@@ -45,9 +47,12 @@ export function UpsertCard() {
     );
 }
 
-export async function creationAction(): Promise<Response> {
+export async function creationAction({params, request}: {params: any, request: any}): Promise<Response> {
     // TODO: Add logic to update the deck
+    const data = await request.formData();
     // TODO: call the right api instead, there shouldn' be any actual update logic
+    // I have access to bookId, sectionId, annotationId
+    await createFlashcardForHighlight(data.get("question"), data.get("answer"), params.annotationId, CardType.MultiLineBasic)
     console.log("Submitted!");
     return redirect("./../..");
 }
