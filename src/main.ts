@@ -37,6 +37,8 @@ export interface LinkStat {
 }
 
 export default class SRPlugin extends Plugin {
+    public parsedCards = [];
+    public flashcards = [];
     public data: PluginData;
     public easeByPath: Record<string, number> = {};
     public dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
