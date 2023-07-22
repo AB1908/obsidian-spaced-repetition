@@ -4,7 +4,7 @@ import {ParsedCard} from "src/data/models/parsedCard";
 export function cardTextGenerator(questionText: string, answerText: string, cardType: CardType) {
     if (cardType == CardType.MultiLineBasic) {
         // todo: figure out how to refer to settings
-        return `${questionText}\n?\n${answerText}\n`;
+        return `${questionText}\n?\n${answerText}`;
     }
 }
 
@@ -21,5 +21,5 @@ export function metadataTextGenerator(highlightId: string, schedulingMetadata: {
 
 // TODO: Allow templating?
 export function generateCardAsStorageFormat(parsedCard: ParsedCard) {
-    return `${parsedCard.cardText}\n${parsedCard.metadataText}`;
+    return `${parsedCard.cardText}\n${parsedCard.metadataText}\n`;
 }
