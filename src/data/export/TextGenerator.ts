@@ -6,7 +6,7 @@ import {ParsedCard} from "src/data/models/parsedCard";
 export function cardTextGenerator(questionText: string, answerText: string, cardType: CardType) {
     if (cardType == CardType.MultiLineBasic) {
         // todo: figure out how to refer to settings
-        return `${questionText}${this.plugin.settings.multilineCardSeparator}${answerText}`
+        return `${questionText}\n${answerText}`
     }
 }
 
