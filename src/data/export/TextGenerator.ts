@@ -1,12 +1,10 @@
 import {CardType} from "src/scheduling";
-
-
 import {ParsedCard} from "src/data/models/parsedCard";
 
 export function cardTextGenerator(questionText: string, answerText: string, cardType: CardType) {
     if (cardType == CardType.MultiLineBasic) {
         // todo: figure out how to refer to settings
-        return `${questionText}\n${answerText}`
+        return `${questionText}\n?\n${answerText}\n`;
     }
 }
 
