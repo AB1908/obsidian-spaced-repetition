@@ -46,12 +46,12 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     return true;
 }
 
-export async function createFlashcardForHighlight(question: string, answer: string, highlightId: string, cardType: CardType) {
+export async function createFlashcardForHighlight(question: string, answer: string, annotationId: string, cardType: CardType) {
     let card;
     if (cardType == CardType.MultiLineBasic) {
-        // TODO: Fix path
-        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "", highlightId);
-        card = new Flashcard(parsedCard.id, question, answer, null, highlightId);
+        // TODO: Fix hardcoded path
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "More flashcards.md", annotationId);
+        card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
     }
     this.flashcards.push(card);
     return true;
