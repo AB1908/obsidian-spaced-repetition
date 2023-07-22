@@ -2,6 +2,7 @@ import {CardType} from "src/scheduling";
 import {nanoid} from "nanoid";
 import {writeCardToDisk} from "src/disk";
 import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
+import {plugin} from "src/main";
 
 export interface ParsedCard {
     id: string,
@@ -23,6 +24,6 @@ export async function createParsedCard(questionText: string, answerText: string,
         cardType: cardType,
     };
     await writeCardToDisk(parsedCard.notePath, generateCardAsStorageFormat(parsedCard));
-    this.parsedCards.push(parsedCard);
+    plugin.parsedCards.push(parsedCard);
     return parsedCard;
 }
