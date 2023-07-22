@@ -8,6 +8,9 @@ import { FlashcardModal } from "src/ui/modals/flashcard-modal";
 import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
+import type {ParsedCard} from "src/data/models/parsedCard";
+import type {Flashcard} from "src/data/models/flashcard";
+import {annotation} from "src/data/import/annotations";
 
 export interface PluginData {
     settings: SRSettings;
@@ -36,15 +39,19 @@ export interface LinkStat {
     linkCount: number;
 }
 
+export let plugin: SRPlugin;
+
 export default class SRPlugin extends Plugin {
-    public parsedCards = [];
-    public flashcards = [];
     public data: PluginData;
     public easeByPath: Record<string, number> = {};
     public dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
+    public flashcards: Flashcard[] = [];
+    public parsedCards: ParsedCard[] = [];
+    public annotations: annotation[] = [];
 
     async onload(): Promise<void> {
         await this.loadPluginData();
+        plugin = this;
 
         appIcon();
 
