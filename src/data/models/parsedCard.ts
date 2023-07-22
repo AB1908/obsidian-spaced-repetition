@@ -12,12 +12,12 @@ export interface ParsedCard {
     notePath?: string,
 }
 
-export async function createParsedCard(questionText: string, answerText: string, cardType: CardType, path: string, highlightId: string): Promise<ParsedCard> {
+export async function createParsedCard(questionText: string, answerText: string, cardType: CardType, path: string, annotationId: string): Promise<ParsedCard> {
     const parsedCard = {
         id: nanoid(8),
         notePath: path,
         cardText: cardTextGenerator(questionText, answerText, cardType),
-        metadataText: metadataTextGenerator(highlightId, null),
+        metadataText: metadataTextGenerator(annotationId, null),
         // TODO: remove lineno
         lineNo: 0,
         cardType: cardType,
