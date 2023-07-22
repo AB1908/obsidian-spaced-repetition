@@ -83,6 +83,11 @@ export class FlashcardModal extends Modal {
                     loader: deckLoader,
                 },
                 {
+                    path: "/books/:bookId/review",
+                    element: <DeckLandingPage/>,
+                    loader: deckLoader,
+                },
+                {
                     path: routes.chapterList,
                     element: <ChapterList/>,
                     loader: chapterLoader,
