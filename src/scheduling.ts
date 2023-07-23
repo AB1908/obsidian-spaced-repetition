@@ -23,7 +23,6 @@ export function schedule(
     ease: number,
     delayBeforeReview: number,
     settingsObj: SRSettings,
-    dueDates?: Record<number, number>
 ): { ease: number; interval: number } {
     delayBeforeReview = Math.max(0, Math.floor(delayBeforeReview / (24 * 3600 * 1000)));
     if (isNaN(interval)) {
@@ -45,34 +44,33 @@ export function schedule(
     }
 
     // replaces random fuzz with load balancing over the fuzz interval
-    if (dueDates !== undefined) {
-        interval = Math.round(interval);
-        if (!Object.prototype.hasOwnProperty.call(dueDates, interval)) {
-            dueDates[interval] = 0;
-        } else {
-            // disable fuzzing for small intervals
-            if (interval > 4) {
-                let fuzz: number;
-                if (interval < 7) fuzz = 1;
-                else if (interval < 30) fuzz = Math.max(2, Math.floor(interval * 0.15));
-                else fuzz = Math.max(4, Math.floor(interval * 0.05));
-
-                const originalInterval = interval;
-                outer: for (let i = 1; i <= fuzz; i++) {
-                    for (const ivl of [originalInterval - i, originalInterval + i]) {
-                        if (!Object.prototype.hasOwnProperty.call(dueDates, ivl)) {
-                            dueDates[ivl] = 0;
-                            interval = ivl;
-                            break outer;
-                        }
-                        if (dueDates[ivl] < dueDates[interval]) interval = ivl;
-                    }
-                }
-            }
-        }
-
-        dueDates[interval]++;
-    }
+    // if (dueDates !== undefined) {
+    //     interval = Math.round(interval);
+    //     if (!Object.prototype.hasOwnProperty.call(dueDates, interval)) {
+    //         dueDates[interval] = 0;
+    //     } else {
+    //         // disable fuzzing for small intervals
+    //         if (interval > 4) {
+    //             let fuzz: number;
+    //             if (interval < 7) fuzz = 1;
+    //             else if (interval < 30) fuzz = Math.max(2, Math.floor(interval * 0.15));
+    //             else fuzz = Math.max(4, Math.floor(interval * 0.05));
+    //
+    //             const originalInterval = interval;
+    //             outer: for (let i = 1; i <= fuzz; i++) {
+    //                 for (const ivl of [originalInterval - i, originalInterval + i]) {
+    //                     if (!Object.prototype.hasOwnProperty.call(dueDates, ivl)) {
+    //                         dueDates[ivl] = 0;
+    //                         interval = ivl;
+    //                         break outer;
+    //                     }
+    //                     if (dueDates[ivl] < dueDates[interval]) interval = ivl;
+    //                 }
+    //             }
+    //         }
+    //     }
+    //     dueDates[interval]++;
+    // }
 
     interval = Math.min(interval, settingsObj.maximumInterval);
 
