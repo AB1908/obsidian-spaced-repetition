@@ -67,3 +67,6 @@ function FlashcardFooter({isQuestion, showAnswerHandler, card}: {isQuestion: boo
     else
         return <ResponseButtons card={card} handleFlashcardResponse={(response: any) => console.log("Clicked!")}/>;
 }
+
+async function processReview(clickedResponse: ReviewResponse, flashcard: Flashcard, data: PluginData) {
+}
