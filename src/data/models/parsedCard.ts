@@ -34,3 +34,20 @@ export async function createParsedCard(
     await writeCardToDisk(parsedCard.notePath, generateCardAsStorageFormat(parsedCard));
     return parsedCard;
 }
+
+export function createParsedCardFromText(
+    cardText: string,
+    cardType: CardType,
+    path: string,
+    metadataText: string,
+): ParsedCard {
+    return {
+        id: nanoid(8),
+        notePath: path,
+        cardText: cardText,
+        metadataText: metadataText,
+        // TODO: remove lineno
+        lineNo: -1,
+        cardType: cardType,
+    };
+}
