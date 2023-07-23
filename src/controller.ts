@@ -28,6 +28,7 @@ export function getFlashcardById(id: string) {
     return plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0] ?? null;
 }
 
+// TODO: add logic to update in storage
 export function updateFlashcardQuestion(id: string, question: string) {
     const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
     if (card === undefined) {
@@ -37,6 +38,7 @@ export function updateFlashcardQuestion(id: string, question: string) {
     return true;
 }
 
+// TODO: add logic to update in storage
 export function updateFlashcardAnswer(id: string, answer: string) {
     const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
     if (card === undefined) {
@@ -60,6 +62,7 @@ export async function createFlashcardForHighlight(question: string, answer: stri
     return true;
 }
 
+// TODO: add logic to remove from storage
 export function deleteFlashcardById(id: string) {
     if (plugin.flashcards.length == 0) {
         throw new Error("Array of flashcards is empty!")
