@@ -39,12 +39,12 @@ function FlashcardHeader({ editLaterHandler }: { editLaterHandler: Function }) {
 }
 
 function FlashcardFooter() {
-    const { isQuestion } = useContext(FlashcardContext);
+    const { isQuestion , card, handleFlashcardResponse, handleShowAnswerButton} = useContext(FlashcardContext);
 
     if (isQuestion)
-        return <ShowAnswerButton />;
+        return <ShowAnswerButton handleShowAnswerButton={handleShowAnswerButton}/>;
     else
-        return <ResponseButtons />;
+        return <ResponseButtons card={card} handleFlashcardResponse={handleFlashcardResponse}/>;
 }
 
 export function FlashcardContent(props: FlashcardButtons) {
