@@ -44,7 +44,6 @@ export let plugin: SRPlugin;
 export default class SRPlugin extends Plugin {
     public data: PluginData;
     public easeByPath: Record<string, number> = {};
-    public dueDatesFlashcards: Record<number, number> = {}; // Record<# of days in future, due count>
     public flashcards: Flashcard[] = [];
     public parsedCards: ParsedCard[] = [];
     public annotations: annotation[] = [];
