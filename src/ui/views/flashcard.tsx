@@ -79,6 +79,8 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
                 data.settings,
             );
         } else {
+            // I don't think this path is ever taken
+            // I discovered that even for newly created cards that isDue == false, which makes no sense
             let initial_ease: number = data.settings.baseEase;
             // if (
             //     Object.prototype.hasOwnProperty.call(
@@ -96,8 +98,6 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
                 0,
                 data.settings,
             );
-            interval = schedObj.interval;
-            ease = schedObj.ease;
         }
 
         interval = schedObj.interval;
