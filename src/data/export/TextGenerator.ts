@@ -1,5 +1,6 @@
 import {CardType} from "src/scheduling";
 import {ParsedCard} from "src/data/models/parsedCard";
+import {FLAG, flagToString} from "src/data/deck";
 
 export function cardTextGenerator(questionText: string, answerText: string, cardType: CardType) {
     if (cardType == CardType.MultiLineBasic) {
@@ -8,15 +9,15 @@ export function cardTextGenerator(questionText: string, answerText: string, card
     }
 }
 
-export function metadataTextGenerator(highlightId: string, schedulingMetadata: {
-    interval: number,
-    ease: number,
-    dueDate: string
-}) {
+export function metadataTextGenerator(
+    annotationId: string,
+    schedulingMetadata: { interval: number, ease: number, dueDate: string },
+    flag: FLAG
+) {
     if (schedulingMetadata === null)
-        return `<!--SR:${highlightId}-->`;
+        return `<!--SR:${annotationId}-->`;
     else
-        return `<!--SR:${highlightId}${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.interval}-->`;
+        return `<!--SR:${annotationId}!${flagToString(flag)},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.interval}-->`;
 }
 
 // TODO: Allow templating?
