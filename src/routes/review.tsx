@@ -3,8 +3,9 @@ import {useLoaderData} from "react-router";
 import {Flashcard} from "src/data/models/flashcard";
 import {ResponseButtons, ShowAnswerButton} from "src/ui/components/buttons";
 import {FlashcardContext} from "src/contexts/FlashcardContext";
-import {ReviewResponse} from "src/scheduling";
+import {ReviewResponse, schedule} from "src/scheduling";
 import {plugin, PluginData} from "src/main";
+import {moment} from "obsidian";
 
 export function reviewLoader({params}: {params: any}) {
     return fetch(`http://localhost:3000/review/${params.bookId}`)
@@ -68,5 +69,37 @@ function FlashcardFooter({isQuestion, showAnswerHandler, card}: {isQuestion: boo
         return <ResponseButtons card={card} handleFlashcardResponse={(response: any) => console.log("Clicked!")}/>;
 }
 
+// todo: move into controller?
+// todo: rename to update card?
 async function processReview(clickedResponse: ReviewResponse, flashcard: Flashcard, data: PluginData) {
+    // take the response received
+    // use that to update flashcard internal state
+    // that will take care of writing to disk
+    // so this should be a relatively lean method
+    // don't forget to update siblings?
+    let schedObj;
+    // is new card
+    if (flashcard.delayBeforeReview === null) {
+        // todo: move default settings down into schedule()?
+        schedObj = schedule(
+            clickedResponse,
+            1.0,
+            plugin.data.settings.baseEase,
+            0,
+            data.settings,
+        );
+    } else {
+        schedObj = schedule(
+            clickedResponse,
+            flashcard.interval,
+            flashcard.ease,
+            flashcard.delayBeforeReview,
+            data.settings,
+        );
+    }
+    const {interval, ease} = schedObj;
+    const due = moment(Date.now() + interval * 24 * 3600 * 1000);
+    const schedulingMetadata = {interval, ease, due};
+    // generate metadata string
+    // write to disk
 }
