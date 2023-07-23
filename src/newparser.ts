@@ -81,3 +81,7 @@ export function generateSectionsTree(sections: (AnnotationWithFlashcard|Heading)
     const headings: Heading[] = sections.filter((t): t is Heading => isHeading(t));
     return generateTree(headings);
 }
+
+export function parseFlashcard() {
+
+}
