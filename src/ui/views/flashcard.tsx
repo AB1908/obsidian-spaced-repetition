@@ -17,7 +17,7 @@ export function FlashcardView(props: FlashcardProps) {
     const deck: Deck = props.deck;
     const flashcardList = useRef(generateFlashcardList(deck));
     const pluginContext = useContext(AppContext);
-    const { data, easeByPath, dueDatesFlashcards } = pluginContext;
+    const { data, easeByPath } = pluginContext;
 
     async function edit(currentCard: Card) {
         let modifiedCard: Card = await FlashcardEditModal.Prompt(pluginContext, currentCard);
@@ -29,7 +29,7 @@ export function FlashcardView(props: FlashcardProps) {
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
         // todo: move to useEffect?
-        await processReview(clickedResponse, flashcardList.current[flashcardIndex], data, dueDatesFlashcards, easeByPath);
+        await processReview(clickedResponse, flashcardList.current[flashcardIndex], data, easeByPath);
         moveToNextFlashcard();
     }
 
@@ -64,7 +64,7 @@ async function writeBack(currentCard: Card, fileText: string) {
     await this.app.vault.modify(currentCard.note, fileText);
 }
 
-async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, dueDatesFlashcards: Record<number, number>, easeByPath: Record<string, number>): Promise<void> {
+async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, easeByPath: Record<string, number>): Promise<void> {
     let interval: number, ease: number, due;
 
     if (response !== ReviewResponse.Reset) {
@@ -77,7 +77,6 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
                 currentCard.ease,
                 currentCard.delayBeforeReview,
                 data.settings,
-                dueDatesFlashcards
             );
         } else {
             let initial_ease: number = data.settings.baseEase;
@@ -96,7 +95,6 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
                 initial_ease,
                 0,
                 data.settings,
-                dueDatesFlashcards
             );
             interval = schedObj.interval;
             ease = schedObj.ease;
