@@ -3,6 +3,7 @@ import {nanoid} from "nanoid";
 import {writeCardToDisk} from "src/disk";
 import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
 import {plugin} from "src/main";
+import {FLAG} from "src/data/deck";
 
 export interface ParsedCard {
     id: string,
@@ -13,12 +14,20 @@ export interface ParsedCard {
     notePath?: string,
 }
 
-export async function createParsedCard(questionText: string, answerText: string, cardType: CardType, path: string, annotationId: string): Promise<ParsedCard> {
+// Note that this creates a learning card by default
+export async function createParsedCard(
+    questionText: string,
+    answerText: string,
+    cardType: CardType,
+    path: string,
+    annotationId: string,
+    flag: FLAG = FLAG.LEARNING
+): Promise<ParsedCard> {
     const parsedCard = {
         id: nanoid(8),
         notePath: path,
         cardText: cardTextGenerator(questionText, answerText, cardType),
-        metadataText: metadataTextGenerator(annotationId, null),
+        metadataText: metadataTextGenerator(annotationId, null, flag),
         // TODO: remove lineno
         lineNo: 0,
         cardType: cardType,
