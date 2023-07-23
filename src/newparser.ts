@@ -1,6 +1,8 @@
 import {HeadingCache, SectionCache} from "obsidian";
 import {Flashcard} from "src/data/models/flashcard";
 import {AnnotationWithFlashcard, BookMetadataSections, Heading} from "src/data/models/book";
+import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
+import {CardType} from "src/scheduling";
 
 // TODO: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
@@ -82,6 +84,14 @@ export function generateSectionsTree(sections: (AnnotationWithFlashcard|Heading)
     return generateTree(headings);
 }
 
-export function parseFlashcard() {
+// TODO: parameterize separators??
+const CARDTEXT_REGEX = /(?<cardText>.*\n\?\n.*)\n(?<metadataText><!--SR:.*-->)/g;
 
+export function parseFileText(fileText: string, path: string) {
+    const cardMatchesArray = fileText.matchAll(CARDTEXT_REGEX);
+    const parsedCardsArray: ParsedCard[] = [];
+    for (let card of cardMatchesArray) {
+        parsedCardsArray.push(createParsedCardFromText(card.groups.cardText, CardType.MultiLineBasic, path, card.groups.metadataText));
+    }
+    return parsedCardsArray;
 }
