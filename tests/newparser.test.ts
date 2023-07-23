@@ -1,6 +1,11 @@
-import {findPreviousHeader, generateTree} from "src/newparser";
-import type {SectionCache} from "obsidian";
-import {beforeEach} from "@jest/globals";
+import { findPreviousHeader, generateTree, parseFileText } from "src/newparser";
+import type { SectionCache } from "obsidian";
+import { beforeEach } from "@jest/globals";
+import {CardType} from "src/scheduling";
+import {createParsedCardFromText} from "src/data/models/parsedCard";
+jest.mock('../src/data/models/parsedCard', () => ({
+    createParsedCardFromText: jest.fn()
+}));
 
 describe("generateTree", () => {
     test("should nest a paragraph within previous heading", () => {
@@ -288,7 +293,27 @@ describe("findPreviousHeader", () => {
 });
 
 describe("parseFlashcard", () => {
-    test("parses a flashcard without metadata", () => {
+    test("parses a flashcard with only annotation id", () => {
+        const flashcard = `This is a question\n?\nThis is an answer\n<!--SR:93813-->`;
+        parseFileText(flashcard, "sample path")
+        expect(createParsedCardFromText).toHaveBeenCalledWith(
+            "This is a question\n?\nThis is an answer",
+            CardType.MultiLineBasic,
+            "sample path",
+            "<!--SR:93813-->"
+        );
+    });
+    test("parses a flashcard with full metadata", () => {
+        const flashcard = `This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->`;
+        parseFileText(flashcard, "sample path");
+        expect(createParsedCardFromText).toHaveBeenCalledWith("This is a question\n?\nThis is an answer",
+            CardType.MultiLineBasic,
+            "sample path",
+            "<!--SR:93813!L,2021-04-05,99,270-->"
+        );
+    });
+    test.todo("parses multiple flashcards");
+});
 
     })
     test.todo("parses a flashcard with only annotation id")
