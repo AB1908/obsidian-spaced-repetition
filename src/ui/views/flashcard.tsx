@@ -17,7 +17,7 @@ export function FlashcardView(props: FlashcardProps) {
     const deck: Deck = props.deck;
     const flashcardList = useRef(generateFlashcardList(deck));
     const pluginContext = useContext(AppContext);
-    const { data, easeByPath } = pluginContext;
+    const { data } = pluginContext;
 
     async function edit(currentCard: Card) {
         let modifiedCard: Card = await FlashcardEditModal.Prompt(pluginContext, currentCard);
@@ -29,7 +29,7 @@ export function FlashcardView(props: FlashcardProps) {
 
     async function handleResponseButtons(clickedResponse: ReviewResponse) {
         // todo: move to useEffect?
-        await processReview(clickedResponse, flashcardList.current[flashcardIndex], data, easeByPath);
+        await processReview(clickedResponse, flashcardList.current[flashcardIndex], data);
         moveToNextFlashcard();
     }
 
@@ -64,7 +64,7 @@ async function writeBack(currentCard: Card, fileText: string) {
     await this.app.vault.modify(currentCard.note, fileText);
 }
 
-async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData, easeByPath: Record<string, number>): Promise<void> {
+async function processReview(response: ReviewResponse, currentCard: Card, data: PluginData): Promise<void> {
     let interval: number, ease: number, due;
 
     if (response !== ReviewResponse.Reset) {
@@ -80,14 +80,14 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
             );
         } else {
             let initial_ease: number = data.settings.baseEase;
-            if (
-                Object.prototype.hasOwnProperty.call(
-                    easeByPath,
-                    currentCard.note.path
-                )
-            ) {
-                initial_ease = Math.round(easeByPath[currentCard.note.path]);
-            }
+            // if (
+            //     Object.prototype.hasOwnProperty.call(
+            //         easeByPath,
+            //         currentCard.note.path
+            //     )
+            // ) {
+            //     initial_ease = Math.round(easeByPath[currentCard.note.path]);
+            // }
 
             schedObj = schedule(
                 response,
