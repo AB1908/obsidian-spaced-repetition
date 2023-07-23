@@ -20,7 +20,7 @@ export async function createParsedCard(
     answerText: string,
     cardType: CardType,
     path: string,
-    annotationId: string,
+    annotationId: number,
     flag: FLAG = FLAG.LEARNING
 ): Promise<ParsedCard> {
     const parsedCard = {
