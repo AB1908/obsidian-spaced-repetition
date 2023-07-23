@@ -32,7 +32,8 @@ export enum FLAG {
     LEARNING
 }
 
-const SCHEDULING_REGEX = /(!(?<flag>[BS]),(?<dueDate>.{10}),(?<interval>\d),(?<ease>\d+))/g;
+const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d),(?<ease>\d+))/g;
+// For now, annotation ids are only numerical
 const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{8})/g;
 
 export interface FlashcardMetadata {
