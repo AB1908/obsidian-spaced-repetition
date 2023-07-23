@@ -1,8 +1,8 @@
 import {CardType} from "src/scheduling";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
-import {Annot} from "src/data/models/book";
 import {plugin} from "src/main";
+import {annotation} from "src/data/import/annotations";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -20,8 +20,8 @@ import {plugin} from "src/main";
 //     }
 // }
 
-export function getAnnotationById(id: string) {
-    return plugin.annotations.filter((t: Annot)=>t.id === id)[0];
+export function getAnnotationById(id: number) {
+    return plugin.annotations.filter((t: annotation)=> t.id === id)[0];
 }
 
 export function getFlashcardById(id: string) {
