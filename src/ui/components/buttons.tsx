@@ -36,11 +36,7 @@ function Button({ text, id, responseHandler }: { text: string, id: string, respo
     </button>)
 }
 
-export function ResponseButtons() {
-    const { data } = useContext(AppContext)
-    let easyBtnText: string, goodBtnText: string, hardBtnText: string;
-    const { handleFlashcardResponse, card } = useContext(FlashcardContext);
-
+export function calculateIntervals(data: PluginData, card: Card|Flashcard) {
     let interval = 1.0,
         ease: number = data.settings.baseEase,
         delayBeforeReview = 0;
@@ -65,6 +61,7 @@ export function ResponseButtons() {
     const goodInterval: number = getInterval(ReviewResponse.Good);
     const easyInterval: number = getInterval(ReviewResponse.Easy);
 
+export function generateButtonText(hardBtnText: string, hardInterval: number, goodBtnText: string, goodInterval: number, easyBtnText: string, easyInterval: number, data: PluginData) {
     if (Platform.isMobile) {
         hardBtnText = `${textInterval(hardInterval, true)}`;
         goodBtnText = `${textInterval(goodInterval, true)}`;
@@ -75,6 +72,15 @@ export function ResponseButtons() {
         goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval( goodInterval, false )}`;
         easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval( easyInterval, false )}`;
     }
+    return {hardBtnText, goodBtnText, easyBtnText};
+}
+
+export function ResponseButtons({card, handleFlashcardResponse}: {card: Flashcard|Card, handleFlashcardResponse: Function}) {
+    const data = plugin.data;
+    let easyBtnText: string, goodBtnText: string, hardBtnText: string;
+    // const { handleFlashcardResponse } = useContext(FlashcardContext);
+    const {hardInterval, goodInterval, easyInterval} = calculateIntervals(data, card);
+    ({hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardBtnText, hardInterval, goodBtnText, goodInterval, easyBtnText, easyInterval, data));
 
     return (
         <div className="sr-response">
