@@ -22,7 +22,7 @@ export function parseCardText(text: string): [string, string] {
 }
 
 export function createParsedCardsArray(fileText: string, settings: SRSettings) {
-    this.parsedCards = [...parse(fileText, settings)]
+    plugin.parsedCards = [...parse(fileText, settings)]
 }
 
 export enum FLAG {
