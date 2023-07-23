@@ -3,6 +3,7 @@ import {SRSettings} from "src/settings";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 
 import {ParsedCard} from "src/data/models/parsedCard";
+import {plugin} from "src/main";
 
 export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]): AbstractFlashcard[] {
     for (let card of parsedCards) {
