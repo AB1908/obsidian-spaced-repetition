@@ -12,239 +12,229 @@ describe("generateTree", () => {
         const input = [
             {
                 heading: "Heading 1",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
-            }
-        ]
-        expect(generateTree(input)).toStrictEqual(
-            [
-                {
-                    heading: "Heading 1",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        }
-                    ]
-                },
-            ]
-        )
+                type: "paragraph",
+            },
+        ];
+        expect(generateTree(input)).toStrictEqual([
+            {
+                heading: "Heading 1",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                ],
+            },
+        ]);
     });
 
     test("should nest each paragraph in each heading", () => {
         const input = [
             {
                 heading: "Heading 1",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "Heading 2",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
-        ]
-        expect(generateTree(input)).toStrictEqual(
-            [
-                {
-                    heading: "Heading 1",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        }
-                    ]
-                },
-                {
-                    heading: "Heading 2",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        }
-                    ]
-                },
-            ]
-        )
+        ];
+        expect(generateTree(input)).toStrictEqual([
+            {
+                heading: "Heading 1",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                ],
+            },
+            {
+                heading: "Heading 2",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                ],
+            },
+        ]);
     });
 
     test("should nest the subheading in the heading", () => {
         const input = [
             {
                 heading: "Heading 1",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 1",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
-        ]
-        expect(generateTree(input)).toStrictEqual(
-            [
-                {
-                    heading: "Heading 1",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        } ,
-                        {
-                            heading: "SubHeading 1",
-                            level: 2,
-                            children: [
-                                {
-                                    type: "paragraph"
-                                }
-                            ]
-                        },
-                    ]
-                }
-            ]
-        )
-    })
+        ];
+        expect(generateTree(input)).toStrictEqual([
+            {
+                heading: "Heading 1",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                    {
+                        heading: "SubHeading 1",
+                        level: 2,
+                        children: [
+                            {
+                                type: "paragraph",
+                            },
+                        ],
+                    },
+                ],
+            },
+        ]);
+    });
 
     test("should nest both subheadings under the same heading", () => {
         const input = [
             {
                 heading: "Heading 1",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 1",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 2",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
-        ]
-        expect(generateTree(input)).toStrictEqual(
-            [
-                {
-                    heading: "Heading 1",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        } ,
-                        {
-                            heading: "SubHeading 1",
-                            level: 2,
-                            children: [
-                                {
-                                    type: "paragraph"
-                                }
-                            ]
-                        },
-                        {
-                            heading: "SubHeading 2",
-                            level: 2,
-                            children: [
-                                {
-                                    type: "paragraph"
-                                }
-                            ]
-                        },
-                    ]
-                }
-            ]
-        )
-    })
+        ];
+        expect(generateTree(input)).toStrictEqual([
+            {
+                heading: "Heading 1",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                    {
+                        heading: "SubHeading 1",
+                        level: 2,
+                        children: [
+                            {
+                                type: "paragraph",
+                            },
+                        ],
+                    },
+                    {
+                        heading: "SubHeading 2",
+                        level: 2,
+                        children: [
+                            {
+                                type: "paragraph",
+                            },
+                        ],
+                    },
+                ],
+            },
+        ]);
+    });
 
     test("should nest subheadings correctly and return only headings", () => {
         const input = [
             {
                 heading: "Heading 1",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 1",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 2",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "Heading 2",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
-        ]
-        expect(generateTree(input)).toStrictEqual(
-            [
-                {
-                    heading: "Heading 1",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        } ,
-                        {
-                            heading: "SubHeading 1",
-                            level: 2,
-                            children: [
-                                {
-                                    type: "paragraph"
-                                }
-                            ]
-                        },
-                        {
-                            heading: "SubHeading 2",
-                            level: 2,
-                            children: [
-                                {
-                                    type: "paragraph"
-                                }
-                            ]
-                        },
-                    ]
-                },
-                {
-                    heading: "Heading 2",
-                    level: 1,
-                    children: [
-                        {
-                            type: "paragraph"
-                        },
-                    ]
-                },
-            ]
-        )
-    })
-})
+        ];
+        expect(generateTree(input)).toStrictEqual([
+            {
+                heading: "Heading 1",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                    {
+                        heading: "SubHeading 1",
+                        level: 2,
+                        children: [
+                            {
+                                type: "paragraph",
+                            },
+                        ],
+                    },
+                    {
+                        heading: "SubHeading 2",
+                        level: 2,
+                        children: [
+                            {
+                                type: "paragraph",
+                            },
+                        ],
+                    },
+                ],
+            },
+            {
+                heading: "Heading 2",
+                level: 1,
+                children: [
+                    {
+                        type: "paragraph",
+                    },
+                ],
+            },
+        ]);
+    });
+});
 
 let input: any[];
 describe("findPreviousHeader", () => {
@@ -252,34 +242,34 @@ describe("findPreviousHeader", () => {
         input = [
             {
                 heading: "Heading 1",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 1",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "SubHeading 2",
-                level: 2
+                level: 2,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
             {
                 heading: "Heading 2",
-                level: 1
+                level: 1,
             },
             {
-                type: "paragraph"
+                type: "paragraph",
             },
         ];
-    })
+    });
 
     test("should return null for a top level header", () => {
         expect(findPreviousHeader(input as SectionCache[], input[6] as SectionCache)).toBe(null);
@@ -314,9 +304,3 @@ describe("parseFlashcard", () => {
     });
     test.todo("parses multiple flashcards");
 });
-
-    })
-    test.todo("parses a flashcard with only annotation id")
-    test.todo("parses a flashcard with full metadata")
-    test.todo("parses a multiple flashcards")
-})
