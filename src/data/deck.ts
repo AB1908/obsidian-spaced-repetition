@@ -27,9 +27,9 @@ export function createParsedCardsArray(fileText: string, settings: SRSettings) {
 }
 
 export enum FLAG {
-    SUSPEND,
-    BURY,
-    LEARNING
+    SUSPEND = "S",
+    BURY = "B",
+    LEARNING = "L"
 }
 
 const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d),(?<ease>\d+))/g;
