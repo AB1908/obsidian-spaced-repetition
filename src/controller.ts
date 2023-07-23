@@ -53,9 +53,10 @@ export async function createFlashcardForHighlight(question: string, answer: stri
         // TODO: Fix hardcoded path
         // TODO: error handling
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "More flashcards.md", annotationId);
+        plugin.parsedCards.push(parsedCard);
         card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
+        plugin.flashcards.push(card);
     }
-    plugin.flashcards.push(card);
     return true;
 }
 
