@@ -48,6 +48,7 @@ export interface FlashcardMetadata {
     flag: FLAG;
 }
 
+// Couldn't find a concise way of doing this that was more readable
 function stringToFlag(flag: string): FLAG {
     switch (flag) {
         case "S": return FLAG.SUSPEND;
