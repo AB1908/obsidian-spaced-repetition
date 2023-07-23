@@ -10,7 +10,7 @@ export function cardTextGenerator(questionText: string, answerText: string, card
 }
 
 export function metadataTextGenerator(
-    annotationId: number,
+    annotationId: string,
     schedulingMetadata: { interval: number, ease: number, dueDate: string },
     flag: FLAG
 ) {
