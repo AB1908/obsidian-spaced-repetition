@@ -78,20 +78,19 @@ export function schedule(
 }
 
 export function textInterval(interval: number, isMobile: boolean): string {
-    // WTF? What are these random numbers?
-    const m: number = Math.round(interval / 3.04375) / 10,
-        y: number = Math.round(interval / 36.525) / 10;
+    const month: number = Math.round(interval / 3.04375) / 10,
+        year: number = Math.round(interval / 36.525) / 10;
 
     if (isMobile) {
-        if (m < 1.0) return t("DAYS_STR_IVL_MOBILE", { interval });
-        else if (y < 1.0) return t("MONTHS_STR_IVL_MOBILE", { interval: m });
-        else return t("YEARS_STR_IVL_MOBILE", { interval: y });
+        if (month < 1.0) return t("DAYS_STR_IVL_MOBILE", { interval });
+        else if (year < 1.0) return t("MONTHS_STR_IVL_MOBILE", { interval: month });
+        else return t("YEARS_STR_IVL_MOBILE", { interval: year });
     } else {
         if (interval <= 1.0) return t("DAY_STR_IVL", { interval });
-        else if (m < 1.0) return t("DAYS_STR_IVL", { interval });
-        else if (m == 1.0) return t("MONTH_STR_IVL", { interval: m});
-        else if (y < 1.0) return t("MONTHS_STR_IVL", { interval: m });
-        else if (y == 1.0) return t("YEAR_STR_IVL", { interval: y});
-        else return t("YEARS_STR_IVL", { interval: y });
+        else if (month < 1.0) return t("DAYS_STR_IVL", { interval });
+        else if (month == 1.0) return t("MONTH_STR_IVL", { interval: month});
+        else if (year < 1.0) return t("MONTHS_STR_IVL", { interval: month });
+        else if (year == 1.0) return t("YEAR_STR_IVL", { interval: year});
+        else return t("YEARS_STR_IVL", { interval: year });
     }
 }
