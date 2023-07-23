@@ -47,6 +47,7 @@ function FlashcardFooter() {
         return <ResponseButtons card={card} handleFlashcardResponse={handleFlashcardResponse}/>;
 }
 
+// TODO: this sucks. change the components to show a full question and answer separately.
 export function FlashcardContent(props: FlashcardButtons) {
     const viewRef = useRef(null);
 
