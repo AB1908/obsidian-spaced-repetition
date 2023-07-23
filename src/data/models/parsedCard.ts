@@ -29,7 +29,7 @@ export async function createParsedCard(
         cardText: cardTextGenerator(questionText, answerText, cardType),
         metadataText: metadataTextGenerator(annotationId, null, flag),
         // TODO: remove lineno
-        lineNo: 0,
+        lineNo: -1,
         cardType: cardType,
     };
     await writeCardToDisk(parsedCard.notePath, generateCardAsStorageFormat(parsedCard));
