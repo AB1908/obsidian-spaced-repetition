@@ -4,6 +4,9 @@ import {FlashcardContext} from "src/contexts/FlashcardContext";
 import {AppContext} from "src/contexts/PluginContext";
 import {ReviewResponse, schedule, textInterval} from "src/scheduling";
 import {Link} from "react-router-dom";
+import {plugin, PluginData} from "src/main";
+import {Card} from "src/Card";
+import {Flashcard} from "src/data/models/flashcard";
 
 export function EditLaterButton({ editLaterHandler }: { editLaterHandler: Function }) {
     return <div className="sr-link" onClick={() => editLaterHandler()}>Edit Later</div>;
@@ -17,12 +20,12 @@ export function ResetButton() {
     );
 }
 
-export function ShowAnswerButton() {
-    const { handleShowAnswerButton } = useContext(FlashcardContext);
+export function ShowAnswerButton(props: {handleShowAnswerButton: Function}) {
+    // const { handleShowAnswerButton } = useContext(FlashcardContext);
     return (
         <button
             id="sr-show-answer"
-            onClick={() => handleShowAnswerButton()}
+            onClick={() => props.handleShowAnswerButton()}
         >
             Show Answer
         </button>
@@ -60,6 +63,8 @@ export function calculateIntervals(data: PluginData, card: Card|Flashcard) {
     const hardInterval: number = getInterval(ReviewResponse.Hard);
     const goodInterval: number = getInterval(ReviewResponse.Good);
     const easyInterval: number = getInterval(ReviewResponse.Easy);
+    return {hardInterval, goodInterval, easyInterval};
+}
 
 export function generateButtonText(hardBtnText: string, hardInterval: number, goodBtnText: string, goodInterval: number, easyBtnText: string, easyInterval: number, data: PluginData) {
     if (Platform.isMobile) {
@@ -68,9 +73,9 @@ export function generateButtonText(hardBtnText: string, hardInterval: number, go
         easyBtnText = `${textInterval(easyInterval, true)}`;
     } else {
         // TODO: investigate fix for button labels being empty
-        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval( hardInterval, false )}`
-        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval( goodInterval, false )}`;
-        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval( easyInterval, false )}`;
+        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(hardInterval, false)}`
+        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(goodInterval, false)}`;
+        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(easyInterval, false)}`;
     }
     return {hardBtnText, goodBtnText, easyBtnText};
 }
