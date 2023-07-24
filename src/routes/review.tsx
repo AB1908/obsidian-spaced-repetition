@@ -52,14 +52,18 @@ function Answer(props: { answerText: string }) {
     </p>;
 }
 
+function CardFront(props: { currentCard: Flashcard, handleShowAnswerButton: () => void }) {
+    return <>
+        <Question questionText={props.currentCard.questionText}/>
+        <ShowAnswerButton handleShowAnswerButton={props.handleShowAnswerButton}/>
+    </>;
+}
+
 export function ReviewDeck() {
     const currentCard = useLoaderData() as Flashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     return (<>
-        {isQuestion && (<>
-            <Question questionText={currentCard.questionText}/>
-            <ShowAnswerButton handleShowAnswerButton={() => setIsQuestion(false)}/>
-            </>)}
+        {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
         {!isQuestion && (<>
             <Question questionText={currentCard.questionText}/>
