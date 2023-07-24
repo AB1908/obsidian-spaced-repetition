@@ -10,8 +10,14 @@ export function getTFileForPath(path: string): TFile {
     else return null;
 }
 
-export function updateCardOnDisk(path: string, originalText: string, updatedText: string) {
-    
+export async function updateCardOnDisk(path: string, originalText: string, updatedText: string) {
+    const tfile = getTFileForPath(path);
+    if (tfile === null)
+        return false;
+    const originalFileText = await app.vault.read(tfile);
+    const updatedFileText = originalFileText.replace(originalText, updatedText);
+    await app.vault.modify(tfile, updatedFileText);
+    return true;
 }
 
 function setOfHashesWithTags(tag: string) {
