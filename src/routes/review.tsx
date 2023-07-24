@@ -20,6 +20,26 @@ interface Flashcard {
     hardBtnText: string,
 }
 
+// The idea here is that if I start a review, I don't immediately have a flashcard ID
+// So I need to fetch the first flashcard in the queue
+// And then redirect myself to that flashcard
+// So that I can subsequently call getFlashcardById() using the flashcardId from the params
+export async function reviewLoader({params}: { params: any }) {
+    if (USE_ACTUAL_BACKEND) {
+        const l = {"id": "1923n8aq"}
+        let flashcardById = getFlashcardById(l.id);
+        if (flashcardById === null)
+        return flashcardById;
+    } else {
+        if (params.flashcardId == null) {
+            const response = await fetch(`http://localhost:3000/review/${params.bookId}`)
+            const flashcardId = (await response.json()).first;
+            return redirect(`${flashcardId}`)
+        }
+        return (await (await fetch(`http://localhost:3000/review/${params.bookId}`)).json()).flashcards.filter(t => t.id === params.flashcardId)[0];
+    }
+}
+
 function Question(props: { questionText: string }) {
     return <p>
         {props.questionText}
