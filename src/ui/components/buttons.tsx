@@ -33,8 +33,8 @@ export function ShowAnswerButton(props: {handleShowAnswerButton: Function}) {
 }
 
 //TODO: Add types
-function Button({ text, id, responseHandler }: { text: string, id: string, responseHandler: Function }) {
-    return (<button id={id} onClick={() => responseHandler()}>
+export function Button({ text, id, responseHandler, value }: { text: string, id: string, responseHandler: Function, value: ReviewResponse }) {
+    return (<button name={"reviewResponse"} id={id} onClick={() => responseHandler()} value={value}>
         {text}
     </button>)
 }
