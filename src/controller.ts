@@ -99,6 +99,36 @@ function updateFlashcards(id: string, reviewResponse: ReviewResponse) {
     });
     return {updatedSchedulingMetadata, flashcard};
 }
+
+// write to disk first
+// then updated parsed card index
+// though that state might go out of sync depending on how fast we call it
+// todo: debounce?
+// todo: think differently?
+async function updateParsedCards(flashcard: Flashcard, updatedSchedulingMetadata: SchedulingMetadata) {
+    const parsedCardCopy = plugin.parsedCards.filter((card: ParsedCard) => card.id === flashcard.parsedCardId)[0];
+    const originalCardOnDisk = generateCardAsStorageFormat(parsedCardCopy);
+    parsedCardCopy.metadataText = metadataTextGenerator(flashcard.annotationId, updatedSchedulingMetadata, flashcard.flag);
+    const newCardOnDisk = generateCardAsStorageFormat(parsedCardCopy);
+    // todo: store the original card
+    // then update the card on disk
+    // then update parsed Card
+    // encapsulate into class?
+
+    const result = await updateCardOnDisk(parsedCardCopy.notePath, originalCardOnDisk, newCardOnDisk);
+    if (result) {
+        plugin.parsedCards.forEach((value, index, array) => {
+            if (value.id === parsedCardCopy.id) {
+                array[index] = parsedCardCopy;
+            }
+        });
+        return true;
+    }
+    else {
+        return false;
+    }
+}
+
 // TODO: add logic to update in storage
 export function updateFlashcardAnswer(id: string, answer: string) {
     const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
