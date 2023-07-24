@@ -59,11 +59,35 @@ export function ReviewDeck() {
     </>);
 }
 
-function FlashcardFooter({isQuestion, showAnswerHandler, card}: {isQuestion: boolean, showAnswerHandler: () => void, card: Flashcard}) {
-    if (isQuestion)
-        return <ShowAnswerButton handleShowAnswerButton={() => showAnswerHandler()}/>;
-    else
-        return <ResponseButtons card={card} handleFlashcardResponse={(response: any) => console.log("Clicked!")}/>;
+export async function reviewAction({request, params}) {
+    const data = await request.formData();
+    const reviewResponse = data.get("reviewResponse");
+    if (USE_ACTUAL_BACKEND) {
+        // should I wait for a successful write? can get troublesome as files get bigger
+        // but let's think about scale later
+        // I need to get the id of the next card
+        // if no next card, redirect to deck
+        const result = await updateFlashcardSchedulingMetadata(params.flashcardId, reviewResponse);
+        let nextCardId: string;
+        if (result) {
+            nextCardId = getNextCard(params.bookId);
+        } else {
+            // we're screwed
+        }
+        if (nextCardId) {
+            return redirect(`../${nextCardId}`);
+        } else {
+            return redirect("..");
+        }
+    } else {
+        return redirect(`./../sm18fbb3`)
+    }
 }
 
+function getNextCard(id: string) {
+    const l = {"id": "1923n8aq"}
+    if (id === l.id)
+        return {"id": "sm18fbb3"}.id;
+    else
+        return null;
 }
