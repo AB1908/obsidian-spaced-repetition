@@ -7,8 +7,17 @@ import {ReviewResponse, schedule} from "src/scheduling";
 import {plugin, PluginData} from "src/main";
 import {moment} from "obsidian";
 
-export function reviewLoader({params}: {params: any}) {
-    return fetch(`http://localhost:3000/review/${params.bookId}`)
+interface Flashcard {
+    id: string,
+    questionText: string,
+    answerText: string,
+    context: string,
+    cardType: number,
+    annotationId: string,
+    parsedCardId: string,
+    goodBtnText: string,
+    easyBtnText: string,
+    hardBtnText: string,
 }
 
 function Question(props: { questionText: string }) {
