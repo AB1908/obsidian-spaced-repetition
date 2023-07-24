@@ -13,7 +13,7 @@ import {UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/ups
 import {ChooseCardType} from "src/routes/choose-card-type";
 import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
-import {ReviewDeck, reviewLoader} from "src/routes/review";
+import {reviewAction, ReviewDeck, reviewLoader} from "src/routes/review";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -87,6 +87,12 @@ export class FlashcardModal extends Modal {
                     path: "/books/:bookId/review",
                     element: <ReviewDeck/>,
                     loader: reviewLoader,
+                },
+                {
+                    path: "/books/:bookId/review/:flashcardId",
+                    element: <ReviewDeck/>,
+                    loader: reviewLoader,
+                    action: reviewAction
                 },
                 {
                     path: routes.chapterList,
