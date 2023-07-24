@@ -129,6 +129,15 @@ async function updateParsedCards(flashcard: Flashcard, updatedSchedulingMetadata
     }
 }
 
+export async function updateFlashcardSchedulingMetadata(
+    id: string,
+    reviewResponse: ReviewResponse,
+) {
+    const {flashcard, updatedSchedulingMetadata} = updateFlashcards(id, reviewResponse);
+
+    return await updateParsedCards(flashcard, updatedSchedulingMetadata);
+}
+
 // TODO: add logic to update in storage
 export function updateFlashcardAnswer(id: string, answer: string) {
     const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
