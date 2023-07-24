@@ -24,26 +24,8 @@ function Answer(props: { answerText: string }) {
 }
 
 export function ReviewDeck() {
-    const flashcards: Flashcard[] = (useLoaderData() as any).flashcards;
-    const [flashcardIndex, setFlashcardIndex] = useState(0);
+    const currentCard = useLoaderData() as Flashcard;
     const [isQuestion, setIsQuestion] = useState(true);
-    const currentCard = flashcards[flashcardIndex];
-
-    async function handleResponseButtons(clickedResponse: ReviewResponse) {
-        // todo: move to useEffect?
-        await processReview(clickedResponse, flashcards[flashcardIndex], plugin.data);
-        moveToNextFlashcard();
-    }
-
-    function moveToNextFlashcard() {
-        if (flashcardIndex + 1 < flashcards.length) {
-            setFlashcardIndex(flashcardIndex + 1);
-            setIsQuestion(true);
-        } else {
-            // props.changeModalStatus(ModalStates.DECK_NOT_IN_REVIEW);
-        }
-    }
-
     return (<>
         <FlashcardContext.Provider
             value={{
