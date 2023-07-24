@@ -27,20 +27,26 @@ export function ReviewDeck() {
     const currentCard = useLoaderData() as Flashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     return (<>
-        <FlashcardContext.Provider
-            value={{
-                handleShowAnswerButton: () => setIsQuestion(false),
-                handleFlashcardResponse: (t: ReviewResponse) => handleResponseButtons(t),
-                isQuestion: isQuestion,
-                card: currentCard
-            }}
-        >
+        {isQuestion && (<>
+            <Question questionText={currentCard.questionText}/>
+            <ShowAnswerButton handleShowAnswerButton={() => setIsQuestion(false)}/>
+            </>)}
+
+        {!isQuestion && (<>
             <Question questionText={currentCard.questionText}/>
             <hr/>
             <Answer answerText={currentCard.answerText}/>
-            <FlashcardFooter isQuestion={isQuestion} showAnswerHandler={() => setIsQuestion(false)}
-                         card={currentCard}/>
-        </FlashcardContext.Provider>
+            <div className="sr-response">
+                <Form method={"POST"}>
+                    <Button text={currentCard.hardBtnText} id="sr-hard-btn"
+                            responseHandler={() => console.log(ReviewResponse.Hard)} value={ReviewResponse.Hard}/>
+                    <Button text={currentCard.goodBtnText} id="sr-good-btn"
+                            responseHandler={() => console.log(ReviewResponse.Good)} value={ReviewResponse.Good}/>
+                    <Button text={currentCard.easyBtnText} id="sr-easy-btn"
+                            responseHandler={() => console.log(ReviewResponse.Easy)} value={ReviewResponse.Easy}/>
+                </Form>
+            </div>
+        </>)}
     </>);
 }
 
