@@ -11,6 +11,8 @@ import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import type {ParsedCard} from "src/data/models/parsedCard";
 import type {Flashcard} from "src/data/models/flashcard";
 import {annotation} from "src/data/import/annotations";
+import {generateFlashcardsArray, parseFileText} from "src/newparser";
+import {getFileContents} from "src/disk";
 
 export interface PluginData {
     settings: SRSettings;
@@ -50,6 +52,9 @@ export default class SRPlugin extends Plugin {
     async onload(): Promise<void> {
         await this.loadPluginData();
         plugin = this;
+        const path = "More flashcards.md";
+        this.parsedCards = parseFileText(await getFileContents(path), path);
+        this.flashcards = generateFlashcardsArray(this.parsedCards);
 
         appIcon();
 
