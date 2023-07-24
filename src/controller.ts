@@ -1,8 +1,11 @@
-import {CardType} from "src/scheduling";
+import {CardType, ReviewResponse, schedule} from "src/scheduling";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
 import {plugin} from "src/main";
 import {annotation} from "src/data/import/annotations";
+import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
+import {updateCardOnDisk} from "src/disk";
+import {moment} from "obsidian";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -80,6 +83,22 @@ export function schedulingMetadataForResponse(
     return {interval, ease, dueDate: due};
 }
 
+function updateFlashcards(id: string, reviewResponse: ReviewResponse) {
+    let updatedSchedulingMetadata;
+    let flashcard;
+    plugin.flashcards.forEach((card: Flashcard, index: number, array: Flashcard[]) => {
+        if (card.id == id) {
+            updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
+                interval: card.interval,
+                ease: card.ease,
+                dueDate: card.dueDate
+            });
+            array[index] = {...card, ...updatedSchedulingMetadata};
+            flashcard = array[index];
+        }
+    });
+    return {updatedSchedulingMetadata, flashcard};
+}
 // TODO: add logic to update in storage
 export function updateFlashcardAnswer(id: string, answer: string) {
     const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
