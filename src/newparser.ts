@@ -3,6 +3,7 @@ import {Flashcard} from "src/data/models/flashcard";
 import {AnnotationWithFlashcard, BookMetadataSections, Heading} from "src/data/models/book";
 import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
 import {CardType} from "src/scheduling";
+import {parseCardText, parseMetadata} from "src/data/deck";
 
 // TODO: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
@@ -94,4 +95,13 @@ export function parseFileText(fileText: string, path: string) {
         parsedCardsArray.push(createParsedCardFromText(card.groups.cardText, CardType.MultiLineBasic, path, card.groups.metadataText));
     }
     return parsedCardsArray;
+}
+
+export function generateFlashcardsArray(parsedCardsArray: ParsedCard[]) {
+    const out: Flashcard[] = [];
+    for (let parsedCard of parsedCardsArray) {
+        const [questionText, answerText] = parseCardText(parsedCard.cardText);
+        out.push(new Flashcard(parsedCard.id, questionText, answerText, parseMetadata(parsedCard.metadataText)));
+    }
+    return out;
 }
