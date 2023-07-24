@@ -12,7 +12,7 @@ export interface Flashcard {
     isDue: boolean,
     interval: number,
     ease: number,
-    delayBeforeReview: number,
+    dueDate: string,
     annotationId: string,
     // this is to update the card so I can keep this object simple
     parsedCardId: string,
@@ -22,7 +22,7 @@ export abstract class AbstractFlashcard implements Flashcard {
     answerText: string;
     cardType: number;
     context: string;
-    delayBeforeReview: number;
+    dueDate: string;
     ease: number;
     id: string;
     interval: number;
@@ -41,7 +41,7 @@ export abstract class AbstractFlashcard implements Flashcard {
         this.id = nanoid(8);
         this.cardType = cardType;
         this.context = null;
-        this.delayBeforeReview = null;
+        this.dueDate = cardMetadata?.dueDate;
         this.ease = cardMetadata?.ease;
         this.interval = cardMetadata?.interval;
         this.annotationId = cardMetadata?.annotationId || annotationId;
