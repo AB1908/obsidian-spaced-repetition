@@ -1,11 +1,11 @@
 import React, {useState} from "react";
 import {useLoaderData} from "react-router";
-import {Flashcard} from "src/data/models/flashcard";
-import {ResponseButtons, ShowAnswerButton} from "src/ui/components/buttons";
-import {FlashcardContext} from "src/contexts/FlashcardContext";
-import {ReviewResponse, schedule} from "src/scheduling";
-import {plugin, PluginData} from "src/main";
-import {moment} from "obsidian";
+import {ReviewResponse} from "src/scheduling";
+import {Form, redirect} from "react-router-dom";
+import {Button, ShowAnswerButton} from "src/ui/components/buttons";
+import {getFlashcardById, updateFlashcardSchedulingMetadata} from "src/controller";
+
+const USE_ACTUAL_BACKEND = false;
 
 interface Flashcard {
     id: string,
