@@ -1,7 +1,6 @@
 import {parse} from "src/parser";
 import {SRSettings} from "src/settings";
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
-
 import {ParsedCard} from "src/data/models/parsedCard";
 import {plugin} from "src/main";
 
@@ -61,11 +60,10 @@ function stringToFlag(flag: string): FLAG {
 export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
     const annotationId = text.matchAll(ANNOTATION_ID_REGEX).next().value;
-    const flag = stringToFlag(annotationId.groups.flag);
     if (!(annotationId)) return null;
     if (scheduling === undefined)
         return {
-            flag: flag,
+            flag: null,
             annotationId: annotationId.groups.annotationId,
             dueDate: null,
             interval: null,
@@ -73,7 +71,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
         };
     else
         return {
-            flag: flag,
+            flag: stringToFlag(scheduling.groups.flag),
             annotationId: annotationId.groups.annotationId,
             dueDate: scheduling.groups.dueDate,
             interval: Number(scheduling.groups.interval),
