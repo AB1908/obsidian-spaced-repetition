@@ -47,7 +47,9 @@ export function calculateIntervals(data: PluginData, card: Card|Flashcard) {
     if (card.isDue) {
         interval = card.interval;
         ease = card.ease;
-        delayBeforeReview = card.delayBeforeReview;
+        if (card instanceof Card) {
+            delayBeforeReview = card.delayBeforeReview;
+        }
     }
 
     function getInterval(response?: ReviewResponse) {
