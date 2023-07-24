@@ -38,6 +38,48 @@ export function updateFlashcardQuestion(id: string, question: string) {
     return true;
 }
 
+export function calculateDelayBeforeReview(due: string) {
+    return moment().valueOf() - moment(due).valueOf();
+}
+
+// todo: move into controller?
+// todo: rename to update card?
+export function schedulingMetadataForResponse(
+    clickedResponse: ReviewResponse,
+    schedulingMetadata: SchedulingMetadata,
+): SchedulingMetadata {
+    // const flashcard = getFlashcardById(flashcardId);
+    // take the response received
+    // use that to update flashcard internal state
+    // that will take care of writing to disk
+    // so this should be a relatively lean method
+    // don't forget to update siblings?
+    let schedObj;
+    // is new card
+    if (schedulingMetadata.dueDate === null) {
+        // todo: move default settings down into schedule()?
+        schedObj = schedule(
+            clickedResponse,
+            1.0,
+            plugin.data.settings.baseEase,
+            0,
+            plugin.data.settings,
+        );
+    } else {
+        schedObj = schedule(
+            clickedResponse,
+            schedulingMetadata.interval,
+            schedulingMetadata.ease,
+            calculateDelayBeforeReview(schedulingMetadata.dueDate),
+            plugin.data.settings,
+        );
+    }
+    const {interval, ease} = schedObj;
+    // todo: parameterize format? nah
+    const due = moment(Date.now() + interval * 24 * 3600 * 1000).format("YYYY-MM-DD");
+    return {interval, ease, dueDate: due};
+}
+
 // TODO: add logic to update in storage
 export function updateFlashcardAnswer(id: string, answer: string) {
     const card = plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0];
