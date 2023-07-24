@@ -59,27 +59,38 @@ function CardFront(props: { currentCard: Flashcard, handleShowAnswerButton: () =
     </>;
 }
 
+function CardBack(props: {
+    currentCard: Flashcard,
+    responseHandler: () => void,
+    responseHandler1: () => void,
+    responseHandler2: () => void
+}) {
+    return <>
+        <Question questionText={props.currentCard.questionText}/>
+        <hr/>
+        <Answer answerText={props.currentCard.answerText}/>
+        <div className="sr-response">
+            <Form method={"POST"}>
+                <Button text={props.currentCard.hardBtnText} id="sr-hard-btn"
+                        responseHandler={props.responseHandler} value={ReviewResponse.Hard}/>
+                <Button text={props.currentCard.goodBtnText} id="sr-good-btn"
+                        responseHandler={props.responseHandler1} value={ReviewResponse.Good}/>
+                <Button text={props.currentCard.easyBtnText} id="sr-easy-btn"
+                        responseHandler={props.responseHandler2} value={ReviewResponse.Easy}/>
+            </Form>
+        </div>
+    </>;
+}
+
 export function ReviewDeck() {
     const currentCard = useLoaderData() as Flashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     return (<>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
-        {!isQuestion && (<>
-            <Question questionText={currentCard.questionText}/>
-            <hr/>
-            <Answer answerText={currentCard.answerText}/>
-            <div className="sr-response">
-                <Form method={"POST"}>
-                    <Button text={currentCard.hardBtnText} id="sr-hard-btn"
-                            responseHandler={() => console.log(ReviewResponse.Hard)} value={ReviewResponse.Hard}/>
-                    <Button text={currentCard.goodBtnText} id="sr-good-btn"
-                            responseHandler={() => console.log(ReviewResponse.Good)} value={ReviewResponse.Good}/>
-                    <Button text={currentCard.easyBtnText} id="sr-easy-btn"
-                            responseHandler={() => console.log(ReviewResponse.Easy)} value={ReviewResponse.Easy}/>
-                </Form>
-            </div>
-        </>)}
+        {!isQuestion && (<CardBack currentCard={currentCard} responseHandler={() => console.log(ReviewResponse.Hard)}
+                                   responseHandler1={() => console.log(ReviewResponse.Good)}
+                                   responseHandler2={() => console.log(ReviewResponse.Easy)}/>)}
     </>);
 }
 
