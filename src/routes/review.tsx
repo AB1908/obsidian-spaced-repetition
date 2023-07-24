@@ -100,7 +100,9 @@ export async function reviewAction({request, params}) {
             return redirect("..");
         }
     } else {
-        return redirect(`./../sm18fbb3`)
+        if (params.flashcardId === "1923n8aq")
+            return redirect(`./../sm18fbb3`)
+        else return redirect("./../..");
     }
 }
 
