@@ -9,9 +9,15 @@ export function cardTextGenerator(questionText: string, answerText: string, card
     }
 }
 
+export interface SchedulingMetadata {
+    interval: number;
+    ease: number;
+    dueDate: string;
+}
+
 export function metadataTextGenerator(
     annotationId: string,
-    schedulingMetadata: { interval: number, ease: number, dueDate: string },
+    schedulingMetadata: SchedulingMetadata,
     flag: FLAG
 ) {
     if (schedulingMetadata === null)
