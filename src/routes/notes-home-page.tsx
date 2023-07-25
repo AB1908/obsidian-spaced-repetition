@@ -15,7 +15,7 @@ export interface ReviewBook {
 export interface FlashCount {
     mature: number;
     new:    number;
-    young:  number;
+    learning:  number;
 }
 
 // TODO: Fix types
