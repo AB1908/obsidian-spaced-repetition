@@ -5,7 +5,7 @@ import {Form, redirect} from "react-router-dom";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
 import {getFlashcardById, updateFlashcardSchedulingMetadata} from "src/controller";
 
-const USE_ACTUAL_BACKEND = false;
+export const USE_ACTUAL_BACKEND = false;
 
 interface Flashcard {
     id: string,
