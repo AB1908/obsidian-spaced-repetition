@@ -6,7 +6,7 @@ import {AppContext} from "src/contexts/PluginContext";
 import {createMemoryRouter, RouterProvider} from "react-router-dom";
 import {Root, Tabs, Tags} from "src/routes/root";
 import ErrorPage from "src/routes/errorPage";
-import {ChapterList, chapterLoader} from "src/ui/components/chapters-list";
+import {ChapterList, chapterLoader} from "src/routes/chapter-list";
 import {DeckLandingPage, deckLoader} from "src/routes/deck-preview";
 import {chapterLoaderData, HighlightsList} from "src/ui/components/highlights";
 import {UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/upsert-card";
