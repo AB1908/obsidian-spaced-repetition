@@ -14,10 +14,26 @@ export function DeckLandingPage() {
     return (
         <>
             <h3>
-                {deck1.deckName}
+                {book.name}
             </h3>
             <h4>
-                {/*<AllCardCounts deck={deck1}/>*/}
+                <DeckCounts counts={book.counts.flashcards}/>
+            </h4>
+            <h4>
+                <span
+                    // aria-label={t(this.props.cardType)}
+                    className={`tree-item-flair sr-deck-counts `}
+                    // backgroundColor="#4caf50"
+                >
+                    {counts.countWith}
+                </span>
+                    <span
+                        // aria-label={t(this.props.cardType)}
+                        className={`tree-item-flair sr-deck-counts `}
+                        // backgroundColor="#4caf50"
+                    >
+                    {counts.countWithout}
+                </span>
             </h4>
             {/*    TODO: Add the untested highlight counts as well?*/}
             <p>
