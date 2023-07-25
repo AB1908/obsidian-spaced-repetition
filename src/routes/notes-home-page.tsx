@@ -58,7 +58,7 @@ export function Notes() {
     )
 }
 
-function DeckCounts({counts}: {counts: FlashCount}) {
+export function DeckCounts({counts}: {counts: FlashCount}) {
     return (
         <div className="tree-item-flair-outer">
                 <span>
