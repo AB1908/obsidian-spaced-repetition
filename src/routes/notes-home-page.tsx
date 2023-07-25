@@ -57,3 +57,30 @@ export function Notes() {
         </div>
     )
 }
+
+function DeckCounts({counts}: {counts: FlashCount}) {
+    return (
+        <div className="tree-item-flair-outer">
+                <span>
+                    <CardCount
+                        cardType="MATURE"
+                        backgroundColor="#4caf50"
+                        cardCount={counts.mature}
+                        additionalClass={"due-cards"}
+                    />
+                    <CardCount
+                        cardType="NEW"
+                        backgroundColor="#2196f3"
+                        cardCount={counts.new}
+                        additionalClass={"new-cards"}
+                    />
+                    <CardCount
+                        cardType="LEARNING"
+                        backgroundColor="#ff7043"
+                        cardCount={counts.learning}
+                        additionalClass={"total-cards"}
+                    />
+                </span>
+        </div>
+    );
+}
