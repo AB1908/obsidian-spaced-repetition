@@ -9,7 +9,8 @@ export function deckLoader({params}: {params: any}) {
 }
 
 export function DeckLandingPage() {
-    const deck1 = useLoaderData() as Deck;
+    const book = useLoaderData() as book;
+    const counts = countTotals(book);
     return (
         <>
             <h3>
