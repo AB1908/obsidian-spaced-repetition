@@ -115,8 +115,8 @@ async function updateParsedCards(flashcard: Flashcard, updatedSchedulingMetadata
     // then update parsed Card
     // encapsulate into class?
 
-    const result = await updateCardOnDisk(parsedCardCopy.notePath, originalCardOnDisk, newCardOnDisk);
-    if (result) {
+    const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardOnDisk, newCardOnDisk);
+    if (writeSuccessful) {
         plugin.parsedCards.forEach((value, index, array) => {
             if (value.id === parsedCardCopy.id) {
                 array[index] = parsedCardCopy;
