@@ -1,16 +1,26 @@
 //todo: investigate using lowdb
 import {getFileContents} from "src/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
-import {CachedMetadata, HeadingCache, Pos} from "obsidian";
+import {CachedMetadata, HeadingCache} from "obsidian";
 import {nanoid} from "nanoid";
 import {Flashcard} from "src/data/models/flashcard";
+import {FlashCount} from "src/routes/notes-home-page";
 
 // TODO: this is not really a "book" per se
 export interface book {
     id:       string;
     name:     string;
     children: book[];
-    counts?:  { [key: string]: Count };
+    counts?:  Counts;
+}
+
+interface Counts {
+    flashcards: FlashCount;
+    sections: SectionCounts
+}
+
+interface SectionCounts {
+    sections: { [key: string]: Count; }
 }
 
 export interface Count {
