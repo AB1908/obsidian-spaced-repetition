@@ -3,7 +3,7 @@ import {useLoaderData} from "react-router";
 import React, {useEffect, useRef} from "react";
 import {setIcon} from "obsidian";
 import {Link} from "react-router-dom";
-import {AllCardCounts} from "src/ui/components/card-counts";
+import {AllCardCounts, CardCount} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
 
 export interface ReviewBook {
@@ -44,7 +44,7 @@ export function Notes() {
                                 <div className={"tree-item-inner"}>
                                     {book.name}
                                 </div>
-                                {/*<AllCardCounts deck={book}/>*/}
+                                <DeckCounts counts={book.counts}/>
                             </li>
                         </Link>
                     )
