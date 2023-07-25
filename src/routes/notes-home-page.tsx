@@ -9,7 +9,7 @@ import {Icon} from "src/routes/root";
 export interface ReviewBook {
     id:         string;
     name:       string;
-    flashcards: FlashCount;
+    counts: FlashCount;
 }
 
 export interface FlashCount {
