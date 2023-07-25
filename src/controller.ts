@@ -181,3 +181,7 @@ export function getAnnotationsForSection(sectionId: string) {
 export function getFlashcardsForAnnotation(annotationId: string) {
 
 }
+
+export function getBooks() {
+
+}
