@@ -1,8 +1,8 @@
-import {AllCardCounts} from "src/ui/components/card-counts";
-import {Deck} from "src/Deck";
 import React from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
+import {DeckCounts} from "src/routes/notes-home-page";
+import {book, Count} from "src/data/models/book";
 
 export function deckLoader({params}: {params: any}) {
     return fetch(`http://localhost:3000/books/${params.bookId}`);
