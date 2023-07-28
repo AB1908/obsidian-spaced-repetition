@@ -61,9 +61,9 @@ function CardFront(props: { currentCard: Flashcard, handleShowAnswerButton: () =
 
 function CardBack(props: {
     currentCard: Flashcard,
-    responseHandler: () => void,
-    responseHandler1: () => void,
-    responseHandler2: () => void
+    hardBtnHandler: () => void,
+    goodBtnHandler: () => void,
+    easyBtnHandler: () => void
 }) {
     return <>
         <Question questionText={props.currentCard.questionText}/>
@@ -72,11 +72,11 @@ function CardBack(props: {
         <div className="sr-response">
             <Form method={"POST"}>
                 <Button text={props.currentCard.hardBtnText} id="sr-hard-btn"
-                        responseHandler={props.responseHandler} value={ReviewResponse.Hard}/>
+                        responseHandler={props.hardBtnHandler} value={ReviewResponse.Hard}/>
                 <Button text={props.currentCard.goodBtnText} id="sr-good-btn"
-                        responseHandler={props.responseHandler1} value={ReviewResponse.Good}/>
+                        responseHandler={props.goodBtnHandler} value={ReviewResponse.Good}/>
                 <Button text={props.currentCard.easyBtnText} id="sr-easy-btn"
-                        responseHandler={props.responseHandler2} value={ReviewResponse.Easy}/>
+                        responseHandler={props.easyBtnHandler} value={ReviewResponse.Easy}/>
             </Form>
         </div>
     </>;
@@ -88,9 +88,9 @@ export function ReviewDeck() {
     return (<>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
-        {!isQuestion && (<CardBack currentCard={currentCard} responseHandler={() => console.log(ReviewResponse.Hard)}
-                                   responseHandler1={() => console.log(ReviewResponse.Good)}
-                                   responseHandler2={() => console.log(ReviewResponse.Easy)}/>)}
+        {!isQuestion && (<CardBack currentCard={currentCard} hardBtnHandler={() => console.log(ReviewResponse.Hard)}
+                                   goodBtnHandler={() => console.log(ReviewResponse.Good)}
+                                   easyBtnHandler={() => console.log(ReviewResponse.Easy)}/>)}
     </>);
 }
 
