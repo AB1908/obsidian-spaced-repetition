@@ -14,13 +14,9 @@ export interface book {
     counts?:  Counts;
 }
 
-interface Counts {
+export interface Counts {
     flashcards: FlashCount;
-    sections: SectionCounts
-}
-
-interface SectionCounts {
-    sections: { [key: string]: Count; }
+    sections: Record<string, Count>
 }
 
 export interface Count {
