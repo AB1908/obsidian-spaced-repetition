@@ -85,12 +85,17 @@ function CardBack(props: {
 export function ReviewDeck() {
     const currentCard = useLoaderData() as Flashcard;
     const [isQuestion, setIsQuestion] = useState(true);
+
+    function buttonHandler(reviewResponse: ReviewResponse) {
+        console.log(reviewResponse);
+    }
+
     return (<>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
-        {!isQuestion && (<CardBack currentCard={currentCard} hardBtnHandler={() => console.log(ReviewResponse.Hard)}
-                                   goodBtnHandler={() => console.log(ReviewResponse.Good)}
-                                   easyBtnHandler={() => console.log(ReviewResponse.Easy)}/>)}
+        {!isQuestion && (<CardBack currentCard={currentCard} hardBtnHandler={() => buttonHandler(ReviewResponse.Hard)}
+                                   goodBtnHandler={() => buttonHandler(ReviewResponse.Good)}
+                                   easyBtnHandler={() => buttonHandler(ReviewResponse.Easy)}/>)}
     </>);
 }
 
