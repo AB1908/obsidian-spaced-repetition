@@ -1,7 +1,6 @@
-import React, {useState} from "react";
-import {useLoaderData} from "react-router";
+import React, {useEffect, useState} from "react";
+import {useLoaderData, useLocation, Form, redirect } from "react-router-dom";
 import {ReviewResponse} from "src/scheduling";
-import {Form, redirect} from "react-router-dom";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
 import {getFlashcardById, updateFlashcardSchedulingMetadata} from "src/controller";
 
@@ -85,6 +84,12 @@ function CardBack(props: {
 export function ReviewDeck() {
     const currentCard = useLoaderData() as Flashcard;
     const [isQuestion, setIsQuestion] = useState(true);
+    const location = useLocation();
+
+    // reset state when we navigate to a new flashcard
+    useEffect(() => {
+        setIsQuestion(() => true)
+    }, [location])
 
     function buttonHandler(reviewResponse: ReviewResponse) {
         console.log(reviewResponse);
@@ -120,6 +125,7 @@ export async function reviewAction({request, params}) {
             return redirect("..");
         }
     } else {
+        console.log('trying')
         if (params.flashcardId === "1923n8aq")
             return redirect(`./../sm18fbb3`)
         else return redirect("./../..");
