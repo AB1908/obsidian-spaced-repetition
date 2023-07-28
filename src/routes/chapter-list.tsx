@@ -13,7 +13,7 @@ export function chapterLoader({params}: {params: any}) {
 
 // TODO: extract spans
 // TODO: add labels
-function Section({section, counts}: { section: any, counts: any }) {
+function Section({section, counts}: { section: book, counts: Counts }) {
     // const clickHandler = () => console.log("Clicked!");
     return <Link to={`${section.id}/annotations`}>
         <div className="sr-deck tree-item-inner">
