@@ -5,6 +5,7 @@ import React from "react";
 import {ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
 import {createFlashcardForHighlight} from "src/controller";
 import {CardType} from "src/scheduling";
+import {Flashcard} from "src/data/models/flashcard";
 
 export function clozeLoader() {
     // TODO: Add redirect if we have cloze card
