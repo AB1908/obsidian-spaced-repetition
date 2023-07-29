@@ -21,8 +21,8 @@ export function PreviewExistingFlashcards() {
                         </p>
                         <ul>
                             {annotation.flashcards.map((t, i) => (
-                                <Link to={`${i}`}>
-                                    <li key={i}>
+                                <Link to={`${t.id}`}>
+                                    <li key={t.id}>
                                         <p>
                                             {t.questionText}
                                         </p>
