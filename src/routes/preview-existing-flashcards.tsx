@@ -13,7 +13,6 @@ export function PreviewExistingFlashcards() {
     const annotation = useLoaderData() as Annot;
     return (
         <>
-            <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note}/>
             <div>
                 {annotation.flashcards.length != 0 &&
                     (<>

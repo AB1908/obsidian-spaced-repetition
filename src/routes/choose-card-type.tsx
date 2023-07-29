@@ -5,11 +5,8 @@ import React from "react";
 import type {annotation} from "src/data/import/annotations";
 
 export function ChooseCardType() {
-    const annotation = useLoaderData() as annotation;
-
     return (
         <>
-            <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note}/>
             <CardTypePicker/>
         </>
     );
