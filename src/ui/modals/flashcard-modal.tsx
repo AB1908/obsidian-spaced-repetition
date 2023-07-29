@@ -9,7 +9,7 @@ import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/routes/chapter-list";
 import {DeckLandingPage, deckLoader} from "src/routes/deck-preview";
 import {chapterLoaderData, HighlightsList} from "src/ui/components/highlights";
-import {UpsertCard, creationAction, ClozeCard, clozeLoader} from "src/routes/upsert-card";
+import {UpsertCard, creationAction, ClozeCard, clozeLoader, cardLoader} from "src/routes/upsert-card";
 import {ChooseCardType} from "src/routes/choose-card-type";
 import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
@@ -131,14 +131,14 @@ export class FlashcardModal extends Modal {
                             path: "flashcards/:flashcardId",
                             element: <UpsertCard/>,
                             action: creationAction,
-                            loader: highlightLoader
+                            loader: cardLoader
                         },
                         {
                             // TODO: this should be refactored into a single add with params for type of card
                             path: "flashcards/new/regular",
                             element: <UpsertCard/>,
                             action: creationAction,
-                            loader: highlightLoader
+                            loader: cardLoader
                         },
                     ]
                 },
