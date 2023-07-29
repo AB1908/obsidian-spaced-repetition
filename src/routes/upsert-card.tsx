@@ -28,8 +28,13 @@ export function ClozeCard() {
     );
 }
 
-export function cardLoader() {
-
+export function cardLoader({params}: {params: any}) {
+    // we arrived here from an existing flashcard
+    // todo: potentially split into different component and loader? this seems error prone
+    if (params.flashcardId === undefined) {
+        return null;
+    }
+    return fetch(`http://localhost:3000/flashcards/${params.flashcardId}`);
 }
 
 // TODO: think of a better name since this also edits cards
