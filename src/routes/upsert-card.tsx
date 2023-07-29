@@ -41,12 +41,9 @@ export function cardLoader({params}: {params: any}) {
 // The path is basically being used as a bit of state but not explicitly so.
 // Is there a better way of doing this?
 export function UpsertCard() {
-    const annotation: any = useLoaderData();
-    const {flashcardId} = useParams();
-    const flashcardIndex = Number(flashcardId);
-    let flashcard = annotation.flashcards[flashcardIndex];
-    const defaultQuestionValue = flashcard?.questionText || "";
-    const defaultAnswerValue = flashcard?.answerText || "";
+    const flashcard: any = useLoaderData() as Flashcard;
+    let defaultQuestionValue = flashcard?.questionText || "";
+    let defaultAnswerValue = flashcard?.answerText || "";
     return (
         <>
             <DefaultCardForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue}/>
