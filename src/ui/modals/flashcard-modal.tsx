@@ -14,6 +14,7 @@ import {ChooseCardType} from "src/routes/choose-card-type";
 import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
 import {reviewAction, ReviewDeck, reviewLoader} from "src/routes/review";
+import {AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -23,7 +24,6 @@ export enum FlashcardModalMode {
 }
 
 export const routes = {
-    // bookList: "/notes/books",
     book: "/books/:bookId",
     chapterList: "/books/:bookId/chapters",
     highlightList: "/books/:bookId/chapters/:sectionId/annotations",
@@ -111,28 +111,36 @@ export class FlashcardModal extends Modal {
                 },
                 // TODO: make these children and use layout routes?
                 {
-                    path: routes.flashcardsList,
-                    element: <PreviewExistingFlashcards/>,
-                    loader: highlightLoader
-                },
-                {
-                    path: routes.createCard,
-                    element: <ChooseCardType/>,
-                    loader: highlightLoader
-                },
-                {
-                    // TODO: this should be refactored into a single add with params for type of card
-                    path: routes.flashcard,
-                    element: <UpsertCard/>,
-                    action: creationAction,
-                    loader: highlightLoader
-                },
-                {
-                    // TODO: this should be refactored into a single add with params for type of card
-                    path: routes.createRegularCard,
-                    element: <UpsertCard/>,
-                    action: creationAction,
-                    loader: highlightLoader
+                    path: "/books/:bookId/chapters/:chapterId/annotations/:annotationId",
+                    element: <AnnotationWithOutlet/>,
+                    loader: highlightLoader,
+                    children: [
+                        {
+                            path: "flashcards",
+                            element: <PreviewExistingFlashcards/>,
+                            loader: highlightLoader,
+
+                        },
+                        {
+                            path: "flashcards/new",
+                            element: <ChooseCardType/>,
+                            loader: highlightLoader
+                        },
+                        {
+                            // TODO: this should be refactored into a single add with params for type of card
+                            path: "flashcards/:flashcardId",
+                            element: <UpsertCard/>,
+                            action: creationAction,
+                            loader: highlightLoader
+                        },
+                        {
+                            // TODO: this should be refactored into a single add with params for type of card
+                            path: "flashcards/new/regular",
+                            element: <UpsertCard/>,
+                            action: creationAction,
+                            loader: highlightLoader
+                        },
+                    ]
                 },
                 {
                     // TODO: this should be refactored into a single add with params for type of card
