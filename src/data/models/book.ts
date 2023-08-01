@@ -195,10 +195,12 @@ export interface BookCounts {
 // todo: refactor to improve testability
 export async function deckNote(path: string): Promise<frontbook> {
     const parsedCards = await parseFileText(path);
+    let id = nanoid(8);
     return {
-        id: nanoid(8),
+        id: id,
         path: path,
-        name: getTFileForPath(path).parent.name,
+        // name: getTFileForPath(path).parent.name ?? "fake name" + id,
+        name: "fake name" + id,
         parsedCards: parsedCards,
         flashcards: generateFlashcardsArray(parsedCards),
         annotationPath: "",
