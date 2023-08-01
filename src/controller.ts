@@ -152,7 +152,7 @@ export function updateFlashcardAnswer(id: string, answer: string) {
 export async function createFlashcardForHighlight(question: string, answer: string, annotationId: string, cardType: CardType) {
     let card;
     if (cardType == CardType.MultiLineBasic) {
-        // TODO: Fix hardcoded path
+        // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "More flashcards.md", annotationId);
         plugin.parsedCards.push(parsedCard);
