@@ -4,6 +4,7 @@ import {AnnotationWithFlashcard, BookMetadataSections, Heading} from "src/data/m
 import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
 import {CardType} from "src/scheduling";
 import {parseCardText, parseMetadata} from "src/data/deck";
+import {getFileContents} from "src/disk";
 
 // TODO: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
@@ -88,7 +89,8 @@ export function generateSectionsTree(sections: (AnnotationWithFlashcard|Heading)
 // TODO: parameterize separators??
 const CARDTEXT_REGEX = /(?<cardText>.*\n\?\n.*)\n(?<metadataText><!--SR:.*-->)/g;
 
-export function parseFileText(fileText: string, path: string) {
+export async function parseFileText(path: string) {
+    const fileText = await getFileContents(path);
     const cardMatchesArray = fileText.matchAll(CARDTEXT_REGEX);
     const parsedCardsArray: ParsedCard[] = [];
     for (let card of cardMatchesArray) {
