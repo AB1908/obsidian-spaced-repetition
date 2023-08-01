@@ -50,10 +50,14 @@ export interface FlashcardMetadata {
 // Couldn't find a concise way of doing this that was more readable
 function stringToFlag(flag: string): FLAG {
     switch (flag) {
-        case "S": return FLAG.SUSPEND;
-        case "B": return FLAG.BURY;
-        case "L": return FLAG.LEARNING;
-        default: throw new Error("stringToFlag: incorrect character encountered");
+        case "S":
+            return FLAG.SUSPEND;
+        case "B":
+            return FLAG.BURY;
+        case "L":
+            return FLAG.LEARNING;
+        default:
+            throw new Error("stringToFlag: incorrect character encountered");
     }
 }
 
