@@ -6,6 +6,8 @@ import {annotation} from "src/data/import/annotations";
 import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
 import {updateCardOnDisk} from "src/disk";
 import {moment} from "obsidian";
+import {ReviewBook} from "src/routes/notes-home-page";
+import {counts} from "src/data/deck";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -182,6 +184,14 @@ export function getFlashcardsForAnnotation(annotationId: string) {
 
 }
 
-export function getBooks() {
-
+export function getBooks(): ReviewBook[]{
+    let books = plugin.books.map(t=> {
+        return {
+            id: t.id,
+            name: t.name,
+            counts: counts(t.flashcards)
+        }
+    });
+    console.log(books);
+    return books;
 }
