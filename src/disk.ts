@@ -1,4 +1,4 @@
-import {TFile} from "obsidian";
+import {TagCache, TFile} from "obsidian";
 
 export async function writeCardToDisk(path: string, text: string) {
     await app.vault.append(getTFileForPath(path), text);
@@ -20,13 +20,14 @@ export async function updateCardOnDisk(path: string, originalText: string, updat
     return true;
 }
 
+
 function setOfHashesWithTags(tag: string) {
-    const findTag = t => t.includes(tag);
+    const findTag = (tag: string) => (t: TagCache) => t.tag.includes(tag);
     const hashSet = new Set<string>();
     const fileHashes = Object.keys(app.metadataCache.metadataCache);
     for (let hash of fileHashes) {
         const cachedFileMetadata = app.metadataCache.metadataCache[hash];
-        if (cachedFileMetadata.tags?.find(findTag) || cachedFileMetadata.frontmatter?.tags?.find(findTag)) {
+        if (cachedFileMetadata.tags?.find(findTag(tag)) || cachedFileMetadata.frontmatter?.tags?.find(findTag(tag))) {
             hashSet.add(hash)
         }
     }
