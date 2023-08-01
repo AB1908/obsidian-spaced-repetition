@@ -42,7 +42,7 @@ export function updateFlashcardQuestion(id: string, question: string) {
 }
 
 export function calculateDelayBeforeReview(due: string) {
-    return moment().valueOf() - moment(due).valueOf();
+    return Math.abs(moment().valueOf() - moment(due).valueOf());
 }
 
 // todo: move into controller?
