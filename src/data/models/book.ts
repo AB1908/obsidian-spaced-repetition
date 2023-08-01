@@ -1,10 +1,12 @@
 //todo: investigate using lowdb
-import {getFileContents} from "src/disk";
+import {getFileContents, getTFileForPath} from "src/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache} from "obsidian";
 import {nanoid} from "nanoid";
 import {Flashcard} from "src/data/models/flashcard";
 import {FlashCount} from "src/routes/notes-home-page";
+import {generateFlashcardsArray, parseFileText} from "src/newparser";
+import {ParsedCard} from "src/data/models/parsedCard";
 
 // TODO: this is not really a "book" per se
 export interface book {
@@ -171,5 +173,34 @@ export function bookTree(id: string, name: string, bookSections: BookMetadataSec
         id,
         name,
         children: bookSections
+    };
+}
+
+export interface frontbook {
+    id:             string;
+    name:           string;
+    path:           string;
+    parsedCards:    ParsedCard[];
+    flashcards:     Flashcard[];
+    annotationPath: string;
+    // counts: BookCounts;
+}
+
+export interface BookCounts {
+    mature:   number;
+    new:      number;
+    learning: number;
+}
+
+// todo: refactor to improve testability
+export async function deckNote(path: string): Promise<frontbook> {
+    const parsedCards = await parseFileText(path);
+    return {
+        id: nanoid(8),
+        path: path,
+        name: getTFileForPath(path).parent.name,
+        parsedCards: parsedCards,
+        flashcards: generateFlashcardsArray(parsedCards),
+        annotationPath: "",
     };
 }
