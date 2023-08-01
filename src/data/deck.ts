@@ -78,3 +78,18 @@ export function parseMetadata(text: string): FlashcardMetadata {
             ease: Number(scheduling.groups.ease),
         };
 }
+
+export function counts(flashcards: Flashcard[])  {
+    let newCount = 0, mature = 0, learning = 0;
+    flashcards.forEach(t => {
+        if (t.interval >= 32) {
+            mature += 1;
+        } else if (t.interval && t.interval < 32) {
+            learning += 1;
+        } else {
+        // } if (!t.interval) {
+            newCount += 1;
+        }
+    });
+    return {mature, learning, new: newCount};
+}
