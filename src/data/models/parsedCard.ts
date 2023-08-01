@@ -14,6 +14,7 @@ export interface ParsedCard {
 }
 
 // Note that this creates a learning card by default
+// todo: fix metadatatext
 export async function createParsedCard(
     questionText: string,
     answerText: string,
