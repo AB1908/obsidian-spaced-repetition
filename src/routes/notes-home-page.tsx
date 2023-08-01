@@ -5,6 +5,8 @@ import {setIcon} from "obsidian";
 import {Link} from "react-router-dom";
 import {AllCardCounts, CardCount} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
+import {getBooks} from "src/controller";
+import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export interface ReviewBook {
     id:         string;
@@ -21,7 +23,11 @@ export interface FlashCount {
 // TODO: Fix types
 // TODO: use more realistic data??
 export function notesLoader({params}: {params: any}) {
-    return fetch('http://localhost:3000/bookReview');
+    if (USE_ACTUAL_BACKEND) {
+        return getBooks();
+    } else {
+        return fetch('http://localhost:3000/bookReview');
+    }
 }
 
 export function Notes() {
