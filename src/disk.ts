@@ -20,7 +20,6 @@ export async function updateCardOnDisk(path: string, originalText: string, updat
     return true;
 }
 
-
 function setOfHashesWithTags(tag: string) {
     const findTag = (tag: string) => (t: TagCache) => t.tag.includes(tag);
     const hashSet = new Set<string>();
@@ -38,7 +37,7 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
     const filePaths: string[] = [];
     const fileCacheKeys = Object.keys(app.metadataCache.fileCache);
     for (let file of fileCacheKeys) {
-        if (app.metadataCache.fileCache[file].hash in hashSet) {
+        if (hashSet.has(app.metadataCache.fileCache[file].hash)) {
             filePaths.push(file);
         }
     }
