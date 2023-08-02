@@ -8,7 +8,7 @@ import {ReviewResponse, schedule} from "src/scheduler/scheduling";
 import {FlashcardContent, FlashcardProps} from "../components/flashcard";
 import {FlashcardEditModal} from "../modals/edit-modal";
 import {ModalStates} from "./modal";
-import {updateCardInFileText, updateCardText} from "src/sched-utils";
+import {updateCardInFileText, updateCardText} from "src/scheduler/sched-utils";
 import {Card} from "src/Card";
 
 export function FlashcardView(props: FlashcardProps) {
