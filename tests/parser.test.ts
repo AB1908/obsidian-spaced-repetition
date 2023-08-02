@@ -1,4 +1,4 @@
-import {parse} from "src/parser";
+import {parse} from "src/old_parser";
 import {CardType} from "src/scheduling";
 import type {SRSettings} from "src/settings";
 
