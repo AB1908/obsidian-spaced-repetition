@@ -49,7 +49,7 @@ export default class SRPlugin extends Plugin {
     public parsedCards: ParsedCard[] = [];
     public annotations: annotation[] = [];
     // todo: fix type
-    public books: frontbook[];
+    public notesWithFlashcards: frontbook[];
     private filePaths: string[];
 
     async onload(): Promise<void> {
@@ -57,7 +57,7 @@ export default class SRPlugin extends Plugin {
         plugin = this;
         // todo: move this initialization to modal opening phase
         this.filePaths = listOfNotes("flashcards");
-        this.books = await Promise.all(this.filePaths.map(async (t: string) => await deckNote(t)));
+        this.notesWithFlashcards = await Promise.all(this.filePaths.map(async (t: string) => await deckNote(t)));
 
         appIcon();
 

@@ -185,7 +185,7 @@ export function getFlashcardsForAnnotation(annotationId: string) {
 }
 
 export function getBooks(): ReviewBook[]{
-    let books = plugin.books.map(t=> {
+    let books = plugin.notesWithFlashcards.map(t=> {
         return {
             id: t.id,
             name: t.name,
