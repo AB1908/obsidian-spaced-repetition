@@ -69,7 +69,9 @@ export class Flashcard extends AbstractFlashcard {
         this.questionText = questionText;
         this.answerText = answerText;
     }
-} // todo: move into controller?
+}
+
+// todo: move into controller?
 export function calculateDelayBeforeReview(due: string) {
     return Math.abs(moment().valueOf() - moment(due).valueOf());
 }
