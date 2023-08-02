@@ -68,7 +68,7 @@ function countTotals(book: Counts) {
     let countWithout: number = 0;
     for (let sectionKey of Object.keys(book.sections)) {
         //@ts-ignore
-        const item: Count = book.counts.sections[sectionKey];
+        const item: Count = book.sections[sectionKey];
         countWith += item.with;
         countWithout += item.without;
     }
