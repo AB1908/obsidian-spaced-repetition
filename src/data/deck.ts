@@ -7,7 +7,7 @@ export function createParsedCardsArray(fileText: string, settings: SRSettings) {
     plugin.parsedCards = [...parse(fileText, settings)]
 }
 
-export function counts(flashcards: Flashcard[])  {
+export function maturityCounts(flashcards: Flashcard[])  {
     let newCount = 0, mature = 0, learning = 0;
     flashcards.forEach(t => {
         if (t.interval >= 32) {
