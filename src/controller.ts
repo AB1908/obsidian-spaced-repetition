@@ -4,7 +4,7 @@ import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
 import {plugin} from "src/main";
 import {annotation} from "src/data/import/annotations";
 import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
-import {updateCardOnDisk} from "src/disk";
+import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
 import {counts} from "src/data/deck";
 
