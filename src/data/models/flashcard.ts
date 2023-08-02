@@ -1,6 +1,9 @@
-import {CardType} from "src/scheduling";
+import {CardType, ReviewResponse, schedule} from "src/scheduling";
 import {nanoid} from "nanoid";
 import {FLAG, FlashcardMetadata} from "src/data/parser";
+import {moment} from "obsidian";
+import {SchedulingMetadata} from "src/data/export/TextGenerator";
+import {plugin} from "src/main";
 
 export interface Flashcard {
     id: string,
@@ -66,4 +69,44 @@ export class Flashcard extends AbstractFlashcard {
         this.questionText = questionText;
         this.answerText = answerText;
     }
+} // todo: move into controller?
+export function calculateDelayBeforeReview(due: string) {
+    return Math.abs(moment().valueOf() - moment(due).valueOf());
+}
+
+// todo: rename to update card?
+export function schedulingMetadataForResponse(
+    clickedResponse: ReviewResponse,
+    schedulingMetadata: SchedulingMetadata,
+): SchedulingMetadata {
+    // const flashcard = getFlashcardById(flashcardId);
+    // take the response received
+    // use that to update flashcard internal state
+    // that will take care of writing to disk
+    // so this should be a relatively lean method
+    // don't forget to update siblings?
+    let schedObj;
+    // is new card
+    if (schedulingMetadata.dueDate === null) {
+        // todo: move default settings down into schedule()?
+        schedObj = schedule(
+            clickedResponse,
+            1.0,
+            plugin.data.settings.baseEase,
+            0,
+            plugin.data.settings,
+        );
+    } else {
+        schedObj = schedule(
+            clickedResponse,
+            schedulingMetadata.interval,
+            schedulingMetadata.ease,
+            calculateDelayBeforeReview(schedulingMetadata.dueDate),
+            plugin.data.settings,
+        );
+    }
+    const {interval, ease} = schedObj;
+    // todo: parameterize format? nah
+    const due = moment(Date.now() + interval * 24 * 3600 * 1000).format("YYYY-MM-DD");
+    return {interval, ease, dueDate: due};
 }
