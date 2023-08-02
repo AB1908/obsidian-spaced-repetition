@@ -1,6 +1,7 @@
 // Given some string text, I should be able to make a deck from it
 
-import {FLAG, parseMetadata} from "src/data/deck";
+
+import {FLAG, parseMetadata} from "src/data/parser";
 
 describe("metadata parser", () => {
     test("no metadata", () => {

@@ -1,6 +1,7 @@
 import {CardType} from "src/scheduling";
 import {ParsedCard} from "src/data/models/parsedCard";
-import {FLAG, flagToString} from "src/data/deck";
+
+import {FLAG, flagToString} from "src/data/parser";
 
 export function cardTextGenerator(questionText: string, answerText: string, cardType: CardType) {
     if (cardType == CardType.MultiLineBasic) {
