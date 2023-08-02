@@ -3,12 +3,12 @@ import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {DeckCounts} from "src/routes/notes-home-page";
 import {book, Count, Counts} from "src/data/models/book";
-import {getBookById} from "src/controller";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export function deckLoader({params}: {params: any}) {
     if (USE_ACTUAL_BACKEND)
-        return getBookById(params.bookId);
+        // return getBookById(params.bookId);
+        return;
     else
         return fetch(`http://localhost:3000/books/${params.bookId}`);
 }
