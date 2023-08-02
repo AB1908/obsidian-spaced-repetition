@@ -1,7 +1,7 @@
 import {AnnotationCount, bookSections, getAnnotations, Heading} from "src/data/models/book";
 import {sampleAnnotationMetadata, sampleAnnotationText} from "./disk.test";
 import {annotation} from "src/data/import/annotations";
-import {generateTree} from "src/data/newparser";
+import {generateTree} from "src/data/parser";
 import {bookWithCounts} from "src/api";
 
 const { nanoid } = jest.requireActual("nanoid");

@@ -5,7 +5,7 @@ import {CachedMetadata, HeadingCache} from "obsidian";
 import {nanoid} from "nanoid";
 import {Flashcard} from "src/data/models/flashcard";
 import {FlashCount} from "src/routes/notes-home-page";
-import {generateFlashcardsArray, parseFileText} from "src/data/newparser";
+import {generateFlashcardsArray, parseFileText} from "src/data/parser";
 import {ParsedCard} from "src/data/models/parsedCard";
 
 // TODO: this is not really a "book" per se
