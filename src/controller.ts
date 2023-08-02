@@ -6,7 +6,7 @@ import {annotation} from "src/data/import/annotations";
 import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
 import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
-import {counts} from "src/data/deck";
+import {maturityCounts} from "src/data/deck";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -146,7 +146,7 @@ export function getBooks(): ReviewBook[]{
         return {
             id: t.id,
             name: t.name,
-            counts: counts(t.flashcards)
+            counts: maturityCounts(t.flashcards)
         }
     });
     console.log(books);
