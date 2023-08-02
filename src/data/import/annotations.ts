@@ -1,7 +1,7 @@
 import {getFileContents, getHeadersForFile} from "src/data/import/disk";
 
 export interface annotation {
-    id:             number;
+    id:             string;
     type:           string;
     highlight:      string;
     note:           string;
@@ -20,7 +20,7 @@ export function parseAnnotations(text: string): annotation {
     for (let match of annotationMatches) {
         parsedAnnotations.push({
             // TODO: potentially switch to string that also contains a short UUID?
-            id: Number(match.groups.id),
+            id: match.groups.id,
             type: match.groups.type,
             highlight: match.groups.highlight.trim(),
             note: match.groups.note.trim(),

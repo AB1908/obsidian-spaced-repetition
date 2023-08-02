@@ -24,7 +24,7 @@ import {counts} from "src/data/deck";
 //     }
 // }
 
-export function getAnnotationById(id: number) {
+export function getAnnotationById(id: string) {
     return plugin.annotations.filter((t: annotation)=> t.id === id)[0];
 }
 
