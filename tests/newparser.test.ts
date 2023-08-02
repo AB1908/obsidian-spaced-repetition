@@ -1,4 +1,4 @@
-import { findPreviousHeader, generateTree, parseFileText } from "src/newparser";
+import { findPreviousHeader, generateTree, parseFileText } from "src/data/newparser";
 import type { SectionCache } from "obsidian";
 import { beforeEach } from "@jest/globals";
 import {CardType} from "src/scheduling";
