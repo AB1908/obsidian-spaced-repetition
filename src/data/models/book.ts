@@ -206,7 +206,9 @@ export async function deckNote(path: string): Promise<frontbook> {
         flashcards: generateFlashcardsArray(parsedCards),
         annotationPath: "",
     };
-} // TODO: why did I make this? Where do I need it?
+}
+
+// TODO: why did I make this? Where do I need it?
 // TODO: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
 // TODO: don't need to nest paragraphs I think
