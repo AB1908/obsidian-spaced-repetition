@@ -8,9 +8,15 @@ export function deckLoader({params}: {params: any}) {
     return fetch(`http://localhost:3000/books/${params.bookId}`);
 }
 
+export interface DeckLand {
+    id: string;
+    name: string;
+    counts: Counts;
+}
+
 export function DeckLandingPage() {
-    const book = useLoaderData() as book;
-    const counts = countTotals(book);
+    const book = useLoaderData() as DeckLand;
+    const counts = countTotals(book.counts);
     return (
         <>
             <h3>
@@ -52,10 +58,10 @@ export function DeckLandingPage() {
     )
 }
 
-function countTotals(book: book) {
+function countTotals(book: Counts) {
     let countWith: number = 0;
     let countWithout: number = 0;
-    for (let sectionKey of Object.keys(book.counts.sections)) {
+    for (let sectionKey of Object.keys(book.sections)) {
         //@ts-ignore
         const item: Count = book.counts.sections[sectionKey];
         countWith += item.with;
