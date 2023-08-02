@@ -1,4 +1,4 @@
-import {getFileContents, getHeadersForFile} from "src/disk";
+import {getFileContents, getHeadersForFile} from "src/data/import/disk";
 
 export interface annotation {
     id:             number;

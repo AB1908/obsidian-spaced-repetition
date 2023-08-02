@@ -1,5 +1,5 @@
 //todo: investigate using lowdb
-import {getFileContents} from "src/disk";
+import {getFileContents} from "src/data/import/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
 import {nanoid} from "nanoid";

@@ -11,7 +11,7 @@ import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import type {ParsedCard} from "src/data/models/parsedCard";
 import type {Flashcard} from "src/data/models/flashcard";
 import {annotation} from "src/data/import/annotations";
-import {listOfNotes} from "src/disk";
+import {listOfNotes} from "src/data/import/disk";
 import {deckNote, frontbook} from "src/data/models/book";
 
 export interface PluginData {
