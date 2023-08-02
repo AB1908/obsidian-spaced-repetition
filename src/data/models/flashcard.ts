@@ -1,6 +1,6 @@
-import {FLAG, FlashcardMetadata} from "src/data/deck";
 import {CardType} from "src/scheduling";
 import {nanoid} from "nanoid";
+import {FLAG, FlashcardMetadata} from "src/data/parser";
 
 export interface Flashcard {
     id: string,
