@@ -1,7 +1,7 @@
 import { parseFileText } from "src/data/parser";
 import type { SectionCache } from "obsidian";
 import { beforeEach } from "@jest/globals";
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import {createParsedCardFromText} from "src/data/models/parsedCard";
 import {findPreviousHeader, generateTree} from "src/data/models/book";
 jest.mock('../src/data/models/parsedCard', () => ({

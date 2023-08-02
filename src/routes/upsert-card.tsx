@@ -4,7 +4,7 @@ import {redirect, useParams} from "react-router-dom";
 import React from "react";
 import {ClozeCardForm, DefaultCardForm} from "src/ui/components/card-creation";
 import {createFlashcardForHighlight} from "src/controller";
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import {Flashcard} from "src/data/models/flashcard";
 
 export function clozeLoader() {

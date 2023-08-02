@@ -1,4 +1,4 @@
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import {ParsedCard} from "src/data/models/parsedCard";
 
 import {FLAG, flagToString} from "src/data/parser";

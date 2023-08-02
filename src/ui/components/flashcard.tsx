@@ -2,7 +2,7 @@ import {MarkdownRenderer} from "obsidian";
 import React, {MutableRefObject, useContext, useEffect, useRef} from "react";
 import {FlashcardContext} from "src/contexts/FlashcardContext";
 import {Deck} from "src/Deck";
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import {EditLaterButton, ResetButton, ResponseButtons, ShowAnswerButton} from "./buttons";
 import {Card} from "src/Card";
 import {removeSchedTextFromCard} from "src/sched-utils";

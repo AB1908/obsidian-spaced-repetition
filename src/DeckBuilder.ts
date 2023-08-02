@@ -4,7 +4,7 @@ import {Deck} from "./Deck";
 import {t} from "./lang/helpers";
 import {LinkStat, PluginData} from "./main";
 import {parse} from "./old_parser";
-import {CardType} from "./scheduling";
+import {CardType} from "./scheduler/scheduling";
 import {SRSettings} from "./settings";
 import {Stats} from "./stats-modal";
 import {cyrb53, escapeRegexString} from "./utils";

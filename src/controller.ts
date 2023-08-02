@@ -1,4 +1,4 @@
-import {CardType, ReviewResponse} from "src/scheduling";
+import {CardType, ReviewResponse} from "src/scheduler/scheduling";
 import {AbstractFlashcard, Flashcard, schedulingMetadataForResponse} from "src/data/models/flashcard";
 import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
 import {plugin} from "src/main";
