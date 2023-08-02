@@ -1,5 +1,5 @@
 import {TFile} from "obsidian";
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 
 export class Card {
     isDue: boolean;

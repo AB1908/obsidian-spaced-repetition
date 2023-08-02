@@ -1,4 +1,4 @@
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import {nanoid} from "nanoid";
 import {writeCardToDisk} from "src/data/import/disk";
 import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";

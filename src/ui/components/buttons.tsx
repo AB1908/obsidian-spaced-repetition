@@ -2,7 +2,7 @@ import {Platform} from "obsidian";
 import React, {useContext} from "react";
 import {FlashcardContext} from "src/contexts/FlashcardContext";
 import {AppContext} from "src/contexts/PluginContext";
-import {ReviewResponse, schedule, textInterval} from "src/scheduling";
+import {ReviewResponse, schedule, textInterval} from "src/scheduler/scheduling";
 import {Link} from "react-router-dom";
 import {plugin, PluginData} from "src/main";
 import {Card} from "src/Card";

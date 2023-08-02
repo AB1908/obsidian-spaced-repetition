@@ -6,7 +6,7 @@ import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
 import {replacedCardText} from "src/edit-utils";
 import {Card} from "src/Card";
 import {AnswerEdit, QuestionEdit} from "../components/edit-card-text-areas";
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 
 // from https://github.com/chhoumann/quickadd/blob/bce0b4cdac44b867854d6233796e3406dfd163c6/src/gui/GenericInputPrompt/GenericInputPrompt.ts#L5
 export class FlashcardEditModal extends Modal {

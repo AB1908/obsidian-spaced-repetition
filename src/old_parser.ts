@@ -1,4 +1,4 @@
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import type {SRSettings} from "src/settings";
 import {nanoid} from "nanoid";
 

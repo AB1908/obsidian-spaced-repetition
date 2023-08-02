@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {useLoaderData, useLocation, Form, redirect } from "react-router-dom";
-import {ReviewResponse} from "src/scheduling";
+import {ReviewResponse} from "src/scheduler/scheduling";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
 import {getFlashcardById, updateFlashcardSchedulingMetadata} from "src/controller";
 

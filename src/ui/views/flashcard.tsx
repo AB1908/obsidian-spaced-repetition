@@ -4,7 +4,7 @@ import {FlashcardContext} from "src/contexts/FlashcardContext";
 import {AppContext} from "src/contexts/PluginContext";
 import {Deck} from "src/Deck";
 import {PluginData} from "src/main";
-import {ReviewResponse, schedule} from "src/scheduling";
+import {ReviewResponse, schedule} from "src/scheduler/scheduling";
 import {FlashcardContent, FlashcardProps} from "../components/flashcard";
 import {FlashcardEditModal} from "../modals/edit-modal";
 import {ModalStates} from "./modal";

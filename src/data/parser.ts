@@ -1,7 +1,7 @@
 import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
 import {BookMetadataSections} from "src/data/models/book";
 import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
-import {CardType} from "src/scheduling";
+import {CardType} from "src/scheduler/scheduling";
 import {getFileContents} from "src/data/import/disk";
 
 // adds a hasFlashcard:true for every annotation that has a flashcard
