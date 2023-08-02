@@ -2,7 +2,7 @@ import React from "react";
 import {Modal} from "obsidian";
 import {createRoot, Root} from "react-dom/client";
 import SRPlugin from "src/main";
-import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
+import {generateSeparator, removeSchedTextFromCard} from "src/scheduler/sched-utils";
 import {replacedCardText} from "src/edit-utils";
 import {Card} from "src/Card";
 import {AnswerEdit, QuestionEdit} from "../components/edit-card-text-areas";

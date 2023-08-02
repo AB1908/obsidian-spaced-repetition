@@ -5,7 +5,7 @@ import {Deck} from "src/Deck";
 import {CardType} from "src/scheduler/scheduling";
 import {EditLaterButton, ResetButton, ResponseButtons, ShowAnswerButton} from "./buttons";
 import {Card} from "src/Card";
-import {removeSchedTextFromCard} from "src/sched-utils";
+import {removeSchedTextFromCard} from "src/scheduler/sched-utils";
 import {renderToString} from 'react-dom/server';
 
 export interface FlashcardButtons extends ContentProps {

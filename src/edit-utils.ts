@@ -1,5 +1,5 @@
 import {escapeRegexString} from "src/utils";
-import {generateSeparator, removeSchedTextFromCard} from "src/sched-utils";
+import {generateSeparator, removeSchedTextFromCard} from "src/scheduler/sched-utils";
 import {Card} from "src/Card";
 import {MULTI_SCHEDULING_EXTRACTOR} from "src/constants";
 

@@ -6,7 +6,7 @@ import {
     removeSchedTextFromCard,
     updateCardInFileText,
     updateCardText
-} from "src/sched-utils";
+} from "src/scheduler/sched-utils";
 import {Card} from "src/Card";
 
 test("initial", () => {
