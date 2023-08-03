@@ -197,37 +197,6 @@ export function getAnnotationFilePath(path: string) {
     return annotationTFile;
 }
 
-// todo: refactor to improve testability
-export async function deckNote(path: string): Promise<frontbook> {
-    const parsedCards = await parseFileText(path);
-    let id = nanoid(8);
-    const annotationTFile = getAnnotationFilePath(path);
-    if (annotationTFile === undefined) return {
-        id: id,
-        path: path,
-        // name: getTFileForPath(path).parent.name ?? "fake name" + id,
-        name: "fake name" + id,
-        parsedCards: parsedCards,
-        flashcards: generateFlashcardsArray(parsedCards),
-        annotationPath: "",
-        //todo: fix annotation file source
-        // annotations: [],
-        bookSections: [],
-    };
-    return {
-        id: id,
-        path: path,
-        // name: getTFileForPath(path).parent.name ?? "fake name" + id,
-        name: "fake name" + id,
-        parsedCards: parsedCards,
-        flashcards: generateFlashcardsArray(parsedCards),
-        annotationPath: annotationTFile?.path,
-        //todo: fix annotation file source
-        // annotations: bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path)).filter((t): t is annotation => isAnnotation(t)),
-        bookSections: bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path))
-    };
-}
-
 // TODO: why did I make this? Where do I need it?
 // TODO: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
