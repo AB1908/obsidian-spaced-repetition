@@ -1,4 +1,4 @@
-import {AnnotationCount, bookSections, generateTree, getAnnotations, Heading} from "src/data/models/book";
+import {AnnotationCount, bookSections, generateTree, getAnnotationsForSection, Heading} from "src/data/models/book";
 import {sampleAnnotationMetadata, sampleAnnotationText} from "./disk.test";
 import {annotation} from "src/data/import/annotations";
 import {bookWithCounts} from "src/api";
@@ -304,7 +304,7 @@ test("bookSections", () => {
 
 describe("getAnnotations", () => {
     test("successfully gets nested annotations", () => {
-        expect(getAnnotations("-g4c-q2S", bookSectionsArray)).toEqual([
+        expect(getAnnotationsForSection("-g4c-q2S", bookSectionsArray)).toEqual([
             {
                 highlight: "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
                 id: 93813,
@@ -327,7 +327,7 @@ describe("getAnnotations", () => {
     });
 
     test("successfully gets annotations from subsection", () => {
-        expect(getAnnotations("xHev-sAx", bookSectionsArray)).toEqual([
+        expect(getAnnotationsForSection("xHev-sAx", bookSectionsArray)).toEqual([
             {
                 highlight: "> Onen i estel Edain, u-chebin estel anim.",
                 id: 93813,
@@ -338,7 +338,7 @@ describe("getAnnotations", () => {
     });
 
     test("gets annotations from first subheader under heading 1", () => {
-        expect(getAnnotations("xHev-sAx", bookSectionsArray)).toEqual([
+        expect(getAnnotationsForSection("xHev-sAx", bookSectionsArray)).toEqual([
             {
                 highlight: "> Onen i estel Edain, u-chebin estel anim.",
                 id: 93813,
@@ -349,7 +349,7 @@ describe("getAnnotations", () => {
     });
 
     test("gets annotations from second subheader under heading 1", () => {
-        expect(getAnnotations("xHev-sA1", bookSectionsArray)).toEqual([
+        expect(getAnnotationsForSection("xHev-sA1", bookSectionsArray)).toEqual([
             {
                 highlight: "> Onen i estel Edain, u-chebin estel anim.",
                 id: 93813,
@@ -360,7 +360,7 @@ describe("getAnnotations", () => {
     });
 
     test("gets all nested annotations under last header", () => {
-        expect(getAnnotations("WVcwnuIQ", bookSectionsArray)).toEqual([
+        expect(getAnnotationsForSection("WVcwnuIQ", bookSectionsArray)).toEqual([
             {
                 highlight: "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
                 id: 93813,
@@ -377,7 +377,7 @@ describe("getAnnotations", () => {
     });
 
     test("gets all nested annotations under last subheader", () => {
-        expect(getAnnotations("WVc23uIQ", bookSectionsArray)).toEqual([
+        expect(getAnnotationsForSection("WVc23uIQ", bookSectionsArray)).toEqual([
             {
                 highlight: "> New highlight here.\n> This is another line.",
                 id: 93813,

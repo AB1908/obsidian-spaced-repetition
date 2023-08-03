@@ -151,8 +151,8 @@ export interface AnnotationWithFlashcard extends annotation {
 
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
-export function getAnnotations(section: string, bookSections: BookMetadataSections) {
-    const index = bookSections.findIndex(t => t.id === section);
+export function getAnnotationsForSection(sectionId: string, bookSections: BookMetadataSections) {
+    const index = bookSections.findIndex(t => t.id === sectionId);
     // todo: it feels like there should be a better way to do this
     const currentHeading = (bookSections[index] as Heading);
     let x = index + 1;
