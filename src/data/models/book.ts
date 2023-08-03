@@ -285,7 +285,11 @@ export class Book implements frontbook {
         const annotationTFile = getAnnotationFilePath(this.path);
         if (annotationTFile) {
             this.annotationPath = annotationTFile.path;
-            this.bookSections = bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path));
+            this.bookSections = bookSections(
+                getMetadataForFile(annotationTFile.path),
+                await getFileContents(annotationTFile.path),
+                this.flashcards
+            );
         }
         return this;
     }
