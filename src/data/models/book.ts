@@ -8,7 +8,6 @@ import {FlashCount} from "src/routes/notes-home-page";
 import {parseFileText} from "src/data/parser";
 import {ParsedCard} from "src/data/models/parsedCard";
 import {generateFlashcardsArray} from "src/data/import/flashcards";
-import {annotationLoader} from "src/routes/annotation-with-outlet";
 
 // TODO: this is not really a "book" per se
 export interface book {
