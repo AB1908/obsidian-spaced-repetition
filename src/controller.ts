@@ -149,6 +149,30 @@ export function getBooks(): ReviewBook[]{
             counts: maturityCounts(t.flashcards)
         }
     });
-    console.log(books);
     return books;
+}
+
+export function getBookById(id: string) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
+    if (!book) {
+        return;
+    }
+    const annotationsWithFlashcards = new Set(...book.annotations.map(t=>t.id));
+    const annotationsWithoutFlashcards = new Set<string>();
+    for (let each of book.annotations) {
+        if (!annotationsWithFlashcards.has(each.id)) {
+            annotationsWithoutFlashcards.add(each.id);
+        }
+    }
+    return {
+        id: book.id,
+        name: book.name,
+        counts: {
+            flashcards: maturityCounts(book.flashcards),
+            annotations: {
+                withFlashcards: annotationsWithFlashcards.size,
+                withoutFlashcards: annotationsWithoutFlashcards.size
+            }
+        }
+    }
 }
