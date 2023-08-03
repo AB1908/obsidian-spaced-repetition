@@ -27,15 +27,6 @@ export interface Count {
     without: number;
 }
 
-// TODO: fix duplicate interface
-export interface Annot {
-    id: string;
-    type: string;
-    highlight: string;
-    note: string;
-    flashcards: Flashcard[]
-}
-
 function isHeading(section: annotation|Heading): section is Heading {
     return (section as Heading).level !== undefined;
 }
