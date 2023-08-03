@@ -30,7 +30,6 @@ interface Count {
 
 export function DeckLandingPage() {
     const book = useLoaderData() as DeckLand;
-    const counts = countTotals(book.counts);
     return (
         <>
             <h3>
@@ -45,14 +44,14 @@ export function DeckLandingPage() {
                     className={`tree-item-flair sr-deck-counts `}
                     // backgroundColor="#4caf50"
                 >
-                    {counts.countWith}
+                    {book.counts.annotations.withFlashcards}
                 </span>
                     <span
                         // aria-label={t(this.props.cardType)}
                         className={`tree-item-flair sr-deck-counts `}
                         // backgroundColor="#4caf50"
                     >
-                    {counts.countWithout}
+                    {book.counts.annotations.withoutFlashcards}
                 </span>
             </h4>
             {/*    TODO: Add the untested highlight counts as well?*/}
