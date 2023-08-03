@@ -1,6 +1,5 @@
 import {useLoaderData} from "react-router";
-import {Annot} from "src/data/models/book";
-import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
+import {annotation} from "src/data/import/annotations";
 import {Link} from "react-router-dom";
 import React from "react";
 
@@ -10,7 +9,7 @@ export async function highlightLoader({params}: { params: any }) {
 }
 
 export function PreviewExistingFlashcards() {
-    const annotation = useLoaderData() as Annot;
+    const annotation = useLoaderData() as annotation;
     return (
         <>
             <div>
