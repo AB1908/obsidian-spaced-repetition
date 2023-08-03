@@ -1,5 +1,5 @@
 //todo: investigate using lowdb
-import {getFileContents} from "src/data/import/disk";
+import {getFileContents, getMetadataForFile} from "src/data/import/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
 import {nanoid} from "nanoid";
@@ -184,6 +184,7 @@ export interface frontbook {
     parsedCards:    ParsedCard[];
     flashcards:     Flashcard[];
     annotationPath: string;
+    annotations: annotation[];
     // counts: BookCounts;
 }
 
@@ -205,6 +206,7 @@ export async function deckNote(path: string): Promise<frontbook> {
         parsedCards: parsedCards,
         flashcards: generateFlashcardsArray(parsedCards),
         annotationPath: "",
+        annotations: bookSections(getMetadataForFile(path), await getFileContents(path)).filter((t): t is annotation => isAnnotation(t))
     };
 }
 
