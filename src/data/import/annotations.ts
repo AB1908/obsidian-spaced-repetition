@@ -14,7 +14,7 @@ const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)(?<highlight>(\n> .*)+)\n
 
 // TODO: also use line for match since we need to correlate with markdown headers later
 // todo: think of header representation
-export function parseAnnotations(text: string): annotation {
+export function parseAnnotations(text: string): annotation[] {
     const parsedAnnotations: annotation[] = [];
     const annotationMatches = text.matchAll(ANNOTATION_REGEX);
     for (let match of annotationMatches) {
@@ -27,7 +27,7 @@ export function parseAnnotations(text: string): annotation {
             // todo: fix
         })
     }
-    return parsedAnnotations[0];
+    return parsedAnnotations;
 }
 
 export async function extractAnnotations(path: string) {
