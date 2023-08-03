@@ -157,7 +157,7 @@ export function getBookById(id: string) {
     if (!book) {
         return;
     }
-    const annotationsWithFlashcards = new Set(...book.annotations().map(t=>t.id));
+    const annotationsWithFlashcards = new Set(...book.flashcards.map(t=>t.annotationId));
     const annotationsWithoutFlashcards = new Set<string>();
     for (let each of book.annotations()) {
         if (!annotationsWithFlashcards.has(each.id)) {
