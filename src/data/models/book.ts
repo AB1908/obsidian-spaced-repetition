@@ -203,15 +203,15 @@ export function getAnnotationFilePath(path: string) {
 // TODO: think about heading collisions as there may be multiple chapters with same name
 // TODO: don't need to nest paragraphs I think
 // TODO: fix type
-export function generateTree(sections: any[]) {
+export function generateTree(sections: (annotation | Heading)[]) {
     let i = 0;
     let prevHeader;
     while (i < sections.length) {
         let cacheItem = sections[i];
-        if ("heading" in cacheItem) {
-            if (!("children" in cacheItem)) {
-                cacheItem.children = [];
-            }
+        if (isHeading(cacheItem)) {
+            // if (!("children" in cacheItem)) {
+            //     cacheItem.children = [];
+            // }
         } else {
             prevHeader = findPreviousHeader(sections, cacheItem);
             if (prevHeader != null) {
@@ -228,14 +228,14 @@ export function generateTree(sections: any[]) {
         let sectionIndex = 0;
         while (sectionIndex < sections.length) {
             let each = sections[sectionIndex];
-            if (("heading" in each) && (each.level == headingLevel)) {
+            if ((isHeading(each)) && (each.level == headingLevel)) {
                 prevHeader = findPreviousHeader(sections, each);
                 sections[prevHeader].children.push(each);
             }
             sectionIndex++;
         }
     }
-    return sections.filter(t => "heading" in t && t.level == 1);
+    return sections.filter(t => isHeading(t) && t.level == 1);
 }
 
 export function findPreviousHeader(sections: (SectionCache | HeadingCache)[], section: SectionCache | HeadingCache) {
