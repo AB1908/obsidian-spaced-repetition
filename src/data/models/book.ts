@@ -8,6 +8,7 @@ import {FlashCount} from "src/routes/notes-home-page";
 import {parseFileText} from "src/data/parser";
 import {ParsedCard} from "src/data/models/parsedCard";
 import {generateFlashcardsArray} from "src/data/import/flashcards";
+import {annotationLoader} from "src/routes/annotation-with-outlet";
 
 // TODO: this is not really a "book" per se
 export interface book {
@@ -209,7 +210,8 @@ export function getAnnotationFilePath(path: string) {
 export async function deckNote(path: string): Promise<frontbook> {
     const parsedCards = await parseFileText(path);
     let id = nanoid(8);
-    return {
+    const annotationTFile = getAnnotationFilePath(path);
+    if (annotationTFile === undefined) return {
         id: id,
         path: path,
         // name: getTFileForPath(path).parent.name ?? "fake name" + id,
@@ -217,7 +219,19 @@ export async function deckNote(path: string): Promise<frontbook> {
         parsedCards: parsedCards,
         flashcards: generateFlashcardsArray(parsedCards),
         annotationPath: "",
-        annotations: bookSections(getMetadataForFile(path), await getFileContents(path)).filter((t): t is annotation => isAnnotation(t))
+        //todo: fix annotation file source
+        annotations: []
+    };
+    return {
+        id: id,
+        path: path,
+        // name: getTFileForPath(path).parent.name ?? "fake name" + id,
+        name: "fake name" + id,
+        parsedCards: parsedCards,
+        flashcards: generateFlashcardsArray(parsedCards),
+        annotationPath: annotationTFile?.path,
+        //todo: fix annotation file source
+        annotations: bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path)).filter((t): t is annotation => isAnnotation(t))
     };
 }
 
