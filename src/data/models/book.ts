@@ -199,7 +199,7 @@ export const ANNOTATIONS_YAML_KEY = "annotations";
 
 export function getAnnotationFilePath(path: string) {
     const metadata = getMetadataForFile(path);
-    const annotationFromYaml = metadata?.frontmatter?[ANNOTATIONS_YAML_KEY];
+    const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
     if (!annotationFromYaml) return;
     const annotationLinkText = annotationFromYaml.replaceAll(/[\[\]]/g, "");
     const annotationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
