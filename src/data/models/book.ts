@@ -243,15 +243,15 @@ export function generateTree(sections: any[]) {
     let i = 0;
     let prevHeader;
     while (i < sections.length) {
-        let each = sections[i];
-        if ("heading" in each) {
-            if (!("children" in each)) {
-                each.children = [];
+        let cacheItem = sections[i];
+        if ("heading" in cacheItem) {
+            if (!("children" in cacheItem)) {
+                cacheItem.children = [];
             }
         } else {
-            prevHeader = findPreviousHeader(sections, each);
+            prevHeader = findPreviousHeader(sections, cacheItem);
             if (prevHeader != null) {
-                sections[prevHeader].children.push(each);
+                sections[prevHeader].children.push(cacheItem);
             }
         }
         i++;
