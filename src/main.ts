@@ -12,7 +12,7 @@ import type {ParsedCard} from "src/data/models/parsedCard";
 import type {Flashcard} from "src/data/models/flashcard";
 import {annotation} from "src/data/import/annotations";
 import {listOfNotes} from "src/data/import/disk";
-import {deckNote, frontbook} from "src/data/models/book";
+import {Book, deckNote, frontbook} from "src/data/models/book";
 
 export interface PluginData {
     settings: SRSettings;
@@ -57,7 +57,7 @@ export default class SRPlugin extends Plugin {
         plugin = this;
         // todo: move this initialization to modal opening phase
         this.filePaths = listOfNotes("flashcards");
-        this.notesWithFlashcards = await Promise.all(this.filePaths.map(async (t: string) => await deckNote(t)));
+        this.notesWithFlashcards = await Promise.all(this.filePaths.map(async (t: string, i: number) => new Book(t, `book${i}`).initialize()));
 
         appIcon();
 
