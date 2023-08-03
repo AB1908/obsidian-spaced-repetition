@@ -238,17 +238,22 @@ export function generateTree(sections: (annotation | Heading)[]) {
     return sections.filter(t => isHeading(t) && t.level == 1);
 }
 
+function isHeadingCache(cacheItem: SectionCache|HeadingCache): cacheItem is HeadingCache {
+    return (cacheItem as HeadingCache).level !== undefined;
+}
+
 export function findPreviousHeader(sections: (SectionCache | HeadingCache)[], section: SectionCache | HeadingCache) {
     let start = sections.indexOf(section);
     // top level headers don't have a parent
     // TODO: consider changing this to -1 so we have a consistent return type
     if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
     while (start >= 0) {
-        if (section == sections[start]) start--;
-        if ("level" in sections[start]) {
-            if ((sections[start] as HeadingCache).level == (section as HeadingCache).level) start--;
+        let sectionStart = sections[start];
+        if (section == sectionStart) start--;
+        if (isHeadingCache(sectionStart)) {
+            if (sectionStart.level == (section as HeadingCache).level) start--;
         }
-        if ("heading" in sections[start])
+        if (isHeadingCache(sectionStart))
             return start;
         start--;
     }
