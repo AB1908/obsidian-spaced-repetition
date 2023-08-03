@@ -1,9 +1,9 @@
 import React from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
-import {DeckCounts} from "src/routes/notes-home-page";
-import {book, Count, Counts} from "src/data/models/book";
+import {DeckCounts, FlashCount} from "src/routes/notes-home-page";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
+import {getBookById} from "src/controller";
 
 export function deckLoader({params}: {params: any}) {
     if (USE_ACTUAL_BACKEND)
