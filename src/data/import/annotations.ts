@@ -6,7 +6,7 @@ export interface annotation {
     highlight:      string;
     note:           string;
     // TODO: do something about this optional thingy
-    hasAnnotations?: boolean;
+    hasFlashcards?: boolean;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
