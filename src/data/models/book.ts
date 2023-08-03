@@ -115,7 +115,7 @@ export function bookSections(metadata: CachedMetadata, fileText: string) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
             let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
-            output.push(annotation);
+            output.push(...annotation);
         } else if (cacheItem.type === "heading") {
             //done: fix casting
             output.push(new Heading(metadata.headings[headingIndex]));
