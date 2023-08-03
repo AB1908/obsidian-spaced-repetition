@@ -194,6 +194,17 @@ export interface BookCounts {
     learning: number;
 }
 
+export const ANNOTATIONS_YAML_KEY = "annotations";
+
+export function getAnnotationFilePath(path: string) {
+    const metadata = getMetadataForFile(path);
+    const annotationFromYaml = metadata?.frontmatter?[ANNOTATIONS_YAML_KEY];
+    if (!annotationFromYaml) return;
+    const annotationLinkText = annotationFromYaml.replaceAll(/[\[\]]/g, "");
+    const annotationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
+    return annotationTFile;
+}
+
 // todo: refactor to improve testability
 export async function deckNote(path: string): Promise<frontbook> {
     const parsedCards = await parseFileText(path);
