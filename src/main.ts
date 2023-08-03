@@ -49,7 +49,7 @@ export default class SRPlugin extends Plugin {
     public parsedCards: ParsedCard[] = [];
     public annotations: annotation[] = [];
     // todo: fix type
-    public notesWithFlashcards: frontbook[];
+    public notesWithFlashcards: Book[];
     private filePaths: string[];
 
     async onload(): Promise<void> {
