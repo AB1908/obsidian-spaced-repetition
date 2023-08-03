@@ -98,15 +98,16 @@ export async function createBook(path: string) {
     // need a get next header function so i can find paragraphs belonging to current header
 }
 
-export function bookSections(metadata: CachedMetadata, fileText: string) {
+export function bookSections(metadata: CachedMetadata, fileText: string, flashcards: Flashcard[]) {
     const output: (annotation|Heading)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
+    const annotationsWithFlashcards = new Set(...flashcards.map(t=>t.annotationId));
     for (let cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
             let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
-            output.push(...annotation);
+            output.push({hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation});
         } else if (cacheItem.type === "heading") {
             //done: fix casting
             output.push(new Heading(metadata.headings[headingIndex]));
