@@ -7,8 +7,7 @@ import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export function deckLoader({params}: {params: any}) {
     if (USE_ACTUAL_BACKEND)
-        // return getBookById(params.bookId);
-        return;
+        return getBookById(params.bookId);
     else
         return fetch(`http://localhost:3000/books/${params.bookId}`);
 }
@@ -17,6 +16,16 @@ export interface DeckLand {
     id: string;
     name: string;
     counts: Counts;
+}
+
+interface Counts {
+    flashcards: FlashCount;
+    annotations: Count;
+}
+
+interface Count {
+    withFlashcards: number;
+    withoutFlashcards: number;
 }
 
 export function DeckLandingPage() {
