@@ -4,11 +4,16 @@ import {useLoaderData} from "react-router";
 import {book, Counts} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
 import {Link} from "react-router-dom";
+import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 // TODO: more realistic data
 // TODO: think of a better data structure for this, this is terrible
 export function chapterLoader({params}: {params: any}) {
-    return fetch(`http://localhost:3000/books/${params.bookId}`);
+    if (USE_ACTUAL_BACKEND) {
+
+    } else {
+        return fetch(`http://localhost:3000/books/${params.bookId}`);
+    }
 }
 
 // TODO: extract spans
