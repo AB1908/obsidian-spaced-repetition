@@ -298,3 +298,38 @@ export function generateSectionsTree(sections: (AnnotationWithFlashcard | Headin
     const headings: Heading[] = sections.filter((t): t is Heading => isHeading(t));
     return generateTree(headings);
 }
+
+export class Book implements frontbook {
+    annotationPath: string;
+    bookSections: (annotation | Heading)[];
+    flashcards: Flashcard[];
+    id: string;
+    name: string;
+    parsedCards: ParsedCard[];
+    path: string;
+
+    constructor(path: string, name: string) {
+        this.id = nanoid(8);
+        this.path = path;
+        this.name = name;
+        this.parsedCards = [];
+        this.flashcards = [];
+        this.annotationPath = null;
+        this.bookSections = [];
+    }
+
+    async initialize() {
+        this.parsedCards = await parseFileText(this.path);
+        this.flashcards = generateFlashcardsArray(this.parsedCards);
+        const annotationTFile = getAnnotationFilePath(this.path);
+        if (annotationTFile) {
+            this.annotationPath = annotationTFile.path;
+            this.bookSections = bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path));
+        }
+        return this;
+    }
+
+    annotations() {
+        return this.bookSections.filter((t): t is annotation => isAnnotation(t));
+    }
+}
