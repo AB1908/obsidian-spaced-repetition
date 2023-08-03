@@ -184,7 +184,8 @@ export interface frontbook {
     parsedCards:    ParsedCard[];
     flashcards:     Flashcard[];
     annotationPath: string;
-    annotations: annotation[];
+    // annotations: annotation[];
+    bookSections: (annotation|Heading)[];
     // counts: BookCounts;
 }
 
@@ -219,7 +220,8 @@ export async function deckNote(path: string): Promise<frontbook> {
         flashcards: generateFlashcardsArray(parsedCards),
         annotationPath: "",
         //todo: fix annotation file source
-        annotations: []
+        // annotations: [],
+        bookSections: [],
     };
     return {
         id: id,
@@ -230,7 +232,8 @@ export async function deckNote(path: string): Promise<frontbook> {
         flashcards: generateFlashcardsArray(parsedCards),
         annotationPath: annotationTFile?.path,
         //todo: fix annotation file source
-        annotations: bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path)).filter((t): t is annotation => isAnnotation(t))
+        // annotations: bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path)).filter((t): t is annotation => isAnnotation(t)),
+        bookSections: bookSections(getMetadataForFile(annotationTFile.path), await getFileContents(annotationTFile.path))
     };
 }
 
