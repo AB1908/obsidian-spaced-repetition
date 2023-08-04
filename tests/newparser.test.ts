@@ -3,7 +3,8 @@ import type { SectionCache } from "obsidian";
 import { beforeEach } from "@jest/globals";
 import {CardType} from "src/scheduler/scheduling";
 import {createParsedCardFromText} from "src/data/models/parsedCard";
-import {findPreviousHeader, generateTree} from "src/data/models/book";
+import {findPreviousHeader} from "src/data/models/book";
+import {generateTree} from "src/data/models/bookTree";
 jest.mock('../src/data/models/parsedCard', () => ({
     createParsedCardFromText: jest.fn()
 }));

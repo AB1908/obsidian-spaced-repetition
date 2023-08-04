@@ -1,8 +1,6 @@
 import {
-    AnnotationCount,
     bookSections,
     findPreviousHeader,
-    generateTree,
     getAnnotationsForSection,
     Heading
 } from "src/data/models/book";
@@ -11,6 +9,7 @@ import {annotation} from "src/data/import/annotations";
 import {bookWithCounts} from "src/api";
 import {beforeEach} from "@jest/globals";
 import {SectionCache} from "obsidian";
+import {AnnotationCount, generateTree} from "src/data/models/bookTree";
 
 const { nanoid } = jest.requireActual("nanoid");
 jest.doMock("nanoid", () => ({
