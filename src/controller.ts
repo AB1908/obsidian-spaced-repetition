@@ -6,7 +6,8 @@ import {annotation} from "src/data/import/annotations";
 import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
 import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
-import {AnnotationCount, bookTree, generateSectionsTree, generateTree} from "src/data/models/book";
+
+import {AnnotationCount, bookTree, generateSectionsTree, generateTree} from "src/data/models/bookTree";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
