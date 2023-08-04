@@ -14,6 +14,16 @@ export function annotationsLoader({params}: {params: any}) {
 export interface SectionAnnotations {
     id:          string;
     annotations: annotation[];
+    title:       string;
+}
+
+interface annotation {
+    id:             string;
+    type:           string;
+    highlight:      string;
+    note:           string;
+    // TODO: do something about this optional thingy
+    flashcardCount: number;
 }
 
 export function HeaderWithCounts(props: { withoutCount: number, withCount: number }) {
