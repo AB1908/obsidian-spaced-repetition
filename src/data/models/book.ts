@@ -46,7 +46,7 @@ with them and how many don't. I couldn't find a cleaner way of doing it without 
  */
 function countAnnotations(sections: any, mem: any, injectedCondition: (sections: any) => boolean, key: string) {
     let count = 0;
-    if (isHeading(sections)) {
+    if ("children" in sections) {
         for (let child of sections.children) {
             count += countAnnotations(child, mem, injectedCondition, key);
         }
