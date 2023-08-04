@@ -74,9 +74,9 @@ export function HighlightsList() {
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
                 {chapterData.annotations.map((annotation: annotation, i: number) => (
-                    <div>
+                    <div key={annotation.id} >
                         <Link to={`${annotation.id}/flashcards`}>
-                            <li key={annotation.id} className={"sr-highlight tree-item-self is-clickable"}>
+                            <li className={"sr-highlight tree-item-self is-clickable"}>
                                 {annotation.highlight}
                                 <span>
                                     <span className={"no-tests tree-item-flair sr-test-counts"}>
