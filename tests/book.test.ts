@@ -1,5 +1,5 @@
 import {
-    bookSections,
+    bookSections, findNextHeader,
     findPreviousHeader,
     getAnnotationsForSection,
     Heading
@@ -8,7 +8,7 @@ import {sampleAnnotationMetadata, sampleAnnotationText} from "./disk.test";
 import {annotation} from "src/data/import/annotations";
 import {bookWithCounts} from "src/api";
 import {beforeEach} from "@jest/globals";
-import {SectionCache} from "obsidian";
+import {HeadingCache, SectionCache} from "obsidian";
 import {AnnotationCount, generateTree} from "src/data/models/bookTree";
 
 const { nanoid } = jest.requireActual("nanoid");
@@ -491,6 +491,57 @@ describe("generateHeaderCounts", () => {
     //     expect(findPreviousHeader(input as SectionCache[], input[4] as SectionCache)).toBe(0);
     //     expect(findPreviousHeader(input as SectionCache[], input[2] as SectionCache)).toBe(0);
     // });
+    // // TODO: test for subsubheaders :(
+    // test("should return a top level header for an annotation under it", () => {
+    //     expect(findPreviousHeader(input as SectionCache[], input[1] as SectionCache)).toBe(0);
+    // });
+    // test("should return a top level header for an annotation under it", () => {
+    //     expect(findPreviousHeader(input as SectionCache[], input[3] as SectionCache)).toBe(2);
+    // });
+});
+
+describe("findNextHeader", () => {
+    beforeEach(() => {
+        input = [
+            {
+                heading: "Heading 1",
+                level: 1,
+            },
+            {
+                type: "paragraph",
+            },
+            {
+                heading: "SubHeading 1",
+                level: 2,
+            },
+            {
+                type: "paragraph",
+            },
+            {
+                heading: "SubHeading 2",
+                level: 2,
+            },
+            {
+                type: "paragraph",
+            },
+            {
+                heading: "Heading 2",
+                level: 1,
+            },
+            {
+                type: "paragraph",
+            },
+        ];
+    });
+
+    test("should return null for a top level header", () => {
+        expect(findNextHeader(input as SectionCache[], input[6] as HeadingCache)).toBe(8);
+        expect(findNextHeader(input as SectionCache[], input[0] as HeadingCache)).toBe(6);
+    });
+    test("should return a top level header for a subheader", () => {
+        expect(findNextHeader(input as SectionCache[], input[4] as HeadingCache)).toBe(6);
+        expect(findNextHeader(input as SectionCache[], input[2] as HeadingCache)).toBe(4);
+    });
     // // TODO: test for subsubheaders :(
     // test("should return a top level header for an annotation under it", () => {
     //     expect(findPreviousHeader(input as SectionCache[], input[1] as SectionCache)).toBe(0);
