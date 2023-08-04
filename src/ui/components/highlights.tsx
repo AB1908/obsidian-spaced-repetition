@@ -45,7 +45,7 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
     );
 }
 
-export function HighlightsList() {
+export function AnnotationList() {
     const chapterData: any = useLoaderData() as SectionAnnotations;
     // const [color, setColor] = useState(null);
     // const uniqueHighlightColors = [...new Set(chapterData.highlights.map((t: any) => t.color))];
