@@ -8,6 +8,7 @@ import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
 
 import {AnnotationCount, bookTree, generateSectionsTree, generateTree} from "src/data/models/bookTree";
+import {findNextHeader, isAnnotation, isHeading} from "src/data/models/book";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -134,8 +135,36 @@ export function deleteFlashcardById(id: string) {
     return true;
 }
 
-export function getAnnotationsForSection(sectionId: string) {
+export function getAnnotationsForSection(sectionId: string, bookId: string) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        return null;
+    }
+    const selectedSectionIndex = book.bookSections.findIndex(t=>sectionId === t.id);
+    const selectedSection = book.bookSections[selectedSectionIndex];
+    if ((!selectedSection) || (!isHeading(selectedSection))) {
+        return null;
+    }
+    const nextHeadingIndex = findNextHeader(book.bookSections, selectedSection);
+    let annotations = book.bookSections.slice(selectedSectionIndex, nextHeadingIndex).filter((t): t is annotation=>isAnnotation(t));
 
+    const flashcardCountForAnnotation: Record<string, number> = {};
+    for (const id of book.flashcards.map(t=>t.annotationId)) {
+        flashcardCountForAnnotation[id] = flashcardCountForAnnotation[id] ? flashcardCountForAnnotation[id] + 1 : 1;
+    }
+
+    annotations = annotations.map(t=> {
+        return {
+            ...t,
+            flashcardCount: flashcardCountForAnnotation[t.id] || 0,
+        }
+    });
+
+    return {
+        id: sectionId,
+        title: selectedSection.name,
+        annotations: annotations
+    }
 }
 
 export function getFlashcardsForAnnotation(annotationId: string) {
@@ -180,13 +209,10 @@ export function getBookById(id: string) {
 
 export function getSectionTreeForBook(id: string) {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
-    console.log(plugin.notesWithFlashcards);
     if (!book) {
         return;
     }
-    console.log(book.bookSections);
     let children = generateSectionsTree(book.bookSections);
-    // console.log(children);
     return {
         id: book.id,
         name: book.name,
