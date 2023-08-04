@@ -14,7 +14,7 @@ export interface book {
     id:       string;
     name:     string;
     children: book[];
-    counts?:  Counts;
+    counts?:  Count;
 }
 
 export interface Counts {
