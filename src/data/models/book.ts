@@ -124,6 +124,7 @@ export class Heading {
     level: number;
     name: string;
     children: Heading[];
+    count?: Count;
 
     constructor(heading: HeadingCache) {
         // might be too clever
