@@ -8,7 +8,7 @@ import {Root, Tabs, Tags} from "src/routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/routes/chapter-list";
 import {DeckLandingPage, deckLoader} from "src/routes/deck-preview";
-import {annotationsLoader, HighlightsList} from "src/ui/components/highlights";
+import {annotationsLoader, AnnotationList} from "src/ui/components/highlights";
 import {UpsertCard, creationAction, ClozeCard, clozeLoader, cardLoader} from "src/routes/upsert-card";
 import {ChooseCardType} from "src/routes/choose-card-type";
 import {Notes, notesLoader} from "src/routes/notes-home-page";
@@ -105,7 +105,7 @@ export class FlashcardModal extends Modal {
                 // },
                 {
                     path: routes.highlightList,
-                    element: <HighlightsList/>,
+                    element: <AnnotationList/>,
                     //todo: conditional logic for intermediate page where we display existing flashcards
                     loader: annotationsLoader
                 },
