@@ -7,6 +7,7 @@ import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} 
 import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
 import {maturityCounts} from "src/data/deck";
+import {AnnotationCount, bookTree, generateSectionsTree, generateTree} from "src/data/models/book";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -175,4 +176,24 @@ export function getBookById(id: string) {
             }
         }
     }
+}
+
+export function getSectionTreeForBook(id: string) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
+    console.log(plugin.notesWithFlashcards);
+    if (!book) {
+        return;
+    }
+    console.log(book.bookSections);
+    let children = generateSectionsTree(book.bookSections);
+    // console.log(children);
+    return {
+        id: book.id,
+        name: book.name,
+        children: children,
+        counts: {
+            sections: AnnotationCount(bookTree(book.id, book.name, children)),
+            flashcards: maturityCounts(book.flashcards),
+        }
+    };
 }
