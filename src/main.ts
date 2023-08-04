@@ -12,7 +12,7 @@ import type {ParsedCard} from "src/data/models/parsedCard";
 import type {Flashcard} from "src/data/models/flashcard";
 import {annotation} from "src/data/import/annotations";
 import {listOfNotes} from "src/data/import/disk";
-import {Book, deckNote, frontbook} from "src/data/models/book";
+import {Book} from "src/data/models/book";
 
 export interface PluginData {
     settings: SRSettings;
@@ -50,7 +50,7 @@ export default class SRPlugin extends Plugin {
     public annotations: annotation[] = [];
     // todo: fix type
     public notesWithFlashcards: Book[];
-    private filePaths: string[];
+    filePaths: string[];
 
     async onload(): Promise<void> {
         await this.loadPluginData();
