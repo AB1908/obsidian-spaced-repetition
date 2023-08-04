@@ -29,12 +29,12 @@ function Section({section, counts}: { section: book, counts: Counts }) {
                 {/*TODO: look into changing these class names? These ugly yo*/}
                 <span className={"yes-tests tree-item-flair sr-test-counts"}>
                     {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                    {counts.sections[sectionId].with}
+                    {section.count.with}
                 </span>
                 <span className={"no-tests tree-item-flair sr-test-counts"}>
                     {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
                     {/*{section.with}*/}
-                    {counts.sections[sectionId].without}
+                    {section.count.without}
                 </span>
             </span>
         </div>
