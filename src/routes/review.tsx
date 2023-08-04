@@ -4,7 +4,7 @@ import {ReviewResponse} from "src/scheduler/scheduling";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
 import {getFlashcardById, updateFlashcardSchedulingMetadata} from "src/controller";
 
-export const USE_ACTUAL_BACKEND = false;
+export const USE_ACTUAL_BACKEND = true;
 
 interface Flashcard {
     id: string,
