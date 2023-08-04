@@ -157,6 +157,29 @@ export function findPreviousHeader(sections: (SectionCache | HeadingCache)[], se
     return null;
 }
 
+export function findNextHeader(sections: (SectionCache | HeadingCache)[], section: HeadingCache) {
+    let index = sections.indexOf(section) + 1;
+    // top level headers don't have a parent
+    // TODO: consider changing this to -1 so we have a consistent return type
+    // if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
+    while (index < sections.length) {
+        let currentSection = sections[index];
+        // if (section == sectionStart) {
+        //     // we are on the same item lol
+        //     // increment and continue
+        //     index++;
+        //     continue;
+        // }
+        if (isHeadingCache(currentSection)) {
+            if (currentSection.level <= (section as HeadingCache).level) {
+                return index;
+            }
+        }
+        index++;
+    }
+    return index;
+}
+
 export function updateHeaders(cacheItem: annotation, sections: (annotation|Heading)[], key: keyof Count) {
     const previousHeadingIndex = findPreviousHeader(sections, cacheItem);
     let previousHeading = sections[previousHeadingIndex] as Heading;
