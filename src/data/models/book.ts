@@ -340,6 +340,7 @@ export class Book implements frontbook {
                 await getFileContents(annotationTFile.path),
                 this.flashcards
             );
+            this.bookSections = generateHeaderCounts(this.bookSections);
         }
         return this;
     }
