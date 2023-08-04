@@ -35,34 +35,6 @@ export function isAnnotation(section: annotation|Heading): section is annotation
     return (section as annotation).highlight !== undefined;
 }
 
-export async function createBook(path: string) {
-    // some assumptions: one book note or multiple?
-    const book = {
-        path: path,
-        contents: await getFileContents(path),
-        // metadata: await getFileMetadata(path)
-    }
-
-    // get file contents
-    // get file metadata
-    // create array of sections
-    // assign every section a uuid? This doesn't work. I need to get all annotations for a section
-    // either by walking the tree or by finding all content up to the next section of the next level
-
-    // create array of just paragraphs
-    // create annotations array
-    // push that into global annotation index
-    //
-
-    // i need a count of all annotations that are tested and not tested
-    // i need section trees
-    // let's put flashcard list here because I know it will be in the same folder
-    // i should be able to get a list of annotations for any given section
-    // i should be able to get a list of flashcards for any annotation
-    // need to parse flashcards first so I know which annotations are covered and which are not
-    // need a get next header function so i can find paragraphs belonging to current header
-}
-
 export function bookSections(metadata: CachedMetadata, fileText: string, flashcards: Flashcard[]) {
     const output: (annotation|Heading)[] = [];
     const fileTextArray = fileText.split("\n");
@@ -101,10 +73,6 @@ export class Heading {
 }
 
 export type BookMetadataSections = (Heading | annotation)[];
-
-export interface AnnotationWithFlashcard extends annotation {
-    hasFlashcard: boolean;
-}
 
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
