@@ -215,8 +215,9 @@ export function generateTree(sections: (annotation | Heading)[]) {
             // }
         } else {
             prevHeader = findPreviousHeader(sections, cacheItem);
+            const previousHeader = sections[prevHeader] as Heading;
             if (prevHeader != null) {
-                sections[prevHeader].children.push(cacheItem);
+                previousHeader.children.push(cacheItem);
             }
         }
         i++;
