@@ -232,8 +232,9 @@ export function generateTree(sections: (annotation | Heading)[]) {
         while (sectionIndex < sections.length) {
             let each = sections[sectionIndex];
             if ((isHeading(each)) && (each.level == headingLevel)) {
-                prevHeader = findPreviousHeader(sections, each);
-                sections[prevHeader].children.push(each);
+                let prevHeader = findPreviousHeader(sections, each);
+                let previousHeader = sections[prevHeader] as Heading;
+                previousHeader.children.push(each);
             }
             sectionIndex++;
         }
