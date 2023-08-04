@@ -249,11 +249,23 @@ export function findPreviousHeader(sections: (SectionCache | HeadingCache)[], se
     if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
     while (start >= 0) {
         let sectionStart = sections[start];
-        if (section == sectionStart) start--;
+        if (section == sectionStart) {
+            // we are on the same item lol
+            // decrement and continue
+            start--;
+            continue;
+        }
         if (isHeadingCache(sectionStart)) {
-            if (sectionStart.level == (section as HeadingCache).level) start--;
+            // if same level heading than 100% it is not the right header
+            // decrement and skip
+            if (sectionStart.level == (section as HeadingCache).level) {
+                start--;
+                continue;
+            }
         }
         if (isHeadingCache(sectionStart))
+            // we've finally reached a header
+            // return it
             return start;
         start--;
     }
