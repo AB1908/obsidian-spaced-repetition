@@ -102,7 +102,7 @@ export function bookSections(metadata: CachedMetadata, fileText: string, flashca
     const output: (annotation|Heading)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
-    const annotationsWithFlashcards = new Set(...flashcards.map(t=>t.annotationId));
+    const annotationsWithFlashcards = new Set(flashcards.map(t=>t.annotationId));
     for (let cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
