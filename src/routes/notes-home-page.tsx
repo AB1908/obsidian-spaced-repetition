@@ -45,7 +45,7 @@ export function Notes() {
         <div className={"Notes"}>
             <ul className={"sr-deck-tree"}>
                 {deckArray.map((book, i) => (
-                        <Link to={`/books/${book.id}`}>
+                        <Link to={`/books/${book.id}`} key={book.id}>
                             <li className={"sr-deck tree-item-self is-clickable"} key={i}>
                                 <div className={"tree-item-inner"}>
                                     {book.name}
