@@ -81,7 +81,7 @@ export function HighlightsList() {
                                 <span>
                                     <span className={"no-tests tree-item-flair sr-test-counts"}>
                                         {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
-                                        {20}
+                                        {annotation.flashcardCount}
                                     </span>
                                 </span>
                             </li>
