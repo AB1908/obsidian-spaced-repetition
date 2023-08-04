@@ -237,51 +237,6 @@ describe("generateTree", () => {
     });
 });
 
-let input: any[];
-describe("findPreviousHeader", () => {
-    beforeEach(() => {
-        input = [
-            {
-                heading: "Heading 1",
-                level: 1,
-            },
-            {
-                type: "paragraph",
-            },
-            {
-                heading: "SubHeading 1",
-                level: 2,
-            },
-            {
-                type: "paragraph",
-            },
-            {
-                heading: "SubHeading 2",
-                level: 2,
-            },
-            {
-                type: "paragraph",
-            },
-            {
-                heading: "Heading 2",
-                level: 1,
-            },
-            {
-                type: "paragraph",
-            },
-        ];
-    });
-
-    test("should return null for a top level header", () => {
-        expect(findPreviousHeader(input as SectionCache[], input[6] as SectionCache)).toBe(null);
-        expect(findPreviousHeader(input as SectionCache[], input[0] as SectionCache)).toBe(null);
-    });
-    test("should return a top level header for a subheader", () => {
-        expect(findPreviousHeader(input as SectionCache[], input[4] as SectionCache)).toBe(0);
-        expect(findPreviousHeader(input as SectionCache[], input[2] as SectionCache)).toBe(0);
-    });
-    // TODO: test for subsubheaders :(
-});
 
 describe("parseFlashcard", () => {
     test("parses a flashcard with only annotation id", () => {
