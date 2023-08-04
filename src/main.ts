@@ -55,7 +55,7 @@ export default class SRPlugin extends Plugin {
     async onload(): Promise<void> {
         await this.loadPluginData();
         plugin = this;
-        // todo: move this initialization to modal opening phase
+        // todo: move this initialization to modal opening phase?
         this.filePaths = listOfNotes("flashcards");
         this.notesWithFlashcards = await Promise.all(this.filePaths.map(async (t: string, i: number) => new Book(t, `book${i}`).initialize()));
 
