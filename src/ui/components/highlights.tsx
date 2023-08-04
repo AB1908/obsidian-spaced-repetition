@@ -1,12 +1,12 @@
 import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
-import {annotation} from "src/data/import/annotations";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
+import {getAnnotationsForSection} from "src/controller";
 
 export function annotationsLoader({params}: {params: any}) {
     if (USE_ACTUAL_BACKEND)
-        return
+        return getAnnotationsForSection(params.sectionId, params.bookId);
     else
         return fetch(`http://localhost:3000/annotationsBySection/${params.sectionId}`);
 }
