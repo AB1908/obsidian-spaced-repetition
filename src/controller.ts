@@ -1,12 +1,11 @@
 import {CardType, ReviewResponse} from "src/scheduler/scheduling";
-import {AbstractFlashcard, Flashcard, schedulingMetadataForResponse} from "src/data/models/flashcard";
+import {AbstractFlashcard, Flashcard, maturityCounts, schedulingMetadataForResponse} from "src/data/models/flashcard";
 import {createParsedCard, ParsedCard} from "src/data/models/parsedCard";
 import {plugin} from "src/main";
 import {annotation} from "src/data/import/annotations";
 import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
 import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
-import {maturityCounts} from "src/data/deck";
 import {AnnotationCount, bookTree, generateSectionsTree, generateTree} from "src/data/models/book";
 
 // TODO: Cloze cards
