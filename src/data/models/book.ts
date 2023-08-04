@@ -272,7 +272,36 @@ export function findPreviousHeader(sections: (SectionCache | HeadingCache)[], se
     return null;
 }
 
-export function generateSectionsTree(sections: (AnnotationWithFlashcard | Heading)[]) {
+export function updateHeaders(cacheItem: annotation, sections: (annotation|Heading)[], key: keyof Count) {
+    const previousHeadingIndex = findPreviousHeader(sections, cacheItem);
+    let previousHeading = sections[previousHeadingIndex] as Heading;
+    while (previousHeading != null) {
+        previousHeading.count[key]++;
+        previousHeading = sections[findPreviousHeader(sections, previousHeading)] as Heading;
+    }
+}
+
+export function generateHeaderCounts(sections: (annotation|Heading)[]) {
+    let i = 0;
+    // const out = [...sections];
+    const out = sections;
+    // const out = sections;
+    while (i < out.length) {
+        let cacheItem = out[i];
+        if (isHeading(cacheItem)) {
+            cacheItem.count = { "with": 0, "without": 0 };
+        } else {
+            if (cacheItem.hasFlashcards)
+                updateHeaders(cacheItem, out, "with");
+            else
+                updateHeaders(cacheItem, out, "without");
+        }
+        i++;
+    }
+    return out;
+}
+
+export function generateSectionsTree(sections: (annotation | Heading)[]) {
     const headings: Heading[] = sections.filter((t): t is Heading => isHeading(t));
     return generateTree(headings);
 }
