@@ -2,7 +2,6 @@ import {CardType} from "src/scheduler/scheduling";
 import {nanoid} from "nanoid";
 import {writeCardToDisk} from "src/data/import/disk";
 import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
-
 import {FLAG} from "src/data/parser";
 
 export interface ParsedCard {
