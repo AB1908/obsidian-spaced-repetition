@@ -213,6 +213,7 @@ export function generateTree(sections: (annotation | Heading)[]) {
             // if (!("children" in cacheItem)) {
             //     cacheItem.children = [];
             // }
+            cacheItem.count = { "with": 0, "without": 0};
         } else {
             prevHeader = findPreviousHeader(sections, cacheItem);
             const previousHeader = sections[prevHeader] as Heading;
