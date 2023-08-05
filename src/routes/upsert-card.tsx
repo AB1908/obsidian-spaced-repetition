@@ -39,6 +39,6 @@ export async function creationAction({params, request}: {params: any, request: a
     const data = await request.formData();
     // TODO: call the right api instead, there shouldn' be any actual update logic
     // I have access to bookId, sectionId, annotationId
-    await createFlashcardForHighlight(data.get("question"), data.get("answer"), params.annotationId)
+    await createFlashcardForHighlight(data.get("question"), data.get("answer"), params.annotationId, params.bookId);
     return redirect(`/books/${params.bookId}/chapters/${params.chapterId}/annotations/${params.annotationId}/flashcards`);
 }
