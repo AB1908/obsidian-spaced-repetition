@@ -172,8 +172,12 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
     }
 }
 
-export function getFlashcardsForAnnotation(annotationId: string) {
-
+export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        return;
+    }
+    return book.flashcards.filter(t=>t.annotationId === annotationId);
 }
 
 export function getBooks(): ReviewBook[]{
