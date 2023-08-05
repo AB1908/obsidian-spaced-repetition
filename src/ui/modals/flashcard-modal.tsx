@@ -9,12 +9,13 @@ import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/routes/chapter-list";
 import {DeckLandingPage, deckLoader} from "src/routes/deck-preview";
 import {annotationsLoader, AnnotationList} from "src/ui/components/highlights";
-import {UpsertCard, creationAction, ClozeCard, clozeLoader, cardLoader} from "src/routes/upsert-card";
+import {UpsertCard, creationAction, cardLoader} from "src/routes/upsert-card";
 import {ChooseCardType} from "src/routes/choose-card-type";
 import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
 import {reviewAction, ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
+import {ClozeCard, clozeLoader} from "src/routes/cloze-card";
 
 export enum FlashcardModalMode {
     DecksList,
