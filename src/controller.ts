@@ -119,7 +119,7 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     return true;
 }
 
-export async function createFlashcardForHighlight(question: string, answer: string, annotationId: string, cardType: CardType = CardType.MultiLineBasic) {
+export async function createFlashcardForHighlight(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
