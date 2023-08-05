@@ -2,9 +2,10 @@ import {useLoaderData} from "react-router";
 import {redirect} from "react-router-dom";
 import React from "react";
 import {DefaultCardForm} from "src/ui/components/card-creation";
-import {createFlashcardForHighlight} from "src/controller";
+import {createFlashcardForHighlight, getFlashcardById} from "src/controller";
 import {CardType} from "src/scheduler/scheduling";
 import {Flashcard} from "src/data/models/flashcard";
+import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export function cardLoader({params}: {params: any}) {
     // we arrived here from an existing flashcard
@@ -12,7 +13,11 @@ export function cardLoader({params}: {params: any}) {
     if (params.flashcardId === undefined) {
         return null;
     }
-    return fetch(`http://localhost:3000/flashcards/${params.flashcardId}`);
+    if (USE_ACTUAL_BACKEND) {
+        return getFlashcardById(params.flashcardId, params.bookId);
+    } else {
+        return fetch(`http://localhost:3000/flashcards/${params.flashcardId}`);
+    }
 }
 
 // TODO: think of a better name since this also edits cards
