@@ -2,7 +2,7 @@ import {useLoaderData} from "react-router";
 import {redirect} from "react-router-dom";
 import React from "react";
 import {DefaultCardForm} from "src/ui/components/card-creation";
-import {createFlashcardForHighlight, getFlashcardById} from "src/controller";
+import {createFlashcardForAnnotation, getFlashcardById} from "src/controller";
 import {CardType} from "src/scheduler/scheduling";
 import {Flashcard} from "src/data/models/flashcard";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
@@ -39,6 +39,6 @@ export async function creationAction({params, request}: {params: any, request: a
     const data = await request.formData();
     // TODO: call the right api instead, there shouldn' be any actual update logic
     // I have access to bookId, sectionId, annotationId
-    await createFlashcardForHighlight(data.get("question"), data.get("answer"), params.annotationId, params.bookId);
+    await createFlashcardForAnnotation(data.get("question"), data.get("answer"), params.annotationId, params.bookId);
     return redirect(`/books/${params.bookId}/chapters/${params.chapterId}/annotations/${params.annotationId}/flashcards`);
 }

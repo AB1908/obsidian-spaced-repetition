@@ -1,5 +1,5 @@
 import {
-    createFlashcardForHighlight,
+    createFlashcardForAnnotation,
     deleteFlashcardById,
     getFlashcardById,
     updateFlashcardAnswer,
@@ -111,13 +111,13 @@ describe('updateFlashcardAnswer', () => {
 
 describe("createFlashcard", () => {
     let mockThis: any;
-    let boundCreate: typeof createFlashcardForHighlight;
+    let boundCreate: typeof createFlashcardForAnnotation;
 
     beforeEach(() => {
         mockThis = {
             flashcards: flashcards()
         };
-        boundCreate = createFlashcardForHighlight.bind(mockThis);
+        boundCreate = createFlashcardForAnnotation.bind(mockThis);
     });
 
     test('should create a new flashcard', async () => {
