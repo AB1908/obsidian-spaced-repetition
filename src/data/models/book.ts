@@ -97,7 +97,7 @@ export function getAnnotationsForSection(sectionId: string, bookSections: BookMe
 export interface frontbook {
     id:             string;
     name:           string;
-    path:           string;
+    flashcardsPath:           string;
     parsedCards:    ParsedCard[];
     flashcards:     Flashcard[];
     annotationPath: string;
@@ -216,11 +216,11 @@ export class Book implements frontbook {
     id: string;
     name: string;
     parsedCards: ParsedCard[];
-    path: string;
+    flashcardsPath: string;
 
     constructor(path: string, name: string) {
         this.id = nanoid(8);
-        this.path = path;
+        this.flashcardsPath = path;
         this.name = name;
         this.parsedCards = [];
         this.flashcards = [];
@@ -229,9 +229,9 @@ export class Book implements frontbook {
     }
 
     async initialize() {
-        this.parsedCards = await parseFileText(this.path);
+        this.parsedCards = await parseFileText(this.flashcardsPath);
         this.flashcards = generateFlashcardsArray(this.parsedCards);
-        const annotationTFile = getAnnotationFilePath(this.path);
+        const annotationTFile = getAnnotationFilePath(this.flashcardsPath);
         if (annotationTFile) {
             this.annotationPath = annotationTFile.path;
             this.bookSections = bookSections(
