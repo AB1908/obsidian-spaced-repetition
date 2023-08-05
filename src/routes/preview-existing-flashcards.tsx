@@ -3,7 +3,7 @@ import {annotation} from "src/data/import/annotations";
 import {Link} from "react-router-dom";
 import React from "react";
 
-export async function highlightLoader({params}: { params: any }) {
+export function highlightLoader({params}: { params: any }) {
     // todo: use redirect
     return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
 }
