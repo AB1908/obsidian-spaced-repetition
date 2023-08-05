@@ -60,7 +60,7 @@ export function flagToString(flag: FLAG): string {
 
 const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d),(?<ease>\d+))/g;
 // For now, annotation ids are only numerical
-const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{5,8})!/g;
+const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{5,8})/g;
 
 export interface FlashcardMetadata {
     ease: number;
@@ -87,7 +87,7 @@ function stringToFlag(flag: string): FLAG {
 export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
     const annotationId = text.matchAll(ANNOTATION_ID_REGEX).next().value;
-    if (!(annotationId)) return null;
+    if (!(annotationId)) new Error("how can this not have an annotation id");
     if (scheduling === undefined)
         return {
             flag: null,
