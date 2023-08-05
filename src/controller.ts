@@ -7,7 +7,7 @@ import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} 
 import {updateCardOnDisk} from "src/data/import/disk";
 import {ReviewBook} from "src/routes/notes-home-page";
 
-import {AnnotationCount, bookTree, generateSectionsTree, generateTree} from "src/data/models/bookTree";
+import {AnnotationCount, bookTree, generateSectionsTree} from "src/data/models/bookTree";
 import {findNextHeader, isAnnotation, isHeading} from "src/data/models/book";
 
 // TODO: Cloze cards
