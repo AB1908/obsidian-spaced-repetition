@@ -128,10 +128,10 @@ export async function createFlashcardForHighlight(question: string, answer: stri
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
-        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, "More flashcards.md", annotationId);
-        plugin.parsedCards.push(parsedCard);
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, book.flashcardsPath, annotationId);
+        book.parsedCards.push(parsedCard);
         card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
-        plugin.flashcards.push(card);
+        book.flashcards.push(card);
     }
     return true;
 }
