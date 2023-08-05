@@ -169,7 +169,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
         id: sectionId,
         title: selectedSection.name,
         annotations: annotations
-    }
+    };
 }
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
@@ -191,7 +191,16 @@ export function getBooks(): ReviewBook[]{
     return books;
 }
 
-export function getBookById(id: string) {
+interface frontEndBook {
+    counts: {
+        annotations: { withFlashcards: number; withoutFlashcards: number };
+        flashcards: { new: number; mature: number; learning: number }
+    };
+    name: string;
+    id: string;
+}
+
+export function getBookById(id: string): frontEndBook {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
     if (!book) {
         return;
@@ -213,7 +222,7 @@ export function getBookById(id: string) {
                 withoutFlashcards: annotationsWithoutFlashcards.size
             }
         }
-    }
+    };
 }
 
 export function getSectionTreeForBook(id: string) {
