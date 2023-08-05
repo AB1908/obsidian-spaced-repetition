@@ -9,17 +9,17 @@ export function highlightLoader({params}: { params: any }) {
 }
 
 export function PreviewExistingFlashcards() {
-    const annotation = useLoaderData() as annotation;
+    const flashcards = useLoaderData() as Flashcard[];
     return (
         <>
             <div>
-                {annotation.flashcards.length != 0 &&
+                {flashcards.length != 0 &&
                     (<>
                         <p>
                             Existing questions:
                         </p>
                         <ul>
-                            {annotation.flashcards.map((t, i) => (
+                            {flashcards.map((t, i) => (
                                 <Link to={`${t.id}`}>
                                     <li key={t.id}>
                                         <p>
