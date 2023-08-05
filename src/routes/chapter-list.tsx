@@ -13,7 +13,7 @@ export function chapterLoader({params}: {params: any}) {
     if (USE_ACTUAL_BACKEND) {
         return getSectionTreeForBook(params.bookId);
     } else {
-        return fetch(`http://localhost:3000/books/${params.bookId}`);
+        return fetch(`http://localhost:3000/bookTree/${params.bookId}`);
     }
 }
 
