@@ -119,7 +119,7 @@ export function updateFlashcardAnswer(id: string, answer: string) {
     return true;
 }
 
-export async function createFlashcardForHighlight(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
+export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
