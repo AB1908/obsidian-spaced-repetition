@@ -121,6 +121,10 @@ export function updateFlashcardAnswer(id: string, answer: string) {
 
 export async function createFlashcardForHighlight(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        return null;
+    }
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
