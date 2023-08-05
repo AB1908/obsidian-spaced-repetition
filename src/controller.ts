@@ -35,8 +35,12 @@ export function getAnnotationById(annotationId: string, bookId: string) {
     return book.annotations().filter((t: annotation)=> t.id === annotationId)[0];
 }
 
-export function getFlashcardById(id: string) {
-    return plugin.flashcards.filter((t: AbstractFlashcard) => t.id === id)[0] ?? null;
+export function getFlashcardById(flashcardId: string, bookId: string) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        return null;
+    }
+    return book.flashcards.filter((t: AbstractFlashcard) => t.id === flashcardId)[0] ?? null;
 }
 
 // TODO: add logic to update in storage
