@@ -1,11 +1,18 @@
 import {useLoaderData} from "react-router";
-import {annotation} from "src/data/import/annotations";
 import {Link} from "react-router-dom";
 import React from "react";
+import {USE_ACTUAL_BACKEND} from "src/routes/review";
+import {getFlashcardsForAnnotation} from "src/controller";
+import {Flashcard} from "src/data/models/flashcard";
 
 export function highlightLoader({params}: { params: any }) {
     // todo: use redirect
-    return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
+    if (USE_ACTUAL_BACKEND) {
+        return getFlashcardsForAnnotation(params.annotationId, params.bookId);
+    }
+    else {
+        return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
+    }
 }
 
 export function PreviewExistingFlashcards() {
