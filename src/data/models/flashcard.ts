@@ -66,6 +66,10 @@ export class Flashcard extends AbstractFlashcard {
         this.questionText = questionText;
         this.answerText = answerText;
     }
+
+    isDue() {
+        return this.dueDate === null || this.dueDate <= moment().format("YYYY-MM-DD");
+    }
 }
 
 // todo: move into controller?
