@@ -12,7 +12,6 @@ export interface Flashcard {
     context: string,
     cardType: number,
     siblings: string[],
-    isDue: boolean,
     interval: number,
     ease: number,
     dueDate: string,
@@ -29,7 +28,6 @@ export abstract class AbstractFlashcard implements Flashcard {
     ease: number;
     id: string;
     interval: number;
-    isDue: boolean;
     questionText: string;
     siblings: string[];
     annotationId: string;
@@ -49,7 +47,6 @@ export abstract class AbstractFlashcard implements Flashcard {
         this.interval = cardMetadata?.interval;
         this.annotationId = cardMetadata?.annotationId || annotationId;
         this.flag = cardMetadata?.flag;
-        this.isDue = false;
         this.siblings = [];
         this.parsedCardId = parsedCardId;
     }
