@@ -77,9 +77,8 @@ export async function updateFlashcardSchedulingMetadata(
     if (!book) {
         return null;
     }
-    const {flashcard, updatedSchedulingMetadata} = updateFlashcards(flashcardId, reviewResponse);
 
-    return await updateParsedCards(flashcard, updatedSchedulingMetadata);
+    return await book.updateFlashcard(flashcardId, reviewResponse).updateParsedCard(flashcardId);
 }
 
 // TODO: add logic to update in storage
