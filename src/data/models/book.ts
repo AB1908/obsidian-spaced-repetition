@@ -1,13 +1,15 @@
 //todo: investigate using lowdb
-import {getFileContents, getMetadataForFile} from "src/data/import/disk";
+import {getFileContents, getMetadataForFile, updateCardOnDisk} from "src/data/import/disk";
 import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
 import {nanoid} from "nanoid";
-import {Flashcard} from "src/data/models/flashcard";
+import {Flashcard, schedulingMetadataForResponse} from "src/data/models/flashcard";
 import {FlashCount} from "src/routes/notes-home-page";
 import {parseFileText} from "src/data/parser";
 import {ParsedCard} from "src/data/models/parsedCard";
 import {generateFlashcardsArray} from "src/data/import/flashcards";
+import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
+import {ReviewResponse} from "src/scheduler/scheduling";
 
 // TODO: this is not really a "book" per se
 export interface book {
