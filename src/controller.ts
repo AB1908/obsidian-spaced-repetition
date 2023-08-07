@@ -35,6 +35,21 @@ export function getAnnotationById(annotationId: string, bookId: string) {
     return book.annotations().filter((t: annotation)=> t.id === annotationId)[0];
 }
 
+export function getNextCard(bookId: string) {
+    console.log(bookId);
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        new Error("You should have a book id here");
+    }
+    if (!book.isInReview()) {
+        book.startReviewing();
+        return book.getNextFlashcard();
+    } else if ((book.isInReview()) && (book.getNextFlashcard() == null)) {
+        book.finishReviewing();
+        return null;
+    }
+}
+
 export function getFlashcardById(flashcardId: string, bookId: string) {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
