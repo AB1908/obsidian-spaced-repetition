@@ -40,7 +40,7 @@ export function getFlashcardById(flashcardId: string, bookId: string) {
     if (!book) {
         return null;
     }
-    return book.flashcards.filter((t: AbstractFlashcard) => t.id === flashcardId)[0] ?? null;
+    return book.flashcards.filter((t: Flashcard) => t.id === flashcardId)[0] ?? null;
 }
 
 // TODO: add logic to update in storage
