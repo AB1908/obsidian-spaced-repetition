@@ -254,6 +254,11 @@ export class Book implements frontbook {
         this.shuffleReviewDeck();
     }
 
+    canBeReviewed() {
+        this.generateReviewDeck();
+        return this.reviewDeck.length != 0;
+    }
+
     annotations() {
         return this.bookSections.filter((t): t is annotation => isAnnotation(t));
     }
