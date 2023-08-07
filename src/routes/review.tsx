@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import {useLoaderData, useLocation, Form, redirect } from "react-router-dom";
 import {ReviewResponse} from "src/scheduler/scheduling";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
-import {getFlashcardById, updateFlashcardSchedulingMetadata} from "src/controller";
+import {getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -25,10 +25,21 @@ interface Flashcard {
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
 export async function reviewLoader({params}: { params: any }) {
     if (USE_ACTUAL_BACKEND) {
-        const l = {"id": "1923n8aq"}
-        let flashcardById = getFlashcardById(l.id);
-        if (flashcardById === null)
-        return flashcardById;
+        // const l = {"id": "1923n8aq"}
+        // let flashcardById = getFlashcardById(l.id);
+        // if (flashcardById === null)
+        // return flashcardById;
+        // if (params.flashcardId == null) {
+        //     return redirect(`${params.flashcardId}`)
+        // }
+        let flashcardId = null;
+        if (params.flashcardId == null) {
+            flashcardId = getNextCard(params.bookId).id;
+            return redirect(`${flashcardId}`);
+        } else {
+            flashcardId = params.flashcardId;
+        }
+        return getFlashcardById(flashcardId, params.bookId);
     } else {
         if (params.flashcardId == null) {
             const response = await fetch(`http://localhost:3000/review/${params.bookId}`)
@@ -115,7 +126,7 @@ export async function reviewAction({request, params}) {
         const result = await updateFlashcardSchedulingMetadata(params.flashcardId, reviewResponse);
         let nextCardId: string;
         if (result) {
-            nextCardId = getNextCard(params.bookId);
+            nextCardId = getNextCard(params.bookId).id;
         } else {
             // we're screwed
         }
@@ -130,12 +141,4 @@ export async function reviewAction({request, params}) {
             return redirect(`./../sm18fbb3`)
         else return redirect("./../..");
     }
-}
-
-function getNextCard(id: string) {
-    const l = {"id": "1923n8aq"}
-    if (id === l.id)
-        return {"id": "sm18fbb3"}.id;
-    else
-        return null;
 }
