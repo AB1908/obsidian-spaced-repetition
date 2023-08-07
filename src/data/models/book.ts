@@ -245,10 +245,40 @@ export class Book implements frontbook {
             );
             this.bookSections = generateHeaderCounts(this.bookSections);
         }
+        this.reviewDeck = this.flashcards.filter(t => t.isDue());
+        this.shuffleReviewDeck();
         return this;
     }
 
     annotations() {
         return this.bookSections.filter((t): t is annotation => isAnnotation(t));
+    }
+
+    startReviewing() {
+        this.reviewIndex = 0;
+    }
+
+    isInReview() {
+        return this.reviewIndex != -1;
+    }
+
+    getNextFlashcard() {
+        if (this.reviewIndex >= this.reviewDeck.length) {
+            this.finishReviewing();
+            return null;
+        }
+        return this.reviewDeck[this.reviewIndex++];
+    }
+
+    finishReviewing() {
+        this.reviewIndex = -1;
+    }
+
+    // copied from https://stackoverflow.com/a/12646864/13285428
+    private shuffleReviewDeck() {
+        for (let i = this.reviewDeck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
+        }
     }
 }
