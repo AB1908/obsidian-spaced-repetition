@@ -245,7 +245,6 @@ export class Book implements frontbook {
             );
             this.bookSections = generateHeaderCounts(this.bookSections);
         }
-        this.generateReviewDeck();
         return this;
     }
 
