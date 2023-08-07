@@ -41,12 +41,12 @@ export function getNextCard(bookId: string) {
     if (!book) {
         new Error("You should have a book id here");
     }
-    if (!book.isInReview()) {
+    if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
-        return book.getNextFlashcard();
-    } else if ((book.isInReview()) && (book.getNextFlashcard() == null)) {
-        book.finishReviewing();
-        return null;
+        return book.getReviewCard();
+    } else if (book.isInReview()) {
+        book.nextReviewCard();
+        return book.getReviewCard();
     }
 }
 
