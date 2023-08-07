@@ -217,6 +217,8 @@ export class Book implements frontbook {
     name: string;
     parsedCards: ParsedCard[];
     flashcardsPath: string;
+    reviewIndex: number;
+    reviewDeck: Flashcard[];
 
     constructor(path: string, name: string) {
         this.id = nanoid(8);
@@ -226,6 +228,8 @@ export class Book implements frontbook {
         this.flashcards = [];
         this.annotationPath = null;
         this.bookSections = [];
+        this.reviewIndex = -1;
+        this.reviewDeck = null;
     }
 
     async initialize() {
