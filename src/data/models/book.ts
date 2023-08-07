@@ -301,6 +301,40 @@ export class Book implements frontbook {
         }
     }
 
+    // write to disk first
+    // then updated parsed card index
+    // though that state might go out of sync depending on how fast we call it
+    // todo: debounce?
+    // todo: think differently?
+    async updateParsedCard(flashcardId: string) {
+        const flashcard = this.flashcards.filter(t => t.id === flashcardId)[0];
+        const parsedCardCopy = this.parsedCards.filter((card: ParsedCard) => card.id === flashcard.parsedCardId)[0];
+        const originalCardOnDisk = generateCardAsStorageFormat(parsedCardCopy);
+        parsedCardCopy.metadataText = metadataTextGenerator(
+            flashcard.annotationId,
+            {dueDate: flashcard.dueDate, interval: flashcard.interval, ease: flashcard.ease},
+            flashcard.flag
+        );
+        const newCardOnDisk = generateCardAsStorageFormat(parsedCardCopy);
+        // todo: store the original card
+        // then update the card on disk
+        // then update parsed Card
+        // encapsulate into class?
+
+        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardOnDisk, newCardOnDisk);
+        if (writeSuccessful) {
+            this.parsedCards.forEach((value, index, array) => {
+                if (value.id === parsedCardCopy.id) {
+                    array[index] = parsedCardCopy;
+                }
+            });
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
     updateFlashcard(flashcardId: string, reviewResponse: ReviewResponse) {
         let updatedSchedulingMetadata, flashcard;
         this.flashcards.forEach((card: Flashcard, index: number) => {
