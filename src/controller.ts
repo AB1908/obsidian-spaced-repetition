@@ -100,10 +100,15 @@ async function updateParsedCards(flashcard: Flashcard, updatedSchedulingMetadata
 }
 
 export async function updateFlashcardSchedulingMetadata(
-    id: string,
+    flashcardId: string,
+    bookId: string,
     reviewResponse: ReviewResponse,
 ) {
-    const {flashcard, updatedSchedulingMetadata} = updateFlashcards(id, reviewResponse);
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        return null;
+    }
+    const {flashcard, updatedSchedulingMetadata} = updateFlashcards(flashcardId, reviewResponse);
 
     return await updateParsedCards(flashcard, updatedSchedulingMetadata);
 }
