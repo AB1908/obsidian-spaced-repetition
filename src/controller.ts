@@ -68,23 +68,6 @@ export function updateFlashcardQuestion(id: string, question: string) {
     return true;
 }
 
-function updateFlashcards(id: string, reviewResponse: ReviewResponse) {
-    let updatedSchedulingMetadata;
-    let flashcard;
-    plugin.flashcards.forEach((card: Flashcard, index: number, array: Flashcard[]) => {
-        if (card.id == id) {
-            updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
-                interval: card.interval,
-                ease: card.ease,
-                dueDate: card.dueDate
-            });
-            array[index] = {...card, ...updatedSchedulingMetadata};
-            flashcard = array[index];
-        }
-    });
-    return {updatedSchedulingMetadata, flashcard};
-}
-
 // write to disk first
 // then updated parsed card index
 // though that state might go out of sync depending on how fast we call it

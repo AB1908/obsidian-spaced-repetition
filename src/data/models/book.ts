@@ -300,4 +300,21 @@ export class Book implements frontbook {
             [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
         }
     }
+
+    updateFlashcard(flashcardId: string, reviewResponse: ReviewResponse) {
+        let updatedSchedulingMetadata, flashcard;
+        this.flashcards.forEach((card: Flashcard, index: number) => {
+            if (card.id == flashcardId) {
+                updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
+                    interval: card.interval,
+                    ease: card.ease,
+                    dueDate: card.dueDate
+                });
+                this.flashcards[index].dueDate = updatedSchedulingMetadata.dueDate;
+                this.flashcards[index].ease = updatedSchedulingMetadata.ease;
+                this.flashcards[index].interval = updatedSchedulingMetadata.interval;
+            }
+        });
+        return this;
+    }
 }
