@@ -131,7 +131,7 @@ export async function reviewAction({request, params}) {
             // we're screwed
         }
         if (nextCardId) {
-            return redirect(`../${nextCardId}`);
+            return redirect(`./../${nextCardId}`);
         } else {
             return redirect("..");
         }
