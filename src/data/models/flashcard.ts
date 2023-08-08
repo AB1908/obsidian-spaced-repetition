@@ -97,7 +97,6 @@ export function schedulingMetadataForResponse(
             1.0,
             plugin.data.settings.baseEase,
             0,
-            plugin.data.settings,
         );
     } else {
         schedObj = schedule(
@@ -105,7 +104,6 @@ export function schedulingMetadataForResponse(
             schedulingMetadata.interval,
             schedulingMetadata.ease,
             calculateDelayBeforeReview(schedulingMetadata.dueDate),
-            plugin.data.settings,
         );
     }
     const {interval, ease} = schedObj;

@@ -76,7 +76,6 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
                 currentCard.interval,
                 currentCard.ease,
                 currentCard.delayBeforeReview,
-                data.settings,
             );
         } else {
             // I don't think this path is ever taken
@@ -96,7 +95,6 @@ async function processReview(response: ReviewResponse, currentCard: Card, data: 
                 1.0,
                 initial_ease,
                 0,
-                data.settings,
             );
         }
 
