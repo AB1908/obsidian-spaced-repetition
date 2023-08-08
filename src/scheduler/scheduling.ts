@@ -1,5 +1,6 @@
 import { SRSettings } from "src/settings";
 import { t } from "src/lang/helpers";
+import {plugin} from "src/main";
 
 export enum ReviewResponse {
     Easy,
