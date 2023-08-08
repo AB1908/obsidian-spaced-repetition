@@ -139,3 +139,47 @@ export async function reviewAction({request, params}) {
         else return redirect("./../..");
     }
 }
+
+function generateButtonText(hardInterval: number, goodInterval: number, easyInterval: number) {
+    let hardBtnText, goodBtnText, easyBtnText;
+    if (Platform.isMobile) {
+        hardBtnText = `${textInterval(hardInterval, true)}`;
+        goodBtnText = `${textInterval(goodInterval, true)}`;
+        easyBtnText = `${textInterval(easyInterval, true)}`;
+    } else {
+        // TODO: investigate fix for button labels being empty
+        const {data} = plugin;
+        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(hardInterval, false)}`
+        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(goodInterval, false)}`;
+        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(easyInterval, false)}`;
+    }
+    return {hardBtnText, goodBtnText, easyBtnText};
+}
+
+export function calculateIntervals(card: FrontendFlashcard) {
+    let interval = 1.0,
+        ease: number = plugin.data.settings.baseEase,
+        delayBeforeReview = 0;
+
+    if (card.interval != null && card.ease != null) {
+        interval = card.interval;
+        ease = card.ease;
+    }
+    if (card.delayBeforeReview) {
+        delayBeforeReview = card.delayBeforeReview;
+    }
+
+    function getInterval(response?: ReviewResponse) {
+        return schedule(
+            response,
+            interval,
+            ease,
+            delayBeforeReview,
+        ).interval;
+    }
+
+    const hardInterval: number = getInterval(ReviewResponse.Hard);
+    const goodInterval: number = getInterval(ReviewResponse.Good);
+    const easyInterval: number = getInterval(ReviewResponse.Easy);
+    return {hardInterval, goodInterval, easyInterval};
+}
