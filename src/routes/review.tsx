@@ -43,7 +43,7 @@ export async function reviewLoader({params}: { params: any }) {
             const flashcardId = (await response.json()).first;
             return redirect(`${flashcardId}`)
         }
-        return (await (await fetch(`http://localhost:3000/review/${params.bookId}`)).json()).flashcards.filter(t => t.id === params.flashcardId)[0];
+        return (await (await fetch(`http://localhost:3000/review/${params.bookId}`)).json()).flashcards.filter((t: FrontendFlashcard) => t.id === params.flashcardId)[0];
     }
 }
 
