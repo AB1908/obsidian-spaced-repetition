@@ -39,9 +39,9 @@ export function Button({ text, id, responseHandler, value }: { text: string, id:
     </button>)
 }
 
-export function calculateIntervals(data: PluginData, card: Card|Flashcard) {
+export function calculateIntervals(card: Card|Flashcard) {
     let interval = 1.0,
-        ease: number = data.settings.baseEase,
+        ease: number = plugin.data.settings.baseEase,
         delayBeforeReview = 0;
 
     if (card.isDue) {
@@ -58,7 +58,6 @@ export function calculateIntervals(data: PluginData, card: Card|Flashcard) {
             interval,
             ease,
             delayBeforeReview,
-            data.settings
         ).interval;
     }
 
@@ -68,7 +67,7 @@ export function calculateIntervals(data: PluginData, card: Card|Flashcard) {
     return {hardInterval, goodInterval, easyInterval};
 }
 
-export function generateButtonText(hardInterval: number, goodInterval: number, easyInterval: number, data: PluginData) {
+export function generateButtonText(hardInterval: number, goodInterval: number, easyInterval: number) {
     let hardBtnText, goodBtnText, easyBtnText;
     if (Platform.isMobile) {
         hardBtnText = `${textInterval(hardInterval, true)}`;
@@ -76,6 +75,7 @@ export function generateButtonText(hardInterval: number, goodInterval: number, e
         easyBtnText = `${textInterval(easyInterval, true)}`;
     } else {
         // TODO: investigate fix for button labels being empty
+        const {data} = plugin;
         hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(hardInterval, false)}`
         goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(goodInterval, false)}`;
         easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(easyInterval, false)}`;
@@ -87,8 +87,8 @@ export function ResponseButtons({card, handleFlashcardResponse}: {card: Flashcar
     const data = plugin.data;
     let easyBtnText: string, goodBtnText: string, hardBtnText: string;
     // const { handleFlashcardResponse } = useContext(FlashcardContext);
-    const {hardInterval, goodInterval, easyInterval} = calculateIntervals(data, card);
-    ({hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval, data));
+    const {hardInterval, goodInterval, easyInterval} = calculateIntervals(card);
+    ({hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval));
 
     return (
         <div className="sr-response">

@@ -22,9 +22,9 @@ export function schedule(
     interval: number,
     ease: number,
     delayBeforeReview: number,
-    settingsObj: SRSettings,
 ): { ease: number; interval: number } {
     delayBeforeReview = Math.max(0, Math.floor(delayBeforeReview / (24 * 3600 * 1000)));
+    const settingsObj = plugin.data.settings;
     if (isNaN(interval)) {
         throw Error("invalid interval");
     }
