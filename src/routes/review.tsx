@@ -13,10 +13,7 @@ interface Flashcard {
     context: string,
     cardType: number,
     annotationId: string,
-    parsedCardId: string,
-    goodBtnText: string,
-    easyBtnText: string,
-    hardBtnText: string,
+    interval: number,
 }
 
 // The idea here is that if I start a review, I don't immediately have a flashcard ID
