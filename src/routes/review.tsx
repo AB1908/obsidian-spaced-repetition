@@ -25,16 +25,13 @@ export interface FrontendFlashcard {
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
 export async function reviewLoader({params}: { params: any }) {
     if (USE_ACTUAL_BACKEND) {
-        // const l = {"id": "1923n8aq"}
-        // let flashcardById = getFlashcardById(l.id);
-        // if (flashcardById === null)
-        // return flashcardById;
-        // if (params.flashcardId == null) {
-        //     return redirect(`${params.flashcardId}`)
-        // }
         let flashcardId = null;
         if (params.flashcardId == null) {
-            flashcardId = getNextCard(params.bookId).id;
+            // todo: handle no cards to be reviewed case
+            flashcardId = getNextCard(params.bookId)?.id;
+            if (flashcardId == null) {
+                return redirect("./..");
+            }
             return redirect(`${flashcardId}`);
         } else {
             flashcardId = params.flashcardId;
