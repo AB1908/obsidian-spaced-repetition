@@ -19,12 +19,16 @@ export interface SchedulingMetadata {
 export function metadataTextGenerator(
     annotationId: string,
     schedulingMetadata: SchedulingMetadata,
-    flag: FLAG
+    flag = FLAG.LEARNING
 ) {
+    // TODO: the default param doesn't get set for some weird reason
+    if (flag === null) {
+        flag = FLAG.LEARNING;
+    }
     if (schedulingMetadata === null)
         return `<!--SR:${annotationId}-->`;
     else
-        return `<!--SR:${annotationId}!${flagToString(flag)},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.interval}-->`;
+        return `<!--SR:${annotationId}!${flag},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.interval}-->`;
 }
 
 // TODO: Allow templating?
