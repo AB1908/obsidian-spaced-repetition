@@ -50,7 +50,7 @@ export function getNextCard(bookId: string) {
     }
 }
 
-export function getFlashcardById(flashcardId: string, bookId: string) {
+export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
         return null;
