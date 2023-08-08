@@ -6,7 +6,7 @@ import {getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "
 
 export const USE_ACTUAL_BACKEND = true;
 
-interface Flashcard {
+export interface FrontendFlashcard {
     id: string,
     questionText: string,
     answerText: string,
