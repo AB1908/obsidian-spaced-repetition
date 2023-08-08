@@ -3,24 +3,24 @@ import { DEFAULT_SETTINGS } from "src/settings";
 
 test("Test reviewing with default settings", () => {
     expect(
-        schedule(ReviewResponse.Easy, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, {})
+        schedule(ReviewResponse.Easy, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase + 20,
         interval: 4,
     });
 
     expect( () =>
-        schedule(ReviewResponse.Easy, undefined, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, {}) ).toThrow("invalid interval");
+        schedule(ReviewResponse.Easy, undefined, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS) ).toThrow("invalid interval");
 
     expect(
-        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, {})
+        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 3,
     });
 
     expect(
-        schedule(ReviewResponse.Hard, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, {})
+        schedule(ReviewResponse.Hard, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase - 20,
         interval: 1,
@@ -30,21 +30,21 @@ test("Test reviewing with default settings", () => {
 test("Test reviewing with default settings & delay", () => {
     const delay = 2 * 24 * 3600 * 1000; // two day delay
     expect(
-        schedule(ReviewResponse.Easy, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS, {})
+        schedule(ReviewResponse.Easy, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase + 20,
         interval: 42,
     });
 
     expect(
-        schedule(ReviewResponse.Good, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS, {})
+        schedule(ReviewResponse.Good, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 28,
     });
 
     expect(
-        schedule(ReviewResponse.Hard, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS, {})
+        schedule(ReviewResponse.Hard, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase - 20,
         interval: 5,
