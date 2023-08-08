@@ -126,7 +126,7 @@ export async function reviewAction({request, params}) {
         const result = await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
         let nextCardId: string;
         if (result) {
-            nextCardId = getNextCard(params.bookId).id;
+            nextCardId = getNextCard(params.bookId)?.id;
         } else {
             // we're screwed
         }
