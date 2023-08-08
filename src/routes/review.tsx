@@ -72,17 +72,19 @@ function CardBack(props: {
     goodBtnHandler: () => void,
     easyBtnHandler: () => void
 }) {
+    const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
+    let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
     return <>
         <Question questionText={props.currentCard.questionText}/>
         <hr/>
         <Answer answerText={props.currentCard.answerText}/>
         <div className="sr-response">
             <Form method={"POST"}>
-                <Button text={props.currentCard.hardBtnText} id="sr-hard-btn"
+                <Button text={hardBtnText} id="sr-hard-btn"
                         responseHandler={props.hardBtnHandler} value={ReviewResponse.Hard}/>
-                <Button text={props.currentCard.goodBtnText} id="sr-good-btn"
+                <Button text={goodBtnText} id="sr-good-btn"
                         responseHandler={props.goodBtnHandler} value={ReviewResponse.Good}/>
-                <Button text={props.currentCard.easyBtnText} id="sr-easy-btn"
+                <Button text={easyBtnText} id="sr-easy-btn"
                         responseHandler={props.easyBtnHandler} value={ReviewResponse.Easy}/>
             </Form>
         </div>
