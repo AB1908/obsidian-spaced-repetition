@@ -57,7 +57,7 @@ export default class SRPlugin extends Plugin {
         plugin = this;
         // todo: move this initialization to modal opening phase?
         this.filePaths = listOfNotes("flashcards");
-        this.notesWithFlashcards = await Promise.all(this.filePaths.map(async (t: string, i: number) => new Book(t, `book${i}`).initialize()));
+        this.notesWithFlashcards = this.filePaths.map((t: string, i: number) => new Book(t, `book${i}`));
 
         appIcon();
 
