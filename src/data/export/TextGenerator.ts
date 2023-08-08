@@ -28,7 +28,7 @@ export function metadataTextGenerator(
     if (schedulingMetadata === null)
         return `<!--SR:${annotationId}-->`;
     else
-        return `<!--SR:${annotationId}!${flag},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.interval}-->`;
+        return `<!--SR:${annotationId}!${flag},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.ease}-->`;
 }
 
 // TODO: Allow templating?
