@@ -37,8 +37,6 @@ export abstract class AbstractFlashcard implements Flashcard {
     // cardMetadata and highlight ID are mutually exclusive properties. Given that there is no constructor overloading
     // probably should change this to be a union type
     protected constructor(cardType: CardType, parsedCardId: string, cardMetadata?: FlashcardMetadata, annotationId?: string) {
-        // this.questionText = questionText;
-        // this.answerText = answerText;
         this.id = nanoid(8);
         this.cardType = cardType;
         this.context = null;
