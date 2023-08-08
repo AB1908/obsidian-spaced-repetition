@@ -190,7 +190,10 @@ export class FlashcardModal extends Modal {
         // };
     }
 
-    onOpen(): void {
+    async onOpen(): Promise<void> {
+        for (const t of this.plugin.notesWithFlashcards) {
+            await t.initialize()
+        }
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
