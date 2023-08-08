@@ -59,7 +59,7 @@ function Answer(props: { answerText: string }) {
     </p>;
 }
 
-function CardFront(props: { currentCard: Flashcard, handleShowAnswerButton: () => void }) {
+function CardFront(props: { currentCard: FrontendFlashcard, handleShowAnswerButton: () => void }) {
     return <>
         <Question questionText={props.currentCard.questionText}/>
         <ShowAnswerButton handleShowAnswerButton={props.handleShowAnswerButton}/>
@@ -67,7 +67,7 @@ function CardFront(props: { currentCard: Flashcard, handleShowAnswerButton: () =
 }
 
 function CardBack(props: {
-    currentCard: Flashcard,
+    currentCard: FrontendFlashcard,
     hardBtnHandler: () => void,
     goodBtnHandler: () => void,
     easyBtnHandler: () => void
@@ -90,7 +90,7 @@ function CardBack(props: {
 }
 
 export function ReviewDeck() {
-    const currentCard = useLoaderData() as Flashcard;
+    const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     const location = useLocation();
 
