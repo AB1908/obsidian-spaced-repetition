@@ -7,6 +7,9 @@ import {getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "
 export const USE_ACTUAL_BACKEND = true;
 
 export interface FrontendFlashcard {
+    delayBeforeReview: number;
+    ease: number;
+    isDue: boolean;
     id: string,
     questionText: string,
     answerText: string,
