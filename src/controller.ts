@@ -55,7 +55,7 @@ export function getFlashcardById(flashcardId: string, bookId: string): FrontendF
     if (!book) {
         return null;
     }
-    return book.flashcards.filter((t: Flashcard) => t.id === flashcardId)[0] ?? null;
+    return book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t=>{ return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)}})[0] ?? null;
 }
 
 // TODO: add logic to update in storage
