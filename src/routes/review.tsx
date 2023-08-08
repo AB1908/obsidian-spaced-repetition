@@ -133,7 +133,7 @@ export async function reviewAction({request, params}) {
         if (nextCardId) {
             return redirect(`./../${nextCardId}`);
         } else {
-            return redirect("..");
+            return redirect("./../..");
         }
     } else {
         console.log('trying')
