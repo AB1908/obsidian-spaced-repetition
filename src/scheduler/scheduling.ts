@@ -74,7 +74,7 @@ export function schedule(
 
     interval = Math.min(interval, settingsObj.maximumInterval);
 
-    return { interval: Math.round(interval * 10) / 10, ease };
+    return { interval: Math.round(interval), ease };
 }
 
 export function textInterval(interval: number, isMobile: boolean): string {
