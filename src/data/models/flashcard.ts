@@ -48,6 +48,10 @@ export abstract class AbstractFlashcard implements Flashcard {
         this.siblings = [];
         this.parsedCardId = parsedCardId;
     }
+
+    isDue() {
+        return this.dueDate === null || this.dueDate <= moment().format("YYYY-MM-DD");
+    }
 }
 
 export class Flashcard extends AbstractFlashcard {
@@ -63,10 +67,6 @@ export class Flashcard extends AbstractFlashcard {
         }
         this.questionText = questionText;
         this.answerText = answerText;
-    }
-
-    isDue() {
-        return this.dueDate === null || this.dueDate <= moment().format("YYYY-MM-DD");
     }
 }
 
