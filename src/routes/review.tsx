@@ -1,8 +1,10 @@
 import React, {useEffect, useState} from "react";
 import {useLoaderData, useLocation, Form, redirect } from "react-router-dom";
-import {ReviewResponse} from "src/scheduler/scheduling";
-import {Button, ShowAnswerButton} from "src/ui/components/buttons";
+import {ReviewResponse, schedule, textInterval} from "src/scheduler/scheduling";
 import {getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
+import {Button, ShowAnswerButton} from "src/ui/components/buttons";
+import {Platform} from "obsidian";
+import {plugin} from "src/main";
 
 export const USE_ACTUAL_BACKEND = true;
 
