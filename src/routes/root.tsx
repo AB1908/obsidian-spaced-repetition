@@ -7,6 +7,7 @@ import {ModalContent} from "src/ui/views/modal";
 export type Icon = typeof ICON_LIST[number];
 
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
+    const backButton = useRef();
     const navigate = useNavigate();
     useEffect(() => {
         navigate("/home/books");
@@ -22,6 +23,8 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
 
     return (
         <>
+            <div className={"modal-back-button"} onClick={onClick} ref={backButton}>
+            </div>
             <div
                 className={"modal-close-button"}
                 onClick={() => handleCloseButton()}
@@ -29,9 +32,7 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
             <div className={"modal-title"}>
                 Spaced Repetition
             </div>
-            <div
-                className={"modal-content sr-modal-content"}
-            >
+            <div className={"modal-content sr-modal-content"}>
                 <Outlet/>
             </div>
         </>
