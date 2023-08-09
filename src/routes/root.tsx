@@ -11,6 +11,8 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     const navigate = useNavigate();
     useEffect(() => {
         navigate("/home/books");
+        const back: Icon = 'arrow-left';
+        setIcon(backButton.current, back);
     }, []);
 
     function onClick () {
