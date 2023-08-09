@@ -12,6 +12,14 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
         navigate("/home/books");
     }, []);
 
+    function onClick () {
+        if ((location.pathname === '/home/books') || (location.pathname === '/home/tabs')) {
+
+        } else {
+            navigate(-1);
+        }
+    }
+
     return (
         <>
             <div
