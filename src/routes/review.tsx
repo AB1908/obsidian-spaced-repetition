@@ -124,7 +124,9 @@ export async function reviewAction({request, params}) {
         // but let's think about scale later
         // I need to get the id of the next card
         // if no next card, redirect to deck
-        const result = await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
+        // need to cast this for some weird reason
+        // todo: investigate casting later
+        const result = await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, Number(reviewResponse));
         let nextCardId: string;
         if (result) {
             nextCardId = getNextCard(params.bookId)?.id;
