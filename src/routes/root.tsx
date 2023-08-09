@@ -1,6 +1,6 @@
-import React, {useEffect} from "react";
-import {Outlet, useNavigate} from "react-router";
-import {NavLink} from "react-router-dom";
+import React, {useEffect, useRef} from "react";
+import {Outlet, useNavigate} from "react-router-dom";
+import {NavLink, useLocation} from "react-router-dom";
 import {ICON_LIST} from "src/constants";
 import {ModalContent} from "src/ui/views/modal";
 
@@ -8,7 +8,9 @@ export type Icon = typeof ICON_LIST[number];
 
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     const backButton = useRef();
+    const location = useLocation();
     const navigate = useNavigate();
+
     useEffect(() => {
         navigate("/home/books");
         const back: Icon = 'arrow-left';
