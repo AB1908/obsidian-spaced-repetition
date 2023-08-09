@@ -13,6 +13,9 @@ import {ReviewBook} from "src/routes/notes-home-page";
 import {AnnotationCount, bookTree, generateSectionsTree} from "src/data/models/bookTree";
 import {findNextHeader, isAnnotation, isHeading} from "src/data/models/book";
 import {FrontendFlashcard} from "src/routes/review";
+import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
+import {updateCardOnDisk} from "src/data/import/disk";
+import {createFlashcard} from "src/data/import/flashcards";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -29,6 +32,8 @@ import {FrontendFlashcard} from "src/routes/review";
 //         // todo: add siblings
 //     }
 // }
+
+// TODO: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
 
 export function getAnnotationById(annotationId: string, bookId: string) {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
@@ -82,6 +87,7 @@ export async function updateFlashcardSchedulingMetadata(
         return null;
     }
 
+    // todo: the order is incorrect, write to disk first and then update in flashcards array
     return await book.updateFlashcard(flashcardId, reviewResponse).updateParsedCard(flashcardId);
 }
 
