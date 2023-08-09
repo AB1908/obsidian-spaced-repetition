@@ -113,6 +113,41 @@ export async function createFlashcardForAnnotation(question: string, answer: str
     return true;
 }
 
+export async function updateFlashcardById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        //todo: throw exception!
+        return null;
+    }
+    if (cardType == CardType.MultiLineBasic) {
+        // TODO: Fix hardcoded path, should come from deckNote obj
+        // TODO: error handling
+        let flashcardCopy = book.flashcards.filter(t=>t.id === flashcardId)[0];
+        const parsedCardCopy = book.parsedCards.filter(t => flashcardCopy.parsedCardId)[0];
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        if (writeSuccessful) {
+            book.parsedCards.forEach((value, index) => {
+                if (value.id === parsedCardCopy.id) {
+                    book.parsedCards[index] = parsedCardCopy;
+                }
+            });
+            flashcardCopy = createFlashcard(parsedCardCopy, question, answer);
+            book.flashcards.forEach((t, i) => {
+                if (t.id === flashcardId) {
+                    book.flashcards[i] = flashcardCopy;
+                }
+            })
+        }
+        else {
+        }
+    }
+    return true;
+}
+
 // TODO: add logic to remove from storage
 export function deleteFlashcardById(id: string) {
     if (plugin.flashcards.length == 0) {
