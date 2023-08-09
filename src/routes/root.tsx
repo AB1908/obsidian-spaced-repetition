@@ -3,6 +3,7 @@ import {Outlet, useNavigate} from "react-router-dom";
 import {NavLink, useLocation} from "react-router-dom";
 import {ICON_LIST} from "src/constants";
 import {ModalContent} from "src/ui/views/modal";
+import {setIcon} from "obsidian";
 
 export type Icon = typeof ICON_LIST[number];
 
