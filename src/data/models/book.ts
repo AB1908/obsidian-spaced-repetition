@@ -103,9 +103,7 @@ export interface frontbook {
     parsedCards:    ParsedCard[];
     flashcards:     Flashcard[];
     annotationPath: string;
-    // annotations: annotation[];
     bookSections: (annotation|Heading)[];
-    // counts: BookCounts;
 }
 
 export interface BookCounts {
