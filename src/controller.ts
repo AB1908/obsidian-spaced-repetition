@@ -13,7 +13,10 @@ import {ReviewBook} from "src/routes/notes-home-page";
 import {AnnotationCount, bookTree, generateSectionsTree} from "src/data/models/bookTree";
 import {findNextHeader, isAnnotation, isHeading} from "src/data/models/book";
 import {FrontendFlashcard} from "src/routes/review";
-import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/export/TextGenerator";
+import {
+    cardTextGenerator,
+    generateCardAsStorageFormat
+} from "src/data/export/TextGenerator";
 import {updateCardOnDisk} from "src/data/import/disk";
 import {createFlashcard} from "src/data/import/flashcards";
 
