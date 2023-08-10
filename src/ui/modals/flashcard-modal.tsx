@@ -59,20 +59,20 @@ export class FlashcardModal extends Modal {
 
     private router = createMemoryRouter([
         {
-            path: "/",
+            path: "",
             element: <Root handleCloseButton={()=>this.close()}/>,
             errorElement: <ErrorPage />,
             children: [
                 {
-                    path: "/home",
+                    path: "/",
                     element: <Tabs />,
                     children: [
                         {
-                            path: "/home/tags",
+                            path: "/tags",
                             element: <Tags />,
                         },
                         {
-                            path: "/home/books",
+                            path: "/books",
                             element: <Notes />,
                             loader: notesLoader,
                         },
@@ -99,10 +99,6 @@ export class FlashcardModal extends Modal {
                     element: <ChapterList/>,
                     loader: chapterLoader,
                 },
-                // {
-                //     path: "/notes/books/:bookId/chapters",
-                //     element: <ChapterList/>
-                // },
                 {
                     path: routes.highlightList,
                     element: <AnnotationList/>,
