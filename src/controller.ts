@@ -121,7 +121,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
     return true;
 }
 
-export async function updateFlashcardById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
+export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
         //todo: throw exception!
