@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from "react";
-import {useLoaderData, useLocation, Form, redirect } from "react-router-dom";
+import {useLoaderData, useLocation, Form, redirect} from "react-router-dom";
 import {ReviewResponse, schedule, textInterval} from "src/scheduler/scheduling";
 import {getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
@@ -63,7 +63,9 @@ function Answer(props: { answerText: string }) {
 
 function CardFront(props: { currentCard: FrontendFlashcard, handleShowAnswerButton: () => void }) {
     return <>
-        <Question questionText={props.currentCard.questionText}/>
+        <div className={"sr-card-body"}>
+            <Question questionText={props.currentCard.questionText}/>
+        </div>
         <ShowAnswerButton handleShowAnswerButton={props.handleShowAnswerButton}/>
     </>;
 }
@@ -77,11 +79,13 @@ function CardBack(props: {
     const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
     let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
     return <>
-        <Question questionText={props.currentCard.questionText}/>
-        <hr/>
-        <Answer answerText={props.currentCard.answerText}/>
+        <div className={"sr-card-body"}>
+            <Question questionText={props.currentCard.questionText}/>
+            <hr/>
+            <Answer answerText={props.currentCard.answerText}/>
+        </div>
         <div className="sr-response">
-            <Form method={"POST"}>
+            <Form method={"POST"} className={"sr-response-form"}>
                 <Button text={hardBtnText} id="sr-hard-btn"
                         responseHandler={props.hardBtnHandler} value={ReviewResponse.Hard}/>
                 <Button text={goodBtnText} id="sr-good-btn"
@@ -97,6 +101,7 @@ export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     const location = useLocation();
+    console.log(currentCard);
 
     // reset state when we navigate to a new flashcard
     useEffect(() => {
