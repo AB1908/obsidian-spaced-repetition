@@ -309,49 +309,52 @@ export class Book implements frontbook {
     // though that state might go out of sync depending on how fast we call it
     // todo: debounce?
     // todo: think differently?
-    async updateParsedCard(flashcardId: string) {
-        const flashcard = this.flashcards.filter(t => t.id === flashcardId)[0];
-        const parsedCardCopy = this.parsedCards.filter((card: ParsedCard) => card.id === flashcard.parsedCardId)[0];
-        const originalCardOnDisk = generateCardAsStorageFormat(parsedCardCopy);
-        parsedCardCopy.metadataText = metadataTextGenerator(
-            flashcard.annotationId,
-            {dueDate: flashcard.dueDate, interval: flashcard.interval, ease: flashcard.ease},
-            flashcard.flag
-        );
-        const newCardOnDisk = generateCardAsStorageFormat(parsedCardCopy);
-        // todo: store the original card
-        // then update the card on disk
-        // then update parsed Card
-        // encapsulate into class?
-
-        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardOnDisk, newCardOnDisk);
-        if (writeSuccessful) {
-            this.parsedCards.forEach((value, index, array) => {
-                if (value.id === parsedCardCopy.id) {
-                    array[index] = parsedCardCopy;
-                }
-            });
-            return true;
-        }
-        else {
-            return false;
-        }
+    async processCardReview(flashcardId: string, reviewResponse: ReviewResponse) {
+        const card = this.flashcards.filter(t=>t.id === flashcardId)[0];
+        const updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
+            interval: card.interval,
+            ease: card.ease,
+            dueDate: card.dueDate
+        });
+        await this.updateParsedCard(card, updatedSchedulingMetadata);
+        this.updateFlashcard(flashcardId, updatedSchedulingMetadata);
     }
 
-    updateFlashcard(flashcardId: string, reviewResponse: ReviewResponse) {
-        let updatedSchedulingMetadata, flashcard;
+    private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
         this.flashcards.forEach((card: Flashcard, index: number) => {
             if (card.id == flashcardId) {
-                updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
-                    interval: card.interval,
-                    ease: card.ease,
-                    dueDate: card.dueDate
-                });
                 this.flashcards[index].dueDate = updatedSchedulingMetadata.dueDate;
                 this.flashcards[index].ease = updatedSchedulingMetadata.ease;
                 this.flashcards[index].interval = updatedSchedulingMetadata.interval;
             }
         });
-        return this;
+    }
+
+    // todo: feels like disk update should be put somewhere else, like parsedcard should have its
+    // own class
+    private async updateParsedCard(card: Flashcard, updatedSchedulingMetadata: SchedulingMetadata) {
+        const parsedCardCopy = this.parsedCards.filter((parsedCard: ParsedCard) => parsedCard.id === card.parsedCardId)[0];
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+
+        const updatedParsedCard = {
+            ...parsedCardCopy, metadataText: metadataTextGenerator(
+                card.annotationId,
+                updatedSchedulingMetadata,
+                card.flag
+            )
+        };
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(updatedParsedCard);
+
+        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+
+        if (writeSuccessful) {
+            this.parsedCards.forEach((value, index, array) => {
+                if (value.id === parsedCardCopy.id) {
+                    array[index] = updatedParsedCard;
+                }
+            });
+        } else {
+
+        }
     }
 }
