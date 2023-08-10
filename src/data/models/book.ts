@@ -247,6 +247,7 @@ export class Book implements frontbook {
             );
             this.bookSections = generateHeaderCounts(this.bookSections);
         }
+        this.generateReviewDeck();
         return this;
     }
 
@@ -258,7 +259,6 @@ export class Book implements frontbook {
     // Sometimes, we may have finished reviewing a deck. We shouldn't allow reviewing it again.
     // So regenerate the review deck, and then check if it has anything.
     canBeReviewed() {
-        this.generateReviewDeck();
         return this.reviewDeck.length != 0;
     }
 
