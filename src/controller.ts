@@ -45,7 +45,6 @@ export function getAnnotationById(annotationId: string, bookId: string) {
 }
 
 export function getNextCard(bookId: string) {
-    console.log(bookId);
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
         new Error("You should have a book id here");
@@ -84,11 +83,11 @@ export async function updateFlashcardSchedulingMetadata(
 ) {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
-        return null;
+        new Error(`${bookId}: book does not exist`);
     }
 
-    // todo: the order is incorrect, write to disk first and then update in flashcards array
-    return await book.updateFlashcard(flashcardId, reviewResponse).updateParsedCard(flashcardId);
+    await book.processCardReview(flashcardId, reviewResponse);
+    return true;
 }
 
 // TODO: add logic to update in storage
