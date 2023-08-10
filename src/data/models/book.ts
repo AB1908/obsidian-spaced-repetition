@@ -293,6 +293,7 @@ export class Book implements frontbook {
 
     finishReviewing() {
         this.reviewIndex = -1;
+        this.reviewDeck = [];
     }
 
     // copied from https://stackoverflow.com/a/12646864/13285428
