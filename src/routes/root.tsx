@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {Outlet, useNavigate} from "react-router-dom";
+import {Outlet, redirect, useNavigate} from "react-router-dom";
 import {NavLink, useLocation} from "react-router-dom";
 import {ICON_LIST} from "src/constants";
 import {ModalContent} from "src/ui/views/modal";
@@ -13,16 +13,16 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate("/home/books");
+        navigate("/books");
         const back: Icon = 'arrow-left';
         setIcon(backButton.current, back);
     }, []);
 
     function onClick () {
-        if ((location.pathname === '/home/books') || (location.pathname === '/home/tabs')) {
+        if ((location.pathname === '/books') || (location.pathname === '/tabs')) {
 
         } else {
-            navigate(-1);
+            // navigate(-1);
         }
     }
 
@@ -48,10 +48,10 @@ export function Tabs() {
     return (
         <>
             <div className={"sr-tab-nav"}>
-                <NavLink to="/home/tags" className={"sr-nav-link is-clickable"} >
+                <NavLink to="/tags" className={"sr-nav-link is-clickable"} >
                     Tags
                 </NavLink>
-                <NavLink to="/home/books" className={"sr-nav-link is-clickable"}>
+                <NavLink to="/books" className={"sr-nav-link is-clickable"}>
                     Notes
                 </NavLink>
             </div>
