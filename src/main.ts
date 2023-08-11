@@ -51,13 +51,14 @@ export default class SRPlugin extends Plugin {
     // todo: fix type
     public notesWithFlashcards: Book[];
     filePaths: string[];
+    public bookNotesPaths: string[];
 
     async onload(): Promise<void> {
         await this.loadPluginData();
         plugin = this;
         // todo: move this initialization to modal opening phase?
-        this.filePaths = listOfNotes("flashcards");
-        this.notesWithFlashcards = this.filePaths.map((t: string, i: number) => new Book(t, `book${i}`));
+        // this.app.metadataCache.on("resolved", () => {
+        // });
 
         appIcon();
 

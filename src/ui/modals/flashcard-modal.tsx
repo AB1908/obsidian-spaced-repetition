@@ -186,9 +186,13 @@ export class FlashcardModal extends Modal {
     }
 
     async onOpen(): Promise<void> {
-        for (const t of this.plugin.notesWithFlashcards) {
-            await t.initialize()
-        }
+        this.plugin.filePaths = listOfNotes("flashcards");
+        this.plugin.bookNotesPaths = listOfNotes("review/book");
+        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `book${i}`));
+        try {
+            for (const t of this.plugin.notesWithFlashcards) {
+                await t.initialize()
+            }
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
