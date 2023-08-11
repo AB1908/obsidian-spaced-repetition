@@ -226,10 +226,10 @@ export class Book implements frontbook {
         this.name = name;
         this.parsedCards = [];
         this.flashcards = [];
-        this.annotationPath = null;
+        this.annotationPath = "";
         this.bookSections = [];
         this.reviewIndex = -1;
-        this.reviewDeck = null;
+        this.reviewDeck = [];
     }
 
     async initialize() {
