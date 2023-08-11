@@ -10,12 +10,12 @@ export function NoteAndHighlight({highlightText, noteText}: { highlightText: str
             </blockquote>
 
         </div>
-        <div>
-            <blockquote>
+        {noteText && <div>
+            <blockquote className={"sr-blockquote"}>
                 <p>
                     {noteText}
                 </p>
             </blockquote>
-        </div>
+        </div>}
     </>;
 }
