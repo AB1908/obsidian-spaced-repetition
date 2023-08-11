@@ -16,6 +16,9 @@ import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-exi
 import {reviewAction, ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
 import {ClozeCard, clozeLoader} from "src/routes/cloze-card";
+import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
+import {listOfNotes} from "src/data/import/disk";
+import {Book} from "src/data/models/book";
 
 export enum FlashcardModalMode {
     DecksList,
@@ -194,7 +197,6 @@ export class FlashcardModal extends Modal {
         this.plugin.filePaths = listOfNotes("flashcards");
         this.plugin.bookNotesPaths = listOfNotes("review/book");
         this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `book${i}`));
-        try {
             for (const t of this.plugin.notesWithFlashcards) {
                 await t.initialize()
             }
