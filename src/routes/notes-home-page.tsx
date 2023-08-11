@@ -56,10 +56,12 @@ export function Notes() {
                     )
                 )}
             </ul>
-            <button className={"create-deck"}>
-                <div ref={iconRef}></div>
-                Add new deck
-            </button>
+            <Link to={"create"}>
+                <button className={"create-deck"}>
+                    <div ref={iconRef}></div>
+                    Add new deck
+                </button>
+            </Link>
         </div>
     )
 }
