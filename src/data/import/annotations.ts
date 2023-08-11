@@ -27,6 +27,9 @@ export function parseAnnotations(text: string): annotation {
             // todo: fix
         })
     }
+    if (parsedAnnotations.length == 0) {
+        new Error("parsedAnnotations: could not find annotation")
+    }
     return parsedAnnotations[0];
 }
 
