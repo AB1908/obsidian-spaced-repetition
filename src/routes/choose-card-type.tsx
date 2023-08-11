@@ -1,13 +1,28 @@
-import {useLoaderData} from "react-router";
-import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
-import {CardTypePicker} from "src/ui/components/card-creation";
 import React from "react";
-import type {annotation} from "src/data/import/annotations";
+import {Link} from "react-router-dom";
 
 export function ChooseCardType() {
-    return (
-        <>
-            <CardTypePicker/>
-        </>
-    );
+    return (<>
+        <p>
+            Which type of flashcard?
+        </p>
+
+        <ol>
+            <Link to={"regular"}>
+                <li>
+                    Regular
+                </li>
+            </Link>
+            {/*<Link to={"reversed"}>*/}
+            {/*    <li>*/}
+            {/*        Reversed*/}
+            {/*    </li>*/}
+            {/*</Link>*/}
+            {/*<Link to={"cloze"}>*/}
+            {/*    <li>*/}
+            {/*        Cloze*/}
+            {/*    </li>*/}
+            {/*</Link>*/}
+        </ol>
+    </>);
 }
