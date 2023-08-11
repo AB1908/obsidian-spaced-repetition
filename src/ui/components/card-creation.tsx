@@ -28,7 +28,7 @@ export function ClozeCardForm(props: any) {
 
 export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
     // todo: add some sort of header signifying the type of card being added
-    return <Form method="post">
+    return <Form method="post" className={"sr-card-form"}>
         <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
                             defaultValue={props.defaultQuestionValue}/>
         <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
