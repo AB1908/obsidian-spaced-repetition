@@ -2,8 +2,8 @@ import React from "react";
 
 export function NoteAndHighlight({highlightText, noteText}: { highlightText: string, noteText: string }) {
     return <>
-        <div>
-            <blockquote className={"markdown-rendered blockquote"}>
+        <div className={"sr-annotation"}>
+            <blockquote className={"sr-blockquote"}>
                 <p>
                     {highlightText}
                 </p>
