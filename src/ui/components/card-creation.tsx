@@ -40,29 +40,3 @@ export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAn
         </div>
     </Form>;
 }
-
-export function CardTypePicker() {
-    return (<>
-        <p>
-            Which type of flashcard?
-        </p>
-
-        <ol>
-            <Link to={"regular"}>
-                <li>
-                    Regular
-                </li>
-            </Link>
-            <Link to={"reversed"}>
-                <li>
-                    Reversed
-                </li>
-            </Link>
-            <Link to={"cloze"}>
-                <li>
-                    Cloze
-                </li>
-            </Link>
-        </ol>
-    </>);
-}
