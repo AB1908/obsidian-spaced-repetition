@@ -22,7 +22,7 @@ export function parseAnnotations(text: string): annotation {
             // TODO: potentially switch to string that also contains a short UUID?
             id: match.groups.id,
             type: match.groups.type,
-            highlight: match.groups.highlight.trim(),
+            highlight: match.groups.highlight.trim().replace(/> /g, ""),
             note: match.groups.note.trim(),
             // todo: fix
         })
