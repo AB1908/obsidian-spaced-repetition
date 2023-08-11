@@ -23,6 +23,7 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
 
         } else {
             // navigate(-1);
+            navigate("./..")
         }
     }
 
