@@ -100,11 +100,13 @@ export function ResponseButtons({card, handleFlashcardResponse}: {card: Flashcar
 }
 
 export function CancelButton() {
-    return <Link to={"./.."}>
+    return (
         <button>
+            <Link to={"./.."}>
             Cancel
+            </Link>
         </button>
-    </Link>;
+    );
 }
 
 export function SubmitButton() {
