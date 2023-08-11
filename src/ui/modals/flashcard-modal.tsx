@@ -79,6 +79,11 @@ export class FlashcardModal extends Modal {
                     ]
                 },
                 {
+                    path: "/books/create",
+                    element: <BookCreator />,
+                    loader: bookCreatorLoader,
+                },
+                {
                     path: "/books/:bookId",
                     element: <DeckLandingPage/>,
                     loader: deckLoader,
