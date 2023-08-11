@@ -17,10 +17,12 @@ export function ClozeCardForm(props: any) {
         {/*Done: fix default value*/}
         <TextInputWithLabel className={"sr-cloze-input"} htmlFor={"cloze"} defaultValue={props.defaultClozeValue}/>
 
-        <SubmitButton/>
+        <div className={"modal-button-container"}>
+            <SubmitButton/>
 
-        {/*TODO: Replace with useNavigate and use history?*/}
-        <CancelButton/>
+            {/*TODO: Replace with useNavigate and use history?*/}
+            <CancelButton/>
+        </div>
     </Form>;
 }
 
@@ -31,10 +33,11 @@ export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAn
                             defaultValue={props.defaultQuestionValue}/>
         <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
 
-        <SubmitButton/>
-
-        {/*TODO: Replace with useNavigate and use history?*/}
-        <CancelButton/>
+        <div className={"modal-button-container"}>
+            <SubmitButton/>
+            {/*TODO: Replace with useNavigate and use history?*/}
+            <CancelButton/>
+        </div>
     </Form>;
 }
 
