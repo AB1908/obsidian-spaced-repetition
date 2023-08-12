@@ -1,4 +1,4 @@
-import {AbstractFlashcard, Flashcard} from "src/data/models/flashcard";
+import {Flashcard} from "src/data/models/flashcard";
 import {BookMetadataSections} from "src/data/models/book";
 import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
 import {CardType} from "src/scheduler/scheduling";
@@ -7,7 +7,7 @@ import {getFileContents} from "src/data/import/disk";
 // adds a hasFlashcard:true for every annotation that has a flashcard
 export function addFlashcardState(flashcards: Flashcard[], bookSections: BookMetadataSections) {
     const out = [];
-    for (let metadataSection of bookSections) {
+    for (const metadataSection of bookSections) {
         // if (flashcards.filter(t=> metadataSection.id === t.id) !== undefined)
         //     out.push({...bookSections, hasFlashcard: true})
         // else
@@ -31,17 +31,16 @@ export async function parseFileText(path: string) {
     return parsedCardsArray;
 }
 
-export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]): AbstractFlashcard[] {
-    for (let card of parsedCards) {
+export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]) {
+    for (const card of parsedCards) {
         const [questionText, answerText] = parseCardText(card.cardText);
-        const flashcard = new Flashcard(card.id, questionText, answerText, parseMetadata(card.metadataText))
-        this.flashcards.push(flashcard)
+        const flashcard = new Flashcard(card.id, questionText, answerText, parseMetadata(card.metadataText));
+        this.flashcards.push(flashcard);
     }
-    return;
 }
 
 export function parseCardText(text: string): [string, string] {
-    let sides = text.split("\n?\n").map(t => t.trim());
+    const sides = text.split("\n?\n").map(t => t.trim());
     if (sides.length < 2) {
         new Error(`parseCardText: no card text found in ${text}`);
     }
