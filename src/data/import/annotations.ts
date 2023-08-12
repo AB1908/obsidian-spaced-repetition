@@ -1,5 +1,3 @@
-import {getFileContents, getHeadersForFile} from "src/data/import/disk";
-
 export interface annotation {
     id:             string;
     type:           string;
@@ -17,7 +15,7 @@ const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)\n(?<highlight>(> .*\n)+)
 export function parseAnnotations(text: string): annotation {
     const parsedAnnotations: annotation[] = [];
     const annotationMatches = text.matchAll(ANNOTATION_REGEX);
-    for (let match of annotationMatches) {
+    for (const match of annotationMatches) {
         parsedAnnotations.push({
             // TODO: potentially switch to string that also contains a short UUID?
             id: match.groups.id,
@@ -25,10 +23,10 @@ export function parseAnnotations(text: string): annotation {
             highlight: match.groups.highlight.trim().replace(/> /g, ""),
             note: match.groups.note.trim(),
             // todo: fix
-        })
+        });
     }
     if (parsedAnnotations.length == 0) {
-        new Error("parsedAnnotations: could not find annotation")
+        new Error("parsedAnnotations: could not find annotation");
     }
     return parsedAnnotations[0];
 }
