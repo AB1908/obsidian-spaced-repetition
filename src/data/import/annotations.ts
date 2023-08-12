@@ -32,14 +32,3 @@ export function parseAnnotations(text: string): annotation {
     }
     return parsedAnnotations[0];
 }
-
-export async function extractAnnotations(path: string) {
-    const fileContents = (await getFileContents(path)).split("\n");
-    const fileHeaders = getHeadersForFile(path);
-    // todo: last iteration
-    for (let i = 0; i < fileHeaders.length-1; i++) {
-        // header.level
-        // header.position.start
-        // parseAnnotations(fileContents.slice(fileHeaders[i].position.start.line, fileHeaders[i + 1]?.position.start.line ?? fileContents.length).join("\n"))
-    }
-}
