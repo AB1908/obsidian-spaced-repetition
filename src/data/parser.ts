@@ -13,7 +13,7 @@ export function addFlashcardState(flashcards: Flashcard[], bookSections: BookMet
         // else
         //     out.push({...bookSections, hasFlashcard: false})
         // TODO: logic for this is incorrect, should be checking against metadata. Fix
-        out.push({...bookSections, hasFlashcard: flashcards.some(t=>t.id === metadataSection.id)})
+        out.push({...bookSections, hasFlashcard: flashcards.some(t=>t.id === metadataSection.id)});
     }
     return out;
 }
@@ -25,7 +25,7 @@ export async function parseFileText(path: string) {
     const fileText = await getFileContents(path);
     const cardMatchesArray = fileText.matchAll(CARDTEXT_REGEX);
     const parsedCardsArray: ParsedCard[] = [];
-    for (let card of cardMatchesArray) {
+    for (const card of cardMatchesArray) {
         parsedCardsArray.push(createParsedCardFromText(card.groups.cardText, CardType.MultiLineBasic, path, card.groups.metadataText));
     }
     return parsedCardsArray;
@@ -66,7 +66,7 @@ export interface FlashcardMetadata {
     dueDate: string|null;
     interval: number|null;
     annotationId: string;
-    flag: FLAG;
+    flag: FLAG|null;
 }
 
 // Couldn't find a concise way of doing this that was more readable
@@ -92,7 +92,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
     }
     if (scheduling === undefined)
         return {
-            flag: "",
+            flag: null,
             annotationId: annotationId,
             dueDate: null,
             interval: null,
