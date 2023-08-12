@@ -22,7 +22,7 @@ export interface FlashCount {
 
 // TODO: Fix types
 // TODO: use more realistic data??
-export function notesLoader({params}: {params: any}) {
+export function notesLoader() {
     if (USE_ACTUAL_BACKEND) {
         return getBooks();
     } else {

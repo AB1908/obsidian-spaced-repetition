@@ -25,7 +25,7 @@ export interface FrontendFlashcard {
 // So I need to fetch the first flashcard in the queue
 // And then redirect myself to that flashcard
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
-export async function reviewLoader({params}: { params: any }) {
+export async function reviewLoader({params}) {
     if (USE_ACTUAL_BACKEND) {
         let flashcardId = null;
         if (params.flashcardId == null) {
