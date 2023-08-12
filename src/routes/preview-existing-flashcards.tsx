@@ -5,7 +5,7 @@ import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getFlashcardsForAnnotation} from "src/controller";
 import {Flashcard} from "src/data/models/flashcard";
 
-export function highlightLoader({params}: { params: any }) {
+export function highlightLoader({params}) {
     // todo: use redirect
     if (USE_ACTUAL_BACKEND) {
         return getFlashcardsForAnnotation(params.annotationId, params.bookId);
