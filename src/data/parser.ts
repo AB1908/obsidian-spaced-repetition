@@ -63,9 +63,9 @@ const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d+),(?
 const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{5,8})/g;
 
 export interface FlashcardMetadata {
-    ease: number;
-    dueDate: string;
-    interval: number;
+    ease: number|null;
+    dueDate: string|null;
+    interval: number|null;
     annotationId: string;
     flag: FLAG;
 }
