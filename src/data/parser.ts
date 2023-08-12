@@ -93,8 +93,8 @@ export function parseMetadata(text: string): FlashcardMetadata {
     }
     if (scheduling === undefined)
         return {
-            flag: null,
-            annotationId: annotationId.groups.annotationId,
+            flag: "",
+            annotationId: annotationId,
             dueDate: null,
             interval: null,
             ease: null
@@ -102,7 +102,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
     else
         return {
             flag: stringToFlag(scheduling.groups.flag),
-            annotationId: annotationId.groups.annotationId,
+            annotationId: annotationId,
             dueDate: scheduling.groups.dueDate,
             interval: Number(scheduling.groups.interval),
             ease: Number(scheduling.groups.ease),
