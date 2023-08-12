@@ -43,7 +43,7 @@ export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]): Abst
 export function parseCardText(text: string): [string, string] {
     let sides = text.split("\n?\n").map(t => t.trim());
     if (sides.length < 2) {
-        return;
+        new Error(`parseCardText: no card text found in ${text}`);
     }
     return [sides[0], sides[1]];
 }
