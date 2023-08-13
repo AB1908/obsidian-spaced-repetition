@@ -7,19 +7,18 @@ import {setIcon} from "obsidian";
 export type Icon = typeof ICON_LIST[number];
 
 export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
-    const backButton = useRef();
+    const backButton = useRef<HTMLDivElement>(null);
     const location = useLocation();
     const navigate = useNavigate();
 
     useEffect(() => {
-        navigate("/books");
-        const back: Icon = 'arrow-left';
+        const back: Icon = "arrow-left";
         setIcon(backButton.current, back);
+        navigate("/books");
     }, []);
 
     function onClick () {
-        if ((location.pathname === '/books') || (location.pathname === '/tabs')) {
-
+        if ((location.pathname === "/books") || (location.pathname === "/tabs")) {
         } else {
             // navigate(-1);
             navigate("./..")
@@ -28,7 +27,7 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
 
     return (
         <>
-            <div className={"modal-back-button"} onClick={onClick} ref={backButton}>
+            <div className={"modal-back-button"} onClick={() => onClick()} ref={backButton}>
             </div>
             <div
                 className={"modal-close-button"}
@@ -58,7 +57,7 @@ export function Tabs() {
             <Outlet/>
         </>
     );
-};
+}
 
 export function Tags() {
     return <p>WIP</p>
