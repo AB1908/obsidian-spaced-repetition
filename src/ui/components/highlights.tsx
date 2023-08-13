@@ -47,19 +47,6 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 
 export function AnnotationList() {
     const chapterData: any = useLoaderData() as SectionAnnotations;
-    // const [color, setColor] = useState(null);
-    // const uniqueHighlightColors = [...new Set(chapterData.highlights.map((t: any) => t.color))];
-    // let filteredHighlights = color === null ? chapterData.highlights : chapterData.highlights.filter(t=>t.color === color);
-
-    // function colorFilterHandler(t: string) {
-    //    setColor((currentState: string) =>{
-    //        if (currentState != t) {
-    //            return t;
-    //        } else {
-    //            return null;
-    //        }
-    //    });
-    // }
 
     return (
         <>
