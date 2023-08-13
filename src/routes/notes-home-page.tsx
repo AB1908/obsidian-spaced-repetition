@@ -1,9 +1,8 @@
-import {Deck} from "src/Deck";
 import {useLoaderData} from "react-router";
 import React, {useEffect, useRef} from "react";
 import {setIcon} from "obsidian";
 import {Link} from "react-router-dom";
-import {AllCardCounts, CardCount} from "src/ui/components/card-counts";
+import {CardCount} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
 import {getBooks} from "src/controller";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";

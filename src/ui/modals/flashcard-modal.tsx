@@ -2,7 +2,6 @@ import React from "react";
 import {App, Modal} from "obsidian";
 import {createRoot, Root as ReactDomRoot} from "react-dom/client";
 import type SRPlugin from "src/main";
-import {AppContext} from "src/contexts/PluginContext";
 import {createMemoryRouter, RouterProvider} from "react-router-dom";
 import {Root, Tabs, Tags} from "src/routes/root";
 import ErrorPage from "src/routes/errorPage";
@@ -203,9 +202,7 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
-                <AppContext.Provider value={this.plugin}>
                     <RouterProvider router={this.router}/>
-                </AppContext.Provider>
             </>
         )
     }
