@@ -1,4 +1,5 @@
 import React, {ReactNode, useState} from "react";
+import {book} from "src/data/models/book";
 
 function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {
     isDeckTreeOpen: boolean,
