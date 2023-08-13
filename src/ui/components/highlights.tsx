@@ -87,7 +87,9 @@ export function AnnotationList() {
                     <div key={annotation.id} >
                         <Link to={`${annotation.id}/flashcards`}>
                             <li className={"sr-highlight tree-item-self is-clickable"}>
-                                {annotation.highlight}
+                                <span className={"sr-annotation-text"}>
+                                    {annotation.highlight}
+                                </span>
                                 <span>
                                     <span className={"no-tests tree-item-flair sr-test-counts"}>
                                         {/*// TODO: potential for this to be null since spec for flashcard array not defined yet*/}
