@@ -49,5 +49,6 @@ export async function updateAction({params, request}: {params: any, request: any
     // TODO: call the right api instead, there shouldn' be any actual update logic
     // I have access to bookId, sectionId, annotationId
     await updateFlashcardContentsById(params.flashcardId, data.get("question"), data.get("answer"), params.bookId);
-    return redirect(`/books/${params.bookId}/chapters/${params.chapterId}/annotations/${params.annotationId}/flashcards`);
+    // return redirect(`/books/${params.bookId}/chapters/${params.chapterId}/annotations/${params.annotationId}/flashcards`);
+    return redirect("./..");
 }
