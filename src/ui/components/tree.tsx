@@ -66,19 +66,18 @@ function NonCollapsibleTreeEntry({render}: { render: () => ReactNode }) {
 }
 
 export function Tree(props: {
-    data: any;
-    apply: Function;
+    data: book,
     render: (t: any) => ReactNode;
     childKey: string;
 }) {
-    const children = props.data[props.childKey];
+    const children = props.data["children"];
     return <>{children.map((child: any, i: number) => {
         if (child[props.childKey]?.length) {
             return (
                 <CollapsibleTreeEntry
                     key={i}
                     renderItem={() => props.render(child)}
-                    renderRest={() => <Tree data={child} childKey={props.childKey} apply={(d: any) => props.apply(d)}
+                    renderRest={() => <Tree data={child} childKey={props.childKey}
                                             render={props.render}/>}
                 />
             );
