@@ -8,7 +8,7 @@ export function ChooseCardType() {
         </p>
 
         <ol>
-            <Link to={"regular"}>
+            <Link to={"regular"} replace>
                 <li>
                     Regular
                 </li>
