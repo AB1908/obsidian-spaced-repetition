@@ -195,7 +195,8 @@ export class FlashcardModal extends Modal {
     async onOpen(): Promise<void> {
         this.plugin.filePaths = listOfNotes("flashcards");
         this.plugin.bookNotesPaths = listOfNotes("review/book");
-        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `book${i}`));
+        // todo: fix
+        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `${t.split("/").last().replace(".md", "")}`));
             for (const t of this.plugin.notesWithFlashcards) {
                 await t.initialize()
             }
