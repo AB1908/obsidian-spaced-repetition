@@ -20,8 +20,8 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     function onClick () {
         if ((location.pathname === "/books") || (location.pathname === "/tabs")) {
         } else {
-            // navigate(-1);
-            navigate("./..")
+            navigate(-1);
+            // navigate("./..")
         }
     }
 
