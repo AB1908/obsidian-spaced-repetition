@@ -69,7 +69,7 @@ export function AnnotationList() {
             <h3>
                 {chapterData.title}
             </h3>
-            <HeaderWithCounts withCount={29} withoutCount={30}/>
+            <HeaderWithCounts withCount={0} withoutCount={0}/>
 
             {/*<>*/}
             {/*    {uniqueHighlightColors.map((t: string)=>(*/}
