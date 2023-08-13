@@ -203,7 +203,9 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot = createRoot(this.modalEl)
         this.modalElReactRoot.render(
             <>
+                <React.StrictMode>
                     <RouterProvider router={this.router}/>
+                </React.StrictMode>
             </>
         )
     }
