@@ -101,7 +101,6 @@ export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     const location = useLocation();
-    console.log(currentCard);
 
     // reset state when we navigate to a new flashcard
     useEffect(() => {
