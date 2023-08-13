@@ -1,11 +1,11 @@
 import React from "react";
 import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
-import {book, Counts} from "src/data/models/book";
+import {book} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
-import {Link} from "react-router-dom";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getSectionTreeForBook} from "src/controller";
+import {Section} from "src/ui/components/section";
 
 // TODO: more realistic data
 // TODO: think of a better data structure for this, this is terrible
