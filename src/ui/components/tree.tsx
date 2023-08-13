@@ -31,7 +31,7 @@ function CollapsibleTreeEntry({renderItem, renderRest}: { renderItem: () => Reac
 
     function handleTriangleClick(e: MouseEvent): void {
         e.preventDefault();
-        setDeckTreeOpen(!isDeckTreeOpen);
+        setDeckTreeOpen(() => !isDeckTreeOpen);
     }
 
     return (
