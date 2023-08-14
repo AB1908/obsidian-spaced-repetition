@@ -89,6 +89,6 @@ export function generateTree(sections: (annotation | Heading)[]) {
 }
 
 export function generateSectionsTree(sections: (annotation | Heading)[]) {
-    const headings: Heading[] = sections.filter((t): t is Heading => isHeading(t));
+    const headings: Heading[] = structuredClone(sections.filter((t): t is Heading => isHeading(t)));
     return generateTree(headings);
 }
