@@ -15,13 +15,14 @@ import {ReviewResponse} from "src/scheduler/scheduling";
 export interface book {
     id:       string;
     name:     string;
-    children: book[];
-    counts?:  Count;
+    children: sectionTree[];
+    counts:  Count;
 }
 
-export interface Counts {
-    flashcards: FlashCount;
-    sections: Record<string, Count>
+export interface sectionTree {
+    id:       string;
+    name:     string;
+    children: book[];
 }
 
 export interface Count {
