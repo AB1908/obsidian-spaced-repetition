@@ -256,7 +256,7 @@ export function getBookById(id: string): frontEndBook {
 export function getSectionTreeForBook(id: string) {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
     if (!book) {
-        return;
+        throw new Error(`getSectionTreeForBook: No book found for id ${id}`);
     }
     let children = generateSectionsTree(book.bookSections);
     return {
