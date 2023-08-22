@@ -11,7 +11,7 @@ import {annotation} from "src/data/import/annotations";
 import {ReviewBook} from "src/routes/notes-home-page";
 
 import {AnnotationCount, bookTree, generateSectionsTree} from "src/data/models/bookTree";
-import {findNextHeader, isAnnotation, isHeading} from "src/data/models/book";
+import {book, findNextHeader, isAnnotation, isHeading, sectionTree} from "src/data/models/book";
 import {FrontendFlashcard} from "src/routes/review";
 import {
     cardTextGenerator,
@@ -262,9 +262,9 @@ export function getSectionTreeForBook(id: string) {
     return {
         id: book.id,
         name: book.name,
-        children: children,
+        // todo: fix this type casting asap
+        children: children as unknown as sectionTree[],
         counts: {
-            sections: AnnotationCount(bookTree(book.id, book.name, children)),
             flashcards: maturityCounts(book.flashcards),
         }
     };
