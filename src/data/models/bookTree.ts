@@ -1,6 +1,6 @@
 // This is terrible. Save me.
 import {annotation} from "src/data/import/annotations";
-import {BookMetadataSections, findPreviousHeader, Heading, isAnnotation, isHeading} from "src/data/models/book";
+import {BookMetadataSections, Count, findPreviousHeader, Heading, isAnnotation, isHeading} from "src/data/models/book";
 
 function writeCountToObj(mem: any, sectionId: string, count: number, key: string) {
     Object.assign(mem, {[`${sectionId}`]: {...mem[sectionId], [key]: count}});
@@ -25,8 +25,10 @@ function countAnnotations(sections: any, mem: any, injectedCondition: (sections:
     return count;
 }
 
+
+
 // TODO: switch to DFS/BFS?
-export function AnnotationCount(sections: any) {
+export function AnnotationCount(sections: any): Record<string, Count> {
     let mem = {};
     // @ts-ignore
     mem[sections.id] = {
