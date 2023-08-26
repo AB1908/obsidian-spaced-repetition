@@ -4,7 +4,7 @@ import {book} from "src/data/models/book";
 import {Link} from "react-router-dom";
 import React from "react";
 
-export function Section({section}: { section: book}) {
+export function Section({section}: { section: book }) {
     // const clickHandler = () => console.log("Clicked!");
     const sectionId: string = section.id;
     return <Link to={`${sectionId}/annotations`}>
