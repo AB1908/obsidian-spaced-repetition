@@ -61,7 +61,7 @@ export function DeckLandingPage() {
                         Create New Cards
                     </button>
                 </Link>
-                <Link to={"review"} replace>
+                <Link to={"review"}>
                     <button>
                         Review
                     </button>
