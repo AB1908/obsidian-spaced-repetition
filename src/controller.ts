@@ -10,8 +10,8 @@ import {plugin} from "src/main";
 import {annotation} from "src/data/import/annotations";
 import {ReviewBook} from "src/routes/notes-home-page";
 
-import {AnnotationCount, bookTree, generateSectionsTree} from "src/data/models/bookTree";
-import {book, findNextHeader, isAnnotation, isHeading, sectionTree} from "src/data/models/book";
+import {generateSectionsTree} from "src/data/models/bookTree";
+import {findNextHeader, isAnnotation, isHeading, sectionTree} from "src/data/models/book";
 import {FrontendFlashcard} from "src/routes/review";
 import {
     cardTextGenerator,
@@ -39,16 +39,16 @@ import {createFlashcard} from "src/data/import/flashcards";
 // TODO: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
 
 export function getAnnotationById(annotationId: string, bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         return null;
     }
 
-    return book.annotations().filter((t: annotation)=> t.id === annotationId)[0];
+    return book.annotations().filter((t: annotation) => t.id === annotationId)[0];
 }
 
 export function getNextCard(bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         new Error("You should have a book id here");
     }
@@ -62,7 +62,7 @@ export function getNextCard(bookId: string) {
 }
 
 export function getCurrentCard(bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         new Error("getCurrentCard: book id not found");
     }
@@ -75,11 +75,13 @@ export function getCurrentCard(bookId: string) {
 }
 
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         return null;
     }
-    return book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t=>{ return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)}})[0] ?? null;
+    return book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
+        return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)}
+    })[0] ?? null;
 }
 
 // TODO: add logic to update in storage
@@ -97,7 +99,7 @@ export async function updateFlashcardSchedulingMetadata(
     bookId: string,
     reviewResponse: ReviewResponse,
 ) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         new Error(`${bookId}: book does not exist`);
     }
@@ -119,7 +121,7 @@ export function updateFlashcardAnswer(id: string, answer: string) {
 
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         return null;
     }
@@ -135,7 +137,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
 }
 
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         //todo: throw exception!
         return null;
@@ -143,7 +145,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
-        let flashcardCopy = book.flashcards.filter(t=>t.id === flashcardId)[0];
+        let flashcardCopy = book.flashcards.filter(t => t.id === flashcardId)[0];
         const parsedCardCopy = book.parsedCards.filter(t => flashcardCopy.parsedCardId)[0];
         const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
         parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
@@ -162,8 +164,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
                     book.flashcards[i] = flashcardCopy;
                 }
             })
-        }
-        else {
+        } else {
         }
     }
     return true;
@@ -182,24 +183,24 @@ export function deleteFlashcardById(id: string) {
 }
 
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         return null;
     }
-    const selectedSectionIndex = book.bookSections.findIndex(t=>sectionId === t.id);
+    const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
     if ((!selectedSection) || (!isHeading(selectedSection))) {
         return null;
     }
     const nextHeadingIndex = findNextHeader(book.bookSections, selectedSection);
-    let annotations = book.bookSections.slice(selectedSectionIndex, nextHeadingIndex).filter((t): t is annotation=>isAnnotation(t));
+    let annotations = book.bookSections.slice(selectedSectionIndex, nextHeadingIndex).filter((t): t is annotation => isAnnotation(t));
 
     const flashcardCountForAnnotation: Record<string, number> = {};
-    for (const id of book.flashcards.map(t=>t.annotationId)) {
+    for (const id of book.flashcards.map(t => t.annotationId)) {
         flashcardCountForAnnotation[id] = flashcardCountForAnnotation[id] ? flashcardCountForAnnotation[id] + 1 : 1;
     }
 
-    annotations = annotations.map(t=> {
+    annotations = annotations.map(t => {
         return {
             ...t,
             flashcardCount: flashcardCountForAnnotation[t.id] || 0,
@@ -214,15 +215,15 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 }
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         return;
     }
-    return book.flashcards.filter(t=>t.annotationId === annotationId);
+    return book.flashcards.filter(t => t.annotationId === annotationId);
 }
 
-export function getBooks(): ReviewBook[]{
-    let books = plugin.notesWithFlashcards.map(t=> {
+export function getBooks(): ReviewBook[] {
+    let books = plugin.notesWithFlashcards.map(t => {
         return {
             id: t.id,
             name: t.name,
@@ -242,11 +243,11 @@ interface frontEndBook {
 }
 
 export function getBookById(id: string): frontEndBook {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === id)[0];
     if (!book) {
         return;
     }
-    const annotationsWithFlashcards = new Set(...book.flashcards.map(t=>t.annotationId));
+    const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.annotationId));
     const annotationsWithoutFlashcards = new Set<string>();
     for (let annotation of book.annotations()) {
         if (!annotationsWithFlashcards.has(annotation.id)) {
@@ -267,7 +268,7 @@ export function getBookById(id: string): frontEndBook {
 }
 
 export function getSectionTreeForBook(id: string) {
-    const book = plugin.notesWithFlashcards.filter(t=>t.id === id)[0];
+    const book = plugin.notesWithFlashcards.filter(t => t.id === id)[0];
     if (!book) {
         throw new Error(`getSectionTreeForBook: No book found for id ${id}`);
     }
