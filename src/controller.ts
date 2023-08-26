@@ -61,6 +61,19 @@ export function getNextCard(bookId: string) {
     }
 }
 
+export function getCurrentCard(bookId: string) {
+    const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
+    if (!book) {
+        new Error("getCurrentCard: book id not found");
+    }
+    if (!book.isInReview() && book.canBeReviewed()) {
+        book.startReviewing();
+        return book.getReviewCard();
+    } else if (book.isInReview()) {
+        return book.getReviewCard();
+    }
+}
+
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     const book = plugin.notesWithFlashcards.filter(t=>t.id === bookId)[0];
     if (!book) {
