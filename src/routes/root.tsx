@@ -1,6 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {Outlet, redirect, useNavigate} from "react-router-dom";
-import {NavLink, useLocation} from "react-router-dom";
+import {NavLink, Outlet, useLocation, useNavigate} from "react-router-dom";
 import {ICON_LIST} from "src/constants";
 import {setIcon} from "obsidian";
 
@@ -13,6 +12,8 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
 
     useEffect(() => {
         const back: Icon = "arrow-left";
+        //todo: figure out how to fix this
+        //@ts-ignore
         setIcon(backButton.current, back);
         navigate("/books");
     }, []);
@@ -39,22 +40,6 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
             <div className={"modal-content sr-modal-content"}>
                 <Outlet/>
             </div>
-        </>
-    );
-}
-
-export function Tabs() {
-    return (
-        <>
-            <div className={"sr-tab-nav"}>
-                <NavLink to="/tags" className={"sr-nav-link is-clickable"} >
-                    Tags
-                </NavLink>
-                <NavLink to="/books" className={"sr-nav-link is-clickable"}>
-                    Notes
-                </NavLink>
-            </div>
-            <Outlet/>
         </>
     );
 }
