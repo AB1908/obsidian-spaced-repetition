@@ -16,7 +16,7 @@ import {reviewAction, ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
 import {ClozeCard, clozeLoader} from "src/routes/cloze-card";
 import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
-import {listOfNotes} from "src/data/import/disk";
+import {getParentFolderName, listOfNotes} from "src/data/import/disk";
 import {Book} from "src/data/models/book";
 
 export enum FlashcardModalMode {
@@ -196,7 +196,7 @@ export class FlashcardModal extends Modal {
         this.plugin.filePaths = listOfNotes("flashcards");
         this.plugin.bookNotesPaths = listOfNotes("review/book");
         // todo: fix
-        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `${t.split("/").last().replace(".md", "")}`));
+        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `${getParentFolderName(t)}`));
             for (const t of this.plugin.notesWithFlashcards) {
                 await t.initialize()
             }
