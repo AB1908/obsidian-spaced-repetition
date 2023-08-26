@@ -162,7 +162,7 @@ export function calculateIntervals(card: FrontendFlashcard) {
         delayBeforeReview = card.delayBeforeReview;
     }
 
-    function getInterval(response?: ReviewResponse) {
+    function getInterval(response: ReviewResponse) {
         return schedule(
             response,
             interval,
