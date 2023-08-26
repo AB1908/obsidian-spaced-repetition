@@ -1,6 +1,7 @@
 //  import 'react-devtools';
 // require('react-devtools');
 import {
+    Notice,
     Plugin, TFile
 } from "obsidian";
 
@@ -81,32 +82,22 @@ export default class SRPlugin extends Plugin {
         });
 
         this.addCommand({
-            id: "srs-review-flashcards-in-note",
-            name: t("REVIEW_CARDS_IN_NOTE"),
+            id: "srs-add-flashcard-note",
+            name: "Add flashcards for the active note",
             callback: async () => {
-                const openFile: TFile | null = this.app.workspace.getActiveFile();
-                if (openFile && openFile.extension === "md") {
-                    // this.deckTree = new Deck("root", null);
-                    // const deckPath: string[] = this.findDeckPath(openFile);
-                    // await this.findFlashcardsInNote(openFile, deckPath);
-                    new FlashcardModal(this.app, this).open();
+                const activeFile = this.app.workspace.getActiveFile();
+                if (activeFile === null) {
+                    return new Notice("No note active!");
                 }
-            },
-        });
+                const fileContents = `---
+annotations: "[[${activeFile.path}]]"
+---
 
-        this.addCommand({
-            id: "srs-cram-flashcards-in-note",
-            name: t("CRAM_CARDS_IN_NOTE"),
-            callback: async () => {
-                const openFile: TFile | null = this.app.workspace.getActiveFile();
-                if (openFile && openFile.extension === "md") {
-                    // this.deckTree = new Deck("root", null);
-                    // const deckPath: string[] = this.findDeckPath(openFile);
-                    // await this.findFlashcardsInNote(openFile, deckPath, false, true);
-                    new FlashcardModal(this.app, this, true).open();
-                }
-            },
-        });
+#flashcards
+`;
+                await this.app.vault.create(`${activeFile.parent.path}/Flashcards.md`, fileContents);
+            }
+        })
 
         this.addSettingTab(new SRSettingTab(this.app, this));
 
