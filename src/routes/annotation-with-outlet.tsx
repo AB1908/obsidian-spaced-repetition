@@ -3,7 +3,7 @@ import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import React from "react";
 import {annotation} from "src/data/import/annotations";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getAnnotationById} from "src/controller";
+import {getAnnotationById} from "src/api";
 
 export async function annotationLoader({params}: { params: any }) {
     // todo: use redirect

@@ -4,7 +4,7 @@ import {useLoaderData} from "react-router";
 import {book} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getSectionTreeForBook} from "src/controller";
+import {getSectionTreeForBook} from "src/api";
 import {Section} from "src/ui/components/section";
 
 // TODO: more realistic data

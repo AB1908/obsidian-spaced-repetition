@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
 import {redirect, useLoaderData, useLocation} from "react-router-dom";
-import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
+import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/api";
 import {CardBack, CardFront} from "src/ui/components/flashcard";
 
 export const USE_ACTUAL_BACKEND = true;

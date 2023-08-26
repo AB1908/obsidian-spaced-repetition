@@ -2,7 +2,7 @@ import React, {useState} from "react";
 import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getAnnotationsForSection} from "src/controller";
+import {getAnnotationsForSection} from "src/api";
 
 export function annotationsLoader({params}: {params: any}) {
     if (USE_ACTUAL_BACKEND)
