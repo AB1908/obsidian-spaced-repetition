@@ -3,7 +3,7 @@ import {Link} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {DeckCounts, FlashCount} from "src/routes/notes-home-page";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getBookById} from "src/controller";
+import {getBookById} from "src/api";
 
 export function deckLoader({params}) {
     if (USE_ACTUAL_BACKEND)

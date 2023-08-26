@@ -2,7 +2,7 @@ import {useLoaderData} from "react-router";
 import {Link} from "react-router-dom";
 import React from "react";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getFlashcardsForAnnotation} from "src/controller";
+import {getFlashcardsForAnnotation} from "src/api";
 import {Flashcard} from "src/data/models/flashcard";
 
 export function highlightLoader({params}) {

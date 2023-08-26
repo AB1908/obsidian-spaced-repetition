@@ -4,7 +4,7 @@ import {setIcon} from "obsidian";
 import {Link} from "react-router-dom";
 import {CardCount} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
-import {getBooks} from "src/controller";
+import {getBooks} from "src/api";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export interface ReviewBook {
