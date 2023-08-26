@@ -119,19 +119,14 @@ export async function reviewAction({request, params}) {
         // need to cast this for some weird reason
         // todo: investigate casting later
         const result = await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, Number(reviewResponse));
-        let nextCardId: string;
-        if (result) {
-            nextCardId = getNextCard(params.bookId)?.id;
-        } else {
-            // we're screwed
-        }
+        let nextCardId: string | undefined;
+        nextCardId = getNextCard(params.bookId)?.id;
         if (nextCardId) {
             return redirect(`./../${nextCardId}`);
         } else {
             return redirect("./../..");
         }
     } else {
-        console.log('trying')
         if (params.flashcardId === "1923n8aq")
             return redirect(`./../sm18fbb3`)
         else return redirect("./../..");
