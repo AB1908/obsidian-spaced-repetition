@@ -72,12 +72,10 @@ function CardFront(props: { currentCard: FrontendFlashcard, handleShowAnswerButt
 
 function CardBack(props: {
     currentCard: FrontendFlashcard,
-    hardBtnHandler: () => void,
-    goodBtnHandler: () => void,
-    easyBtnHandler: () => void
 }) {
     const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
     let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
+    const navigate = useNavigate();
     return <>
         <div className={"sr-card-body"}>
             <Question questionText={props.currentCard.questionText}/>
@@ -86,12 +84,9 @@ function CardBack(props: {
         </div>
         <div className="sr-response">
             <Form method={"POST"} className={"sr-response-form"}>
-                <Button text={hardBtnText} id="sr-hard-btn"
-                        responseHandler={props.hardBtnHandler} value={ReviewResponse.Hard}/>
-                <Button text={goodBtnText} id="sr-good-btn"
-                        responseHandler={props.goodBtnHandler} value={ReviewResponse.Good}/>
-                <Button text={easyBtnText} id="sr-easy-btn"
-                        responseHandler={props.easyBtnHandler} value={ReviewResponse.Easy}/>
+                <Button text={hardBtnText} id="sr-hard-btn" value={ReviewResponse.Hard}/>
+                <Button text={goodBtnText} id="sr-good-btn" value={ReviewResponse.Good}/>
+                <Button text={easyBtnText} id="sr-easy-btn" value={ReviewResponse.Easy}/>
             </Form>
         </div>
     </>;
@@ -107,16 +102,10 @@ export function ReviewDeck() {
         setIsQuestion(() => true)
     }, [location])
 
-    function buttonHandler(reviewResponse: ReviewResponse) {
-        console.log(reviewResponse);
-    }
-
     return (<>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
-        {!isQuestion && (<CardBack currentCard={currentCard} hardBtnHandler={() => buttonHandler(ReviewResponse.Hard)}
-                                   goodBtnHandler={() => buttonHandler(ReviewResponse.Good)}
-                                   easyBtnHandler={() => buttonHandler(ReviewResponse.Easy)}/>)}
+        {!isQuestion && (<CardBack currentCard={currentCard} />)}
     </>);
 }
 
