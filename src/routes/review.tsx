@@ -75,7 +75,6 @@ function CardBack(props: {
 }) {
     const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
     let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
-    const navigate = useNavigate();
     return <>
         <div className={"sr-card-body"}>
             <Question questionText={props.currentCard.questionText}/>
