@@ -3,7 +3,7 @@ import {App, Modal} from "obsidian";
 import {createRoot, Root as ReactDomRoot} from "react-dom/client";
 import type SRPlugin from "src/main";
 import {createMemoryRouter, RouterProvider} from "react-router-dom";
-import {Root, Tags} from "src/routes/root";
+import {Root} from "src/routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/routes/chapter-list";
 import {DeckLandingPage, deckLoader} from "src/routes/deck-preview";
@@ -19,6 +19,7 @@ import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
 import {getParentFolderName, listOfNotes} from "src/data/import/disk";
 import {Book} from "src/data/models/book";
 import {Tabs} from "src/routes/tabs";
+import {Tags} from "src/routes/tags";
 
 export enum FlashcardModalMode {
     DecksList,
