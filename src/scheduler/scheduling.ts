@@ -1,6 +1,6 @@
-import { SRSettings } from "src/settings";
-import { t } from "src/lang/helpers";
+import {t} from "src/lang/helpers";
 import {plugin} from "src/main";
+import {FrontendFlashcard} from "src/routes/review";
 
 export enum ReviewResponse {
     Easy,
@@ -94,4 +94,32 @@ export function textInterval(interval: number, isMobile: boolean): string {
         else if (year == 1.0) return t("YEAR_STR_IVL", { interval: year});
         else return t("YEARS_STR_IVL", { interval: year });
     }
+}
+
+export function calculateIntervals(card: FrontendFlashcard) {
+    let interval = 1.0,
+        ease: number = plugin.data.settings.baseEase,
+        delayBeforeReview = 0;
+
+    if (card.interval != null && card.ease != null) {
+        interval = card.interval;
+        ease = card.ease;
+    }
+    if (card.delayBeforeReview) {
+        delayBeforeReview = card.delayBeforeReview;
+    }
+
+    function getInterval(response: ReviewResponse) {
+        return schedule(
+            response,
+            interval,
+            ease,
+            delayBeforeReview,
+        ).interval;
+    }
+
+    const hardInterval: number = getInterval(ReviewResponse.Hard);
+    const goodInterval: number = getInterval(ReviewResponse.Good);
+    const easyInterval: number = getInterval(ReviewResponse.Easy);
+    return {hardInterval, goodInterval, easyInterval};
 }
