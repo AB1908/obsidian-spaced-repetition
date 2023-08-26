@@ -12,7 +12,7 @@ export function deckLoader({params}) {
         return fetch(`http://localhost:3000/books/${params.bookId}`);
 }
 
-export interface DeckLand {
+export interface Book {
     id: string;
     name: string;
     counts: Counts;
@@ -29,7 +29,7 @@ interface Count {
 }
 
 export function DeckLandingPage() {
-    const book = useLoaderData() as DeckLand;
+    const book = useLoaderData() as Book;
     return (
         <>
             <h3>
