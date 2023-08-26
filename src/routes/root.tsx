@@ -1,5 +1,5 @@
 import React, {useEffect, useRef} from "react";
-import {NavLink, Outlet, useLocation, useNavigate} from "react-router-dom";
+import {Outlet, useLocation, useNavigate} from "react-router-dom";
 import {ICON_LIST} from "src/constants";
 import {setIcon} from "obsidian";
 
@@ -44,6 +44,3 @@ export function Root({handleCloseButton}: {handleCloseButton: () => void}) {
     );
 }
 
-export function Tags() {
-    return <p>WIP</p>
-}
