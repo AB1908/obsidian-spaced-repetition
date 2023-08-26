@@ -1,10 +1,8 @@
 import React, {useEffect, useState} from "react";
 import {Form, redirect, useLoaderData, useLocation} from "react-router-dom";
-import {calculateIntervals, ReviewResponse, textInterval} from "src/scheduler/scheduling";
+import {calculateIntervals, ReviewResponse} from "src/scheduler/scheduling";
 import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
-import {Button, ShowAnswerButton} from "src/ui/components/buttons";
-import {Platform} from "obsidian";
-import {plugin} from "src/main";
+import {Button, generateButtonText, ShowAnswerButton} from "src/ui/components/buttons";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -131,21 +129,5 @@ export async function reviewAction({request, params}) {
             return redirect(`./../sm18fbb3`)
         else return redirect("./../..");
     }
-}
-
-function generateButtonText(hardInterval: number, goodInterval: number, easyInterval: number) {
-    let hardBtnText, goodBtnText, easyBtnText;
-    if (Platform.isMobile) {
-        hardBtnText = `${textInterval(hardInterval, true)}`;
-        goodBtnText = `${textInterval(goodInterval, true)}`;
-        easyBtnText = `${textInterval(easyInterval, true)}`;
-    } else {
-        // TODO: investigate fix for button labels being empty
-        const {data} = plugin;
-        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(hardInterval, false)}`
-        goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(goodInterval, false)}`;
-        easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(easyInterval, false)}`;
-    }
-    return {hardBtnText, goodBtnText, easyBtnText};
 }
 
