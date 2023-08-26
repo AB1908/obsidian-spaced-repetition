@@ -55,7 +55,7 @@ export async function getFileContents(path: string) {
 
 export function getParentFolderName(path: string) {
     // TODO: What if root folder?
-    return getTFileForPath(path)?.parent.path;
+    return getTFileForPath(path)?.parent.name;
 }
 
 export function getHeadersForFile(path: string) {
