@@ -1,8 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {Form, redirect, useLoaderData, useLocation} from "react-router-dom";
-import {calculateIntervals, ReviewResponse} from "src/scheduler/scheduling";
+import {redirect, useLoaderData, useLocation} from "react-router-dom";
 import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
-import {Button, generateButtonText, ShowAnswerButton} from "src/ui/components/buttons";
+import {CardBack, CardFront} from "src/ui/components/flashcard";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -47,54 +46,13 @@ export async function reviewLoader({params}) {
     }
 }
 
-function Question(props: { questionText: string }) {
-    return <p>
-        {props.questionText}
-    </p>;
-}
-
-function Answer(props: { answerText: string }) {
-    return <p>
-        {props.answerText}
-    </p>;
-}
-
-function CardFront(props: { currentCard: FrontendFlashcard, handleShowAnswerButton: () => void }) {
-    return <>
-        <div className={"sr-card-body"}>
-            <Question questionText={props.currentCard.questionText}/>
-        </div>
-        <ShowAnswerButton handleShowAnswerButton={props.handleShowAnswerButton}/>
-    </>;
-}
-
-function CardBack(props: {
-    currentCard: FrontendFlashcard,
-}) {
-    const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
-    let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
-    return <>
-        <div className={"sr-card-body"}>
-            <Question questionText={props.currentCard.questionText}/>
-            <hr/>
-            <Answer answerText={props.currentCard.answerText}/>
-        </div>
-        <div className="sr-response">
-            <Form method={"POST"} className={"sr-response-form"}>
-                <Button text={hardBtnText} id="sr-hard-btn" value={ReviewResponse.Hard}/>
-                <Button text={goodBtnText} id="sr-good-btn" value={ReviewResponse.Good}/>
-                <Button text={easyBtnText} id="sr-easy-btn" value={ReviewResponse.Easy}/>
-            </Form>
-        </div>
-    </>;
-}
-
 export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     const location = useLocation();
 
     // reset state when we navigate to a new flashcard
+    // todo: think of cleaner way to do this as it is slow
     useEffect(() => {
         setIsQuestion(() => true)
     }, [location])
@@ -130,4 +88,3 @@ export async function reviewAction({request, params}) {
         else return redirect("./../..");
     }
 }
-
