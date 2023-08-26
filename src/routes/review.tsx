@@ -1,6 +1,6 @@
 import React, {useEffect, useState} from "react";
-import {useLoaderData, useLocation, Form, redirect} from "react-router-dom";
-import {ReviewResponse, schedule, textInterval} from "src/scheduler/scheduling";
+import {Form, redirect, useLoaderData, useLocation} from "react-router-dom";
+import {calculateIntervals, ReviewResponse, textInterval} from "src/scheduler/scheduling";
 import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
 import {Platform} from "obsidian";
@@ -149,30 +149,3 @@ function generateButtonText(hardInterval: number, goodInterval: number, easyInte
     return {hardBtnText, goodBtnText, easyBtnText};
 }
 
-export function calculateIntervals(card: FrontendFlashcard) {
-    let interval = 1.0,
-        ease: number = plugin.data.settings.baseEase,
-        delayBeforeReview = 0;
-
-    if (card.interval != null && card.ease != null) {
-        interval = card.interval;
-        ease = card.ease;
-    }
-    if (card.delayBeforeReview) {
-        delayBeforeReview = card.delayBeforeReview;
-    }
-
-    function getInterval(response: ReviewResponse) {
-        return schedule(
-            response,
-            interval,
-            ease,
-            delayBeforeReview,
-        ).interval;
-    }
-
-    const hardInterval: number = getInterval(ReviewResponse.Hard);
-    const goodInterval: number = getInterval(ReviewResponse.Good);
-    const easyInterval: number = getInterval(ReviewResponse.Easy);
-    return {hardInterval, goodInterval, easyInterval};
-}
