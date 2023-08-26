@@ -103,6 +103,14 @@ export class FlashcardModal extends Modal {
                     action: reviewAction
                 },
                 {
+                    path: "/books/:bookId/review/:flashcardId/edit",
+                    element: <UpsertCard/>,
+                    action: updateAction,
+                    loader: cardLoader
+                    // loader: reviewLoader,
+                    // action: reviewAction
+                },
+                {
                     path: routes.chapterList,
                     element: <ChapterList/>,
                     loader: chapterLoader,
