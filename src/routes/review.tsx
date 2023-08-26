@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
 import {useLoaderData, useLocation, Form, redirect} from "react-router-dom";
 import {ReviewResponse, schedule, textInterval} from "src/scheduler/scheduling";
-import {getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
+import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/controller";
 import {Button, ShowAnswerButton} from "src/ui/components/buttons";
 import {Platform} from "obsidian";
 import {plugin} from "src/main";
@@ -30,7 +30,7 @@ export async function reviewLoader({params}) {
         let flashcardId = null;
         if (params.flashcardId == null) {
             // todo: handle no cards to be reviewed case
-            flashcardId = getNextCard(params.bookId)?.id;
+            flashcardId = getCurrentCard(params.bookId)?.id;
             if (flashcardId == null) {
                 return redirect("./..");
             }
