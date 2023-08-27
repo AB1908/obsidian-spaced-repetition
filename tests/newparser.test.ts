@@ -1,10 +1,30 @@
-import { parseFileText } from "src/data/parser";
+import {parseFileText} from "src/data/parser";
 import {CardType} from "src/scheduler/scheduling";
-import {createParsedCardFromText} from "src/data/models/parsedCard";
 import {generateTree} from "src/data/models/bookTree";
-jest.mock('../src/data/models/parsedCard', () => ({
-    createParsedCardFromText: jest.fn()
-}));
+import {getFileContents} from "src/data/import/disk";
+import {annotation} from "src/data/import/annotations";
+import {Heading} from "src/data/models/book";
+
+jest.mock('../src/data/import/disk.ts');
+jest.mock('nanoid', () => ({
+    nanoid: (number: number) => "aaaaaaaa"
+}))
+
+jest.mock('../src/main', () => {
+        return {
+            plugin: {
+                data: {
+                    settings: {
+                        "baseEase": 250,
+                        "lapsesIntervalChange": 0.5,
+                        "easyBonus": 1.3,
+                        "maximumInterval": 36525,
+                    }
+                }
+            }
+        }
+    }
+)
 
 describe("generateTree", () => {
     test("should nest a paragraph within previous heading", () => {
@@ -12,11 +32,12 @@ describe("generateTree", () => {
             {
                 heading: "Heading 1",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
             },
-        ];
+        ] as (annotation | Heading)[];
         expect(generateTree(input)).toStrictEqual([
             {
                 heading: "Heading 1",
@@ -35,6 +56,7 @@ describe("generateTree", () => {
             {
                 heading: "Heading 1",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
@@ -42,11 +64,12 @@ describe("generateTree", () => {
             {
                 heading: "Heading 2",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
             },
-        ];
+        ] as (annotation | Heading)[];
         expect(generateTree(input)).toStrictEqual([
             {
                 heading: "Heading 1",
@@ -74,6 +97,7 @@ describe("generateTree", () => {
             {
                 heading: "Heading 1",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
@@ -81,11 +105,12 @@ describe("generateTree", () => {
             {
                 heading: "SubHeading 1",
                 level: 2,
+                children: []
             },
             {
                 type: "paragraph",
             },
-        ];
+        ] as (annotation | Heading)[];
         expect(generateTree(input)).toStrictEqual([
             {
                 heading: "Heading 1",
@@ -113,6 +138,7 @@ describe("generateTree", () => {
             {
                 heading: "Heading 1",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
@@ -120,6 +146,7 @@ describe("generateTree", () => {
             {
                 heading: "SubHeading 1",
                 level: 2,
+                children: []
             },
             {
                 type: "paragraph",
@@ -127,12 +154,13 @@ describe("generateTree", () => {
             {
                 heading: "SubHeading 2",
                 level: 2,
+                children: []
             },
             {
                 type: "paragraph",
             },
         ];
-        expect(generateTree(input)).toStrictEqual([
+        expect(generateTree(input as (annotation | Heading)[])).toStrictEqual([
             {
                 heading: "Heading 1",
                 level: 1,
@@ -168,6 +196,7 @@ describe("generateTree", () => {
             {
                 heading: "Heading 1",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
@@ -175,6 +204,7 @@ describe("generateTree", () => {
             {
                 heading: "SubHeading 1",
                 level: 2,
+                children: []
             },
             {
                 type: "paragraph",
@@ -182,6 +212,7 @@ describe("generateTree", () => {
             {
                 heading: "SubHeading 2",
                 level: 2,
+                children: []
             },
             {
                 type: "paragraph",
@@ -189,11 +220,12 @@ describe("generateTree", () => {
             {
                 heading: "Heading 2",
                 level: 1,
+                children: []
             },
             {
                 type: "paragraph",
             },
-        ];
+        ] as (annotation | Heading)[];
         expect(generateTree(input)).toStrictEqual([
             {
                 heading: "Heading 1",
@@ -237,24 +269,33 @@ describe("generateTree", () => {
 
 
 describe("parseFlashcard", () => {
-    test("parses a flashcard with only annotation id", () => {
+    test("parses a flashcard with only annotation id", async () => {
         const flashcard = `This is a question\n?\nThis is an answer\n<!--SR:93813-->`;
-        parseFileText(flashcard, "sample path")
-        expect(createParsedCardFromText).toHaveBeenCalledWith(
-            "This is a question\n?\nThis is an answer",
-            CardType.MultiLineBasic,
-            "sample path",
-            "<!--SR:93813-->"
-        );
+        jest.mocked(getFileContents).mockImplementation(async (path: string) => {
+            return flashcard
+        });
+        expect(await parseFileText("sample path")).toEqual([{
+            id: "aaaaaaaa",
+            notePath: "sample path",
+            cardText: "This is a question\n?\nThis is an answer",
+            metadataText: "<!--SR:93813-->",
+            lineNo: -1,
+            cardType: CardType.MultiLineBasic,
+        }]);
     });
-    test("parses a flashcard with full metadata", () => {
+    test("parses a flashcard with full metadata", async () => {
         const flashcard = `This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->`;
-        parseFileText(flashcard, "sample path");
-        expect(createParsedCardFromText).toHaveBeenCalledWith("This is a question\n?\nThis is an answer",
-            CardType.MultiLineBasic,
-            "sample path",
-            "<!--SR:93813!L,2021-04-05,99,270-->"
-        );
+        jest.mocked(getFileContents).mockImplementation(async (path: string) => {
+            return flashcard
+        });
+        expect(await parseFileText("sample path")).toEqual([{
+            id: "aaaaaaaa",
+            notePath: "sample path",
+            cardText: "This is a question\n?\nThis is an answer",
+            metadataText: "<!--SR:93813!L,2021-04-05,99,270-->",
+            lineNo: -1,
+            cardType: CardType.MultiLineBasic,
+        }]);
     });
     test.todo("parses multiple flashcards");
 });
