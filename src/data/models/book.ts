@@ -120,8 +120,7 @@ export function getAnnotationFilePath(path: string) {
     const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
     if (!annotationFromYaml) return;
     const annotationLinkText = annotationFromYaml.replaceAll(/[\[\]]/g, "");
-    const annotationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
-    return annotationTFile;
+    return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
 function isHeadingCache(cacheItem: SectionCache|HeadingCache): cacheItem is HeadingCache {
