@@ -20,7 +20,7 @@ export interface SchedulingMetadata {
 
 export function metadataTextGenerator(
     annotationId: string,
-    schedulingMetadata: SchedulingMetadata,
+    schedulingMetadata: SchedulingMetadata | null,
     flag = FLAG.LEARNING
 ) {
     // TODO: the default param doesn't get set for some weird reason
