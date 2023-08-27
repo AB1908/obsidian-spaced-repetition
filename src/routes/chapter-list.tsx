@@ -20,12 +20,12 @@ export function chapterLoader({params}: {params: any}) {
 // TODO: Fix state changes when clicking?
 // TODO: Actually allow clicking?
 export function ChapterList() {
-    const deck1: book = useLoaderData() as book;
+    const book: book = useLoaderData() as book;
     return (
         <>
             <p>Add flashcards from:</p>
 
-            <Tree data={deck1} render={(child) => <Section section={child}/>} childKey={"children"}/>
+            <Tree data={book} render={(child) => <Section section={child}/>} childKey={"children"}/>
         </>
     );
 }
