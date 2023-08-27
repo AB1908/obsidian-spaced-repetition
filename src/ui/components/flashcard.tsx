@@ -38,11 +38,9 @@ export function CardBack(props: {
             <Answer answerText={props.currentCard.answerText}/>
         </div>
         <div className="sr-response">
-            <Form method={"POST"} className={"sr-response-form"}>
-                <Button text={hardBtnText} id="sr-hard-btn" value={ReviewResponse.Hard}/>
-                <Button text={goodBtnText} id="sr-good-btn" value={ReviewResponse.Good}/>
-                <Button text={easyBtnText} id="sr-easy-btn" value={ReviewResponse.Easy}/>
-            </Form>
+            <Button text={hardBtnText} id="sr-hard-btn" clickHandler={() => props.clickHandler(ReviewResponse.Hard)}/>
+            <Button text={goodBtnText} id="sr-good-btn" clickHandler={() => props.clickHandler(ReviewResponse.Good)}/>
+            <Button text={easyBtnText} id="sr-easy-btn" clickHandler={() => props.clickHandler(ReviewResponse.Easy)}/>
         </div>
     </>;
 }
