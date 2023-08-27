@@ -27,6 +27,7 @@ export function CardFront(props: { currentCard: FrontendFlashcard, handleShowAns
 
 export function CardBack(props: {
     currentCard: FrontendFlashcard,
+    clickHandler: Function,
 }) {
     const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
     let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
