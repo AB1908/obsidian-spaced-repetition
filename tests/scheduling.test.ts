@@ -1,26 +1,42 @@
-import { schedule, ReviewResponse, textInterval } from "src/scheduler/scheduling";
-import { DEFAULT_SETTINGS } from "src/settings";
+import {schedule, ReviewResponse, textInterval} from "src/scheduler/scheduling";
+import {DEFAULT_SETTINGS} from "src/settings";
+
+jest.mock('../src/main', () => {
+        return {
+            plugin: {
+                data: {
+                    settings: {
+                        "baseEase": 250,
+                        "lapsesIntervalChange": 0.5,
+                        "easyBonus": 1.3,
+                        "maximumInterval": 36525,
+                    }
+                }
+            }
+        }
+    }
+)
 
 test("Test reviewing with default settings", () => {
     expect(
-        schedule(ReviewResponse.Easy, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS)
+        schedule(ReviewResponse.Easy, 1, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase + 20,
         interval: 4,
     });
 
-    expect( () =>
-        schedule(ReviewResponse.Easy, undefined, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS) ).toThrow("invalid interval");
+    expect(() =>
+        schedule(ReviewResponse.Easy, undefined, DEFAULT_SETTINGS.baseEase, 0)).toThrow("invalid interval");
 
     expect(
-        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS)
+        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 3,
     });
 
     expect(
-        schedule(ReviewResponse.Hard, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS)
+        schedule(ReviewResponse.Hard, 1, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase - 20,
         interval: 1,
@@ -30,21 +46,21 @@ test("Test reviewing with default settings", () => {
 test("Test reviewing with default settings & delay", () => {
     const delay = 2 * 24 * 3600 * 1000; // two day delay
     expect(
-        schedule(ReviewResponse.Easy, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS)
+        schedule(ReviewResponse.Easy, 10, DEFAULT_SETTINGS.baseEase, delay)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase + 20,
         interval: 42,
     });
 
     expect(
-        schedule(ReviewResponse.Good, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS)
+        schedule(ReviewResponse.Good, 10, DEFAULT_SETTINGS.baseEase, delay)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 28,
     });
 
     expect(
-        schedule(ReviewResponse.Hard, 10, DEFAULT_SETTINGS.baseEase, delay, DEFAULT_SETTINGS)
+        schedule(ReviewResponse.Hard, 10, DEFAULT_SETTINGS.baseEase, delay)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase - 20,
         interval: 5,
@@ -59,7 +75,7 @@ test("Test load balancing, small interval (load balancing disabled)", () => {
         3: 4,
     };
     expect(
-        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, dueDates)
+        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 3,
@@ -78,7 +94,7 @@ test("Test load balancing", () => {
         5: 2,
     };
     expect(
-        schedule(ReviewResponse.Good, 2, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, dueDates)
+        schedule(ReviewResponse.Good, 2, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 4,
@@ -93,7 +109,7 @@ test("Test load balancing", () => {
         25: 2,
     };
     expect(
-        schedule(ReviewResponse.Good, 10, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, dueDates)
+        schedule(ReviewResponse.Good, 10, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 24,
@@ -117,7 +133,7 @@ test("Test load balancing", () => {
         67: 10,
     };
     expect(
-        schedule(ReviewResponse.Good, 25, DEFAULT_SETTINGS.baseEase, 0, DEFAULT_SETTINGS, dueDates)
+        schedule(ReviewResponse.Good, 25, DEFAULT_SETTINGS.baseEase, 0)
     ).toEqual({
         ease: DEFAULT_SETTINGS.baseEase,
         interval: 66,
