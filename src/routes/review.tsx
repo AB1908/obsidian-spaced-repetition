@@ -50,6 +50,19 @@ export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     const location = useLocation();
+    const params = useParams();
+    const navigate = useNavigate();
+
+    function flashcardResponseHandler(reviewResponse: number) {
+        const result = updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
+        let nextCardId: string | undefined;
+        nextCardId = getNextCard(params.bookId)?.id;
+        if (nextCardId) {
+            navigate(`./../${nextCardId}`, {replace: true});
+        } else {
+            navigate(`./../..`, {replace: true});
+        }
+    }
 
     // reset state when we navigate to a new flashcard
     // todo: think of cleaner way to do this as it is slow
@@ -62,29 +75,4 @@ export function ReviewDeck() {
 
         {!isQuestion && (<CardBack currentCard={currentCard} />)}
     </>);
-}
-
-export async function reviewAction({request, params}) {
-    const data = await request.formData();
-    const reviewResponse = data.get("reviewResponse");
-    if (USE_ACTUAL_BACKEND) {
-        // should I wait for a successful write? can get troublesome as files get bigger
-        // but let's think about scale later
-        // I need to get the id of the next card
-        // if no next card, redirect to deck
-        // need to cast this for some weird reason
-        // todo: investigate casting later
-        const result = await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, Number(reviewResponse));
-        let nextCardId: string | undefined;
-        nextCardId = getNextCard(params.bookId)?.id;
-        if (nextCardId) {
-            return redirect(`./../${nextCardId}`);
-        } else {
-            return redirect("./../..");
-        }
-    } else {
-        if (params.flashcardId === "1923n8aq")
-            return redirect(`./../sm18fbb3`)
-        else return redirect("./../..");
-    }
 }
