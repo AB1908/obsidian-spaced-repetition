@@ -101,14 +101,7 @@ annotations: "[[${activeFile.path}]]"
 
         this.addSettingTab(new SRSettingTab(this.app, this));
 
-        this.app.workspace.onLayoutReady(() => {
-            this.initView();
-            setTimeout(async () => {
-                // if (!this.syncLock) {
-                    // await this.sync();
-                // }
-            }, 2000);
-        });
+        console.log("SRS Plugin loaded")
     }
 
     onunload(): void {
