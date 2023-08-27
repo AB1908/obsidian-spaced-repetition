@@ -12,7 +12,7 @@ import {UpsertCard, creationAction, cardLoader, updateAction} from "src/routes/u
 import {ChooseCardType} from "src/routes/choose-card-type";
 import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
-import {reviewAction, ReviewDeck, reviewLoader} from "src/routes/review";
+import {ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
 import {ClozeCard, clozeLoader} from "src/routes/cloze-card";
 import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
@@ -112,7 +112,6 @@ export class FlashcardModal extends Modal {
                     path: "/books/:bookId/review/:flashcardId",
                     element: <ReviewDeck/>,
                     loader: reviewLoader,
-                    action: reviewAction
                 },
                 {
                     path: "/books/:bookId/review/:flashcardId/edit",
