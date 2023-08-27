@@ -6,7 +6,7 @@ import {createMemoryRouter, RouterProvider} from "react-router-dom";
 import {Root} from "src/routes/root";
 import ErrorPage from "src/routes/errorPage";
 import {ChapterList, chapterLoader} from "src/routes/chapter-list";
-import {DeckLandingPage, deckLoader} from "src/routes/deck-preview";
+import {BookButtons, DeckLandingPage, deckLoader} from "src/routes/deck-preview";
 import {annotationsLoader, AnnotationList} from "src/ui/components/highlights";
 import {UpsertCard, creationAction, cardLoader, updateAction} from "src/routes/upsert-card";
 import {ChooseCardType} from "src/routes/choose-card-type";
@@ -91,6 +91,17 @@ export class FlashcardModal extends Modal {
                     path: "/books/:bookId",
                     element: <DeckLandingPage/>,
                     loader: deckLoader,
+                    children: [
+                        {
+                            path: "",
+                            element: <BookButtons/>,
+                        },
+                        {
+                            path: "chapters",
+                            element: <ChapterList/>,
+                            loader: chapterLoader,
+                        },
+                    ]
                 },
                 {
                     path: "/books/:bookId/review",
@@ -108,13 +119,6 @@ export class FlashcardModal extends Modal {
                     element: <UpsertCard/>,
                     action: updateAction,
                     loader: cardLoader
-                    // loader: reviewLoader,
-                    // action: reviewAction
-                },
-                {
-                    path: routes.chapterList,
-                    element: <ChapterList/>,
-                    loader: chapterLoader,
                 },
                 {
                     path: routes.highlightList,
