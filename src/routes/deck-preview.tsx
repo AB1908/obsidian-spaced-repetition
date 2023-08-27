@@ -1,5 +1,5 @@
 import React from "react";
-import {Link} from "react-router-dom";
+import {Link, Outlet} from "react-router-dom";
 import {useLoaderData} from "react-router";
 import {DeckCounts, FlashCount} from "src/routes/notes-home-page";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
@@ -28,6 +28,21 @@ interface Count {
     withoutFlashcards: number;
 }
 
+export function BookButtons() {
+    return <p>
+        <Link to={`chapters`}>
+            <button>
+                Create New Cards
+            </button>
+        </Link>
+        <Link to={"review"}>
+            <button>
+                Review
+            </button>
+        </Link>
+    </p>;
+}
+
 export function DeckLandingPage() {
     const book = useLoaderData() as Book;
     return (
@@ -46,27 +61,16 @@ export function DeckLandingPage() {
                 >
                     {book.counts.annotations.withFlashcards}
                 </span>
-                    <span
-                        // aria-label={t(this.props.cardType)}
-                        className={`tree-item-flair sr-deck-counts `}
-                        // backgroundColor="#4caf50"
-                    >
+                <span
+                    // aria-label={t(this.props.cardType)}
+                    className={`tree-item-flair sr-deck-counts `}
+                    // backgroundColor="#4caf50"
+                >
                     {book.counts.annotations.withoutFlashcards}
                 </span>
             </h4>
             {/*    TODO: Add the untested highlight counts as well?*/}
-            <p>
-                <Link to={`chapters`}>
-                    <button>
-                        Create New Cards
-                    </button>
-                </Link>
-                <Link to={"review"}>
-                    <button>
-                        Review
-                    </button>
-                </Link>
-            </p>
+            <Outlet/>
         </>
     )
 }
