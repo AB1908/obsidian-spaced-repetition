@@ -4,7 +4,6 @@ import {annotation, parseAnnotations} from "src/data/import/annotations";
 import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
 import {nanoid} from "nanoid";
 import {Flashcard, schedulingMetadataForResponse} from "src/data/models/flashcard";
-import {FlashCount} from "src/routes/notes-home-page";
 import {parseFileText} from "src/data/parser";
 import {ParsedCard} from "src/data/models/parsedCard";
 import {generateFlashcardsArray} from "src/data/import/flashcards";
@@ -64,13 +63,14 @@ export class Heading {
     level: number;
     name: string;
     children: Heading[];
-    count?: Count;
+    counts: Count;
 
     constructor(heading: HeadingCache) {
         // might be too clever
         ({heading: this.name, level: this.level} = heading);
         this.id = nanoid(8);
         this.children = [];
+        this.counts = {with: 0, without: 0};
     }
 
 }
@@ -185,7 +185,7 @@ export function updateHeaders(cacheItem: annotation, sections: (annotation|Headi
     const previousHeadingIndex = findPreviousHeader(sections, cacheItem);
     let previousHeading = sections[previousHeadingIndex] as Heading;
     while (previousHeading != null) {
-        previousHeading.count[key]++;
+        previousHeading.counts[key]++;
         previousHeading = sections[findPreviousHeader(sections, previousHeading)] as Heading;
     }
 }
@@ -198,7 +198,6 @@ export function generateHeaderCounts(sections: (annotation|Heading)[]) {
     while (i < out.length) {
         let cacheItem = out[i];
         if (isHeading(cacheItem)) {
-            cacheItem.count = { "with": 0, "without": 0 };
         } else {
             if (cacheItem.hasFlashcards)
                 updateHeaders(cacheItem, out, "with");
