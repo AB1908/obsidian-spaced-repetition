@@ -140,7 +140,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
         //todo: throw exception!
-        return null;
+        throw new Error("book not found");
     }
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
@@ -165,6 +165,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
                 }
             })
         } else {
+            throw new Error("not implemented");
         }
     }
     return true;
