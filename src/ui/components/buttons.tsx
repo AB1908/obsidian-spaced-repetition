@@ -16,8 +16,8 @@ export function ShowAnswerButton(props: {handleShowAnswerButton: Function}) {
 }
 
 //TODO: Add types
-export function Button({ text, id, value }: { text: string, id: string, value: ReviewResponse }) {
-    return (<button name={"reviewResponse"} id={id} value={value}>
+export function Button({ text, id, clickHandler }: { text: string, id: string, clickHandler: Function }) {
+    return (<button name={"reviewResponse"} id={id} onClick={() => clickHandler()}>
         {text}
     </button>)
 }
