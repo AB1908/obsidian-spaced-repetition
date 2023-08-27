@@ -1,5 +1,4 @@
 import React from "react";
-import {HeaderWithCounts} from "src/ui/components/highlights";
 import {useLoaderData} from "react-router";
 import {book} from "src/data/models/book";
 import {Tree} from "src/ui/components/tree";
@@ -22,16 +21,8 @@ export function chapterLoader({params}: {params: any}) {
 // TODO: Actually allow clicking?
 export function ChapterList() {
     const deck1: book = useLoaderData() as book;
-    const {counts} = deck1;
     return (
         <>
-            <h3>
-                {deck1.name}
-            </h3>
-            <HeaderWithCounts
-                withCount={9}
-                withoutCount={10}
-            />
             <p>Add flashcards from:</p>
 
             <Tree data={deck1} render={(child) => <Section section={child}/>} childKey={"children"}/>
