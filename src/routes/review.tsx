@@ -18,11 +18,16 @@ export interface FrontendFlashcard {
     interval: number,
 }
 
+interface ReviewLoaderParams {
+    bookId: string;
+    flashcardId: string;
+}
+
 // The idea here is that if I start a review, I don't immediately have a flashcard ID
 // So I need to fetch the first flashcard in the queue
 // And then redirect myself to that flashcard
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
-export async function reviewLoader({params}) {
+export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
     if (USE_ACTUAL_BACKEND) {
         let flashcardId = null;
         if (params.flashcardId == null) {
@@ -50,10 +55,12 @@ export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
     const location = useLocation();
-    const params = useParams();
+    const params = useParams<keyof ReviewLoaderParams>();
     const navigate = useNavigate();
 
     function flashcardResponseHandler(reviewResponse: number) {
+        if (params.flashcardId == null) throw new Error("ReviewDeck: flashcardId cannot be null or undefined");
+        if (params.bookId == null) throw new Error("ReviewDeck: bookId cannot be null or undefined");
         const result = updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
         let nextCardId: string | undefined;
         nextCardId = getNextCard(params.bookId)?.id;
