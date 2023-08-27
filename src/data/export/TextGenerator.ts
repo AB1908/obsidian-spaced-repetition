@@ -7,6 +7,8 @@ export function cardTextGenerator(questionText: string, answerText: string, card
     if (cardType == CardType.MultiLineBasic) {
         // todo: figure out how to refer to settings
         return `${questionText}\n?\n${answerText}`;
+    } else {
+        throw new Error("cardTextGenerator: Not implemented");
     }
 }
 
