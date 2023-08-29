@@ -7,7 +7,7 @@ export async function writeCardToDisk(path: string, text: string) {
 export function getTFileForPath(path: string): TFile {
     const tfile = app.vault.getAbstractFileByPath(path);
     if (tfile instanceof TFile) return tfile;
-    else return null;
+    else throw new Error(`no getTFileForPath: no TFile found for ${path}`);
 }
 
 export async function updateCardOnDisk(path: string, originalText: string, updatedText: string) {
