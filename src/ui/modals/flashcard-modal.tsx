@@ -28,17 +28,6 @@ export enum FlashcardModalMode {
     Closed,
 }
 
-export const routes = {
-    book: "/books/:bookId",
-    chapterList: "/books/:bookId/chapters",
-    highlightList: "/books/:bookId/chapters/:sectionId/annotations",
-    flashcardsList: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards",
-    flashcard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/:flashcardId",
-    createCard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/new",
-    createRegularCard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/new/regular",
-    createClozeCard: "/books/:bookId/chapters/:chapterId/annotations/:annotationId/flashcards/new/cloze",
-};
-
 /*
 books by title or id?
 generated id might be diff in every scenario
@@ -156,13 +145,13 @@ export class FlashcardModal extends Modal {
                         },
                     ]
                 },
-                {
-                    // TODO: this should be refactored into a single add with params for type of card
-                    path: routes.createClozeCard,
-                    element: <ClozeCard/>,
-                    action: creationAction,
-                    loader: clozeLoader,
-                }
+                // {
+                //     // TODO: this should be refactored into a single add with params for type of card
+                //     path: routes.createClozeCard,
+                //     element: <ClozeCard/>,
+                //     action: creationAction,
+                //     loader: clozeLoader,
+                // }
             ]
         },
     ]);
