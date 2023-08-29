@@ -26,6 +26,7 @@ export async function parseFileText(path: string) {
     const cardMatchesArray = fileText.matchAll(CARDTEXT_REGEX);
     const parsedCardsArray: ParsedCard[] = [];
     for (const card of cardMatchesArray) {
+        if (card.groups === undefined) throw new Error("parseFileText: no text found");
         parsedCardsArray.push(createParsedCardFromText(card.groups.cardText, CardType.MultiLineBasic, path, card.groups.metadataText));
     }
     return parsedCardsArray;
