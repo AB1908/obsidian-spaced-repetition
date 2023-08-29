@@ -29,16 +29,16 @@ export interface Count {
     without: number;
 }
 
-export function isHeading(section: annotation|Heading): section is Heading {
+export function isHeading(section: BookMetadataSection): section is Heading {
     return (section as Heading).level !== undefined;
 }
 
-export function isAnnotation(section: annotation|Heading): section is annotation {
+export function isAnnotation(section: BookMetadataSection): section is annotation {
     return (section as annotation).highlight !== undefined;
 }
 
 export function bookSections(metadata: CachedMetadata, fileText: string, flashcards: Flashcard[]) {
-    const output: (annotation|Heading)[] = [];
+    const output: (BookMetadataSection)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
     const annotationsWithFlashcards = new Set(flashcards.map(t=>t.annotationId));
@@ -75,7 +75,8 @@ export class Heading {
 
 }
 
-export type BookMetadataSections = (Heading | annotation)[];
+export type BookMetadataSection = Heading | annotation;
+export type BookMetadataSections = BookMetadataSection[];
 
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
@@ -104,7 +105,7 @@ export interface frontbook {
     parsedCards:    ParsedCard[];
     flashcards:     Flashcard[];
     annotationPath: string;
-    bookSections: (annotation|Heading)[];
+    bookSections: BookMetadataSections;
 }
 
 export interface BookCounts {
@@ -180,7 +181,7 @@ export function findNextHeader(sections: (SectionCache | HeadingCache)[], sectio
     return index;
 }
 
-export function updateHeaders(cacheItem: annotation, sections: (annotation|Heading)[], key: keyof Count) {
+export function updateHeaders(cacheItem: annotation, sections: BookMetadataSections, key: keyof Count) {
     const previousHeadingIndex = findPreviousHeader(sections, cacheItem);
     let previousHeading = sections[previousHeadingIndex] as Heading;
     while (previousHeading != null) {
@@ -189,7 +190,7 @@ export function updateHeaders(cacheItem: annotation, sections: (annotation|Headi
     }
 }
 
-export function generateHeaderCounts(sections: (annotation|Heading)[]) {
+export function generateHeaderCounts(sections: BookMetadataSections) {
     let i = 0;
     // const out = [...sections];
     const out = sections;
