@@ -52,7 +52,7 @@ export function bookTree(id: string, name: string, bookSections: BookMetadataSec
 // TODO: think about heading collisions as there may be multiple chapters with same name
 // TODO: don't need to nest paragraphs I think
 // TODO: fix type
-export function generateTree(sections: (annotation | Heading)[]) {
+export function generateTree(sections: Heading[]) {
     let i = 0;
     let prevHeader;
     while (i < sections.length) {
