@@ -2,6 +2,7 @@ import React from "react";
 import { useRouteError } from "react-router-dom";
 
 export default function ErrorPage() {
+    // todo: what is the correct type for this?
     const error = useRouteError();
     console.error(error);
 
