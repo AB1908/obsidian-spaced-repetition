@@ -50,6 +50,7 @@ export class FlashcardModal extends Modal {
     public ignoreStats: boolean;
     private modalElReactRoot: ReactDomRoot;
 
+    // todo: remove ts-ignore and use logic in https://stackoverflow.com/a/75327283/13285428
     private router = createMemoryRouter([
         {
             path: "",
@@ -95,11 +96,13 @@ export class FlashcardModal extends Modal {
                 {
                     path: "/books/:bookId/review",
                     element: <ReviewDeck/>,
+                    //@ts-ignore
                     loader: reviewLoader,
                 },
                 {
                     path: "/books/:bookId/review/:flashcardId",
                     element: <ReviewDeck/>,
+                    //@ts-ignore
                     loader: reviewLoader,
                 },
                 {
@@ -109,7 +112,7 @@ export class FlashcardModal extends Modal {
                     loader: cardLoader
                 },
                 {
-                    path: routes.highlightList,
+                    path: "/books/:bookId/chapters/:sectionId/annotations",
                     element: <AnnotationList/>,
                     //todo: conditional logic for intermediate page where we display existing flashcards
                     loader: annotationsLoader
@@ -123,6 +126,7 @@ export class FlashcardModal extends Modal {
                         {
                             path: "flashcards",
                             element: <PreviewExistingFlashcards/>,
+                            //@ts-ignore
                             loader: highlightLoader,
                         },
                         {
