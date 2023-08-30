@@ -19,7 +19,7 @@ jest.mock('nanoid', () => ({
     nanoid: (number: number) => "293nf82b"
 }))
 jest.mock('../src/data/models/parsedCard', () => ({
-    createParsedCard: (...args) => mockParsedCard
+    createParsedCard: (...args: any) => mockParsedCard
 }));
 
 const flashcards = () => [{
@@ -125,7 +125,7 @@ describe("createFlashcard", () => {
         const answer = "test answer";
         const id = "yjlML2s9W";
         const highlightId = "9asdfkn23k";
-        await boundCreate(question, answer, highlightId, CardType.MultiLineBasic);
+        await boundCreate(question, answer, highlightId, id);
         expect(mockThis.flashcards[1].questionText).toBe(question);
     });
 });
