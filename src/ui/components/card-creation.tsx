@@ -1,5 +1,5 @@
 import React from "react";
-import {Form, Link} from "react-router-dom";
+import {Form} from "react-router-dom";
 import {CancelButton, SubmitButton} from "src/ui/components/buttons";
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {

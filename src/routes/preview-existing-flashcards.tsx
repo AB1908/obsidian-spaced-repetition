@@ -32,7 +32,7 @@ export function PreviewExistingFlashcards() {
                             Existing questions:
                         </p>
                         <ul>
-                            {flashcards.map((t, i) => (
+                            {flashcards.map((t) => (
                                 <Link to={`${t.id}`} key={t.id} replace>
                                     <li>
                                         <p>

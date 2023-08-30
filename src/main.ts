@@ -2,7 +2,7 @@
 // require('react-devtools');
 import {
     Notice,
-    Plugin, TFile
+    Plugin
 } from "obsidian";
 
 import { FlashcardModal } from "src/ui/modals/flashcard-modal";

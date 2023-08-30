@@ -111,12 +111,6 @@ export interface frontbook {
     bookSections: BookMetadataSections;
 }
 
-export interface BookCounts {
-    mature:   number;
-    new:      number;
-    learning: number;
-}
-
 export const ANNOTATIONS_YAML_KEY = "annotations";
 
 export function getAnnotationFilePath(path: string) {
@@ -128,10 +122,6 @@ export function getAnnotationFilePath(path: string) {
 }
 
 export type RawBookSection = (SectionCache | HeadingCache);
-export type RawBookSections = RawBookSection[];
-export interface GenericLevel {
-    level: number;
-}
 
 export function findPreviousHeader(section: RawBookSection|BookMetadataSection, sections: Array<typeof section>) {
     let index = sections.indexOf(section);
