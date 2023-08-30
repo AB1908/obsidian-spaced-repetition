@@ -10,7 +10,7 @@ export interface ParsedCard {
     cardText: string,
     metadataText: string,
     lineNo: number,
-    notePath?: string,
+    notePath: string,
 }
 
 // Note that this creates a learning card by default
