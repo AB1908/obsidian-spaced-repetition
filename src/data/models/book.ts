@@ -127,38 +127,42 @@ export function getAnnotationFilePath(path: string) {
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
-function isHeadingCache(cacheItem: SectionCache|HeadingCache): cacheItem is HeadingCache {
-    return (cacheItem as HeadingCache).level !== undefined;
+export type RawBookSection = (SectionCache | HeadingCache);
+export type RawBookSections = RawBookSection[];
+export interface GenericLevel {
+    level: number;
 }
 
 export function findPreviousHeader(section: RawBookSection|BookMetadataSection, sections: Array<typeof section>) {
     let index = sections.indexOf(section);
     // top level headers don't have a parent
-    // TODO: consider changing this to -1 so we have a consistent return type
-    if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
-    while (start >= 0) {
-        let sectionStart = sections[start];
-        if (section == sectionStart) {
+    // done: consider changing this to -1 so we have a consistent return type
+    if ('level' in section) {
+        if (section.level == 1) return -1;
+    }
+    while (index >= 0) {
+        let currentSection: typeof section = sections[index];
+        if (section == currentSection) {
             // we are on the same item lol
             // decrement and continue
-            start--;
+            index--;
             continue;
         }
-        if (isHeadingCache(sectionStart)) {
+        if ("level" in currentSection) { // we are on a heading
             // if same level heading than 100% it is not the right header
             // decrement and skip
-            if (sectionStart.level == (section as HeadingCache).level) {
-                start--;
+            if (("level" in section) && (currentSection.level == section.level)) {
+                index--;
                 continue;
             }
         }
-        if (isHeadingCache(sectionStart))
+        if ("level" in currentSection)
             // we've finally reached a header
             // return it
-            return start;
-        start--;
+            return index;
+        index--;
     }
-    return null;
+    return -1;
 }
 
 export function findNextHeader(sections: (SectionCache | HeadingCache)[], section: HeadingCache) {
