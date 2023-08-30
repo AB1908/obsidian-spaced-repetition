@@ -179,7 +179,7 @@ export function findNextHeader(section: RawBookSection|BookMetadataSection, sect
         //     index++;
         //     continue;
         // }
-        if (isHeadingCache(currentSection)) {
+        if ("level" in currentSection) {
             if (currentSection.level <= (section as HeadingCache).level) {
                 return index;
             }
