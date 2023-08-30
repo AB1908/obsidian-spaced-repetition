@@ -128,8 +128,8 @@ function isHeadingCache(cacheItem: SectionCache|HeadingCache): cacheItem is Head
     return (cacheItem as HeadingCache).level !== undefined;
 }
 
-export function findPreviousHeader(sections: (SectionCache | HeadingCache)[], section: SectionCache | HeadingCache) {
-    let start = sections.indexOf(section);
+export function findPreviousHeader(section: RawBookSection|BookMetadataSection, sections: Array<typeof section>) {
+    let index = sections.indexOf(section);
     // top level headers don't have a parent
     // TODO: consider changing this to -1 so we have a consistent return type
     if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
@@ -182,11 +182,11 @@ export function findNextHeader(sections: (SectionCache | HeadingCache)[], sectio
 }
 
 export function updateHeaders(cacheItem: annotation, sections: BookMetadataSections, key: keyof Count) {
-    const previousHeadingIndex = findPreviousHeader(sections, cacheItem);
+    const previousHeadingIndex = findPreviousHeader(cacheItem, sections);
     let previousHeading = sections[previousHeadingIndex] as Heading;
     while (previousHeading != null) {
         previousHeading.counts[key]++;
-        previousHeading = sections[findPreviousHeader(sections, previousHeading)] as Heading;
+        previousHeading = sections[findPreviousHeader(previousHeading, sections)] as Heading;
     }
 }
 
