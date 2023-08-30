@@ -58,14 +58,6 @@ export function getParentFolderName(path: string) {
     return getTFileForPath(path)?.parent.name;
 }
 
-export function getHeadersForFile(path: string) {
-    const tfile = getTFileForPath(path);
-    if (tfile === null) {
-        return;
-    }
-    return app.metadataCache.getFileCache(tfile).headings;
-}
-
 export function getMetadataForFile(path: string) {
     const tfile = getTFileForPath(path);
     if (tfile === null) {
