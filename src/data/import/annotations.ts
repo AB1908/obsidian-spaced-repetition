@@ -16,6 +16,7 @@ export function parseAnnotations(text: string): annotation {
     const parsedAnnotations: annotation[] = [];
     const annotationMatches = text.matchAll(ANNOTATION_REGEX);
     for (const match of annotationMatches) {
+        if (match.groups == null) throw new Error(`parseAnnotations: no annotations found for text ${text}`);
         parsedAnnotations.push({
             // TODO: potentially switch to string that also contains a short UUID?
             id: match.groups.id,
