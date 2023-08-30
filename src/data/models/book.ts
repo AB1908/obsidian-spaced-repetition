@@ -37,19 +37,22 @@ export function isAnnotation(section: BookMetadataSection): section is annotatio
     return (section as annotation).highlight !== undefined;
 }
 
-export function bookSections(metadata: CachedMetadata, fileText: string, flashcards: Flashcard[]) {
+export function bookSections(metadata: CachedMetadata|null|undefined, fileText: string, flashcards: Flashcard[]) {
+    if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
     const output: (BookMetadataSection)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
     const annotationsWithFlashcards = new Set(flashcards.map(t=>t.annotationId));
+    if (metadata.sections == null) throw new Error("bookSections: file has no sections");
     for (let cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
             let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
             output.push({hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation});
         } else if (cacheItem.type === "heading") {
-            //done: fix casting
-            output.push(new Heading(metadata.headings[headingIndex]));
+            let headings = metadata?.headings;
+            if (headings === undefined) throw new Error("bookSections: no headings in file");
+            output.push(new Heading(headings[headingIndex]));
             headingIndex++;
         } else {
             // TODO: Any edge cases?
