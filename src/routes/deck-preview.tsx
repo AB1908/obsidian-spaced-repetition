@@ -5,7 +5,11 @@ import {DeckCounts, FlashCount} from "src/routes/notes-home-page";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getBookById} from "src/api";
 
-export function deckLoader({params}) {
+interface DeckLoaderParams {
+    bookId: string;
+}
+
+export function deckLoader({params}: {params: DeckLoaderParams}) {
     if (USE_ACTUAL_BACKEND)
         return getBookById(params.bookId);
     else
