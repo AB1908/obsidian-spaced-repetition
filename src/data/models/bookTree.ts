@@ -63,7 +63,7 @@ export function generateTree(sections: Heading[]) {
             // }
             // cacheItem.count = {"with": 0, "without": 0};
         } else {
-            prevHeader = findPreviousHeader(sections, cacheItem);
+            prevHeader = findPreviousHeader(cacheItem, sections);
             const previousHeader = sections[prevHeader] as Heading;
             if (prevHeader != null) {
                 previousHeader.children.push(cacheItem);
@@ -80,7 +80,7 @@ export function generateTree(sections: Heading[]) {
         while (sectionIndex < sections.length) {
             let each = sections[sectionIndex];
             if ((isHeading(each)) && (each.level == headingLevel)) {
-                let prevHeader = findPreviousHeader(sections, each);
+                let prevHeader = findPreviousHeader(each, sections);
                 let previousHeader = sections[prevHeader] as Heading;
                 previousHeader.children.push(each);
             }
