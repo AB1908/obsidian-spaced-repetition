@@ -146,7 +146,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
         let flashcardCopy = book.flashcards.filter(t => t.id === flashcardId)[0];
-        const parsedCardCopy = book.parsedCards.filter(t => flashcardCopy.parsedCardId)[0];
+        const parsedCardCopy = book.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
         const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
         parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
 
