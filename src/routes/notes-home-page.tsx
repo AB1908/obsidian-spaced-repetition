@@ -36,6 +36,8 @@ export function Notes() {
 
     useEffect(() => {
         const plus: Icon = 'plus-circle';
+        // todo: fix this
+        //@ts-ignore
         setIcon(iconRef.current, plus);
     }, []);
 
