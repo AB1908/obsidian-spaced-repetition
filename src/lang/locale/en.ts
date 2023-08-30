@@ -32,17 +32,6 @@ export default {
     NO_DECK_EXISTS: "No deck exists for ${deckName}",
     ALL_CAUGHT_UP: "You're all caught up now :D.",
 
-    // scheduling.ts
-    DAY_STR_IVL: "${interval} day",
-    MONTH_STR_IVL: "${interval} month",
-    YEAR_STR_IVL: "${interval} year",
-    DAYS_STR_IVL: "${interval} days",
-    MONTHS_STR_IVL: "${interval} months",
-    YEARS_STR_IVL: "${interval} years",
-    DAYS_STR_IVL_MOBILE: "${interval}d",
-    MONTHS_STR_IVL_MOBILE: "${interval}m",
-    YEARS_STR_IVL_MOBILE: "${interval}y",
-
     // settings.ts
     SETTINGS_HEADER: "Spaced Repetition Plugin - Settings",
     CHECK_WIKI: 'For more information, check the <a href="${wiki_url}">wiki</a>.',
