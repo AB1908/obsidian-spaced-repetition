@@ -77,7 +77,7 @@ export function getCurrentCard(bookId: string) {
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
-        return null;
+        throw new Error("book not found");
     }
     return book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
         return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)}
@@ -193,7 +193,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
     if ((!selectedSection) || (!isHeading(selectedSection))) {
         return null;
     }
-    const nextHeadingIndex = findNextHeader(book.bookSections, selectedSection);
+    const nextHeadingIndex = findNextHeader(selectedSection, book.bookSections);
     let annotations = book.bookSections.slice(selectedSectionIndex, nextHeadingIndex).filter((t): t is annotation => isAnnotation(t));
 
     const flashcardCountForAnnotation: Record<string, number> = {};
@@ -246,7 +246,7 @@ interface frontEndBook {
 export function getBookById(id: string): frontEndBook {
     const book = plugin.notesWithFlashcards.filter(t => t.id === id)[0];
     if (!book) {
-        return;
+        throw new Error(`getBookById: No book found for id ${id}`);
     }
     const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.annotationId));
     const annotationsWithoutFlashcards = new Set<string>();
