@@ -1,5 +1,5 @@
 import React from "react";
-import { render, screen } from "@testing-library/react";
+import { render } from "@testing-library/react";
 import { TestComponent } from "src/ui/components/book-list";
 import { ChapterList } from "src/routes/chapter-list";
 

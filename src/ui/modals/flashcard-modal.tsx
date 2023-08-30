@@ -14,7 +14,6 @@ import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
 import {ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
-import {ClozeCard, clozeLoader} from "src/routes/cloze-card";
 import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
 import {getParentFolderName, listOfNotes} from "src/data/import/disk";
 import {Book} from "src/data/models/book";
@@ -80,6 +79,7 @@ export class FlashcardModal extends Modal {
                 {
                     path: "/books/:bookId",
                     element: <DeckLandingPage/>,
+                    //@ts-ignore
                     loader: deckLoader,
                     children: [
                         {
@@ -202,7 +202,7 @@ export class FlashcardModal extends Modal {
         this.plugin.filePaths = listOfNotes("flashcards");
         this.plugin.bookNotesPaths = listOfNotes("review/book");
         // todo: fix
-        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string, i: number) => new Book(t, `${getParentFolderName(t)}`));
+        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string) => new Book(t, `${getParentFolderName(t)}`));
             for (const t of this.plugin.notesWithFlashcards) {
                 await t.initialize()
             }

@@ -39,13 +39,6 @@ export function AnnotationCount(sections: any): Record<string, Count> {
 }
 
 // Need this to be able to call countAnnotations
-export function bookTree(id: string, name: string, bookSections: BookMetadataSections) {
-    return {
-        id,
-        name,
-        children: bookSections
-    };
-}
 
 // TODO: why did I make this? Where do I need it?
 // TODO: refactor

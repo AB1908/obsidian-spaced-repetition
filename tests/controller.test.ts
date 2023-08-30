@@ -5,7 +5,7 @@ import {
     updateFlashcardAnswer,
     updateFlashcardQuestion
 } from "src/api";
-import {CardType} from "src/scheduler/scheduling";
+
 const mockParsedCard = {
     id: "test1234",
     note: null,

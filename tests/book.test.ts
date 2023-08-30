@@ -6,7 +6,6 @@ import {
 } from "src/data/models/book";
 import {sampleAnnotationMetadata, sampleAnnotationText} from "./disk.test";
 import {annotation} from "src/data/import/annotations";
-import {bookWithCounts} from "src/api";
 import {beforeEach} from "@jest/globals";
 import {HeadingCache, SectionCache} from "obsidian";
 import {AnnotationCount, generateTree} from "src/data/models/bookTree";

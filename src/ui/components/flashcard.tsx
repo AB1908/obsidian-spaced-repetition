@@ -1,6 +1,5 @@
 import {calculateIntervals, ReviewResponse} from "src/scheduler/scheduling";
 import {Button, generateButtonText, ShowAnswerButton} from "src/ui/components/buttons";
-import {Form} from "react-router-dom";
 import React from "react";
 import {FrontendFlashcard} from "src/routes/review";
 

@@ -5,18 +5,6 @@ import {CardType} from "src/scheduler/scheduling";
 import {getFileContents} from "src/data/import/disk";
 
 // adds a hasFlashcard:true for every annotation that has a flashcard
-export function addFlashcardState(flashcards: Flashcard[], bookSections: BookMetadataSections) {
-    const out = [];
-    for (const metadataSection of bookSections) {
-        // if (flashcards.filter(t=> metadataSection.id === t.id) !== undefined)
-        //     out.push({...bookSections, hasFlashcard: true})
-        // else
-        //     out.push({...bookSections, hasFlashcard: false})
-        // TODO: logic for this is incorrect, should be checking against metadata. Fix
-        out.push({...bookSections, hasFlashcard: flashcards.some(t=>t.id === metadataSection.id)});
-    }
-    return out;
-}
 
 // TODO: parameterize separators??
 const CARDTEXT_REGEX = /(?<cardText>.*\n\?\n.*)\n(?<metadataText><!--SR:.*-->)/g;
@@ -30,14 +18,6 @@ export async function parseFileText(path: string) {
         parsedCardsArray.push(createParsedCardFromText(card.groups.cardText, CardType.MultiLineBasic, path, card.groups.metadataText));
     }
     return parsedCardsArray;
-}
-
-export function createFlashcardsFromParsedCards(parsedCards: ParsedCard[]) {
-    for (const card of parsedCards) {
-        const [questionText, answerText] = parseCardText(card.cardText);
-        const flashcard = new Flashcard(card.id, questionText, answerText, parseMetadata(card.metadataText));
-        this.flashcards.push(flashcard);
-    }
 }
 
 export function parseCardText(text: string): [string, string] {

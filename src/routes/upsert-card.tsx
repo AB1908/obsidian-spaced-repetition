@@ -3,7 +3,6 @@ import {redirect} from "react-router-dom";
 import React from "react";
 import {DefaultCardForm} from "src/ui/components/card-creation";
 import {createFlashcardForAnnotation, getFlashcardById, updateFlashcardContentsById} from "src/api";
-import {CardType} from "src/scheduler/scheduling";
 import {Flashcard} from "src/data/models/flashcard";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 

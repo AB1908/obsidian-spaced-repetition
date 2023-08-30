@@ -1,5 +1,5 @@
 import React from "react";
-import {ReviewResponse, textInterval} from "src/scheduler/scheduling";
+import {textInterval} from "src/scheduler/scheduling";
 import {Link} from "react-router-dom";
 import {Platform} from "obsidian";
 import {plugin} from "src/main";
