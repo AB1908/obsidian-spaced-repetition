@@ -165,7 +165,8 @@ export function findPreviousHeader(section: RawBookSection|BookMetadataSection, 
     return -1;
 }
 
-export function findNextHeader(sections: (SectionCache | HeadingCache)[], section: HeadingCache) {
+export function findNextHeader(section: RawBookSection|BookMetadataSection, sections: Array<typeof section>) {
+// export function findNextHeader(section: HeadingCache, sections: (SectionCache | HeadingCache)[]) {
     let index = sections.indexOf(section) + 1;
     // top level headers don't have a parent
     // TODO: consider changing this to -1 so we have a consistent return type
