@@ -1,4 +1,3 @@
-import {t} from "src/lang/helpers";
 import {plugin} from "src/main";
 import {FrontendFlashcard} from "src/routes/review";
 
@@ -83,16 +82,16 @@ export function textInterval(interval: number, isMobile: boolean): string {
         year: number = Math.round(interval / 36.525) / 10;
 
     if (isMobile) {
-        if (month < 1.0) return t("DAYS_STR_IVL_MOBILE", { interval });
-        else if (year < 1.0) return t("MONTHS_STR_IVL_MOBILE", { interval: month });
-        else return t("YEARS_STR_IVL_MOBILE", { interval: year });
+        if (month < 1.0) return `${interval}d`;
+        else if (year < 1.0) return `${month}m`;
+        else return `${year}y`;
     } else {
-        if (interval <= 1.0) return t("DAY_STR_IVL", { interval });
-        else if (month < 1.0) return t("DAYS_STR_IVL", { interval });
-        else if (month == 1.0) return t("MONTH_STR_IVL", { interval: month});
-        else if (year < 1.0) return t("MONTHS_STR_IVL", { interval: month });
-        else if (year == 1.0) return t("YEAR_STR_IVL", { interval: year});
-        else return t("YEARS_STR_IVL", { interval: year });
+        if (interval <= 1.0) return `${interval} day`;
+        else if (month < 1.0) return `${interval} days`;
+        else if (month == 1.0) return `${month} month`;
+        else if (year < 1.0) return `${month} months`;
+        else if (year == 1.0) return `${year} year`;
+        else return `${year} years`;
     }
 }
 
