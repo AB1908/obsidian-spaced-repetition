@@ -14,7 +14,7 @@ import {Notes, notesLoader} from "src/routes/notes-home-page";
 import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
 import {ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
-import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
+// import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
 import {getParentFolderName, listOfNotes} from "src/data/import/disk";
 import {Book} from "src/data/models/book";
 import {Tabs} from "src/routes/tabs";
@@ -71,11 +71,11 @@ export class FlashcardModal extends Modal {
                         },
                     ]
                 },
-                {
-                    path: "/books/create",
-                    element: <BookCreator />,
-                    loader: bookCreatorLoader,
-                },
+                // {
+                //     path: "/books/create",
+                //     element: <BookCreator />,
+                //     loader: bookCreatorLoader,
+                // },
                 {
                     path: "/books/:bookId",
                     element: <DeckLandingPage/>,
