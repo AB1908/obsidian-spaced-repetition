@@ -8,7 +8,7 @@ export function createFlashcard(parsedCard: ParsedCard, questionText: string, an
 
 export function generateFlashcardsArray(parsedCardsArray: ParsedCard[]) {
     const out: Flashcard[] = [];
-    for (let parsedCard of parsedCardsArray) {
+    for (const parsedCard of parsedCardsArray) {
         const [questionText, answerText] = parseCardText(parsedCard.cardText);
         out.push(createFlashcard(parsedCard, questionText, answerText));
     }

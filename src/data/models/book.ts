@@ -44,13 +44,13 @@ export function bookSections(metadata: CachedMetadata|null|undefined, fileText: 
     let headingIndex = 0;
     const annotationsWithFlashcards = new Set(flashcards.map(t=>t.annotationId));
     if (metadata.sections == null) throw new Error("bookSections: file has no sections");
-    for (let cacheItem of metadata.sections) {
+    for (const cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
-            let annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
+            const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
             output.push({hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation});
         } else if (cacheItem.type === "heading") {
-            let headings = metadata?.headings;
+            const headings = metadata?.headings;
             if (headings === undefined) throw new Error("bookSections: no headings in file");
             output.push(new Heading(headings[headingIndex]));
             headingIndex++;
@@ -127,11 +127,11 @@ export function findPreviousHeader(section: RawBookSection|BookMetadataSection, 
     let index = sections.indexOf(section);
     // top level headers don't have a parent
     // done: consider changing this to -1 so we have a consistent return type
-    if ('level' in section) {
+    if ("level" in section) {
         if (section.level == 1) return -1;
     }
     while (index >= 0) {
-        let currentSection: typeof section = sections[index];
+        const currentSection: typeof section = sections[index];
         if (section == currentSection) {
             // we are on the same item lol
             // decrement and continue
@@ -162,7 +162,7 @@ export function findNextHeader(section: RawBookSection|BookMetadataSection, sect
     // TODO: consider changing this to -1 so we have a consistent return type
     // if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
     while (index < sections.length) {
-        let currentSection = sections[index];
+        const currentSection = sections[index];
         // if (section == sectionStart) {
         //     // we are on the same item lol
         //     // increment and continue
@@ -194,9 +194,8 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
     const out = sections;
     // const out = sections;
     while (i < out.length) {
-        let cacheItem = out[i];
-        if (isHeading(cacheItem)) {
-        } else {
+        const cacheItem = out[i];
+        if (isHeading(cacheItem)) { /* empty */ } else {
             if (cacheItem.hasFlashcards)
                 updateHeaders(cacheItem, out, "with");
             else

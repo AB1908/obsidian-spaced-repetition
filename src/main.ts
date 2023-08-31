@@ -97,11 +97,11 @@ annotations: "[[${activeFile.path}]]"
 `;
                 await this.app.vault.create(`${activeFile.parent.path}/Flashcards.md`, fileContents);
             }
-        })
+        });
 
         this.addSettingTab(new SRSettingTab(this.app, this));
 
-        console.log("SRS Plugin loaded")
+        console.log("SRS Plugin loaded");
     }
 
     onunload(): void {

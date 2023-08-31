@@ -29,7 +29,7 @@ export function CardBack(props: {
     clickHandler: Function,
 }) {
     const {hardInterval, goodInterval, easyInterval} = calculateIntervals(props.currentCard);
-    let {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
+    const {hardBtnText, goodBtnText, easyBtnText} = generateButtonText(hardInterval, goodInterval, easyInterval);
     return <>
         <div className={"sr-card-body"}>
             <Question questionText={props.currentCard.questionText}/>

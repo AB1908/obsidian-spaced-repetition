@@ -24,8 +24,8 @@ export function cardLoader({params}: {params: any}) {
 // Is there a better way of doing this?
 export function UpsertCard() {
     const flashcard: any = useLoaderData() as Flashcard;
-    let defaultQuestionValue = flashcard?.questionText || "";
-    let defaultAnswerValue = flashcard?.answerText || "";
+    const defaultQuestionValue = flashcard?.questionText || "";
+    const defaultAnswerValue = flashcard?.answerText || "";
     return (
         <>
             <DefaultCardForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue}/>

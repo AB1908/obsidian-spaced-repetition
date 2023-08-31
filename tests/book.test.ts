@@ -16,7 +16,7 @@ jest.doMock("nanoid", () => ({
 }));
 jest.mock("../src/main", () => {});
 
-let bookSectionsArray = [
+const bookSectionsArray = [
     {
         display: "Header 1",
         heading: "Header 1",
@@ -93,7 +93,7 @@ let bookSectionsArray = [
 
 test("generate tree with flashcard information", () => {
     // expect()
-    let flashcards = [
+    const flashcards = [
         {
             display: "Header 1",
             heading: "Header 1",
@@ -174,7 +174,7 @@ test("generate tree with flashcard information", () => {
         },
     ] as (annotation | Heading)[];
 
-    let output = [
+    const output = [
         {
             display: "Header 1",
             heading: "Header 1",

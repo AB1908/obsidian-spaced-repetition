@@ -55,5 +55,5 @@ export function PreviewExistingFlashcards() {
                 </Link>
             </div>
         </>
-    )
+    );
 }

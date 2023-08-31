@@ -80,7 +80,7 @@ export function getFlashcardById(flashcardId: string, bookId: string): FrontendF
         throw new Error("book not found");
     }
     return book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
-        return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)}
+        return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)};
     })[0] ?? null;
 }
 
@@ -163,7 +163,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
                 if (t.id === flashcardId) {
                     book.flashcards[i] = flashcardCopy;
                 }
-            })
+            });
         } else {
             throw new Error("not implemented");
         }
@@ -174,7 +174,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
 // TODO: add logic to remove from storage
 export function deleteFlashcardById(id: string) {
     if (plugin.flashcards.length == 0) {
-        throw new Error("Array of flashcards is empty!")
+        throw new Error("Array of flashcards is empty!");
     }
     if (plugin.flashcards.findIndex((f: AbstractFlashcard) => f.id === id) == -1) {
         return false;
@@ -205,7 +205,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
         return {
             ...t,
             flashcardCount: flashcardCountForAnnotation[t.id] || 0,
-        }
+        };
     });
 
     return {
@@ -224,12 +224,12 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
 }
 
 export function getBooks(): ReviewBook[] {
-    let books = plugin.notesWithFlashcards.map(t => {
+    const books = plugin.notesWithFlashcards.map(t => {
         return {
             id: t.id,
             name: t.name,
             counts: maturityCounts(t.flashcards)
-        }
+        };
     });
     return books;
 }
@@ -250,7 +250,7 @@ export function getBookById(id: string): frontEndBook {
     }
     const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.annotationId));
     const annotationsWithoutFlashcards = new Set<string>();
-    for (let annotation of book.annotations()) {
+    for (const annotation of book.annotations()) {
         if (!annotationsWithFlashcards.has(annotation.id)) {
             annotationsWithoutFlashcards.add(annotation.id);
         }
@@ -273,7 +273,7 @@ export function getSectionTreeForBook(id: string) {
     if (!book) {
         throw new Error(`getSectionTreeForBook: No book found for id ${id}`);
     }
-    let children = generateSectionsTree(book.bookSections);
+    const children = generateSectionsTree(book.bookSections);
     return {
         id: book.id,
         name: book.name,

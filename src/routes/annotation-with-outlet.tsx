@@ -21,5 +21,5 @@ export function AnnotationWithOutlet() {
             <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note}/>
             <Outlet/>
         </>
-    )
+    );
 }

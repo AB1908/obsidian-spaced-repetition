@@ -1,6 +1,6 @@
 // This is terrible. Save me.
 import {annotation} from "src/data/import/annotations";
-import {BookMetadataSections, Count, findPreviousHeader, Heading, isAnnotation, isHeading} from "src/data/models/book";
+import {Count, findPreviousHeader, Heading, isAnnotation, isHeading} from "src/data/models/book";
 
 function writeCountToObj(mem: any, sectionId: string, count: number, key: string) {
     Object.assign(mem, {[`${sectionId}`]: {...mem[sectionId], [key]: count}});
@@ -13,13 +13,13 @@ with them and how many don't. I couldn't find a cleaner way of doing it without 
 function countAnnotations(sections: any, mem: any, injectedCondition: (sections: any) => boolean, key: string) {
     let count = 0;
     if ("children" in sections) {
-        for (let child of sections.children) {
+        for (const child of sections.children) {
             count += countAnnotations(child, mem, injectedCondition, key);
         }
         writeCountToObj(mem, sections.id, count, key);
     } else if (isAnnotation(sections)) {
         if (injectedCondition(sections)) {
-            count += 1
+            count += 1;
         }
     }
     return count;
@@ -29,12 +29,12 @@ function countAnnotations(sections: any, mem: any, injectedCondition: (sections:
 
 // TODO: switch to DFS/BFS?
 export function AnnotationCount(sections: any): Record<string, Count> {
-    let mem = {};
+    const mem = {};
     // @ts-ignore
     mem[sections.id] = {
         "without": countAnnotations(sections, mem, (sections: any) => sections.hasFlashcards == false, "without"),
         "with": countAnnotations(sections, mem, (sections: any) => sections.hasFlashcards == true, "with")
-    }
+    };
     return mem;
 }
 
@@ -49,7 +49,7 @@ export function generateTree(sections: Heading[]) {
     let i = 0;
     let prevHeader;
     while (i < sections.length) {
-        let cacheItem = sections[i];
+        const cacheItem = sections[i];
         if (isHeading(cacheItem)) {
             // if (!("children" in cacheItem)) {
             //     cacheItem.children = [];
@@ -71,10 +71,10 @@ export function generateTree(sections: Heading[]) {
     for (let headingLevel = 4; headingLevel > 1; headingLevel--) {
         let sectionIndex = 0;
         while (sectionIndex < sections.length) {
-            let each = sections[sectionIndex];
+            const each = sections[sectionIndex];
             if ((isHeading(each)) && (each.level == headingLevel)) {
-                let prevHeader = findPreviousHeader(each, sections);
-                let previousHeader = sections[prevHeader] as Heading;
+                const prevHeader = findPreviousHeader(each, sections);
+                const previousHeader = sections[prevHeader] as Heading;
                 previousHeader.children.push(each);
             }
             sectionIndex++;

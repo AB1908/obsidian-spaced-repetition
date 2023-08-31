@@ -5,12 +5,12 @@ import {getFileContents} from "src/data/import/disk";
 import {annotation} from "src/data/import/annotations";
 import {Heading} from "src/data/models/book";
 
-jest.mock('../src/data/import/disk.ts');
-jest.mock('nanoid', () => ({
+jest.mock("../src/data/import/disk.ts");
+jest.mock("nanoid", () => ({
     nanoid: (number: number) => "aaaaaaaa"
-}))
+}));
 
-jest.mock('../src/main', () => {
+jest.mock("../src/main", () => {
         return {
             plugin: {
                 data: {
@@ -22,9 +22,9 @@ jest.mock('../src/main', () => {
                     }
                 }
             }
-        }
+        };
     }
-)
+);
 
 describe("generateTree", () => {
     test("should nest a paragraph within previous heading", () => {
@@ -270,9 +270,9 @@ describe("generateTree", () => {
 
 describe("parseFlashcard", () => {
     test("parses a flashcard with only annotation id", async () => {
-        const flashcard = `This is a question\n?\nThis is an answer\n<!--SR:93813-->`;
+        const flashcard = "This is a question\n?\nThis is an answer\n<!--SR:93813-->";
         jest.mocked(getFileContents).mockImplementation(async (path: string) => {
-            return flashcard
+            return flashcard;
         });
         expect(await parseFileText("sample path")).toEqual([{
             id: "aaaaaaaa",
@@ -284,9 +284,9 @@ describe("parseFlashcard", () => {
         }]);
     });
     test("parses a flashcard with full metadata", async () => {
-        const flashcard = `This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->`;
+        const flashcard = "This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
         jest.mocked(getFileContents).mockImplementation(async (path: string) => {
-            return flashcard
+            return flashcard;
         });
         expect(await parseFileText("sample path")).toEqual([{
             id: "aaaaaaaa",
