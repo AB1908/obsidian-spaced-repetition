@@ -1,31 +1,31 @@
 //todo: investigate using lowdb
-import {getFileContents, getMetadataForFile, updateCardOnDisk} from "src/data/import/disk";
-import {annotation, parseAnnotations} from "src/data/import/annotations";
-import {CachedMetadata, HeadingCache, SectionCache} from "obsidian";
-import {nanoid} from "nanoid";
-import {Flashcard, schedulingMetadataForResponse} from "src/data/models/flashcard";
-import {parseFileText} from "src/data/parser";
-import {ParsedCard} from "src/data/models/parsedCard";
-import {generateFlashcardsArray} from "src/data/import/flashcards";
-import {generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata} from "src/data/export/TextGenerator";
-import {ReviewResponse} from "src/scheduler/scheduling";
+import { getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/import/disk";
+import { annotation, parseAnnotations } from "src/data/import/annotations";
+import { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
+import { nanoid } from "nanoid";
+import { Flashcard, schedulingMetadataForResponse } from "src/data/models/flashcard";
+import { parseFileText } from "src/data/parser";
+import { ParsedCard } from "src/data/models/parsedCard";
+import { generateFlashcardsArray } from "src/data/import/flashcards";
+import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/export/TextGenerator";
+import { ReviewResponse } from "src/scheduler/scheduling";
 
 // TODO: this is not really a "book" per se
 export interface book {
-    id:       string;
-    name:     string;
+    id: string;
+    name: string;
     children: sectionTree[];
-    counts:  Count;
+    counts: Count;
 }
 
 export interface sectionTree {
-    id:       string;
-    name:     string;
+    id: string;
+    name: string;
     children: book[];
 }
 
 export interface Count {
-    with:    number;
+    with: number;
     without: number;
 }
 
@@ -37,18 +37,18 @@ export function isAnnotation(section: BookMetadataSection): section is annotatio
     return (section as annotation).highlight !== undefined;
 }
 
-export function bookSections(metadata: CachedMetadata|null|undefined, fileText: string, flashcards: Flashcard[]) {
+export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[]) {
     if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
     const output: (BookMetadataSection)[] = [];
     const fileTextArray = fileText.split("\n");
     let headingIndex = 0;
-    const annotationsWithFlashcards = new Set(flashcards.map(t=>t.annotationId));
+    const annotationsWithFlashcards = new Set(flashcards.map(t => t.annotationId));
     if (metadata.sections == null) throw new Error("bookSections: file has no sections");
     for (const cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
-            const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line+1).join("\n"));
-            output.push({hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation});
+            const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
+            output.push({ hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation });
         } else if (cacheItem.type === "heading") {
             const headings = metadata?.headings;
             if (headings === undefined) throw new Error("bookSections: no headings in file");
@@ -70,10 +70,10 @@ export class Heading {
 
     constructor(heading: HeadingCache) {
         // might be too clever
-        ({heading: this.name, level: this.level} = heading);
+        ({ heading: this.name, level: this.level } = heading);
         this.id = nanoid(8);
         this.children = [];
-        this.counts = {with: 0, without: 0};
+        this.counts = { with: 0, without: 0 };
     }
 
 }
@@ -98,15 +98,15 @@ export function getAnnotationsForSection(sectionId: string, bookSections: BookMe
         }
         x++;
     }
-    return bookSections.slice(index+1, x).filter(t => isAnnotation(t));
+    return bookSections.slice(index + 1, x).filter(t => isAnnotation(t));
 }
 
 export interface frontbook {
-    id:             string;
-    name:           string;
-    flashcardsPath:           string;
-    parsedCards:    ParsedCard[];
-    flashcards:     Flashcard[];
+    id: string;
+    name: string;
+    flashcardsPath: string;
+    parsedCards: ParsedCard[];
+    flashcards: Flashcard[];
     annotationPath: string;
     bookSections: BookMetadataSections;
 }
@@ -117,13 +117,13 @@ export function getAnnotationFilePath(path: string) {
     const metadata = getMetadataForFile(path);
     const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
     if (!annotationFromYaml) return;
-    const annotationLinkText = annotationFromYaml.replaceAll(/[\[\]]/g, "");
+    const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
 export type RawBookSection = (SectionCache | HeadingCache);
 
-export function findPreviousHeader(section: RawBookSection|BookMetadataSection, sections: Array<typeof section>) {
+export function findPreviousHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
     let index = sections.indexOf(section);
     // top level headers don't have a parent
     // done: consider changing this to -1 so we have a consistent return type
@@ -155,7 +155,7 @@ export function findPreviousHeader(section: RawBookSection|BookMetadataSection, 
     return -1;
 }
 
-export function findNextHeader(section: RawBookSection|BookMetadataSection, sections: Array<typeof section>) {
+export function findNextHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
 // export function findNextHeader(section: HeadingCache, sections: (SectionCache | HeadingCache)[]) {
     let index = sections.indexOf(section) + 1;
     // top level headers don't have a parent
@@ -195,7 +195,8 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
     // const out = sections;
     while (i < out.length) {
         const cacheItem = out[i];
-        if (isHeading(cacheItem)) { /* empty */ } else {
+        if (isHeading(cacheItem)) { /* empty */
+        } else {
             if (cacheItem.hasFlashcards)
                 updateHeaders(cacheItem, out, "with");
             else
@@ -305,7 +306,7 @@ export class Book implements frontbook {
     // todo: debounce?
     // todo: think differently?
     async processCardReview(flashcardId: string, reviewResponse: ReviewResponse) {
-        const card = this.flashcards.filter(t=>t.id === flashcardId)[0];
+        const card = this.flashcards.filter(t => t.id === flashcardId)[0];
         const updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
             interval: card.interval,
             ease: card.ease,
@@ -349,7 +350,7 @@ export class Book implements frontbook {
                 }
             });
         } else {
-
+            //empty
         }
     }
 }
