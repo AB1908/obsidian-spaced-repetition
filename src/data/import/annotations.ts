@@ -8,7 +8,7 @@ export interface annotation {
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
-const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)\n(?<highlight>(> .*\n)+)> \*\*\*\n> (?<note>(.*)+)/g;
+const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)\n(?<highlight>(> .*\n)+)> \*\*\*(?<note>(\n> .*)+)/g;
 
 // TODO: also use line for match since we need to correlate with markdown headers later
 // todo: think of header representation
@@ -22,7 +22,7 @@ export function parseAnnotations(text: string): annotation {
             id: match.groups.id,
             type: match.groups.type,
             highlight: match.groups.highlight.trim().replace(/> /g, ""),
-            note: match.groups.note.trim(),
+            note: match.groups.note.replace(/> /g, "").trim(),
             // todo: fix
         });
     }
