@@ -1,43 +1,7 @@
-// This is terrible. Save me.
-import {annotation} from "src/data/import/annotations";
-import {Count, findPreviousHeader, Heading, isAnnotation, isHeading} from "src/data/models/book";
-
-function writeCountToObj(mem: any, sectionId: string, count: number, key: string) {
-    Object.assign(mem, {[`${sectionId}`]: {...mem[sectionId], [key]: count}});
-}
-
-/*
-This function is invoked twice to do a section tree walk, to figure out how many annotations have flashcards associated
-with them and how many don't. I couldn't find a cleaner way of doing it without being too clever for myself.
- */
-function countAnnotations(sections: any, mem: any, injectedCondition: (sections: any) => boolean, key: string) {
-    let count = 0;
-    if ("children" in sections) {
-        for (const child of sections.children) {
-            count += countAnnotations(child, mem, injectedCondition, key);
-        }
-        writeCountToObj(mem, sections.id, count, key);
-    } else if (isAnnotation(sections)) {
-        if (injectedCondition(sections)) {
-            count += 1;
-        }
-    }
-    return count;
-}
-
-
+import { annotation } from "src/data/import/annotations";
+import { findPreviousHeader, Heading, isHeading } from "src/data/models/book";
 
 // TODO: switch to DFS/BFS?
-export function AnnotationCount(sections: any): Record<string, Count> {
-    const mem = {};
-    // @ts-ignore
-    mem[sections.id] = {
-        "without": countAnnotations(sections, mem, (sections: any) => sections.hasFlashcards == false, "without"),
-        "with": countAnnotations(sections, mem, (sections: any) => sections.hasFlashcards == true, "with")
-    };
-    return mem;
-}
-
 // Need this to be able to call countAnnotations
 
 // TODO: why did I make this? Where do I need it?
@@ -45,6 +9,7 @@ export function AnnotationCount(sections: any): Record<string, Count> {
 // TODO: think about heading collisions as there may be multiple chapters with same name
 // TODO: don't need to nest paragraphs I think
 // TODO: fix type
+
 export function generateTree(sections: Heading[]) {
     let i = 0;
     let prevHeader;
