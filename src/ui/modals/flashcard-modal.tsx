@@ -204,16 +204,16 @@ export class FlashcardModal extends Modal {
         // todo: fix
         this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string) => new Book(t, `${getParentFolderName(t)}`));
             for (const t of this.plugin.notesWithFlashcards) {
-                await t.initialize()
+                await t.initialize();
             }
-        this.modalElReactRoot = createRoot(this.modalEl)
+        this.modalElReactRoot = createRoot(this.modalEl);
         this.modalElReactRoot.render(
             <>
                 <React.StrictMode>
                     <RouterProvider router={this.router}/>
                 </React.StrictMode>
             </>
-        )
+        );
     }
 
     onClose(): void {

@@ -19,7 +19,7 @@ export function ShowAnswerButton(props: {handleShowAnswerButton: Function}) {
 export function Button({ text, id, clickHandler }: { text: string, id: string, clickHandler: Function }) {
     return (<button name={"reviewResponse"} id={id} onClick={() => clickHandler()}>
         {text}
-    </button>)
+    </button>);
 }
 
 export function CancelButton() {
@@ -45,7 +45,7 @@ export function generateButtonText(hardInterval: number, goodInterval: number, e
     } else {
         // TODO: investigate fix for button labels being empty
         const {data} = plugin;
-        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(hardInterval, false)}`
+        hardBtnText = `${data.settings.flashcardHardText} - ${textInterval(hardInterval, false)}`;
         goodBtnText = `${data.settings.flashcardGoodText} - ${textInterval(goodInterval, false)}`;
         easyBtnText = `${data.settings.flashcardEasyText} - ${textInterval(easyInterval, false)}`;
     }

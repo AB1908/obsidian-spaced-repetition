@@ -44,9 +44,9 @@ export interface SRSettings {
 
 export const DEFAULT_SETTINGS: SRSettings = {
     // flashcards
-    flashcardEasyText: t("EASY"),
-    flashcardGoodText: t("GOOD"),
-    flashcardHardText: t("HARD"),
+    flashcardEasyText: "Easy",
+    flashcardGoodText: "Good",
+    flashcardHardText: "Hard",
     flashcardTags: ["#flashcards"],
     convertFoldersToDecks: false,
     cardCommentOnSameLine: false,
@@ -100,7 +100,7 @@ export class SRSettingTab extends PluginSettingTab {
 
         containerEl.empty();
 
-        containerEl.createEl('h2', { text: `${t("SETTINGS_HEADER")}` });
+        containerEl.createEl("h2", { text: `${t("SETTINGS_HEADER")}` });
 
         containerEl.createDiv().innerHTML = t("CHECK_WIKI", {
             wiki_url: "https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki",
@@ -123,7 +123,7 @@ export class SRSettingTab extends PluginSettingTab {
                     })
             );
 
-        containerEl.createEl('h3', { text: `${t("FLASHCARDS")}` });
+        containerEl.createEl("h3", { text: `${t("FLASHCARDS")}` });
 
         new Setting(containerEl)
             .setName(t("FLASHCARD_EASY_LABEL"))
@@ -530,7 +530,7 @@ export class SRSettingTab extends PluginSettingTab {
                     });
             });
 
-        containerEl.createEl('h3', { text: `${t("NOTES")}` });
+        containerEl.createEl("h3", { text: `${t("NOTES")}` });
 
         new Setting(containerEl)
             .setName(t("TAGS_TO_REVIEW"))
@@ -546,7 +546,7 @@ export class SRSettingTab extends PluginSettingTab {
                     })
             );
 
-        containerEl.createEl('h3', { text: `${t("ALGORITHM")}` });
+        containerEl.createEl("h3", { text: `${t("ALGORITHM")}` });
         containerEl.createDiv().innerHTML = t("CHECK_ALGORITHM_WIKI", {
             algo_url:
                 "https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Spaced-Repetition-Algorithm",
@@ -709,7 +709,7 @@ export class SRSettingTab extends PluginSettingTab {
                     });
             });
 
-        containerEl.createEl('h3', { text: `${t("LOGGING")}` });
+        containerEl.createEl("h3", { text: `${t("LOGGING")}` });
         new Setting(containerEl)
             .setName(t("DISPLAY_DEBUG_INFO"))
             .addToggle((toggle) =>

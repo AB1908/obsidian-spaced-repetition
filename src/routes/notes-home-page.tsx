@@ -25,7 +25,7 @@ export function notesLoader() {
     if (USE_ACTUAL_BACKEND) {
         return getBooks();
     } else {
-        return fetch('http://localhost:3000/bookReview');
+        return fetch("http://localhost:3000/bookReview");
     }
 }
 
@@ -35,7 +35,7 @@ export function Notes() {
     const deckArray = useLoaderData() as ReviewBook[];
 
     useEffect(() => {
-        const plus: Icon = 'plus-circle';
+        const plus: Icon = "plus-circle";
         // todo: fix this
         //@ts-ignore
         setIcon(iconRef.current, plus);
@@ -64,7 +64,7 @@ export function Notes() {
                 </button>
             </Link>
         </div>
-    )
+    );
 }
 
 export function DeckCounts({counts}: {counts: FlashCount}) {

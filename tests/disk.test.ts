@@ -300,7 +300,7 @@ notes
 asdlkfj;asldkfj;asldkfjsdk`;
 
 
-export const sampleAnnotationText: string = `---
+export const sampleAnnotationText = `---
 lastUpdated: "10/9/2022"
 length: 47031
 tags:
@@ -339,7 +339,7 @@ tags:
 > Onen i estel Edain, u-chebin estel anim.
 > This is another line.
 > ***
-> What a beautiful line by Tolkien`
+> What a beautiful line by Tolkien`;
 export const sampleAnnotationMetadata: CachedMetadata = {
     "tags": [
         {

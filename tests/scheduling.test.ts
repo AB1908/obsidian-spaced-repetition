@@ -1,7 +1,7 @@
 import {schedule, ReviewResponse, textInterval} from "src/scheduler/scheduling";
 import {DEFAULT_SETTINGS} from "src/settings";
 
-jest.mock('../src/main', () => {
+jest.mock("../src/main", () => {
         return {
             plugin: {
                 data: {
@@ -13,9 +13,9 @@ jest.mock('../src/main', () => {
                     }
                 }
             }
-        }
+        };
     }
-)
+);
 
 test("Test reviewing with default settings", () => {
     expect(

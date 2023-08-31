@@ -43,9 +43,9 @@ export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
         return getFlashcardById(flashcardId, params.bookId);
     } else {
         if (params.flashcardId == null) {
-            const response = await fetch(`http://localhost:3000/review/${params.bookId}`)
+            const response = await fetch(`http://localhost:3000/review/${params.bookId}`);
             const flashcardId = (await response.json()).first;
-            return redirect(`${flashcardId}`)
+            return redirect(`${flashcardId}`);
         }
         return (await (await fetch(`http://localhost:3000/review/${params.bookId}`)).json()).flashcards.filter((t: FrontendFlashcard) => t.id === params.flashcardId)[0];
     }
@@ -67,15 +67,15 @@ export function ReviewDeck() {
         if (nextCardId) {
             navigate(`./../${nextCardId}`, {replace: true});
         } else {
-            navigate(`./../..`, {replace: true});
+            navigate("./../..", {replace: true});
         }
     }
 
     // reset state when we navigate to a new flashcard
     // todo: think of cleaner way to do this as it is slow
     useEffect(() => {
-        setIsQuestion(() => true)
-    }, [location])
+        setIsQuestion(() => true);
+    }, [location]);
 
     return (<>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}

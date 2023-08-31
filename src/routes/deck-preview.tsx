@@ -34,7 +34,7 @@ interface Count {
 
 export function BookButtons() {
     return <p>
-        <Link to={`chapters`}>
+        <Link to={"chapters"}>
             <button>
                 Create New Cards
             </button>
@@ -60,14 +60,14 @@ export function DeckLandingPage() {
             <h4>
                 <span
                     // aria-label={t(this.props.cardType)}
-                    className={`tree-item-flair sr-deck-counts `}
+                    className={"tree-item-flair sr-deck-counts "}
                     // backgroundColor="#4caf50"
                 >
                     {book.counts.annotations.withFlashcards}
                 </span>
                 <span
                     // aria-label={t(this.props.cardType)}
-                    className={`tree-item-flair sr-deck-counts `}
+                    className={"tree-item-flair sr-deck-counts "}
                     // backgroundColor="#4caf50"
                 >
                     {book.counts.annotations.withoutFlashcards}
@@ -76,5 +76,5 @@ export function DeckLandingPage() {
             {/*    TODO: Add the untested highlight counts as well?*/}
             <Outlet/>
         </>
-    )
+    );
 }

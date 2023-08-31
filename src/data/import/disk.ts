@@ -24,10 +24,10 @@ function setOfHashesWithTags(tag: string) {
     const findTag = (tag: string) => (t: TagCache) => t.tag.includes(tag);
     const hashSet = new Set<string>();
     const fileHashes = Object.keys(app.metadataCache.metadataCache);
-    for (let hash of fileHashes) {
+    for (const hash of fileHashes) {
         const cachedFileMetadata = app.metadataCache.metadataCache[hash];
         if (cachedFileMetadata.tags?.find(findTag(tag)) || cachedFileMetadata.frontmatter?.tags?.find(findTag(tag))) {
-            hashSet.add(hash)
+            hashSet.add(hash);
         }
     }
     return hashSet;
@@ -36,7 +36,7 @@ function setOfHashesWithTags(tag: string) {
 function findFilesWithHashInSet(hashSet: Set<string>) {
     const filePaths: string[] = [];
     const fileCacheKeys = Object.keys(app.metadataCache.fileCache);
-    for (let file of fileCacheKeys) {
+    for (const file of fileCacheKeys) {
         if (hashSet.has(app.metadataCache.fileCache[file].hash)) {
             filePaths.push(file);
         }
