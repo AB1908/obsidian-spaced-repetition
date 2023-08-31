@@ -2,11 +2,11 @@ import { parseFileText } from "src/data/parser";
 import { CardType } from "src/scheduler/scheduling";
 import { generateTree } from "src/data/models/bookTree";
 import { getFileContents } from "src/data/import/disk";
-import { annotation } from "src/data/import/annotations";
 import { Heading } from "src/data/models/book";
 
 jest.mock("../src/data/import/disk.ts");
 jest.mock("nanoid", () => ({
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nanoid: (number: number) => "aaaaaaaa",
 }));
 
@@ -198,6 +198,7 @@ describe("generateTree", () => {
 describe("parseFlashcard", () => {
     test("parses a flashcard with only annotation id", async () => {
         const flashcard = "This is a question\n?\nThis is an answer\n<!--SR:93813-->";
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         jest.mocked(getFileContents).mockImplementation(async (path: string) => {
             return flashcard;
         });
@@ -215,6 +216,7 @@ describe("parseFlashcard", () => {
     test("parses a flashcard with full metadata", async () => {
         const flashcard =
             "This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         jest.mocked(getFileContents).mockImplementation(async (path: string) => {
             return flashcard;
         });
