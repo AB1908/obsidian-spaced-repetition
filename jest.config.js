@@ -19,12 +19,12 @@ module.exports = {
     coverageDirectory: "coverage",
     maxWorkers: 1,
     globals: {
-        'ts-jest': {
+        "ts-jest": {
             isolatedModules: true
         }
     },
     transform: {
-        '\\.[jt]sx?$': 'ts-jest',
+        "\\.[jt]sx?$": "ts-jest",
     },
     snapshotFormat: {
         escapeString: true,
