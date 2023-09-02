@@ -1,6 +1,6 @@
 {
     "name": "obsidian-spaced-repetition",
-    "version": "1.10.0-beta",
+    "version": "0.1-beta",
     "description": "Fight the forgetting curve by reviewing flashcards & entire notes.",
     "main": "main.js",
     "scripts": {
@@ -18,7 +18,7 @@
             "commit": true
         }
     },
-    "author": "Stephen Mwangi",
+    "author": "AB1908 and Stephen Mwangi",
     "license": "MIT",
     "devDependencies": {
         "@testing-library/dom": "^9.2.0",
