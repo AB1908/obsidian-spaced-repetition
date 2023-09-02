@@ -1,109 +1,34 @@
 import {
     bookSections, findNextHeader,
-    findPreviousHeader,
-    getAnnotationsForSection,
-    Heading
+    findPreviousHeader
 } from "src/data/models/book";
 import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
-import { annotation } from "src/data/import/annotations";
 import { beforeEach } from "@jest/globals";
 import { HeadingCache, SectionCache } from "obsidian";
+import { Flashcard } from "src/data/models/flashcard";
 
-const { nanoid } = jest.requireActual("nanoid");
-jest.doMock("nanoid", () => ({
-    nanoid: nanoid
-}));
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-jest.mock("../src/main", () => {});
-
-test("bookSections", () => {
-    expect(bookSections(sampleAnnotationMetadata, sampleAnnotationText)).toMatchSnapshot();
+jest.mock("../src/main", () => {
 });
 
-describe("getAnnotations", () => {
-    test("successfully gets nested annotations", () => {
-        expect(getAnnotationsForSection("-g4c-q2S", bookSectionsArray)).toEqual([
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
-                id: 93813,
-                note: ">",
-                type: "notes"
-            },
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.",
-                id: 93813,
-                note: "> What a beautiful line by Tolkien",
-                type: "notes"
-            },
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.",
-                id: 93813,
-                note: "> What a beautiful line by Tolkien 2",
-                type: "notes"
-            }
-        ]);
-    });
-
-    test("successfully gets annotations from subsection", () => {
-        expect(getAnnotationsForSection("xHev-sAx", bookSectionsArray)).toEqual([
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.",
-                id: 93813,
-                note: "> What a beautiful line by Tolkien",
-                type: "notes"
-            }
-        ]);
-    });
-
-    test("gets annotations from first subheader under heading 1", () => {
-        expect(getAnnotationsForSection("xHev-sAx", bookSectionsArray)).toEqual([
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.",
-                id: 93813,
-                note: "> What a beautiful line by Tolkien",
-                type: "notes"
-            }
-        ]);
-    });
-
-    test("gets annotations from second subheader under heading 1", () => {
-        expect(getAnnotationsForSection("xHev-sA1", bookSectionsArray)).toEqual([
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.",
-                id: 93813,
-                note: "> What a beautiful line by Tolkien 2",
-                type: "notes"
-            }
-        ]);
-    });
-
-    test("gets all nested annotations under last header", () => {
-        expect(getAnnotationsForSection("WVcwnuIQ", bookSectionsArray)).toEqual([
-            {
-                highlight: "> Onen i estel Edain, u-chebin estel anim.\n> This is another line.",
-                id: 93813,
-                note: "> What a beautiful line by Tolkien",
-                type: "notes"
-            },
-            {
-                highlight: "> New highlight here.\n> This is another line.",
-                id: 93813,
-                note: "> Test",
-                type: "notes"
-            }
-        ]);
-    });
-
-    test("gets all nested annotations under last subheader", () => {
-        expect(getAnnotationsForSection("WVc23uIQ", bookSectionsArray)).toEqual([
-            {
-                highlight: "> New highlight here.\n> This is another line.",
-                id: 93813,
-                note: "> Test",
-                type: "notes"
-            }
-        ]);
-    });
+test("bookSections", () => {
+    const flashcards = [
+        {
+            "annotationId": "93813",
+            "answerText": "This is an answer",
+            "cardType": 2,
+            "context": null,
+            "dueDate": null,
+            "ease": null,
+            "flag": null,
+            "id": "b4cYyMuF",
+            "interval": null,
+            "parsedCardId": "aaaaaaaa",
+            "questionText": "This is a question",
+            "siblings": []
+        }
+    ];
+    expect(bookSections(sampleAnnotationMetadata, sampleAnnotationText, flashcards as unknown as Flashcard[])).toMatchSnapshot();
 });
 
 let input: any[];

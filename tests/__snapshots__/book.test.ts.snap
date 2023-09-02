@@ -2,103 +2,75 @@
 
 exports[`bookSections 1`] = `
 [
-  HeadingImpl {
-    "display": "Header 1",
-    "heading": "Header 1",
-    "id": "-g4c-q2S",
-    "level": 1,
-    "position": {
-      "end": {
-        "col": 10,
-        "line": 10,
-        "offset": 102,
-      },
-      "start": {
-        "col": 0,
-        "line": 10,
-        "offset": 92,
-      },
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 2,
+      "without": 0,
     },
+    "id": 0,
+    "level": 1,
+    "name": "Header 1",
   },
   {
-    "highlight": "> Onen i estel Edain, u-chebin estel anim.
-> This is another line.",
-    "id": 93813,
-    "note": ">",
+    "hasFlashcards": true,
+    "highlight": "Onen i estel Edain, u-chebin estel anim.
+This is another line.",
+    "id": "93813",
+    "note": "",
     "type": "notes",
   },
-  HeadingImpl {
-    "display": "SubHeader 1",
-    "heading": "SubHeader 1",
-    "id": "xHev-sAx",
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 1,
+      "without": 0,
+    },
+    "id": 1,
     "level": 2,
-    "position": {
-      "end": {
-        "col": 14,
-        "line": 18,
-        "offset": 212,
-      },
-      "start": {
-        "col": 0,
-        "line": 18,
-        "offset": 198,
-      },
-    },
+    "name": "SubHeader 1",
   },
   {
-    "highlight": "> Onen i estel Edain, u-chebin estel anim.",
-    "id": 93813,
-    "note": "> What a beautiful line by Tolkien",
+    "hasFlashcards": true,
+    "highlight": "Onen i estel Edain, u-chebin estel anim.",
+    "id": "93813",
+    "note": "What a beautiful line by Tolkien",
     "type": "notes",
   },
-  HeadingImpl {
-    "display": "Header 2",
-    "heading": "Header 2",
-    "id": "eLy47ZoN",
-    "level": 1,
-    "position": {
-      "end": {
-        "col": 10,
-        "line": 25,
-        "offset": 326,
-      },
-      "start": {
-        "col": 0,
-        "line": 25,
-        "offset": 316,
-      },
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 1,
+      "without": 0,
     },
+    "id": 2,
+    "level": 1,
+    "name": "Header 2",
   },
   {
-    "highlight": "> Onen i estel Edain, u-chebin estel anim.",
-    "id": 93813,
-    "note": "> What a beautiful line by Tolkien
-> This is another line.",
+    "hasFlashcards": true,
+    "highlight": "Onen i estel Edain, u-chebin estel anim.",
+    "id": "93813",
+    "note": "What a beautiful line by Tolkien
+This is another line.",
     "type": "notes",
   },
-  HeadingImpl {
-    "display": "Last header",
-    "heading": "Last header",
-    "id": "WVcwnuIQ",
-    "level": 1,
-    "position": {
-      "end": {
-        "col": 13,
-        "line": 33,
-        "offset": 467,
-      },
-      "start": {
-        "col": 0,
-        "line": 33,
-        "offset": 454,
-      },
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 1,
+      "without": 0,
     },
+    "id": 3,
+    "level": 1,
+    "name": "Last header",
   },
   {
-    "highlight": "> Onen i estel Edain, u-chebin estel anim.
-> This is another line.",
-    "id": 93813,
-    "note": "> What a beautiful line by Tolkien",
+    "hasFlashcards": true,
+    "highlight": "Onen i estel Edain, u-chebin estel anim.
+This is another line.",
+    "id": "93813",
+    "note": "What a beautiful line by Tolkien",
     "type": "notes",
   },
 ]
