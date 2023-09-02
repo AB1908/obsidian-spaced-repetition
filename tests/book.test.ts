@@ -14,6 +14,7 @@ jest.doMock("nanoid", () => ({
     nanoid: nanoid
 }));
 // eslint-disable-next-line @typescript-eslint/no-empty-function
+jest.mock("../src/main", () => {});
 
 test("bookSections", () => {
     expect(bookSections(sampleAnnotationMetadata, sampleAnnotationText)).toMatchSnapshot();
