@@ -15,10 +15,10 @@ const mockParsedCard = {
     lineNo: 0,
     cardType: null,
 };
-jest.mock('nanoid', () => ({
+jest.mock("nanoid", () => ({
     nanoid: (number: number) => "293nf82b"
-}))
-jest.mock('../src/data/models/parsedCard', () => ({
+}));
+jest.mock("../src/data/models/parsedCard", () => ({
     createParsedCard: (...args: any) => mockParsedCard
 }));
 
@@ -38,7 +38,7 @@ const flashcards = () => [{
     "parsedCardId": "d9sakj32",
 }];
 
-describe('getFlashcardById', () => {
+describe("getFlashcardById", () => {
     let mockThis: any;
     let boundGet: any;
 
@@ -55,7 +55,7 @@ describe('getFlashcardById', () => {
     });
 });
 
-describe('updateFlashcardQuestion', () => {
+describe("updateFlashcardQuestion", () => {
     let mockThis: any;
     let boundUpdate: any;
 
@@ -66,23 +66,23 @@ describe('updateFlashcardQuestion', () => {
         boundUpdate = updateFlashcardQuestion.bind(mockThis);
     });
 
-    test('should update the questionText of the flashcard with the given id', () => {
-        const updatedQuestion = 'What is your age?';
+    test("should update the questionText of the flashcard with the given id", () => {
+        const updatedQuestion = "What is your age?";
         const id = "yjlML2s9W";
 
         expect(boundUpdate(id, updatedQuestion)).toBe(true);
         expect(mockThis.flashcards[0].questionText).toBe(updatedQuestion);
     });
 
-    test('should return false if the flashcard with the given id does not exist', () => {
-        const nonExistingId = '3';
-        const updatedQuestion = 'What is your age?';
+    test("should return false if the flashcard with the given id does not exist", () => {
+        const nonExistingId = "3";
+        const updatedQuestion = "What is your age?";
 
         expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
     });
 });
 
-describe('updateFlashcardAnswer', () => {
+describe("updateFlashcardAnswer", () => {
     let mockThis: any;
     let boundUpdate: any;
 
@@ -93,17 +93,17 @@ describe('updateFlashcardAnswer', () => {
         boundUpdate = updateFlashcardAnswer.bind(mockThis);
     });
 
-    test('should update the questionText of the flashcard with the given id', () => {
-        const updatedAnswer = 'What is your age?';
+    test("should update the questionText of the flashcard with the given id", () => {
+        const updatedAnswer = "What is your age?";
         const id = "yjlML2s9W";
 
         expect(boundUpdate(id, updatedAnswer)).toBe(true);
         expect(mockThis.flashcards[0].answerText).toBe(updatedAnswer);
     });
 
-    test('should return false if the flashcard with the given id does not exist', () => {
-        const nonExistingId = '3';
-        const updatedQuestion = 'What is your age?';
+    test("should return false if the flashcard with the given id does not exist", () => {
+        const nonExistingId = "3";
+        const updatedQuestion = "What is your age?";
 
         expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
     });
@@ -120,8 +120,8 @@ describe("createFlashcard", () => {
         boundCreate = createFlashcardForAnnotation.bind(mockThis);
     });
 
-    test('should create a new flashcard', async () => {
-        const question = 'What is your age?';
+    test("should create a new flashcard", async () => {
+        const question = "What is your age?";
         const answer = "test answer";
         const id = "yjlML2s9W";
         const highlightId = "9asdfkn23k";
@@ -141,19 +141,19 @@ describe("deleteFlashcard", () => {
         boundDelete = deleteFlashcardById.bind(mockThis);
     });
 
-    test('should delete an existing flashcard', () => {
+    test("should delete an existing flashcard", () => {
         const id = "yjlML2s9W";
         expect(boundDelete(id)).toBe(true);
         expect(mockThis.flashcards).toStrictEqual([]);
     });
 
-    test('should return false if flashcard doesn\'t exist', () => {
+    test("should return false if flashcard doesn't exist", () => {
         const id = "aaaa";
         expect(boundDelete(id)).toBe(false);
         expect(mockThis.flashcards).toStrictEqual(flashcards());
     });
 
-    test('should throw an error when trying to delete from an empty flashcard array', () => {
+    test("should throw an error when trying to delete from an empty flashcard array", () => {
         mockThis.flashcards = [];
         boundDelete = deleteFlashcardById.bind(mockThis);
         const id = "aaaa";
