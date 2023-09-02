@@ -84,24 +84,6 @@ export type BookMetadataSections = BookMetadataSection[];
 
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
-export function getAnnotationsForSection(sectionId: string, bookSections: BookMetadataSections) {
-    const index = bookSections.findIndex(t => t.id === sectionId);
-    // todo: it feels like there should be a better way to do this
-    const currentHeading = (bookSections[index] as Heading);
-    let x = index + 1;
-    while (x < bookSections.length) {
-        const item = bookSections[x];
-        // apparently, can't pass bookSections[x] in directly, see: https://stackoverflow.com/a/73666912
-        if (isHeading(item)) {
-            if (item.level <= currentHeading.level) {
-                break;
-            }
-        }
-        x++;
-    }
-    return bookSections.slice(index + 1, x).filter(t => isAnnotation(t));
-}
-
 export interface frontbook {
     id: string;
     name: string;
