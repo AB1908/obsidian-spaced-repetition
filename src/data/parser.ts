@@ -66,8 +66,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
     const annotationId = text.matchAll(ANNOTATION_ID_REGEX).next().value?.groups?.annotationId;
     if (annotationId == null) {
-        new Error("how can this not have an annotation id");
-        console.error(text);
+        throw new Error("how can this not have an annotation id");
     }
     if (scheduling === undefined)
         return {
