@@ -39,9 +39,9 @@ export function isAnnotation(section: BookMetadataSection): section is annotatio
 
 export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[]) {
     if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
-    const output: (BookMetadataSection)[] = [];
-    const fileTextArray = fileText.split("\n");
+    let output: (BookMetadataSection)[] = [];
     let headingIndex = 0;
+    const fileTextArray = fileText.split("\n");
     const annotationsWithFlashcards = new Set(flashcards.map(t => t.annotationId));
     if (metadata.sections == null) throw new Error("bookSections: file has no sections");
     for (const cacheItem of metadata.sections) {
@@ -58,6 +58,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             // TODO: Any edge cases?
         }
     }
+    output = generateHeaderCounts(output);
     return output;
 }
 
@@ -190,9 +191,7 @@ export function updateHeaders(cacheItem: annotation, sections: BookMetadataSecti
 
 export function generateHeaderCounts(sections: BookMetadataSections) {
     let i = 0;
-    // const out = [...sections];
     const out = sections;
-    // const out = sections;
     while (i < out.length) {
         const cacheItem = out[i];
         if (isHeading(cacheItem)) { /* empty */
@@ -241,7 +240,6 @@ export class Book implements frontbook {
                 await getFileContents(annotationTFile.path),
                 this.flashcards
             );
-            this.bookSections = generateHeaderCounts(this.bookSections);
         }
         this.generateReviewDeck();
         return this;
