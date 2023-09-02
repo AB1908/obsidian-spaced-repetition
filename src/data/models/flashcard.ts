@@ -5,7 +5,7 @@ import {moment} from "obsidian";
 import {SchedulingMetadata} from "src/data/export/TextGenerator";
 import {plugin} from "src/main";
 
-export interface Flashcard {
+export interface AbstractFlashcard {
     id: string,
     questionText: string,
     answerText: string,
@@ -20,7 +20,7 @@ export interface Flashcard {
     parsedCardId: string,
 }
 
-export abstract class AbstractFlashcard implements Flashcard {
+export abstract class AbstractFlashcard implements AbstractFlashcard {
     answerText: string;
     cardType: number;
     context: string;
