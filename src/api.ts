@@ -77,11 +77,13 @@ export function getCurrentCard(bookId: string) {
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
-        throw new Error("book not found");
+        throw new Error("getFlashcardById: book not found");
     }
-    return book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
-        return {...t, isDue: t.isDue(), delayBeforeReview: calculateDelayBeforeReview(t.dueDate)};
+    const flashcard: FrontendFlashcard = book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
+        return { ...t, delayBeforeReview: calculateDelayBeforeReview(t.dueDate) };
     })[0] ?? null;
+    if (flashcard == null) throw new Error(`getFlashcardById: flashcard not found for id ${flashcardId}`);
+    return flashcard;
 }
 
 // TODO: add logic to update in storage
