@@ -85,6 +85,7 @@ export default class SRPlugin extends Plugin {
             id: "srs-add-flashcard-note",
             name: "Add flashcards for the active note",
             callback: async () => {
+                // todo: refactor
                 const activeFile = this.app.workspace.getActiveFile();
                 if (activeFile === null) {
                     return new Notice("No note active!");
