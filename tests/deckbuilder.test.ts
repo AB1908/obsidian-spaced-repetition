@@ -1,45 +1,45 @@
-// Given some string text, I should be able to make a deck from it
+import { FLAG, parseMetadata } from "src/data/parser";
 
-
-import {FLAG, parseMetadata} from "src/data/parser";
+jest.mock("../src/main", () => {});
 
 describe("metadata parser", () => {
     test("no metadata", () => {
-        const metadataText = "<!--SR:8jfaj0d7!S,2021-08-11,4,270-->";
+        const metadataText = "<!--SR:12345!S,2021-08-11,4,270-->";
 
         // <!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->
-        expect(parseMetadata("gibberish")).toBe(null);
+        expect(() => parseMetadata("gibberish")).toThrowErrorMatchingInlineSnapshot(
+            `"how can this not have an annotation id"`
+        );
         expect(parseMetadata(metadataText)).toEqual({
             flag: FLAG.SUSPEND,
-            highlightId: "8jfaj0d7",
+            annotationId: "12345",
             dueDate: "2021-08-11",
             interval: 4,
-            ease: 270
+            ease: 270,
         });
     });
 
     test("only highlight", () => {
-
         // <!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->
-        const metadata = "<!--SR:9fn28asl-->";
+        const metadata = "<!--SR:12345-->";
         expect(parseMetadata(metadata)).toEqual({
-            highlightId: "9fn28asl",
+            annotationId: "12345",
             flag: null,
             dueDate: null,
             interval: null,
-            ease: null
+            ease: null,
         });
     });
 
     test("highlight with scheduling info", () => {
-        const metadataText = "<!--SR:8jfaj0d7!S,2021-08-11,4,270-->";
+        const metadataText = "<!--SR:12345!S,2021-08-11,4,270-->";
 
         expect(parseMetadata(metadataText)).toEqual({
             flag: FLAG.SUSPEND,
-            highlightId: "8jfaj0d7",
+            annotationId: "12345",
             dueDate: "2021-08-11",
             interval: 4,
-            ease: 270
+            ease: 270,
         });
     });
 });
