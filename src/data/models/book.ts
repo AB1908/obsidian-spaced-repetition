@@ -273,6 +273,8 @@ export class Book implements frontbook {
 
     // copied from https://stackoverflow.com/a/12646864/13285428
     private shuffleReviewDeck() {
+        // can also use this, but it is an Obsidian extension to the Array prototype
+        // this.reviewDeck.shuffle();
         for (let i = this.reviewDeck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
