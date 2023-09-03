@@ -123,7 +123,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
     let card;
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
-        return null;
+        throw new Error("book not found");
     }
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
