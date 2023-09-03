@@ -1,7 +1,7 @@
-import {CardType} from "src/scheduler/scheduling";
-import {ParsedCard} from "src/data/models/parsedCard";
+import { CardType } from "src/scheduler/scheduling";
+import { ParsedCard } from "src/data/models/parsedCard";
 
-import {FLAG} from "src/data/parser";
+import { FLAG } from "src/data/parser";
 
 export function cardTextGenerator(questionText: string, answerText: string, cardType: CardType) {
     if (cardType == CardType.MultiLineBasic) {
