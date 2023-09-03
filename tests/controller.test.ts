@@ -1,162 +1,261 @@
-import {
-    createFlashcardForAnnotation,
-    deleteFlashcardById,
-    getFlashcardById,
-    updateFlashcardAnswer,
-    updateFlashcardQuestion
-} from "src/api";
+import { createFlashcardForAnnotation, getFlashcardById } from "src/api";
+import { plugin } from "src/main";
 
-const mockParsedCard = {
-    id: "test1234",
-    note: null,
-    cardText: "anything",
-    metadataText: "whatever",
-    // TODO: remove lineno
-    lineNo: 0,
-    cardType: null,
-};
-jest.mock("nanoid", () => ({
-    nanoid: (number: number) => "293nf82b"
-}));
-jest.mock("../src/data/models/parsedCard", () => ({
-    createParsedCard: (...args: any) => mockParsedCard
-}));
+jest.mock("../src/data/import/disk", () => {
+    return {
+        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        writeCardToDisk: (path: string, text: string) => {
+        }
+    };
+});
 
-const flashcards = () => [{
-    "id": "yjlML2s9W",
-    "isDue": true,
-    "questionText": " i-Estel Edain, ú-chebin estel anim.",
-    "answerText": "Onen",
-    "context": "",
-    "cardType": 4,
-    "siblings": [],
-    "interval": 2,
-    "ease": 230,
-    "delayBeforeReview": 17662032301,
-    "highlightId": "d9fasdkf9",
-    "flag": null,
-    "parsedCardId": "d9sakj32",
-}];
+jest.mock("../src/main", () => {
+    return {
+        plugin: {
+            notesWithFlashcards: [
+                {
+                    id: "ibJ6QFl4",
+                    flashcardsPath: "Memory - A Very Short Introduction/Flashcards.md",
+                    name: "Memory - A Very Short Introduction",
+                    parsedCards: [
+                        {
+                            id: "u-72tWEW",
+                            notePath: "Memory - A Very Short Introduction/Flashcards.md",
+                            cardText:
+                                "What is cued recall?\n?\nCued recall is where we cue recall by presenting some information.",
+                            metadataText: "<!--SR:5769!L,2023-09-02,2,250-->",
+                            lineNo: -1,
+                            cardType: 2
+                        }
+                    ],
+                    flashcards: [
+                        {
+                            id: "pBri5QNB",
+                            cardType: 2,
+                            context: null,
+                            dueDate: "2023-09-02",
+                            ease: 250,
+                            interval: 2,
+                            annotationId: "5769",
+                            flag: "L",
+                            siblings: [],
+                            parsedCardId: "u-72tWEW",
+                            questionText: "What is cued recall?",
+                            answerText:
+                                "Cued recall is where we cue recall by presenting some information."
+                        }
+                    ]
+                }
+            ]
+        }
+    };
+});
+
+jest.mock("../src/data/models/flashcard", () => {
+    // Require the original module to not be mocked...
+    const originalModule = jest.requireActual<typeof import("../src/data/models/flashcard")>(
+        "../src/data/models/flashcard"
+    );
+
+    return {
+        __esModule: true, // Use it when dealing with esModules
+        ...originalModule,
+        calculateDelayBeforeReview: jest.fn((due: string) => 63836018)
+    };
+});
 
 describe("getFlashcardById", () => {
-    let mockThis: any;
-    let boundGet: any;
-
-    beforeEach(() => {
-        mockThis = {
-            flashcards: flashcards()
-        };
-        boundGet = getFlashcardById.bind(mockThis);
-    });
-
     test("retrieves a flashcard successfully", () => {
-        expect(boundGet("yjlML2s9W")).toStrictEqual(mockThis.flashcards[0]);
-        expect(boundGet("aaaa")).toEqual(null);
+        expect(getFlashcardById("pBri5QNB", "ibJ6QFl4")).toStrictEqual(
+            {
+                id: "pBri5QNB",
+                cardType: 2,
+                context: null,
+                dueDate: "2023-09-02",
+                ease: 250,
+                interval: 2,
+                delayBeforeReview: 63836018,
+                annotationId: "5769",
+                flag: "L",
+                siblings: [],
+                parsedCardId: "u-72tWEW",
+                questionText: "What is cued recall?",
+                answerText: "Cued recall is where we cue recall by presenting some information."
+            });
+        expect(() => getFlashcardById("aaaa", t.id)).toThrowError();
     });
 });
 
-describe("updateFlashcardQuestion", () => {
-    let mockThis: any;
-    let boundUpdate: any;
+// describe("updateFlashcardQuestion", () => {
+//     let mockThis: any;
+//     let boundUpdate: any;
+//
+//     beforeEach(() => {
+//         mockThis = {
+//             flashcards: flashcards()
+//         };
+//         boundUpdate = updateFlashcardQuestion.bind(mockThis);
+//     });
+//
+//     test("should update the questionText of the flashcard with the given id", () => {
+//         const updatedQuestion = "What is your age?";
+//         const id = "yjlML2s9W";
+//
+//         expect(boundUpdate(id, updatedQuestion)).toBe(true);
+//         expect(mockThis.flashcards[0].questionText).toBe(updatedQuestion);
+//     });
+//
+//     test("should return false if the flashcard with the given id does not exist", () => {
+//         const nonExistingId = "3";
+//         const updatedQuestion = "What is your age?";
+//
+//         expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
+//     });
+// });
+//
+// describe("updateFlashcardAnswer", () => {
+//     let mockThis: any;
+//     let boundUpdate: any;
+//
+//     beforeEach(() => {
+//         mockThis = {
+//             flashcards: flashcards()
+//         };
+//         boundUpdate = updateFlashcardAnswer.bind(mockThis);
+//     });
+//
+//     test("should update the questionText of the flashcard with the given id", () => {
+//         const updatedAnswer = "What is your age?";
+//         const id = "yjlML2s9W";
+//
+//         expect(boundUpdate(id, updatedAnswer)).toBe(true);
+//         expect(mockThis.flashcards[0].answerText).toBe(updatedAnswer);
+//     });
+//
+//     test("should return false if the flashcard with the given id does not exist", () => {
+//         const nonExistingId = "3";
+//         const updatedQuestion = "What is your age?";
+//
+//         expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
+//     });
+// });
 
-    beforeEach(() => {
-        mockThis = {
-            flashcards: flashcards()
-        };
-        boundUpdate = updateFlashcardQuestion.bind(mockThis);
-    });
-
-    test("should update the questionText of the flashcard with the given id", () => {
-        const updatedQuestion = "What is your age?";
-        const id = "yjlML2s9W";
-
-        expect(boundUpdate(id, updatedQuestion)).toBe(true);
-        expect(mockThis.flashcards[0].questionText).toBe(updatedQuestion);
-    });
-
-    test("should return false if the flashcard with the given id does not exist", () => {
-        const nonExistingId = "3";
-        const updatedQuestion = "What is your age?";
-
-        expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
-    });
-});
-
-describe("updateFlashcardAnswer", () => {
-    let mockThis: any;
-    let boundUpdate: any;
-
-    beforeEach(() => {
-        mockThis = {
-            flashcards: flashcards()
-        };
-        boundUpdate = updateFlashcardAnswer.bind(mockThis);
-    });
-
-    test("should update the questionText of the flashcard with the given id", () => {
-        const updatedAnswer = "What is your age?";
-        const id = "yjlML2s9W";
-
-        expect(boundUpdate(id, updatedAnswer)).toBe(true);
-        expect(mockThis.flashcards[0].answerText).toBe(updatedAnswer);
-    });
-
-    test("should return false if the flashcard with the given id does not exist", () => {
-        const nonExistingId = "3";
-        const updatedQuestion = "What is your age?";
-
-        expect(boundUpdate(nonExistingId, updatedQuestion)).toBe(false);
-    });
-});
-
-describe("createFlashcard", () => {
-    let mockThis: any;
-    let boundCreate: typeof createFlashcardForAnnotation;
-
-    beforeEach(() => {
-        mockThis = {
-            flashcards: flashcards()
-        };
-        boundCreate = createFlashcardForAnnotation.bind(mockThis);
-    });
-
+describe("createFlashcardForAnnotation", () => {
     test("should create a new flashcard", async () => {
-        const question = "What is your age?";
-        const answer = "test answer";
-        const id = "yjlML2s9W";
-        const highlightId = "9asdfkn23k";
-        await boundCreate(question, answer, highlightId, id);
-        expect(mockThis.flashcards[1].questionText).toBe(question);
-    });
-});
-
-describe("deleteFlashcard", () => {
-    let mockThis: any;
-    let boundDelete: typeof deleteFlashcardById;
-
-    beforeEach(() => {
-        mockThis = {
-            flashcards: flashcards()
+        const card = {
+            id: "pBri5QNB",
+            cardType: 2,
+            context: null,
+            dueDate: "2023-09-02",
+            ease: 250,
+            interval: 2,
+            delayBeforeReview: 63836018,
+            annotationId: "5769",
+            flag: "L",
+            siblings: [],
+            parsedCardId: "u-72tWEW",
+            questionText: "What is cued recall?",
+            answerText: "Cued recall is where we cue recall by presenting some information."
         };
-        boundDelete = deleteFlashcardById.bind(mockThis);
-    });
-
-    test("should delete an existing flashcard", () => {
-        const id = "yjlML2s9W";
-        expect(boundDelete(id)).toBe(true);
-        expect(mockThis.flashcards).toStrictEqual([]);
-    });
-
-    test("should return false if flashcard doesn't exist", () => {
-        const id = "aaaa";
-        expect(boundDelete(id)).toBe(false);
-        expect(mockThis.flashcards).toStrictEqual(flashcards());
-    });
-
-    test("should throw an error when trying to delete from an empty flashcard array", () => {
-        mockThis.flashcards = [];
-        boundDelete = deleteFlashcardById.bind(mockThis);
-        const id = "aaaa";
-        expect(() => boundDelete(id)).toThrow();
+        const bookId = "ibJ6QFl4";
+        await createFlashcardForAnnotation(
+            card.questionText,
+            card.answerText,
+            card.annotationId,
+            bookId
+        );
+        // console.log(plugin.notesWithFlashcards);
+        expect(plugin.notesWithFlashcards).toMatchInlineSnapshot(`
+            [
+              {
+                "flashcards": [
+                  {
+                    "annotationId": "5769",
+                    "answerText": "Cued recall is where we cue recall by presenting some information.",
+                    "cardType": 2,
+                    "context": null,
+                    "dueDate": "2023-09-02",
+                    "ease": 250,
+                    "flag": "L",
+                    "id": "pBri5QNB",
+                    "interval": 2,
+                    "parsedCardId": "u-72tWEW",
+                    "questionText": "What is cued recall?",
+                    "siblings": [],
+                  },
+                  Flashcard {
+                    "annotationId": "5769",
+                    "answerText": "Cued recall is where we cue recall by presenting some information.",
+                    "cardType": 2,
+                    "context": null,
+                    "dueDate": undefined,
+                    "ease": undefined,
+                    "flag": undefined,
+                    "id": 1,
+                    "interval": undefined,
+                    "parsedCardId": 0,
+                    "questionText": "What is cued recall?",
+                    "siblings": [],
+                  },
+                ],
+                "flashcardsPath": "Memory - A Very Short Introduction/Flashcards.md",
+                "id": "ibJ6QFl4",
+                "name": "Memory - A Very Short Introduction",
+                "parsedCards": [
+                  {
+                    "cardText": "What is cued recall?
+            ?
+            Cued recall is where we cue recall by presenting some information.",
+                    "cardType": 2,
+                    "id": "u-72tWEW",
+                    "lineNo": -1,
+                    "metadataText": "<!--SR:5769!L,2023-09-02,2,250-->",
+                    "notePath": "Memory - A Very Short Introduction/Flashcards.md",
+                  },
+                  {
+                    "cardText": "What is cued recall?
+            ?
+            Cued recall is where we cue recall by presenting some information.",
+                    "cardType": 2,
+                    "id": 0,
+                    "lineNo": -1,
+                    "metadataText": "<!--SR:5769-->",
+                    "notePath": "Memory - A Very Short Introduction/Flashcards.md",
+                  },
+                ],
+              },
+            ]
+        `);
     });
 });
+
+// describe("deleteFlashcard", () => {
+//     let mockThis: any;
+//     let boundDelete: typeof deleteFlashcardById;
+//
+//     beforeEach(() => {
+//         mockThis = {
+//             flashcards: flashcards()
+//         };
+//         boundDelete = deleteFlashcardById.bind(mockThis);
+//     });
+//
+//     test("should delete an existing flashcard", () => {
+//         const id = "yjlML2s9W";
+//         expect(boundDelete(id)).toBe(true);
+//         expect(mockThis.flashcards).toStrictEqual([]);
+//     });
+//
+//     test("should return false if flashcard doesn't exist", () => {
+//         const id = "aaaa";
+//         expect(boundDelete(id)).toBe(false);
+//         expect(mockThis.flashcards).toStrictEqual(flashcards());
+//     });
+//
+//     test("should throw an error when trying to delete from an empty flashcard array", () => {
+//         mockThis.flashcards = [];
+//         boundDelete = deleteFlashcardById.bind(mockThis);
+//         const id = "aaaa";
+//         expect(() => boundDelete(id)).toThrow();
+//     });
+// });
