@@ -81,7 +81,7 @@ export function getFlashcardById(flashcardId: string, bookId: string): FrontendF
 export async function updateFlashcardSchedulingMetadata(
     flashcardId: string,
     bookId: string,
-    reviewResponse: ReviewResponse,
+    reviewResponse: ReviewResponse
 ) {
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
@@ -166,7 +166,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
     annotations = annotations.map(t => {
         return {
             ...t,
-            flashcardCount: flashcardCountForAnnotation[t.id] || 0,
+            flashcardCount: flashcardCountForAnnotation[t.id] || 0
         };
     });
 
@@ -242,7 +242,7 @@ export function getSectionTreeForBook(id: string) {
         // todo: fix this type casting asap
         children: children as unknown as sectionTree[],
         counts: {
-            flashcards: maturityCounts(book.flashcards),
+            flashcards: maturityCounts(book.flashcards)
         }
     };
 }
