@@ -61,7 +61,7 @@ export function getParentFolderName(path: string) {
 export function getMetadataForFile(path: string) {
     const tfile = getTFileForPath(path);
     if (tfile === null) {
-        return;
+        throw new Error(`getMetadataForFile: no TFile found at path ${path}`);
     }
     return app.metadataCache.getFileCache(tfile);
 }
