@@ -23,7 +23,7 @@ export function cardLoader({params}: {params: any}) {
 // The path is basically being used as a bit of state but not explicitly so.
 // Is there a better way of doing this?
 export function UpsertCard() {
-    const flashcard: any = useLoaderData() as Flashcard;
+    const flashcard = useLoaderData() as Flashcard;
     const defaultQuestionValue = flashcard?.questionText || "";
     const defaultAnswerValue = flashcard?.answerText || "";
     return (
