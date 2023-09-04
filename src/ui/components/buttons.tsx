@@ -4,7 +4,7 @@ import {Link} from "react-router-dom";
 import {Platform} from "obsidian";
 import {plugin} from "src/main";
 
-export function ShowAnswerButton(props: {handleShowAnswerButton: Function}) {
+export function ShowAnswerButton(props: {handleShowAnswerButton: () => void}) {
     return (
         <button
             id="sr-show-answer"
@@ -16,7 +16,7 @@ export function ShowAnswerButton(props: {handleShowAnswerButton: Function}) {
 }
 
 //TODO: Add types
-export function Button({ text, id, clickHandler }: { text: string, id: string, clickHandler: Function }) {
+export function Button({ text, id, clickHandler }: { text: string, id: string, clickHandler: () => void }) {
     return (<button name={"reviewResponse"} id={id} onClick={() => clickHandler()}>
         {text}
     </button>);
