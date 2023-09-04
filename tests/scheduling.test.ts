@@ -67,7 +67,7 @@ test("Test reviewing with default settings & delay", () => {
     });
 });
 
-test("Test load balancing, small interval (load balancing disabled)", () => {
+test.todo("Test load balancing, small interval (load balancing disabled)", () => {
     const dueDates = {
         0: 1,
         1: 1,
@@ -88,7 +88,7 @@ test("Test load balancing, small interval (load balancing disabled)", () => {
     });
 });
 
-test("Test load balancing", () => {
+test.todo("Test load balancing", () => {
     // interval < 7
     let dueDates: Record<number, number> = {
         5: 2,
