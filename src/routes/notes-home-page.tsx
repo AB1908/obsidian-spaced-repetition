@@ -37,6 +37,7 @@ export function Notes() {
     useEffect(() => {
         const plus: Icon = "plus-circle";
         // todo: fix this
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         setIcon(iconRef.current, plus);
     }, []);
