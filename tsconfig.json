@@ -11,7 +11,7 @@
         "allowJs": true,
         "noImplicitAny": true,
         "moduleResolution": "node",
-        "esModuleInterop": false,
+        "esModuleInterop": true,
         "importHelpers": true,
         "lib": ["dom", "dom.Iterable", "scripthost", "ES5", "ES6", "ES7", "ES2021"],
         "jsx": "react-jsx",
