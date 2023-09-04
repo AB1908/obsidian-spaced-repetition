@@ -3,6 +3,9 @@
  */
 let value = 0;
 
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
 export function nanoid(size?: number): string {
-    return value++;
+    const retval = value.toString();
+    value++;
+    return retval;
 }
