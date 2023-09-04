@@ -33,6 +33,7 @@ export function UpsertCard() {
     );
 }
 
+// todo: fix any
 export async function creationAction({params, request}: {params: any, request: any}): Promise<Response> {
     // TODO: Add logic to update the deck
     const data = await request.formData();
@@ -42,6 +43,7 @@ export async function creationAction({params, request}: {params: any, request: a
     return redirect(`/books/${params.bookId}/chapters/${params.chapterId}/annotations/${params.annotationId}/flashcards`);
 }
 
+// todo: fix any
 export async function updateAction({params, request}: {params: any, request: any}): Promise<Response> {
     // TODO: Add logic to update the deck
     const data = await request.formData();
