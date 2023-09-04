@@ -158,7 +158,7 @@ export function findNextHeader(section: RawBookSection | BookMetadataSection, se
         }
         index++;
     }
-    return index;
+    return -1;
 }
 
 export function updateHeaders(cacheItem: annotation, sections: BookMetadataSections, key: keyof Count) {
