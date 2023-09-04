@@ -4,7 +4,12 @@ import {useLoaderData} from "react-router";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getAnnotationsForSection} from "src/api";
 
-export function annotationsLoader({params}: {params: any}) {
+export interface AnnotationsLoaderParams {
+    bookId: string;
+    sectionId: string;
+}
+
+export function annotationsLoader({params}: {params: AnnotationsLoaderParams}) {
     if (USE_ACTUAL_BACKEND)
         return getAnnotationsForSection(params.sectionId, params.bookId);
     else
