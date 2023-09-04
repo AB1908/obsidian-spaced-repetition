@@ -1,16 +1,15 @@
 import { CardType, ReviewResponse } from "src/scheduler/scheduling";
 import { calculateDelayBeforeReview, Flashcard, maturityCounts } from "src/data/models/flashcard";
 import { createParsedCard, ParsedCard } from "src/data/models/parsedCard";
-import { plugin } from "src/main";
-import { annotation } from "src/data/import/annotations";
-import { ReviewBook } from "src/routes/notes-home-page";
-
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { findNextHeader, isAnnotation, isHeading, sectionTree } from "src/data/models/book";
-import { FrontendFlashcard } from "src/routes/review";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/export/TextGenerator";
 import { updateCardOnDisk } from "src/data/import/disk";
 import { createFlashcard } from "src/data/import/flashcards";
+import { plugin } from "src/main";
+import type { annotation } from "src/data/import/annotations";
+import type { ReviewBook } from "src/routes/notes-home-page";
+import type { FrontendFlashcard } from "src/routes/review";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -186,20 +185,26 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
 }
 
 export function getBooks(): ReviewBook[] {
-    const books = plugin.notesWithFlashcards.map(t => {
+    return plugin.notesWithFlashcards.map(t => {
         return {
             id: t.id,
             name: t.name,
             counts: maturityCounts(t.flashcards)
         };
     });
-    return books;
 }
 
 interface frontEndBook {
     counts: {
-        annotations: { withFlashcards: number; withoutFlashcards: number };
-        flashcards: { new: number; mature: number; learning: number }
+        annotations: {
+            withFlashcards: number;
+            withoutFlashcards: number
+        };
+        flashcards: {
+            new: number;
+            mature: number;
+            learning: number
+        }
     };
     name: string;
     id: string;
