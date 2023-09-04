@@ -72,6 +72,8 @@ export class Flashcard extends AbstractFlashcard {
 
 // todo: move into controller?
 export function calculateDelayBeforeReview(due: string) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     return Math.abs(moment().valueOf() - moment(due).valueOf());
 }
 
@@ -106,6 +108,8 @@ export function schedulingMetadataForResponse(
     }
     const {interval, ease} = schedObj;
     // todo: parameterize format? nah
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     const due = moment(Date.now() + interval * 24 * 3600 * 1000).format("YYYY-MM-DD");
     return {interval, ease, dueDate: due};
 }
