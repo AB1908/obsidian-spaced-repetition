@@ -601,3 +601,11 @@ export const sampleAnnotationMetadata: CachedMetadata = {
         }
     }
 };
+
+describe("findFilesWithHashInSet", () => {
+    test.todo("returns a set of file paths given a hash set");
+});
+
+describe("setOfHashesWithTags", () => {
+    test.todo("returns a hash set given a tag");
+});
