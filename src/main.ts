@@ -45,6 +45,7 @@ export default class SRPlugin extends Plugin {
 
     async onload(): Promise<void> {
         await this.loadPluginData();
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
         plugin = this;
         // todo: move this initialization to modal opening phase?
         // this.app.metadataCache.on("resolved", () => {
@@ -105,6 +106,7 @@ annotations: "[[${activeFile.path}]]"
         console.log("SRS Plugin loaded");
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-empty-function
     onunload(): void {
 
     }
