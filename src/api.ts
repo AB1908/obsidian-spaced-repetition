@@ -1,5 +1,5 @@
 import { CardType, ReviewResponse } from "src/scheduler/scheduling";
-import { AbstractFlashcard, calculateDelayBeforeReview, Flashcard, maturityCounts } from "src/data/models/flashcard";
+import { calculateDelayBeforeReview, Flashcard, maturityCounts } from "src/data/models/flashcard";
 import { createParsedCard, ParsedCard } from "src/data/models/parsedCard";
 import { plugin } from "src/main";
 import { annotation } from "src/data/import/annotations";
