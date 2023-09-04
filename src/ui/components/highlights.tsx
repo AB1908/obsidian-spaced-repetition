@@ -51,7 +51,7 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 }
 
 export function AnnotationList() {
-    const chapterData: any = useLoaderData() as SectionAnnotations;
+    const chapterData = useLoaderData() as SectionAnnotations;
 
     return (
         <>
@@ -75,7 +75,7 @@ export function AnnotationList() {
 
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
-                {chapterData.annotations.map((annotation: annotation, i: number) => (
+                {chapterData.annotations.map((annotation: annotation) => (
                     <div key={annotation.id} >
                         <Link to={`${annotation.id}/flashcards`}>
                             <li className={"sr-highlight tree-item-self is-clickable"}>
