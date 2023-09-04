@@ -41,7 +41,6 @@ export function logArgs(inputArgs: IArguments, outputArgs: any) {
     console.group("inputs");
     for (const key of Object.keys(input)) {
         console.group(key);
-        // @ts-ignore
         console.log(input[key]);
         console.groupEnd();
     }
@@ -85,7 +84,7 @@ function writeToDirectory(fileName: string, fileContent: string) {
 
         // Check if the directory contains the desired file
         // if (files.includes(fileName)) {
-        const filePath = `${directoryPath}/${fileName.replaceAll(/[\+:]/g, "-")}.json`;
+        const filePath = `${directoryPath}/${fileName.replaceAll(/[+:]/g, "-")}.json`;
         writeFileSync(filePath, fileContent, {flag:"wx"});
         console.log(`Data written to file: ${filePath}`);
         // } else {
