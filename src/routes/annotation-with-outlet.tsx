@@ -5,7 +5,13 @@ import {annotation} from "src/data/import/annotations";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getAnnotationById} from "src/api";
 
-export async function annotationLoader({params}: { params: any }) {
+export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
+    annotationId: string;
+}
+
+export async function annotationLoader({ params }: {
+    params: AnnotationLoaderParams
+}) {
     // todo: use redirect
     if (USE_ACTUAL_BACKEND){
         return getAnnotationById(params.annotationId, params.bookId);
