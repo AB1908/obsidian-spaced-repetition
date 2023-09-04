@@ -1,5 +1,6 @@
 import { FLAG, parseMetadata } from "src/data/parser";
 
+// eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/main", () => {});
 
 describe("metadata parser", () => {
