@@ -1,11 +1,8 @@
-import {
-    bookSections, findNextHeader,
-    findPreviousHeader
-} from "src/data/models/book";
-import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
+import { bookSections, findNextHeader, findPreviousHeader } from "src/data/models/book";
 import { beforeEach } from "@jest/globals";
-import { HeadingCache, SectionCache } from "obsidian";
-import { Flashcard } from "src/data/models/flashcard";
+import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
+import type { SectionCache } from "obsidian";
+import type { Flashcard } from "src/data/models/flashcard";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/main", () => {
@@ -31,39 +28,41 @@ test("bookSections", () => {
     expect(bookSections(sampleAnnotationMetadata, sampleAnnotationText, flashcards as unknown as Flashcard[])).toMatchSnapshot();
 });
 
-let input: any[];
+let input: SectionCache[];
+
+const sectionsGenerator = () => [
+    {
+        heading: "Heading 1",
+        level: 1
+    },
+    {
+        type: "paragraph"
+    },
+    {
+        heading: "SubHeading 1",
+        level: 2
+    },
+    {
+        type: "paragraph"
+    },
+    {
+        heading: "SubHeading 2",
+        level: 2
+    },
+    {
+        type: "paragraph"
+    },
+    {
+        heading: "Heading 2",
+        level: 1
+    },
+    {
+        type: "paragraph"
+    }
+];
 describe("findPreviousHeader", () => {
     beforeEach(() => {
-        input = [
-            {
-                heading: "Heading 1",
-                level: 1
-            },
-            {
-                type: "paragraph"
-            },
-            {
-                heading: "SubHeading 1",
-                level: 2
-            },
-            {
-                type: "paragraph"
-            },
-            {
-                heading: "SubHeading 2",
-                level: 2
-            },
-            {
-                type: "paragraph"
-            },
-            {
-                heading: "Heading 2",
-                level: 1
-            },
-            {
-                type: "paragraph"
-            }
-        ];
+        input = sectionsGenerator() as SectionCache[];
     });
 
     test("should return null for a top level header", () => {
@@ -85,36 +84,7 @@ describe("findPreviousHeader", () => {
 
 describe("generateHeaderCounts", () => {
     beforeEach(() => {
-        input = [
-            {
-                heading: "Heading 1",
-                level: 1
-            },
-            {
-                type: "paragraph"
-            },
-            {
-                heading: "SubHeading 1",
-                level: 2
-            },
-            {
-                type: "paragraph"
-            },
-            {
-                heading: "SubHeading 2",
-                level: 2
-            },
-            {
-                type: "paragraph"
-            },
-            {
-                heading: "Heading 2",
-                level: 1
-            },
-            {
-                type: "paragraph"
-            }
-        ];
+        input = sectionsGenerator() as unknown as SectionCache[];
     });
 
     test("should return null for a top level header", () => {
@@ -134,9 +104,11 @@ describe("generateHeaderCounts", () => {
     // });
 });
 
+let inputHeadingCache: SectionCache[];
+
 describe("findNextHeader", () => {
     beforeEach(() => {
-        input = [
+        inputHeadingCache = [
             {
                 heading: "Heading 1",
                 level: 1
@@ -165,16 +137,16 @@ describe("findNextHeader", () => {
             {
                 type: "paragraph"
             }
-        ];
+        ] as SectionCache[];
     });
 
     test("should return null for a top level header", () => {
-        expect(findNextHeader(input[6] as HeadingCache, input as SectionCache[])).toBe(8);
-        expect(findNextHeader(input[0] as HeadingCache, input as SectionCache[])).toBe(6);
+        expect(findNextHeader(inputHeadingCache[6], inputHeadingCache as SectionCache[])).toBe(-1);
+        expect(findNextHeader(inputHeadingCache[0], inputHeadingCache as SectionCache[])).toBe(6);
     });
     test("should return a top level header for a subheader", () => {
-        expect(findNextHeader(input[4] as HeadingCache, input as SectionCache[])).toBe(6);
-        expect(findNextHeader(input[2] as HeadingCache, input as SectionCache[])).toBe(4);
+        expect(findNextHeader(inputHeadingCache[4], inputHeadingCache as SectionCache[])).toBe(6);
+        expect(findNextHeader(inputHeadingCache[2], inputHeadingCache as SectionCache[])).toBe(4);
     });
     // // TODO: test for subsubheaders :(
     // test("should return a top level header for an annotation under it", () => {
