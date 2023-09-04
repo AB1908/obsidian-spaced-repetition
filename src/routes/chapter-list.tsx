@@ -6,9 +6,13 @@ import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getSectionTreeForBook} from "src/api";
 import {Section} from "src/ui/components/section";
 
+export interface ChapterLoaderParams {
+    bookId: string;
+}
+
 // TODO: more realistic data
 // TODO: think of a better data structure for this, this is terrible
-export function chapterLoader({params}: {params: any}) {
+export function chapterLoader({params}: {params: ChapterLoaderParams}) {
     if (USE_ACTUAL_BACKEND) {
         return getSectionTreeForBook(params.bookId);
     } else {
