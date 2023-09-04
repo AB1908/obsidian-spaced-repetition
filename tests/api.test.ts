@@ -3,7 +3,7 @@ import { plugin } from "src/main";
 
 jest.mock("../src/data/import/disk", () => {
     return {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function
+        // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
         writeCardToDisk: (path: string, text: string) => {
         }
     };
@@ -60,29 +60,29 @@ jest.mock("../src/data/models/flashcard", () => {
     return {
         __esModule: true, // Use it when dealing with esModules
         ...originalModule,
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         calculateDelayBeforeReview: jest.fn((due: string) => 63836018)
     };
 });
 
 describe("getFlashcardById", () => {
     test("retrieves a flashcard successfully", () => {
-        expect(getFlashcardById("pBri5QNB", "ibJ6QFl4")).toStrictEqual(
-            {
-                id: "pBri5QNB",
-                cardType: 2,
-                context: null,
-                dueDate: "2023-09-02",
-                ease: 250,
-                interval: 2,
-                delayBeforeReview: 63836018,
-                annotationId: "5769",
-                flag: "L",
-                siblings: [],
-                parsedCardId: "u-72tWEW",
-                questionText: "What is cued recall?",
-                answerText: "Cued recall is where we cue recall by presenting some information."
-            });
-        expect(() => getFlashcardById("aaaa", t.id)).toThrowError();
+        expect(getFlashcardById("pBri5QNB", "ibJ6QFl4")).toStrictEqual({
+            id: "pBri5QNB",
+            cardType: 2,
+            context: null,
+            dueDate: "2023-09-02",
+            ease: 250,
+            interval: 2,
+            delayBeforeReview: 63836018,
+            annotationId: "5769",
+            flag: "L",
+            siblings: [],
+            parsedCardId: "u-72tWEW",
+            questionText: "What is cued recall?",
+            answerText: "Cued recall is where we cue recall by presenting some information."
+        });
+        expect(() => getFlashcardById("aaaa", "ibJ6QFl4")).toThrowError();
     });
 });
 
@@ -191,9 +191,9 @@ describe("createFlashcardForAnnotation", () => {
                     "dueDate": undefined,
                     "ease": undefined,
                     "flag": undefined,
-                    "id": 1,
+                    "id": "1",
                     "interval": undefined,
-                    "parsedCardId": 0,
+                    "parsedCardId": "0",
                     "questionText": "What is cued recall?",
                     "siblings": [],
                   },
@@ -217,7 +217,7 @@ describe("createFlashcardForAnnotation", () => {
             ?
             Cued recall is where we cue recall by presenting some information.",
                     "cardType": 2,
-                    "id": 0,
+                    "id": "0",
                     "lineNo": -1,
                     "metadataText": "<!--SR:5769-->",
                     "notePath": "Memory - A Very Short Introduction/Flashcards.md",
