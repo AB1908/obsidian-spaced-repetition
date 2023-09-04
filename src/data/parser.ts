@@ -2,8 +2,6 @@ import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
 import {CardType} from "src/scheduler/scheduling";
 import {getFileContents} from "src/data/import/disk";
 
-// adds a hasFlashcard:true for every annotation that has a flashcard
-
 // TODO: parameterize separators??
 const CARDTEXT_REGEX = /(?<cardText>.*\n\?\n.*)\n(?<metadataText><!--SR:.*-->)/g;
 
@@ -30,10 +28,6 @@ export enum FLAG {
     SUSPEND = "S",
     BURY = "B",
     LEARNING = "L"
-}
-
-export function flagToString(flag: FLAG): string {
-    return flag;
 }
 
 const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d+),(?<ease>\d+))/g;
