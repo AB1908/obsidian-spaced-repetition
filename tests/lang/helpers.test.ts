@@ -48,7 +48,7 @@ test("Test translation without interpolation in English", () => {
     });
 });
 
-test.todo("Test translation without interpolation in čeština", () => {
+test.skip("Test translation without interpolation in čeština", () => {
     jest.isolateModules(() => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { moment } = require("obsidian");
@@ -74,7 +74,7 @@ test("Test translation with interpolation in English", () => {
     });
 });
 
-test.todo("Test translation with interpolation in German", () => {
+test.skip("Test translation with interpolation in German", () => {
     jest.isolateModules(() => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
         const { moment } = require("obsidian");
