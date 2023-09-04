@@ -6,7 +6,12 @@ import {createFlashcardForAnnotation, getFlashcardById, updateFlashcardContentsB
 import {Flashcard} from "src/data/models/flashcard";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
-export function cardLoader({params}: {params: any}) {
+export interface CardLoaderParams {
+    bookId: string;
+    flashcardId: string;
+}
+
+export function cardLoader({params}: {params: CardLoaderParams}) {
     // we arrived here from an existing flashcard
     // todo: potentially split into different component and loader? this seems error prone
     if (params.flashcardId === undefined) {
