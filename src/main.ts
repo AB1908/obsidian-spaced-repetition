@@ -21,14 +21,12 @@ export interface PluginData {
     // should work as long as user doesn't modify card's text
     // which covers most of the cases
     buryList: string[];
-    historyDeck: string | null;
 }
 
 const DEFAULT_DATA: PluginData = {
     settings: DEFAULT_SETTINGS,
     buryDate: "",
     buryList: [],
-    historyDeck: null,
 };
 
 export let plugin: SRPlugin;
