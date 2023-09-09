@@ -201,7 +201,12 @@ export class Book implements frontbook {
     async initialize() {
         this.name = getParentFolderName(this.flashcardsPath);
         this.parsedCards = await parseFileText(this.flashcardsPath);
-        this.flashcards = generateFlashcardsArray(this.parsedCards);
+        try {
+            this.flashcards = generateFlashcardsArray(this.parsedCards);
+        } catch (e) {
+            console.error(e);
+            throw new Error("initialize: You have invalid flashcards in your file.");
+        }
         const annotationTFile = getAnnotationFilePath(this.flashcardsPath);
         if (annotationTFile) {
             this.annotationPath = annotationTFile.path;
