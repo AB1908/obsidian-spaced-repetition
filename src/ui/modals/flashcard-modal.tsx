@@ -1,31 +1,13 @@
 import React from "react";
-import {App, Modal} from "obsidian";
-import {createRoot, Root as ReactDomRoot} from "react-dom/client";
+import { Modal } from "obsidian";
 import type SRPlugin from "src/main";
-import {createMemoryRouter, RouterProvider} from "react-router-dom";
-import {Root} from "src/routes/root";
+import { createRoot, Root as ReactDomRoot } from "react-dom/client";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
+import { Root } from "src/routes/root";
+import { children } from "src/routes/routes";
 import ErrorPage from "src/routes/errorPage";
-import {ChapterList, chapterLoader} from "src/routes/chapter-list";
-import {BookButtons, DeckLandingPage, deckLoader} from "src/routes/deck-preview";
-import {annotationsLoader, AnnotationList} from "src/ui/components/highlights";
-import {UpsertCard, creationAction, cardLoader, updateAction} from "src/routes/upsert-card";
-import {ChooseCardType} from "src/routes/choose-card-type";
-import {Notes, notesLoader} from "src/routes/notes-home-page";
-import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-existing-flashcards";
-import {ReviewDeck, reviewLoader} from "src/routes/review";
-import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
-// import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
-import {getParentFolderName, listOfNotes} from "src/data/disk";
-import {Book} from "src/data/models/book";
-import {Tabs} from "src/routes/tabs";
-import {Tags} from "src/routes/tags";
-
-export enum FlashcardModalMode {
-    DecksList,
-    Front,
-    Back,
-    Closed,
-}
+import { listOfNotePaths } from "src/data/disk";
+import { Book } from "src/data/models/book";
 
 /*
 books by title or id?
