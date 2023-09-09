@@ -1,14 +1,18 @@
-//todo: investigate using lowdb
-import { getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/import/disk";
-import { annotation, parseAnnotations } from "src/data/import/annotations";
-import { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
+import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
-import { Flashcard, schedulingMetadataForResponse } from "src/data/models/flashcard";
+import { getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/import/disk";
+import { type annotation, parseAnnotations } from "src/data/import/annotations";
+import { type Flashcard, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import { parseFileText } from "src/data/parser";
-import { ParsedCard } from "src/data/models/parsedCard";
+import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateFlashcardsArray } from "src/data/import/flashcards";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/export/TextGenerator";
-import { ReviewResponse } from "src/scheduler/scheduling";
+import type { ReviewResponse } from "src/scheduler/scheduling";
+
+export const ANNOTATIONS_YAML_KEY = "annotations";
+export type RawBookSection = (SectionCache | HeadingCache);
+export type BookMetadataSection = Heading | annotation;
+export type BookMetadataSections = BookMetadataSection[];
 
 // TODO: this is not really a "book" per se
 export interface book {
@@ -73,9 +77,6 @@ export class Heading {
 
 }
 
-export type BookMetadataSection = Heading | annotation;
-export type BookMetadataSections = BookMetadataSection[];
-
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
 export interface frontbook {
@@ -88,8 +89,6 @@ export interface frontbook {
     bookSections: BookMetadataSections;
 }
 
-export const ANNOTATIONS_YAML_KEY = "annotations";
-
 export function getAnnotationFilePath(path: string) {
     const metadata = getMetadataForFile(path);
     const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
@@ -97,8 +96,6 @@ export function getAnnotationFilePath(path: string) {
     const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
-
-export type RawBookSection = (SectionCache | HeadingCache);
 
 export function findPreviousHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
     let index = sections.indexOf(section);
@@ -220,16 +217,12 @@ export class Book implements frontbook {
         return this;
     }
 
-    private generateReviewDeck() {
-        this.reviewDeck = this.flashcards.filter(t => t.isDue());
-        this.shuffleReviewDeck();
-    }
-
-    // Sometimes, we may have finished reviewing a deck. We shouldn't allow reviewing it again.
     // So regenerate the review deck, and then check if it has anything.
     canBeReviewed() {
         return this.reviewDeck.length != 0;
     }
+
+    // Sometimes, we may have finished reviewing a deck. We shouldn't allow reviewing it again.
 
     annotations() {
         return this.bookSections.filter((t): t is annotation => isAnnotation(t));
@@ -265,20 +258,6 @@ export class Book implements frontbook {
         this.reviewDeck = [];
     }
 
-    // copied from https://stackoverflow.com/a/12646864/13285428
-    private shuffleReviewDeck() {
-        // can also use this, but it is an Obsidian extension to the Array prototype
-        // this.reviewDeck.shuffle();
-        for (let i = this.reviewDeck.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
-        }
-    }
-
-    // write to disk first
-    // then updated parsed card index
-    // though that state might go out of sync depending on how fast we call it
-    // todo: debounce?
     // todo: think differently?
     async processCardReview(flashcardId: string, reviewResponse: ReviewResponse) {
         const card = this.flashcards.filter(t => t.id === flashcardId)[0];
@@ -289,6 +268,26 @@ export class Book implements frontbook {
         });
         await this.updateParsedCard(card, updatedSchedulingMetadata);
         this.updateFlashcard(flashcardId, updatedSchedulingMetadata);
+    }
+
+    private generateReviewDeck() {
+        this.reviewDeck = this.flashcards.filter(t => t.isDue());
+        this.shuffleReviewDeck();
+    }
+
+    // write to disk first
+    // then updated parsed card index
+    // though that state might go out of sync depending on how fast we call it
+    // todo: debounce?
+
+    // copied from https://stackoverflow.com/a/12646864/13285428
+    private shuffleReviewDeck() {
+        // can also use this, but it is an Obsidian extension to the Array prototype
+        // this.reviewDeck.shuffle();
+        for (let i = this.reviewDeck.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
+        }
     }
 
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
