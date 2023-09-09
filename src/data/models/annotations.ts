@@ -8,7 +8,7 @@ export interface annotation {
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
-const ANNOTATION_REGEX = /> \[!(?<type>.*)\] (?<id>\d+)\n(?<highlight>(> .*\n)+)> \*\*\*(?<note>(\n> .*)+)/g;
+const ANNOTATION_REGEX = /> \[!(?<type>.*)] (?<id>\d+)\n(?<highlight>(> .*\n)+)> \*\*\*(?<note>(\n> .*)+)/g;
 
 // TODO: also use line for match since we need to correlate with markdown headers later
 // todo: think of header representation
