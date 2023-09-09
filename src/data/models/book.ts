@@ -14,7 +14,7 @@ import { ReviewResponse } from "src/scheduler/scheduling";
 export interface book {
     id: string;
     name: string;
-    children: sectionTree[];
+    children: Heading[];
     counts: Count;
 }
 
