@@ -44,7 +44,7 @@ function CollapsibleTreeEntry({renderItem, renderRest}: { renderItem: () => Reac
                 >
                     <CollapseIcon
                         isDeckTreeOpen={isDeckTreeOpen}
-                        handleTriangleClick={(e: MouseEvent) => handleTriangleClick(e)}
+                        handleTriangleClick={(e: React.MouseEvent) => handleTriangleClick(e)}
                     />
                     {renderItem()}
                 </summary>
