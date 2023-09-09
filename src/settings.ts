@@ -1,4 +1,4 @@
-import { Notice, PluginSettingTab, Setting, App, Platform } from "obsidian";
+import { Notice, PluginSettingTab, Setting, App, Platform, TFolder } from "obsidian";
 import React from "react";
 
 import type SRPlugin from "src/main";
@@ -6,6 +6,7 @@ import { t } from "src/lang/helpers";
 
 export interface SRSettings {
     // flashcards
+    bookNotesPath: string;
     flashcardEasyText: string;
     flashcardGoodText: string;
     flashcardHardText: string;
@@ -43,6 +44,7 @@ export interface SRSettings {
 }
 
 export const DEFAULT_SETTINGS: SRSettings = {
+    bookNotesPath: "",
     // flashcards
     flashcardEasyText: "Easy",
     flashcardGoodText: "Good",
@@ -77,7 +79,7 @@ export const DEFAULT_SETTINGS: SRSettings = {
     maximumInterval: 36525,
     maxLinkFactor: 1.0,
     // logging
-    showDebugMessages: false,
+    showDebugMessages: false
 };
 
 // https://github.com/mgmeyers/obsidian-kanban/blob/main/src/Settings.ts
@@ -105,6 +107,24 @@ export class SRSettingTab extends PluginSettingTab {
         containerEl.createDiv().innerHTML = t("CHECK_WIKI", {
             wiki_url: "https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki",
         });
+
+        new Setting(containerEl)
+            .setName("Book Notes Folder")
+            .setDesc("Set the folder path for your Moon Reader annotations")
+            .addTextArea((text) =>
+                text
+                    .setValue(this.plugin.data.settings.bookNotesPath)
+                    .onChange((value) => {
+                        applySettingsUpdate(async () => {
+                            if (this.plugin.app.vault.getAbstractFileByPath(value) instanceof TFolder) {
+                                this.plugin.data.settings.bookNotesPath = value;
+                                await this.plugin.savePluginData();
+                            } else {
+                                new Notice("Entered path is not a folder");
+                            }
+                        });
+                    })
+            );
 
         new Setting(containerEl)
             .setName(t("FOLDERS_TO_IGNORE"))
