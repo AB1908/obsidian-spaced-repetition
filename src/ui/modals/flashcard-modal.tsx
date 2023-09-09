@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal } from "obsidian";
+import { Modal, Notice } from "obsidian";
 import type SRPlugin from "src/main";
 import { createRoot, Root as ReactDomRoot } from "react-dom/client";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
@@ -71,7 +71,13 @@ export async function init() {
     // done: fix
     const notesWithFlashcards = filePaths.map((t: string) => new Book(t));
     for (const t of notesWithFlashcards) {
-        await t.initialize();
+        try {
+            await t.initialize();
+        } catch (e) {
+            console.error(e);
+            console.error("init: unable to initialize book");
+            new Notice("Error: Unable to parse legacy SRS flashcards. Try removing the #flashcards tag from files with SRS flashcards.");
+        }
     }
     return notesWithFlashcards;
 }
