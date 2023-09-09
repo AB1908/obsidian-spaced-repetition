@@ -1,18 +1,9 @@
-//  import 'react-devtools';
-// require('react-devtools');
-import {
-    Notice,
-    Plugin
-} from "obsidian";
-
+import { Plugin } from "obsidian";
 import { FlashcardModal } from "src/ui/modals/flashcard-modal";
 import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
-import type {ParsedCard} from "src/data/models/parsedCard";
-import type {Flashcard} from "src/data/models/flashcard";
-import {annotation} from "src/data/models/annotations";
-import {Book} from "src/data/models/book";
+import type { Book } from "src/data/models/book";
 
 export interface PluginData {
     settings: SRSettings;
@@ -35,7 +26,7 @@ export default class SRPlugin extends Plugin {
     public data: PluginData;
     // todo: fix type
     public notesWithFlashcards: Book[];
-    filePaths: string[];
+    public filePaths: string[];
     public bookNotesPaths: string[];
 
     async onload(): Promise<void> {
