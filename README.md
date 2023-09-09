@@ -1,52 +1,64 @@
-# Flashcard-Based and Note-Based Spaced Repetition Plugin
+# Obsidian Card Coverage
 
-<img src="https://img.shields.io/github/downloads/st3v3nmw/obsidian-spaced-repetition/total" /> <img src="https://img.shields.io/github/downloads/st3v3nmw/obsidian-spaced-repetition/latest/total?style=flat-square" /> <img src="https://img.shields.io/github/manifest-json/v/st3v3nmw/obsidian-spaced-repetition?style=flat-square" />
+<img src="https://img.shields.io/github/downloads/ab1908/obsidian-spaced-repetition/total" /> <img src="https://img.shields.io/github/downloads/ab1908/obsidian-spaced-repetition/latest/total?style=flat-square" /> <img src="https://img.shields.io/github/manifest-json/v/ab1908/obsidian-spaced-repetition?style=flat-square" />
 
-Fight the forgetting curve & note aging by reviewing flashcards & notes using [spaced repetition](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Spaced-Repetition-Algorithm) on Obsidian.md
+In software testing, we use the idea of test coverage to understand how much of the codebase has tests.
+Since flashcards are about testing your memory, I thought of applying the idea of test coverage to books and other content I read to gauge how much of it I remember.
+The plugin also comes with first class mobile support as I use my phone for flashcard review more than my desktop.
 
-Spaced repetition, eh? [Basics](https://ncase.me/remember/), [Detailed](https://www.gwern.net/Spaced-repetition).
+Here's a primer to flashcards and the idea of spaced repetition [How To Remember Anything Forever-ish - Nicky Case](https://ncase.me/remember/)
 
-Check the [roadmap](https://github.com/st3v3nmw/obsidian-spaced-repetition/projects/1) for upcoming features & fixes. \
-Raise an issue [here](https://github.com/st3v3nmw/obsidian-spaced-repetition/issues) if you have a feature request or a bug-report. \
-Visit the [Discussions](https://github.com/st3v3nmw/obsidian-spaced-repetition/discussions) section for Q&A help, feedback, and general discussion. \
-To help translate this plugin to another language, check the [translation guide here](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Help-Translate).
-
-## Features
-
--   Flashcards
-    -   [Decks](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Decks) (Using Obsidian's hierarchical tags or folder structure)
-    -   [Single-line style](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Flashcard-Types#single-line-basic-remnote-style) (`Question::Answer`)
-    -   [Single-line reversed style](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Flashcard-Types#single-line-reversed) (`Question:::Answer`)
-    -   [Multi-line style](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Flashcard-Types#multi-line-basic) (Separated by `?`)
-    -   [Multi-line reversed style](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Flashcard-Types#multi-line-reversed) (Separated by `??`)
-    -   [Cloze cards](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Flashcard-Types#cloze-cards) (`==highlight==` your cloze deletions!, or `**bolded text**`)
-    -   [Card context - automatic titles based on headings](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Reviewing-Flashcards#context) (i.e. `Note title > Heading 1 > Subheading`)
-    -   Rich text support in flashcards (inherited from Obsidian)
-        -   Images, Audio, & Video
-        -   LaTeX
-        -   Code syntax highlighting
-        -   Footnotes
--   Notes
-    -   [Reviewing entire notes](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Notes)
-    -   Possible use case: [Incremental writing](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Incremental-Writing)
--   [Statistics](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki/Statistics)
-
-## Quick Demo
-
-https://user-images.githubusercontent.com/43380836/115256965-5d455f00-a138-11eb-988f-27ba29f328a0.mp4
-
-(if the screencast video doesn't play, check it out on the project's [README](https://github.com/st3v3nmw/obsidian-spaced-repetition/blob/master/README.md) on GitHub)
+Many thanks to @st3v3nmw for his initial work with [Obsidian Spaced Repetition](https://github.com/st3v3nmw/obsidian-spaced-repetition/) which has been invaluable to me.
+This plugin started as a fork (which is why it has the same repo name), but gradually evolved into a rewrite.
+This is not backwards compatible with the original SRS plugin though I may add it at a later date.
 
 ## Installation
 
-You can easily install the plugin from Obsidian's community plugin section in the Obsidian app (Search `Spaced Repetition`).
+I do not plan to add this to the community plugins list soon. Instead, use BRAT.
 
-### Manual Installation
+1. Install this plugin using [TfTHacker's BRAT](https://github.com/TfTHacker/obsidian42-brat).
 
-Create an `obsidian-spaced-repetition` folder under `.obsidian/plugins` in your vault. Add the `main.js`, `manifest.json`, and the `styles.css` files from the [latest release](https://github.com/st3v3nmw/obsidian-spaced-repetition/releases) to the folder.
+    - Install BRAT from Community Plugins
+
+    - Use this repo's URL (https://github.com/AB1908/obsidian-spaced-repetition) to install a plugin from URL in BRAT.
+
+Note: This plugin relies on the export format from my [Moon Reader plugin](https://github.com/AB1908/obsidian-moon-reader). Turn on experimental SRS support to use the intended export format.
 
 ## Usage
 
-Check the [wiki](https://github.com/st3v3nmw/obsidian-spaced-repetition/wiki) for more details.
+1. Card Coverage expects files with Moon+ Reader annotations to be tagged with `review/book`.
+My Moon Reader plugin adds this to the parsed export automatically.
+It also expects the file containing annotations to be inside a folder with the book name.
+For example, `/Atomic Habits` will contain all files related to the book.
+Inside, I will have `Annotations.md` which contains all my annotations.
+Card Coverage will create a `Flashcards.md` alongside it.
+This is not configurable for now.
 
-<a href='https://ko-fi.com/M4M44DEN6' target='_blank'><img height='36' style='border:0px;height:36px;' src='https://cdn.ko-fi.com/cdn/kofi3.png?v=2' border='0' alt='Buy Me a Coffee at ko-fi.com' /></a>
+2. You can add a deck using the "Add New Deck" option.
+This creates a new flashcard note in the same directory as explained earlier.
+
+3. Don't change any settings for now.
+I am working on revamping it.
+
+## Why should I use this?
+
+Well, if you've been interested in remembering what you read, you've probably noticed that existing plugins or even spaced repetition apps don't tell you how much of something you remember.
+The original SRS plugin by Stephen is excellent, but it doesn't let me create flashcards from certain highlights or paragraphs.
+With this plugin, you can create flashcards that map to whatever you annotate in a book.
+
+I usually annotate a lot while reading, marking up things that I think are core ideas or interesting tidbits that I want to retain from the book.
+I wanted to be able to create 2-3 annotations for each highlight to test myself on the idea in various ways to ensure it stuck.
+The only other app I've seen that implements this idea to a degree is [Readwise](https://readwise.io).
+However, being an Obsidian user, I was deeply uncomfortable sharing my annotation and reading data with a third party.
+That's how this plugin was born.
+
+It also made sense to use the idea of test coverage as a metric to see how many annotations I have tested myself on.
+The higher the percentage, the more I (should) remember from a book and the more useful it would be to me.
+Hopefully, the name conveys the intention well.
+If not, well, I tried.
+
+## Contributions
+
+Please open an issue if you have a request or have encountered a bug.
+Please understand that I have primarily created this for personal use and may choose not to work on certain issues or features if I do not find them useful or relevant.
+That said, I am very happy to guide people who want to contribute.
