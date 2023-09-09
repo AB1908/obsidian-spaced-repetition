@@ -59,9 +59,8 @@ export class FlashcardModal extends Modal {
         }
     ]);
 
-    constructor(app: App, plugin: SRPlugin, ignoreStats = false) {
-        super(app);
-
+    constructor(plugin: SRPlugin) {
+        super(plugin.app);
         this.plugin = plugin;
         this.ignoreStats = ignoreStats;
 
