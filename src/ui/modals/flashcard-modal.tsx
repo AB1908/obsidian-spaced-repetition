@@ -35,7 +35,7 @@ export class FlashcardModal extends Modal {
     private router = createMemoryRouter([
         {
             path: "",
-            element: <Root handleCloseButton={()=>this.close()}/>,
+            element: <Root handleCloseButton={() => this.close()} />,
             errorElement: <ErrorPage />,
             children: children
         }
@@ -55,7 +55,7 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot.render(
             <>
                 <React.StrictMode>
-                    <RouterProvider router={this.router}/>
+                    <RouterProvider router={this.router} />
                 </React.StrictMode>
             </>
         );
