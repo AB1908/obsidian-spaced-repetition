@@ -44,38 +44,7 @@ export class FlashcardModal extends Modal {
     constructor(plugin: SRPlugin) {
         super(plugin.app);
         this.plugin = plugin;
-        this.ignoreStats = ignoreStats;
-
         this.modalEl.addClass("sr-modal");
-
-
-        // document.body.onkeydown = (e) => {
-        //     if (this.mode !== FlashcardModalMode.DecksList) {
-        //         if (this.mode !== FlashcardModalMode.Closed && e.code === "KeyS") {
-        //             this.currentDeck.deleteFlashcardAtIndex(
-        //                 this.currentCardIdx,
-        //                 this.currentCard.isDue
-        //             );
-        //             this.burySiblingCards(false);
-        //             this.currentDeck.nextCard(this);
-        //         } else if (
-        //             this.mode === FlashcardModalMode.Front &&
-        //             (e.code === "Space" || e.code === "Enter")
-        //         ) {
-        //             this.showAnswer();
-        //         } else if (this.mode === FlashcardModalMode.Back) {
-        //             if (e.code === "Numpad1" || e.code === "Digit1") {
-        //                 this.processReview(ReviewResponse.Hard);
-        //             } else if (e.code === "Numpad2" || e.code === "Digit2" || e.code === "Space") {
-        //                 this.processReview(ReviewResponse.Good);
-        //             } else if (e.code === "Numpad3" || e.code === "Digit3") {
-        //                 this.processReview(ReviewResponse.Easy);
-        //             } else if (e.code === "Numpad0" || e.code === "Digit0") {
-        //                 this.processReview(ReviewResponse.Reset);
-        //             }
-        //         }
-        //     }
-        // };
     }
 
     async onOpen(): Promise<void> {
