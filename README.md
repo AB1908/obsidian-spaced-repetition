@@ -26,6 +26,8 @@ Note: This plugin relies on the export format from my [Moon Reader plugin](https
 
 ## Usage
 
+WARNING: Legacy SRS flashcards are not supported due to a breaking change in the metadata format. Please remove `#flashcard` tags from files with legacy flashcards.
+
 1. Card Coverage expects files with Moon+ Reader annotations to be tagged with `review/book`.
 My Moon Reader plugin adds this to the parsed export automatically.
 It also expects the file containing annotations to be inside a folder with the book name.
