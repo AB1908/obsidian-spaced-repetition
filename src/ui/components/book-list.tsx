@@ -17,6 +17,7 @@ export function BookCreator() {
 
     async function clickHandler(path: string) {
         // some logic here to create that new file
+        // todo: refactor and move to api.ts
         await createFlashcardsFileForBook(path);
         const newBook = new Book(`${path}/Flashcards.md`);
         await newBook.initialize();
