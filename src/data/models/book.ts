@@ -2,10 +2,9 @@ import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import { getAnnotationFilePath, getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/import/disk";
 import { type annotation, parseAnnotations } from "src/data/import/annotations";
-import { type Flashcard, schedulingMetadataForResponse } from "src/data/models/flashcard";
+import { type Flashcard, generateFlashcardsArray, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import { parseFileText } from "src/data/parser";
 import type { ParsedCard } from "src/data/models/parsedCard";
-import { generateFlashcardsArray } from "src/data/import/flashcards";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/export/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/scheduling";
 

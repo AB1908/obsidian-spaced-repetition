@@ -1,9 +1,10 @@
-import {CardType, ReviewResponse, schedule} from "src/scheduler/scheduling";
-import {nanoid} from "nanoid";
-import {FLAG, FlashcardMetadata} from "src/data/parser";
-import {moment} from "obsidian";
-import {SchedulingMetadata} from "src/data/export/TextGenerator";
-import {plugin} from "src/main";
+import { CardType, ReviewResponse, schedule } from "src/scheduler/scheduling";
+import { nanoid } from "nanoid";
+import { FLAG, FlashcardMetadata, parseCardText, parseMetadata } from "src/data/parser";
+import { moment } from "obsidian";
+import { SchedulingMetadata } from "src/data/export/TextGenerator";
+import { plugin } from "src/main";
+import { ParsedCard } from "src/data/models/parsedCard";
 
 export interface AbstractFlashcard {
     id: string,
@@ -127,4 +128,17 @@ export function maturityCounts(flashcards: Flashcard[]) {
         }
     });
     return {mature, learning, new: newCount};
+}
+
+export function createFlashcard(parsedCard: ParsedCard, questionText: string, answerText: string) {
+    return new Flashcard(parsedCard.id, questionText, answerText, parseMetadata(parsedCard.metadataText));
+}
+
+export function generateFlashcardsArray(parsedCardsArray: ParsedCard[]) {
+    const out: Flashcard[] = [];
+    for (const parsedCard of parsedCardsArray) {
+        const [questionText, answerText] = parseCardText(parsedCard.cardText);
+        out.push(createFlashcard(parsedCard, questionText, answerText));
+    }
+    return out;
 }
