@@ -65,21 +65,15 @@ export default class SRPlugin extends Plugin {
         // });
 
         this.addRibbonIcon("SpacedRepIcon", t("REVIEW_CARDS"), async () => {
-            // if (!this.syncLock) {
-                // await this.sync();
-                new FlashcardModal(this.app, this).open();
-            // }
+            new FlashcardModal(this).open();
         });
 
         this.addCommand({
             id: "srs-review-flashcards",
             name: t("REVIEW_ALL_CARDS"),
             callback: async () => {
-                // if (!this.syncLock) {
-                    // await this.sync();
-                    new FlashcardModal(this.app, this).open();
-                // }
-            },
+                new FlashcardModal(this).open();
+            }
         });
 
         this.addCommand({
