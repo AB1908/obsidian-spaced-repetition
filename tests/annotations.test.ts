@@ -1,4 +1,4 @@
-import { parseAnnotations } from "src/data/import/annotations";
+import { parseAnnotations } from "src/data/models/annotations";
 
 describe("parseAnnotations should parse an annotation with", () => {
     test("a single line highlight", () => {

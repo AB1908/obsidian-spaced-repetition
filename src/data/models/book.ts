@@ -1,7 +1,7 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import { getAnnotationFilePath, getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/disk";
-import { type annotation, parseAnnotations } from "src/data/import/annotations";
+import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { type Flashcard, generateFlashcardsArray, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import { parseFileText } from "src/data/parser";
 import type { ParsedCard } from "src/data/models/parsedCard";

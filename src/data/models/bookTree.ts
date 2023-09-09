@@ -1,4 +1,4 @@
-import type { annotation } from "src/data/import/annotations";
+import type { annotation } from "src/data/models/annotations";
 import { findPreviousHeader, type Heading, isHeading } from "src/data/models/book";
 
 // KILL: switch to DFS/BFS?

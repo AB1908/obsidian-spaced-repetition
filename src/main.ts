@@ -11,7 +11,7 @@ import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import type {ParsedCard} from "src/data/models/parsedCard";
 import type {Flashcard} from "src/data/models/flashcard";
-import {annotation} from "src/data/import/annotations";
+import {annotation} from "src/data/models/annotations";
 import {Book} from "src/data/models/book";
 
 export interface PluginData {
