@@ -1,7 +1,7 @@
 {
-    "name": "obsidian-spaced-repetition",
-    "version": "0.1-beta",
-    "description": "Fight the forgetting curve by reviewing flashcards & entire notes.",
+    "name": "card-coverage",
+    "version": "0.2.0",
+    "description": "Test coverage for your memory using flashcards.",
     "main": "main.js",
     "scripts": {
         "build": "node esbuild.config.mjs production",

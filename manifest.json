@@ -1,10 +1,10 @@
 {
-    "id": "obsidian-spaced-repetition",
-    "name": "Spaced Repetition",
-    "version": "1.9.0a",
+    "id": "-card-coverage",
+    "name": "Card Coverage",
+    "version": "0.2.0",
     "minAppVersion": "0.15.4",
-    "description": "Fight the forgetting curve by reviewing flashcards & entire notes.",
-    "author": "Stephen Mwangi",
-    "authorUrl": "https://github.com/st3v3nmw",
+    "description": "Test coverage for your memory using flashcards.",
+    "author": "AB1908 and Stephen Mwangi",
+    "authorUrl": "https://github.com/AB1908",
     "isDesktopOnly": false
 }
