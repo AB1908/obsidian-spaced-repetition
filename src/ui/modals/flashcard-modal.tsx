@@ -97,13 +97,9 @@ export class FlashcardModal extends Modal {
     }
 
     async onOpen(): Promise<void> {
-        this.plugin.filePaths = listOfNotes("flashcards");
-        this.plugin.bookNotesPaths = listOfNotes("review/book");
-        // todo: fix
-        this.plugin.notesWithFlashcards = this.plugin.filePaths.map((t: string) => new Book(t, `${getParentFolderName(t)}`));
-            for (const t of this.plugin.notesWithFlashcards) {
-                await t.initialize();
-            }
+        this.plugin.bookNotesPaths = listOfNotePaths("review/book");
+        // done: fix
+        this.plugin.notesWithFlashcards = await init();
         this.modalElReactRoot = createRoot(this.modalEl);
         this.modalElReactRoot.render(
             <>
@@ -117,4 +113,14 @@ export class FlashcardModal extends Modal {
     onClose(): void {
         this.modalElReactRoot.unmount();
     }
+}
+
+export async function init() {
+    const filePaths = listOfNotePaths("flashcards");
+    // done: fix
+    const notesWithFlashcards = filePaths.map((t: string) => new Book(t));
+    for (const t of notesWithFlashcards) {
+        await t.initialize();
+    }
+    return notesWithFlashcards;
 }
