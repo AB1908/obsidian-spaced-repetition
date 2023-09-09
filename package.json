@@ -1,6 +1,6 @@
 {
     "name": "card-coverage",
-    "version": "0.2.0",
+    "version": "0.1.0",
     "description": "Test coverage for your memory using flashcards.",
     "main": "main.js",
     "scripts": {
