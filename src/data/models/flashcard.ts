@@ -51,6 +51,8 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
     }
 
     isDue() {
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         return this.dueDate === null || this.dueDate <= moment().format("YYYY-MM-DD");
     }
 }
