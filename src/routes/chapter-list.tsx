@@ -29,7 +29,7 @@ export function ChapterList() {
         <>
             <p>Add flashcards from:</p>
 
-            <Tree data={book} render={(child) => <Section section={child}/>} childKey={"children"}/>
+            <Tree data={book} render={(child: Heading) => <Section section={child} />} />
         </>
     );
 }
