@@ -1,7 +1,7 @@
 import { Outlet, useLoaderData } from "react-router";
 import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
 import React from "react";
-import type { annotation } from "src/data/import/annotations";
+import type { annotation } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationById } from "src/api";
 import type { AnnotationsLoaderParams } from "src/ui/components/highlights";

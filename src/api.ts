@@ -6,7 +6,7 @@ import { findNextHeader, isAnnotation, isHeading } from "src/data/models/book";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk } from "src/data/disk";
 import { plugin } from "src/main";
-import type { annotation } from "src/data/import/annotations";
+import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
 
