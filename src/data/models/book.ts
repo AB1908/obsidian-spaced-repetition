@@ -18,12 +18,6 @@ export interface book {
     counts: Count;
 }
 
-export interface sectionTree {
-    id: string;
-    name: string;
-    children: book[];
-}
-
 export interface Count {
     with: number;
     without: number;
