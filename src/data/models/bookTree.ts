@@ -15,12 +15,7 @@ export function generateTree(sections: Heading[]) {
     let prevHeader;
     while (i < sections.length) {
         const cacheItem = sections[i];
-        if (isHeading(cacheItem)) {
-            // if (!("children" in cacheItem)) {
-            //     cacheItem.children = [];
-            // }
-            // cacheItem.count = {"with": 0, "without": 0};
-        } else {
+        if (!isHeading(cacheItem)) {
             prevHeader = findPreviousHeader(cacheItem, sections);
             const previousHeader = sections[prevHeader] as Heading;
             if (prevHeader != null) {
