@@ -29,11 +29,11 @@ export const children: RouteObject[] = [
             }
         ]
     },
-    // {
-    //     path: "/books/create",
-    //     element: <BookCreator />,
-    //     loader: bookCreatorLoader,
-    // },
+    {
+        path: "/books/create",
+        element: <BookCreator />,
+        loader: bookCreatorLoader,
+    },
     {
         path: "/books/:bookId",
         element: <DeckLandingPage />,
