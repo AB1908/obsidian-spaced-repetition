@@ -1,5 +1,6 @@
 import { CardType } from "src/scheduler/scheduling";
-import { generateFlashcardsArray } from "src/data/import/flashcards";
+
+import { generateFlashcardsArray } from "src/data/models/flashcard";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/main", () => {

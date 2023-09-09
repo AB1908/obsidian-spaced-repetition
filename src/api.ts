@@ -1,11 +1,10 @@
-import { CardType, ReviewResponse } from "src/scheduler/scheduling";
-import { calculateDelayBeforeReview, Flashcard, maturityCounts } from "src/data/models/flashcard";
-import { createParsedCard, ParsedCard } from "src/data/models/parsedCard";
+import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
+import { calculateDelayBeforeReview, createFlashcard, Flashcard, maturityCounts } from "src/data/models/flashcard";
+import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { findNextHeader, isAnnotation, isHeading } from "src/data/models/book";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/export/TextGenerator";
 import { updateCardOnDisk } from "src/data/import/disk";
-import { createFlashcard } from "src/data/import/flashcards";
 import { plugin } from "src/main";
 import type { annotation } from "src/data/import/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
@@ -92,6 +91,7 @@ export async function updateFlashcardSchedulingMetadata(
 }
 
 // DONE: add logic to update in storage
+// TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
@@ -109,6 +109,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
     return true;
 }
 
+// TODO: create abstraction
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
@@ -144,6 +145,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     return true;
 }
 
+// TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
     if (!book) {
