@@ -2,7 +2,7 @@ import { CardType, ReviewResponse, schedule } from "src/scheduler/scheduling";
 import { nanoid } from "nanoid";
 import { FLAG, FlashcardMetadata, parseCardText, parseMetadata } from "src/data/parser";
 import { moment } from "obsidian";
-import { SchedulingMetadata } from "src/data/export/TextGenerator";
+import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
 

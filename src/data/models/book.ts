@@ -5,7 +5,7 @@ import { type annotation, parseAnnotations } from "src/data/import/annotations";
 import { type Flashcard, generateFlashcardsArray, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import { parseFileText } from "src/data/parser";
 import type { ParsedCard } from "src/data/models/parsedCard";
-import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/export/TextGenerator";
+import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/scheduling";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
