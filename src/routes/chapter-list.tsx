@@ -1,18 +1,18 @@
 import React from "react";
-import {useLoaderData} from "react-router";
-import {book} from "src/data/models/book";
-import {Tree} from "src/ui/components/tree";
-import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getSectionTreeForBook} from "src/api";
-import {Section} from "src/ui/components/section";
+import { useLoaderData } from "react-router";
+import type { Heading, book } from "src/data/models/book";
+import { Tree } from "src/ui/components/tree";
+import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { getSectionTreeForBook } from "src/api";
+import { Section } from "src/ui/components/section";
 
 export interface ChapterLoaderParams {
     bookId: string;
 }
 
-// TODO: more realistic data
-// TODO: think of a better data structure for this, this is terrible
-export function chapterLoader({params}: {params: ChapterLoaderParams}) {
+// DONE: more realistic data
+// DONE: think of a better data structure for this, this is terrible
+export function chapterLoader({ params }: { params: ChapterLoaderParams }) {
     if (USE_ACTUAL_BACKEND) {
         return getSectionTreeForBook(params.bookId);
     } else {
@@ -20,9 +20,9 @@ export function chapterLoader({params}: {params: ChapterLoaderParams}) {
     }
 }
 
-// TODO: Fix counts for header
-// TODO: Fix state changes when clicking?
-// TODO: Actually allow clicking?
+// DONE: Fix counts for header
+// DONE: Fix state changes when clicking?
+// DONE: Actually allow clicking?
 export function ChapterList() {
     const book: book = useLoaderData() as book;
     return (
