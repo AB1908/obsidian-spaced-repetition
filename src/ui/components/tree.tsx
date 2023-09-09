@@ -1,7 +1,7 @@
-import React, {ReactNode, useState} from "react";
-import {book} from "src/data/models/book";
+import React, { ReactNode, useState } from "react";
+import type { Heading, book } from "src/data/models/book";
 
-function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {
+function CollapseIcon({ isDeckTreeOpen, handleTriangleClick }: {
     isDeckTreeOpen: boolean,
     handleTriangleClick: (e: React.MouseEvent<HTMLDivElement>) => void
 }) {
@@ -15,7 +15,7 @@ function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {
                 width={10}
                 height={10}
                 className="right-triangle"
-                style={isDeckTreeOpen ? {} : {transform: "rotate(-90deg)"}}
+                style={isDeckTreeOpen ? {} : { transform: "rotate(-90deg)" }}
             >
                 <path
                     fill="currentColor"
@@ -27,7 +27,10 @@ function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {
     );
 }
 
-function CollapsibleTreeEntry({renderItem, renderRest}: { renderItem: () => ReactNode; renderRest: () => ReactNode }) {
+function CollapsibleTreeEntry({ renderItem, renderRest }: {
+    renderItem: () => ReactNode;
+    renderRest: () => ReactNode
+}) {
     const [isDeckTreeOpen, setDeckTreeOpen] = useState(false);
 
     function handleTriangleClick(e: React.MouseEvent<Element, MouseEvent>): void {
@@ -56,7 +59,7 @@ function CollapsibleTreeEntry({renderItem, renderRest}: { renderItem: () => Reac
     );
 }
 
-function NonCollapsibleTreeEntry({render}: { render: () => ReactNode }) {
+function NonCollapsibleTreeEntry({ render }: { render: () => ReactNode }) {
     return (
         <div className="tree-item">
             <div className="tree-item-self tag-pane-tag is-clickable">
@@ -66,6 +69,10 @@ function NonCollapsibleTreeEntry({render}: { render: () => ReactNode }) {
     );
 }
 
+/*
+ * This uses explicit types for now but I will need to refactor these to be
+ * generic later
+ */
 export function Tree(props: {
     data: book,
     render: (t: Heading) => ReactNode;
