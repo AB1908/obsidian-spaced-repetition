@@ -33,9 +33,6 @@ export let plugin: SRPlugin;
 
 export default class SRPlugin extends Plugin {
     public data: PluginData;
-    public flashcards: Flashcard[] = [];
-    public parsedCards: ParsedCard[] = [];
-    public annotations: annotation[] = [];
     // todo: fix type
     public notesWithFlashcards: Book[];
     filePaths: string[];
@@ -45,22 +42,8 @@ export default class SRPlugin extends Plugin {
         await this.loadPluginData();
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         plugin = this;
-        // todo: move this initialization to modal opening phase?
-        // this.app.metadataCache.on("resolved", () => {
-        // });
 
         appIcon();
-
-        // this.statusBar = this.addStatusBarItem();
-        // this.statusBar.classList.add("mod-clickable");
-        // this.statusBar.setAttribute("aria-label", t("OPEN_NOTE_FOR_REVIEW"));
-        // this.statusBar.setAttribute("aria-label-position", "top");
-        // this.statusBar.addEventListener("click", async () => {
-        //     if (!this.syncLock) {
-        //         // await this.sync();
-        //         // this.reviewNextNoteModal();
-        //     }
-        // });
 
         this.addRibbonIcon("SpacedRepIcon", t("REVIEW_CARDS"), async () => {
             new FlashcardModal(this).open();
@@ -71,25 +54,6 @@ export default class SRPlugin extends Plugin {
             name: t("REVIEW_ALL_CARDS"),
             callback: async () => {
                 new FlashcardModal(this).open();
-            }
-        });
-
-        this.addCommand({
-            id: "srs-add-flashcard-note",
-            name: "Add flashcards for the active note",
-            callback: async () => {
-                // todo: refactor
-                const activeFile = this.app.workspace.getActiveFile();
-                if (activeFile === null) {
-                    return new Notice("No note active!");
-                }
-                const fileContents = `---
-annotations: "[[${activeFile.path}]]"
----
-
-#flashcards
-`;
-                await this.app.vault.create(`${activeFile.parent.path}/Flashcards.md`, fileContents);
             }
         });
 
@@ -110,16 +74,5 @@ annotations: "[[${activeFile.path}]]"
 
     async savePluginData(): Promise<void> {
         await this.saveData(this.data);
-    }
-
-    initView(): void {
-        // if (this.app.workspace.getLeavesOfType(REVIEW_QUEUE_VIEW_TYPE).length) {
-        //     return;
-        // }
-
-        // this.app.workspace.getRightLeaf(false).setViewState({
-        //     type: REVIEW_QUEUE_VIEW_TYPE,
-        //     active: true,
-        // });
     }
 }
