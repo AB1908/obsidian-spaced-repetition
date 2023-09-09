@@ -1,6 +1,6 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
-import { getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/import/disk";
+import { getAnnotationFilePath, getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/import/disk";
 import { type annotation, parseAnnotations } from "src/data/import/annotations";
 import { type Flashcard, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import { parseFileText } from "src/data/parser";
@@ -87,14 +87,6 @@ export interface frontbook {
     flashcards: Flashcard[];
     annotationPath: string;
     bookSections: BookMetadataSections;
-}
-
-export function getAnnotationFilePath(path: string) {
-    const metadata = getMetadataForFile(path);
-    const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
-    if (!annotationFromYaml) return;
-    const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
-    return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
 export function findPreviousHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
