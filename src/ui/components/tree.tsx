@@ -68,8 +68,7 @@ function NonCollapsibleTreeEntry({render}: { render: () => ReactNode }) {
 
 export function Tree(props: {
     data: book,
-    render: (t: any) => ReactNode;
-    childKey: string;
+    render: (t: Heading) => ReactNode;
 }) {
     const treeItems = props.data["children"];
     return <>{treeItems.map((heading: Heading) => {
