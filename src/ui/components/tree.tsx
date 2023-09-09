@@ -3,7 +3,7 @@ import {book} from "src/data/models/book";
 
 function CollapseIcon({isDeckTreeOpen, handleTriangleClick}: {
     isDeckTreeOpen: boolean,
-    handleTriangleClick: Function
+    handleTriangleClick: (e: React.MouseEvent<HTMLDivElement>) => void
 }) {
     return (
         <div
