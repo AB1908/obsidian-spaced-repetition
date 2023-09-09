@@ -2,7 +2,7 @@ import { CardType, ReviewResponse } from "src/scheduler/scheduling";
 import { calculateDelayBeforeReview, Flashcard, maturityCounts } from "src/data/models/flashcard";
 import { createParsedCard, ParsedCard } from "src/data/models/parsedCard";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { findNextHeader, isAnnotation, isHeading, sectionTree } from "src/data/models/book";
+import { findNextHeader, isAnnotation, isHeading } from "src/data/models/book";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/export/TextGenerator";
 import { updateCardOnDisk } from "src/data/import/disk";
 import { createFlashcard } from "src/data/import/flashcards";
@@ -245,7 +245,7 @@ export function getSectionTreeForBook(id: string) {
         id: book.id,
         name: book.name,
         // todo: fix this type casting asap
-        children: children as unknown as sectionTree[],
+        children: children,
         counts: {
             flashcards: maturityCounts(book.flashcards)
         }
