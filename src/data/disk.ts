@@ -1,4 +1,4 @@
-import { TagCache, TFile } from "obsidian";
+import { TagCache, TFile, TFolder } from "obsidian";
 import { ANNOTATIONS_YAML_KEY } from "src/data/models/book";
 
 export async function writeCardToDisk(path: string, text: string) {
@@ -45,7 +45,7 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
     return filePaths;
 }
 
-export function listOfNotes(tag: string) {
+export function listOfNotePaths(tag: string) {
     const hashSet = setOfHashesWithTags(tag);
     return findFilesWithHashInSet(hashSet);
 }
@@ -73,4 +73,40 @@ export function getAnnotationFilePath(path: string) {
     if (!annotationFromYaml) return;
     const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
+}
+
+export function getFolderNameFromPath(path: string) {
+    console.log(path);
+    const tfile = app.vault.getAbstractFileByPath(path);
+    if (tfile instanceof TFile) {
+        return tfile.parent.name;
+    } else {
+        throw new Error(`getFolderNameFromPath: Folder not found for path ${path}`);
+    }
+}
+export async function createFlashcardsFileForBook(bookPath: string) {
+    // todo: refactor
+    const tfolder = app.vault.getAbstractFileByPath(bookPath);
+    if (!(tfolder instanceof TFolder)) {
+        throw new Error(`createFlashcardsFileForBook: Folder not found for path ${bookPath}`);
+    }
+    const fileContents = `---
+annotations: "[[${tfolder.path}/Annotations]]"
+---
+
+#flashcards
+`;
+    await app.vault.create(`${tfolder.path}/Flashcards.md`, fileContents);
+}
+
+export function getParentFolderPathAndName(filePath: string) {
+    const tfile = app.vault.getAbstractFileByPath(filePath);
+    if (tfile instanceof TFile) {
+        return {
+            name: tfile.parent.name,
+            path: tfile.parent.path
+        };
+    } else {
+        throw new Error(`getFolderNameFromPath: Folder not found for path ${filePath}`);
+    }
 }
