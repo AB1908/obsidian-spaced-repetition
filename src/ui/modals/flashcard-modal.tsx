@@ -15,7 +15,7 @@ import {highlightLoader, PreviewExistingFlashcards} from "src/routes/preview-exi
 import {ReviewDeck, reviewLoader} from "src/routes/review";
 import {annotationLoader, AnnotationWithOutlet} from "src/routes/annotation-with-outlet";
 // import {BookCreator, bookCreatorLoader} from "src/routes/book-creator";
-import {getParentFolderName, listOfNotes} from "src/data/import/disk";
+import {getParentFolderName, listOfNotes} from "src/data/disk";
 import {Book} from "src/data/models/book";
 import {Tabs} from "src/routes/tabs";
 import {Tags} from "src/routes/tags";

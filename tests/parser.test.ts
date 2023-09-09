@@ -1,7 +1,7 @@
 import { parseFileText } from "src/data/parser";
 import { CardType } from "src/scheduler/scheduling";
 import { generateTree } from "src/data/models/bookTree";
-import { getFileContents } from "src/data/import/disk";
+import { getFileContents } from "src/data/disk";
 import { Heading } from "src/data/models/book";
 
 jest.mock("../src/data/import/disk");

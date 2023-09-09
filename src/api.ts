@@ -4,7 +4,7 @@ import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { findNextHeader, isAnnotation, isHeading } from "src/data/models/book";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { updateCardOnDisk } from "src/data/import/disk";
+import { updateCardOnDisk } from "src/data/disk";
 import { plugin } from "src/main";
 import type { annotation } from "src/data/import/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
