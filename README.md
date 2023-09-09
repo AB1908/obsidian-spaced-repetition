@@ -40,6 +40,9 @@ This creates a new flashcard note in the same directory as explained earlier.
 3. Don't change any settings for now.
 I am working on revamping it.
 
+Please check the [assets](assets) folder for screenshots.
+I couldn't figure out how to add them to the readme without them taking up too much space.
+
 ## Why should I use this?
 
 Well, if you've been interested in remembering what you read, you've probably noticed that existing plugins or even spaced repetition apps don't tell you how much of something you remember.
