@@ -27,7 +27,7 @@ function setOfHashesWithTags(tag: string) {
     const fileHashes = Object.keys(app.metadataCache.metadataCache);
     for (const hash of fileHashes) {
         const cachedFileMetadata = app.metadataCache.metadataCache[hash];
-        if (cachedFileMetadata.tags?.find(findTag(tag)) || cachedFileMetadata.frontmatter?.tags?.find(findTag(tag))) {
+        if (cachedFileMetadata.tags?.find(findTag(tag)) || cachedFileMetadata.frontmatter?.tags?.includes(tag)) {
             hashSet.add(hash);
         }
     }
