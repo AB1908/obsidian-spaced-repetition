@@ -1,6 +1,6 @@
 {
     "name": "card-coverage",
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": "Test coverage for your memory using flashcards.",
     "main": "main.js",
     "scripts": {
@@ -10,12 +10,12 @@
         "lint": "yarn prettier --check .",
         "test": "jest",
         "watch": "jest --watch",
-        "release": "standard-version",
+        "release": "standard-version --tag-prefix \"\"",
         "mock-server": "json-server --watch db.json"
     },
     "standard-version": {
         "skip": {
-            "commit": true
+            "commit": false
         }
     },
     "author": "AB1908 and Stephen Mwangi",
