@@ -1,6 +1,12 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
-import { getAnnotationFilePath, getFileContents, getMetadataForFile, updateCardOnDisk } from "src/data/disk";
+import {
+    getAnnotationFilePath,
+    getFileContents,
+    getMetadataForFile,
+    getParentFolderName,
+    updateCardOnDisk
+} from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { type Flashcard, generateFlashcardsArray, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import { parseFileText } from "src/data/parser";
@@ -180,10 +186,10 @@ export class Book implements frontbook {
     reviewIndex: number;
     reviewDeck: Flashcard[];
 
-    constructor(path: string, name: string) {
+    constructor(path: string) {
         this.id = nanoid(8);
         this.flashcardsPath = path;
-        this.name = name;
+        this.name = "";
         this.parsedCards = [];
         this.flashcards = [];
         this.annotationPath = "";
@@ -193,6 +199,7 @@ export class Book implements frontbook {
     }
 
     async initialize() {
+        this.name = getParentFolderName(this.flashcardsPath);
         this.parsedCards = await parseFileText(this.flashcardsPath);
         this.flashcards = generateFlashcardsArray(this.parsedCards);
         const annotationTFile = getAnnotationFilePath(this.flashcardsPath);
