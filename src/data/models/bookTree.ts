@@ -1,14 +1,14 @@
-import { annotation } from "src/data/import/annotations";
-import { findPreviousHeader, Heading, isHeading } from "src/data/models/book";
+import type { annotation } from "src/data/import/annotations";
+import { findPreviousHeader, type Heading, isHeading } from "src/data/models/book";
 
-// TODO: switch to DFS/BFS?
+// KILL: switch to DFS/BFS?
 // Need this to be able to call countAnnotations
 
-// TODO: why did I make this? Where do I need it?
-// TODO: refactor
+// DONE: why did I make this? Where do I need it?
+// DONE: refactor
 // TODO: think about heading collisions as there may be multiple chapters with same name
-// TODO: don't need to nest paragraphs I think
-// TODO: fix type
+// KILL: don't need to nest paragraphs I think
+// DONE: fix type
 
 export function generateTree(sections: Heading[]) {
     let i = 0;
