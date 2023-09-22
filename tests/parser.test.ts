@@ -4,7 +4,7 @@ import { generateTree } from "src/data/models/bookTree";
 import { getFileContents } from "src/data/disk";
 import { Heading } from "src/data/models/book";
 
-jest.mock("../src/data/import/disk");
+jest.mock("../src/data/disk");
 jest.mock("nanoid", () => ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nanoid: (number: number) => "aaaaaaaa",

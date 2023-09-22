@@ -1,7 +1,7 @@
 import { createFlashcardForAnnotation, getFlashcardById } from "src/api";
 import { plugin } from "src/main";
 
-jest.mock("../src/data/import/disk", () => {
+jest.mock("../src/data/disk", () => {
     return {
         // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
         writeCardToDisk: (path: string, text: string) => {
