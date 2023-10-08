@@ -26,7 +26,6 @@ export default class SRPlugin extends Plugin {
     public data: PluginData;
     // todo: fix type
     public notesWithFlashcards: Book[];
-    public filePaths: string[];
     public bookNotesPaths: string[];
 
     async onload(): Promise<void> {
