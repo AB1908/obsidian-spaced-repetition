@@ -48,8 +48,9 @@ export class FlashcardModal extends Modal {
     }
 
     async onOpen(): Promise<void> {
+        // todo: refactor to move business logic out of modal creation
+        // todo: refactor tag into a plugin setting
         this.plugin.bookNotesPaths = listOfNotePaths("review/book");
-        // done: fix
         this.plugin.notesWithFlashcards = await init();
         this.modalElReactRoot = createRoot(this.modalEl);
         this.modalElReactRoot.render(
@@ -66,6 +67,7 @@ export class FlashcardModal extends Modal {
     }
 }
 
+// todo: move elsewhere
 export async function init() {
     const filePaths = listOfNotePaths("flashcards");
     // done: fix
@@ -74,6 +76,7 @@ export async function init() {
         try {
             await t.initialize();
         } catch (e) {
+            // todo: this is dangerous, I am catching other errors and just assuming that these are this error
             console.error(e);
             console.error("init: unable to initialize book");
             new Notice("Error: Unable to parse legacy SRS flashcards. Try removing the #flashcards tag from files with SRS flashcards.");
