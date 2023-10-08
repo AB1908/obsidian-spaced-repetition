@@ -23,7 +23,7 @@ export async function extractParagraphs(filePath: string, flashcards: Flashcard[
     const fileContents = await getFileContents(filePath);
     const fileContentsArray = fileContents.split("\n");
     const processedData: paragraph[] = [];
-    const paragraphsWithFlashcards = new Set(flashcards.map(t => t.annotationId));
+    const paragraphsWithFlashcards = new Set(flashcards.map(t => t.parentId));
     for (let section of paragraphsOrHeadings) {
         if (section.type == "paragraph") {
             const start = section.position.start.line;

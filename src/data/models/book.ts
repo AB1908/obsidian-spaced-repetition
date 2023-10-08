@@ -46,7 +46,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
     let output: (BookMetadataSection)[] = [];
     let headingIndex = 0;
     const fileTextArray = fileText.split("\n");
-    const annotationsWithFlashcards = new Set(flashcards.map(t => t.annotationId));
+    const annotationsWithFlashcards = new Set(flashcards.map(t => t.parentId));
     if (metadata.sections == null) throw new Error("bookSections: file has no sections");
     for (const cacheItem of metadata.sections) {
         // todo: consider parameterizing this
@@ -320,7 +320,7 @@ export class Book implements frontbook {
 
         const updatedParsedCard = {
             ...parsedCardCopy, metadataText: metadataTextGenerator(
-                card.annotationId,
+                card.parentId,
                 updatedSchedulingMetadata,
                 card.flag
             )

@@ -160,7 +160,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
     let annotations = book.bookSections.slice(selectedSectionIndex, nextHeadingIndex).filter((t): t is annotation => isAnnotation(t));
 
     const flashcardCountForAnnotation: Record<string, number> = {};
-    for (const id of book.flashcards.map(t => t.annotationId)) {
+    for (const id of book.flashcards.map(t => t.parentId)) {
         flashcardCountForAnnotation[id] = flashcardCountForAnnotation[id] ? flashcardCountForAnnotation[id] + 1 : 1;
     }
 
@@ -183,7 +183,7 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
     if (!book) {
         return;
     }
-    return book.flashcards.filter(t => t.annotationId === annotationId);
+    return book.flashcards.filter(t => t.parentId === annotationId);
 }
 
 export function getBooks(): ReviewBook[] {
@@ -217,7 +217,7 @@ export function getBookById(id: string): frontEndBook {
     if (!book) {
         throw new Error(`getBookById: No book found for id ${id}`);
     }
-    const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.annotationId));
+    const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.parentId));
     const annotationsWithoutFlashcards = new Set<string>();
     for (const annotation of book.annotations()) {
         if (!annotationsWithFlashcards.has(annotation.id)) {
@@ -259,6 +259,8 @@ export interface NotesWithoutBooks {
     path: string;
 }
 
+// todo: expand to also include other notes and not just books
+// todo: consider using the tag to fetch here??
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
     const notesWithReviewDecks = new Set(plugin.notesWithFlashcards.map(t => t.annotationPath).map(t => getParentFolderName(t)));
     return plugin.bookNotesPaths

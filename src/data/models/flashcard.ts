@@ -32,7 +32,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
     questionText: string;
     siblings: string[];
     // todo: rename
-    annotationId: string;
+    parentId: string;
     flag: FLAG;
     parsedCardId: string;
 
@@ -45,7 +45,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
         this.dueDate = cardMetadata?.dueDate;
         this.ease = cardMetadata?.ease;
         this.interval = cardMetadata?.interval;
-        this.annotationId = cardMetadata?.annotationId || annotationId;
+        this.parentId = cardMetadata?.annotationId || annotationId;
         this.flag = cardMetadata?.flag;
         this.siblings = [];
         this.parsedCardId = parsedCardId;
