@@ -67,6 +67,8 @@ export function getMetadataForFile(path: string) {
     return app.metadataCache.getFileCache(tfile);
 }
 
+// todo: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
+// move to some other file instead
 export function getAnnotationFilePath(path: string) {
     const metadata = getMetadataForFile(path);
     const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
@@ -76,7 +78,6 @@ export function getAnnotationFilePath(path: string) {
 }
 
 export function getFolderNameFromPath(path: string) {
-    console.log(path);
     const tfile = app.vault.getAbstractFileByPath(path);
     if (tfile instanceof TFile) {
         return tfile.parent.name;
@@ -84,6 +85,7 @@ export function getFolderNameFromPath(path: string) {
         throw new Error(`getFolderNameFromPath: Folder not found for path ${path}`);
     }
 }
+
 export async function createFlashcardsFileForBook(bookPath: string) {
     // todo: refactor
     const tfolder = app.vault.getAbstractFileByPath(bookPath);
