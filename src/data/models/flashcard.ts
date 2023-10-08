@@ -31,6 +31,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
     interval: number;
     questionText: string;
     siblings: string[];
+    // todo: rename
     annotationId: string;
     flag: FLAG;
     parsedCardId: string;
