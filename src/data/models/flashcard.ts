@@ -16,8 +16,8 @@ export interface AbstractFlashcard {
     interval: number,
     ease: number,
     dueDate: string,
-    annotationId: string,
-    // this is to update the card so I can keep this object simple
+    parentId: string,
+    // this is to update the card so that I can avoid nesting additional objects inside this one
     parsedCardId: string,
 }
 
