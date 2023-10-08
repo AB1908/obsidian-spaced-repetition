@@ -1,0 +1,65 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getParagraphFromFile 1`] = `
+[
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 0,
+      "without": 0,
+    },
+    "id": "0",
+    "level": 1,
+    "name": "Chapter 3: Pulling the rabbit out of the hat",
+  },
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 0,
+      "without": 0,
+    },
+    "id": "1",
+    "level": 2,
+    "name": "Relating study and test",
+  },
+  {
+    "hasFlashcards": false,
+    "id": "hjhjhlkap",
+    "text": "What is episodic memory?
+NO one knows ^hjhjhlkap",
+    "wasIdPresent": true,
+  },
+]
+`;
+
+exports[`getParagraphFromFile 2`] = `
+[
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 0,
+      "without": 0,
+    },
+    "id": "2",
+    "level": 1,
+    "name": "Chapter 3: Pulling the rabbit out of the hat",
+  },
+  Heading {
+    "children": [],
+    "counts": {
+      "with": 0,
+      "without": 0,
+    },
+    "id": "3",
+    "level": 2,
+    "name": "Relating study and test",
+  },
+  {
+    "hasFlashcards": true,
+    "id": "hjhjhlkap",
+    "text": "What is episodic memory?
+NO one knows ^hjhjhlkap",
+    "wasIdPresent": true,
+  },
+]
+`;
