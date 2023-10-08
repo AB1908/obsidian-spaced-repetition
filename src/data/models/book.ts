@@ -190,6 +190,9 @@ export class Book implements frontbook {
     parsedCards: ParsedCard[];
     flashcardsPath: string;
     reviewIndex: number;
+    // even though this is a subset of this.flashcards, we need this as we are maintaining this as state internally
+    // and not passing it to the frontend
+    // this is because it is easier to test here
     reviewDeck: Flashcard[];
 
     constructor(path: string) {
