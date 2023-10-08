@@ -51,6 +51,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
             const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
+            // todo: I think I've fucked up the ordering for assignment with spread
             output.push({ hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation });
         } else if (cacheItem.type === "heading") {
             const headings = metadata?.headings;
@@ -109,6 +110,7 @@ export function findPreviousHeader(section: RawBookSection | BookMetadataSection
             index--;
             continue;
         }
+        // todo: convert to idiomatic type check?
         if ("level" in currentSection) { // we are on a heading
             // if same level heading than 100% it is not the right header
             // decrement and skip
