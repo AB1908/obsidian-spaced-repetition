@@ -40,6 +40,7 @@ export function isAnnotation(section: BookMetadataSection): section is annotatio
     return (section as annotation).highlight !== undefined;
 }
 
+// todo: should this be part of the Book class??
 export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[]) {
     if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
     let output: (BookMetadataSection)[] = [];
@@ -55,6 +56,8 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             output.push({ hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation });
         } else if (cacheItem.type === "heading") {
             const headings = metadata?.headings;
+            // todo: again, this is another case of an interesting type problem like in paragraphs.ts
+            // todo: figure out a way to remove this error handling logic
             if (headings === undefined) throw new Error("bookSections: no headings in file");
             output.push(new Heading(headings[headingIndex]));
             headingIndex++;
@@ -62,6 +65,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             // TODO: Any edge cases?
         }
     }
+    // todo: use method chaining instead?
     output = generateHeaderCounts(output);
     return output;
 }
