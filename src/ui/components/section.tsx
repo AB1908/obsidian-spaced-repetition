@@ -1,6 +1,6 @@
 // TODO: extract spans
 // TODO: add labels
-import {book} from "src/data/models/book";
+import {book} from "src/data/models/sourceNote";
 import {Link} from "react-router-dom";
 import React from "react";
 

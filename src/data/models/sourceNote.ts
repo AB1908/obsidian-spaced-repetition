@@ -190,7 +190,7 @@ export function getAnnotationFilePath(path: string) {
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
-export class Book implements frontbook {
+export class SourceNote implements frontbook {
     annotationPath: string;
     bookSections: (annotation | Heading)[];
     flashcards: Flashcard[];
@@ -202,6 +202,7 @@ export class Book implements frontbook {
     // even though this is a subset of this.flashcards, we need this as we are maintaining this as state internally
     // and not passing it to the frontend
     // this is because it is easier to test here
+    // also makes front end simpler in terms of routes and state management
     reviewDeck: Flashcard[];
 
     constructor(path: string) {
