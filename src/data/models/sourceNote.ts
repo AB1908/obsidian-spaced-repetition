@@ -207,11 +207,11 @@ export class SourceNote implements frontbook {
 
     constructor(path: string) {
         this.id = nanoid(8);
-        this.flashcardsPath = path;
+        this.flashcardsPath = null;
         this.name = "";
         this.parsedCards = [];
         this.flashcards = [];
-        this.path = "";
+        this.path = path;
         this.bookSections = [];
         this.reviewIndex = -1;
         this.reviewDeck = [];
