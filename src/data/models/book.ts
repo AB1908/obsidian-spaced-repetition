@@ -1,7 +1,6 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
-    getAnnotationFilePath,
     getFileContents,
     getMetadataForFile,
     getParentOrFilename,
@@ -179,6 +178,16 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
         i++;
     }
     return out;
+}
+
+// todo: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
+// move to some other file instead
+export function getAnnotationFilePath(path: string) {
+    const metadata = getMetadataForFile(path);
+    const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
+    if (!annotationFromYaml) return;
+    const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
+    return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
 export class Book implements frontbook {
