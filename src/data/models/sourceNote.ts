@@ -94,7 +94,7 @@ export interface frontbook {
     flashcardsPath: string;
     parsedCards: ParsedCard[];
     flashcards: Flashcard[];
-    annotationPath: string;
+    path: string;
     bookSections: BookMetadataSections;
 }
 
@@ -191,7 +191,7 @@ export function getAnnotationFilePath(path: string) {
 }
 
 export class SourceNote implements frontbook {
-    annotationPath: string;
+    path: string;
     bookSections: (annotation | Heading)[];
     flashcards: Flashcard[];
     id: string;
@@ -211,7 +211,7 @@ export class SourceNote implements frontbook {
         this.name = "";
         this.parsedCards = [];
         this.flashcards = [];
-        this.annotationPath = "";
+        this.path = "";
         this.bookSections = [];
         this.reviewIndex = -1;
         this.reviewDeck = [];
@@ -231,7 +231,7 @@ export class SourceNote implements frontbook {
     async initialize() {
         const annotationTFile = getAnnotationFilePath(this.flashcardsPath);
         if (annotationTFile) {
-            this.annotationPath = annotationTFile.path;
+            this.path = annotationTFile.path;
             this.bookSections = bookSections(
                 getMetadataForFile(annotationTFile.path),
                 await getFileContents(annotationTFile.path),
