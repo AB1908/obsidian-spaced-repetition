@@ -45,7 +45,7 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
     return filePaths;
 }
 
-export function listOfNotePaths(tag: string) {
+export function filePathsWithTag(tag: string) {
     const hashSet = setOfHashesWithTags(tag);
     return findFilesWithHashInSet(hashSet);
 }

@@ -6,7 +6,7 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { Root } from "src/routes/root";
 import { children } from "src/routes/routes";
 import ErrorPage from "src/routes/errorPage";
-import { listOfNotePaths } from "src/data/disk";
+import { filePathsWithTag } from "src/data/disk";
 import { SourceNote } from "src/data/models/sourceNote";
 
 /*
@@ -50,8 +50,8 @@ export class FlashcardModal extends Modal {
     async onOpen(): Promise<void> {
         // todo: refactor to move business logic out of modal creation
         // todo: refactor tag into a plugin setting
-        this.plugin.bookNotesPaths = listOfNotePaths("review/book");
-        this.plugin.notesWithFlashcards = await init();
+        this.plugin.bookNotesPaths = filePathsWithTag("review/book");
+        // this.plugin.notesWithFlashcards = await init();
         this.modalElReactRoot = createRoot(this.modalEl);
         this.modalElReactRoot.render(
             <>
@@ -69,7 +69,7 @@ export class FlashcardModal extends Modal {
 
 // todo: move elsewhere
 export async function init() {
-    const filePaths = listOfNotePaths("flashcards");
+    const filePaths = listOfFilePathsWithTag("flashcards");
     // done: fix
     const notesWithFlashcards = filePaths.map((t: string) => new SourceNote(t));
     for (const t of notesWithFlashcards) {
