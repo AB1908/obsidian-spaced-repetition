@@ -86,18 +86,6 @@ export class Heading {
 
 }
 
-// DONE rewrite to use ids instead of doing object equality
-// DONE: fix types, narrowing doesn't work here somehow
-export interface frontbook {
-    id: string;
-    name: string;
-    flashcardsPath: string;
-    parsedCards: ParsedCard[];
-    flashcards: Flashcard[];
-    path: string;
-    bookSections: BookMetadataSections;
-}
-
 export function findPreviousHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
     let index = sections.indexOf(section);
     // top level headers don't have a parent
@@ -190,6 +178,18 @@ export function getAnnotationFilePath(path: string) {
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
+// DONE rewrite to use ids instead of doing object equality
+// DONE: fix types, narrowing doesn't work here somehow
+export interface frontbook {
+    id: string;
+    name: string;
+    flashcardsPath: string | null;
+    parsedCards: ParsedCard[];
+    flashcards: Flashcard[];
+    path: string;
+    bookSections: BookMetadataSections;
+}
+
 export class SourceNote implements frontbook {
     path: string;
     bookSections: (annotation | Heading)[];
@@ -197,7 +197,7 @@ export class SourceNote implements frontbook {
     id: string;
     name: string;
     parsedCards: ParsedCard[];
-    flashcardsPath: string;
+    flashcardsPath: string | null;
     reviewIndex: number;
     // even though this is a subset of this.flashcards, we need this as we are maintaining this as state internally
     // and not passing it to the frontend
