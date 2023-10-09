@@ -1,4 +1,5 @@
 import { TagCache, TFile, TFolder } from "obsidian";
+import {ANNOTATIONS_YAML_KEY} from "src/data/models/sourceNote";
 
 export async function writeCardToDisk(path: string, text: string) {
     await app.vault.append(getTFileForPath(path), text);
@@ -83,7 +84,7 @@ export async function createFlashcardsFileForBook(bookPath: string) {
         throw new Error(`createFlashcardsFileForBook: Folder not found for path ${bookPath}`);
     }
     const fileContents = `---
-annotations: "[[${tfolder.path}/Annotations]]"
+${ANNOTATIONS_YAML_KEY}: "[[${tfolder.path}/Annotations]]"
 ---
 
 #flashcards
