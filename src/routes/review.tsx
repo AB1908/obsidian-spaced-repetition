@@ -13,7 +13,7 @@ export interface FrontendFlashcard {
     answerText: string,
     context: string,
     cardType: number,
-    annotationId: string,
+    parentId: string,
     interval: number,
 }
 
