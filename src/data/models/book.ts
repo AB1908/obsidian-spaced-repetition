@@ -228,14 +228,6 @@ export class Book implements frontbook {
     // think of decoupling that later down the line?
 
     async initialize() {
-        this.name = getParentOrFilename(this.flashcardsPath);
-        this.parsedCards = await parseFileText(this.flashcardsPath);
-        try {
-            this.flashcards = generateFlashcardsArray(this.parsedCards);
-        } catch (e) {
-            console.error(e);
-            throw new Error("initialize: You have invalid flashcards in your file.");
-        }
         const annotationTFile = getAnnotationFilePath(this.flashcardsPath);
         if (annotationTFile) {
             this.annotationPath = annotationTFile.path;
@@ -244,6 +236,15 @@ export class Book implements frontbook {
                 await getFileContents(annotationTFile.path),
                 this.flashcards
             );
+        }
+
+        this.name = getParentOrFilename(this.flashcardsPath);
+        this.parsedCards = await parseFileText(this.flashcardsPath);
+        try {
+            this.flashcards = generateFlashcardsArray(this.parsedCards);
+        } catch (e) {
+            console.error(e);
+            throw new Error("initialize: You have invalid flashcards in your file.");
         }
         this.generateReviewDeck();
         return this;
