@@ -157,7 +157,9 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
         return null;
     }
     const nextHeadingIndex = findNextHeader(selectedSection, book.bookSections);
-    let annotations = book.bookSections.slice(selectedSectionIndex, nextHeadingIndex).filter((t): t is annotation => isAnnotation(t));
+    let annotations = book.bookSections
+        .slice(selectedSectionIndex, nextHeadingIndex)
+        .filter((t): t is annotation => isAnnotation(t));
 
     const flashcardCountForAnnotation: Record<string, number> = {};
     for (const id of book.flashcards.map(t => t.parentId)) {
