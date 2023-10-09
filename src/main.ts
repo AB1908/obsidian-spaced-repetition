@@ -3,7 +3,7 @@ import { FlashcardModal } from "src/ui/modals/flashcard-modal";
 import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
-import type { Book } from "src/data/models/book";
+import type { SourceNote } from "src/data/models/sourceNote";
 
 export interface PluginData {
     settings: SRSettings;
@@ -25,8 +25,9 @@ export let plugin: SRPlugin;
 export default class SRPlugin extends Plugin {
     public data: PluginData;
     // todo: fix type
-    public notesWithFlashcards: Book[];
+    public notesWithFlashcards: SourceNote[];
     public bookNotesPaths: string[];
+    public flashcardNotes: any[]; // should have path and array of flashcards?
 
     async onload(): Promise<void> {
         await this.loadPluginData();

@@ -2,7 +2,7 @@ import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
 import { calculateDelayBeforeReview, createFlashcard, Flashcard, maturityCounts } from "src/data/models/flashcard";
 import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { findNextHeader, isAnnotation, isHeading } from "src/data/models/book";
+import { findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { getParentFolderPathAndName, getParentOrFilename, updateCardOnDisk } from "src/data/disk";
 import { plugin } from "src/main";

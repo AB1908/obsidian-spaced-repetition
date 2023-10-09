@@ -1,4 +1,4 @@
-import { bookSections, findNextHeader, findPreviousHeader } from "src/data/models/book";
+import { bookSections, findNextHeader, findPreviousHeader } from "src/data/models/sourceNote";
 import { beforeEach } from "@jest/globals";
 import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
 import type { SectionCache } from "obsidian";

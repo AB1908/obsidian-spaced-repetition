@@ -7,7 +7,7 @@ import { Root } from "src/routes/root";
 import { children } from "src/routes/routes";
 import ErrorPage from "src/routes/errorPage";
 import { listOfNotePaths } from "src/data/disk";
-import { Book } from "src/data/models/book";
+import { SourceNote } from "src/data/models/sourceNote";
 
 /*
 books by title or id?
@@ -71,7 +71,7 @@ export class FlashcardModal extends Modal {
 export async function init() {
     const filePaths = listOfNotePaths("flashcards");
     // done: fix
-    const notesWithFlashcards = filePaths.map((t: string) => new Book(t));
+    const notesWithFlashcards = filePaths.map((t: string) => new SourceNote(t));
     for (const t of notesWithFlashcards) {
         try {
             await t.initialize();

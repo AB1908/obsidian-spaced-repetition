@@ -2,7 +2,7 @@ import React from "react";
 import { getNotesWithoutReview, NotesWithoutBooks } from "src/api";
 import { plugin } from "src/main";
 import { createFlashcardsFileForBook } from "src/data/disk";
-import { Book } from "src/data/models/book";
+import { SourceNote } from "src/data/models/sourceNote";
 import { useNavigate } from "react-router-dom";
 import { useLoaderData } from "react-router";
 
@@ -19,7 +19,7 @@ export function BookCreator() {
         // some logic here to create that new file
         // todo: refactor and move to api.ts
         await createFlashcardsFileForBook(path);
-        const newBook = new Book(`${path}/Flashcards.md`);
+        const newBook = new SourceNote(`${path}/Flashcards.md`);
         await newBook.initialize();
         // add this to array of books
         plugin.notesWithFlashcards.push(newBook);

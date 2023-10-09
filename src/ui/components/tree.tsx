@@ -1,5 +1,5 @@
 import React, { ReactNode, useState } from "react";
-import type { Heading, book } from "src/data/models/book";
+import type { Heading, book } from "src/data/models/sourceNote";
 
 function CollapseIcon({ isDeckTreeOpen, handleTriangleClick }: {
     isDeckTreeOpen: boolean,
