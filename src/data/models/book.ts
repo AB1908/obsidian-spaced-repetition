@@ -216,6 +216,17 @@ export class Book implements frontbook {
         this.reviewDeck = [];
     }
 
+    // first initialize all the basic attributes of the book/note
+    // then initialize optional attributes like its flashcards
+    // how do I find flashcards? err, well, using some kind of relationship?
+    // basically need to do a join?
+    // i imagine I might need to have parsed flashcards earlier?
+    // if not, I need to find them while initializing the book and then get them up and running
+    // seems somewhat slow to me
+    // potentially investigate web workers in the future
+    // booksections: this must necessarily come later because of its reliance on flashcards
+    // think of decoupling that later down the line?
+
     async initialize() {
         this.name = getParentOrFilename(this.flashcardsPath);
         this.parsedCards = await parseFileText(this.flashcardsPath);
