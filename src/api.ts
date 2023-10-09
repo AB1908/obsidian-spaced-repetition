@@ -148,11 +148,13 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
     const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
+    // todo: this should also throw error
     if (!book) {
         return null;
     }
     const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
+    // todo: shouldn't this throw an error since this is an impossible condition to reach?
     if ((!selectedSection) || (!isHeading(selectedSection))) {
         return null;
     }
@@ -161,6 +163,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
         .slice(selectedSectionIndex, nextHeadingIndex)
         .filter((t): t is annotation => isAnnotation(t));
 
+    // WTF is this???
     const flashcardCountForAnnotation: Record<string, number> = {};
     for (const id of book.flashcards.map(t => t.parentId)) {
         flashcardCountForAnnotation[id] = flashcardCountForAnnotation[id] ? flashcardCountForAnnotation[id] + 1 : 1;
