@@ -5,6 +5,8 @@ import { moment } from "obsidian";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
+import {getAnnotationFilePath, SourceNote} from "src/data/models/sourceNote";
+import { filePathsWithTag } from "src/data/disk";
 
 export interface AbstractFlashcard {
     id: string,
