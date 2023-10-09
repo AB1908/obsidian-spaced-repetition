@@ -78,7 +78,7 @@ export async function init() {
         } catch (e) {
             // WARNING! this is dangerous, I am catching other errors and just assuming that these are this error
             console.error(e);
-            console.error(`init: unable to initialize book ${t.annotationPath}`);
+            console.error(`init: unable to initialize book ${t.path}`);
             new Notice("Error: Unable to parse legacy SRS flashcards. Try removing the #flashcards tag from files with SRS flashcards.");
         }
     }
