@@ -54,9 +54,10 @@ export async function getFileContents(path: string) {
     return await app.vault.read(getTFileForPath(path));
 }
 
-export function getParentFolderName(path: string) {
+export function getParentOrFilename(path: string) {
     // TODO: What if root folder?
-    return getTFileForPath(path)?.parent.name;
+    let tFileForPath = getTFileForPath(path);
+    return tFileForPath.parent?.name || tFileForPath.basename;
 }
 
 export function getMetadataForFile(path: string) {
