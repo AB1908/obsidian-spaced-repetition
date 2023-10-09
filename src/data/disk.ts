@@ -1,5 +1,4 @@
 import { TagCache, TFile, TFolder } from "obsidian";
-import { ANNOTATIONS_YAML_KEY } from "src/data/models/book";
 
 export async function writeCardToDisk(path: string, text: string) {
     await app.vault.append(getTFileForPath(path), text);
@@ -66,16 +65,6 @@ export function getMetadataForFile(path: string) {
         throw new Error(`getMetadataForFile: no TFile found at path ${path}`);
     }
     return app.metadataCache.getFileCache(tfile);
-}
-
-// todo: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
-// move to some other file instead
-export function getAnnotationFilePath(path: string) {
-    const metadata = getMetadataForFile(path);
-    const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
-    if (!annotationFromYaml) return;
-    const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
-    return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
 
 export function getFolderNameFromPath(path: string) {
