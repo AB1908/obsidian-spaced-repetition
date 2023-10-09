@@ -4,7 +4,7 @@ import {
     getAnnotationFilePath,
     getFileContents,
     getMetadataForFile,
-    getParentFolderName,
+    getParentOrFilename,
     updateCardOnDisk
 } from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
@@ -208,7 +208,7 @@ export class Book implements frontbook {
     }
 
     async initialize() {
-        this.name = getParentFolderName(this.flashcardsPath);
+        this.name = getParentOrFilename(this.flashcardsPath);
         this.parsedCards = await parseFileText(this.flashcardsPath);
         try {
             this.flashcards = generateFlashcardsArray(this.parsedCards);

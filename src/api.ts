@@ -4,7 +4,7 @@ import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { findNextHeader, isAnnotation, isHeading } from "src/data/models/book";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { getParentFolderPathAndName, getParentFolderName, updateCardOnDisk } from "src/data/disk";
+import { getParentFolderPathAndName, getParentOrFilename, updateCardOnDisk } from "src/data/disk";
 import { plugin } from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
@@ -262,8 +262,8 @@ export interface NotesWithoutBooks {
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
-    const notesWithReviewDecks = new Set(plugin.notesWithFlashcards.map(t => t.annotationPath).map(t => getParentFolderName(t)));
+    const notesWithReviewDecks = new Set(plugin.notesWithFlashcards.map(t => t.annotationPath).map(t => getParentOrFilename(t)));
     return plugin.bookNotesPaths
-        .filter(t => !notesWithReviewDecks.has(getParentFolderName(t)))
+        .filter(t => !notesWithReviewDecks.has(getParentOrFilename(t)))
         .map(t => getParentFolderPathAndName(t));
 }
