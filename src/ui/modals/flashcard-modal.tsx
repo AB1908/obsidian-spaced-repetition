@@ -67,20 +67,6 @@ export class FlashcardModal extends Modal {
     }
 }
 
-// todo: move elsewhere
+// todo: move elsewhere?
 export async function init() {
-    const filePaths = listOfFilePathsWithTag("flashcards");
-    // done: fix
-    const notesWithFlashcards = filePaths.map((t: string) => new SourceNote(t));
-    for (const t of notesWithFlashcards) {
-        try {
-            await t.initialize();
-        } catch (e) {
-            // WARNING! this is dangerous, I am catching other errors and just assuming that these are this error
-            console.error(e);
-            console.error(`init: unable to initialize book ${t.path}`);
-            new Notice("Error: Unable to parse legacy SRS flashcards. Try removing the #flashcards tag from files with SRS flashcards.");
-        }
-    }
-    return notesWithFlashcards;
 }
