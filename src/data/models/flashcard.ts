@@ -1,7 +1,7 @@
 import { CardType, ReviewResponse, schedule } from "src/scheduler/scheduling";
 import { nanoid } from "nanoid";
-import { FLAG, FlashcardMetadata, parseCardText, parseMetadata } from "src/data/parser";
-import { moment } from "obsidian";
+import { FLAG, FlashcardMetadata, parseCardText, parseFileText, parseMetadata } from "src/data/parser";
+import { moment, Notice } from "obsidian";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
@@ -146,4 +146,29 @@ export function generateFlashcardsArray(parsedCardsArray: ParsedCard[]) {
         out.push(createFlashcard(parsedCard, questionText, answerText));
     }
     return out;
+}
+
+class FlashcardNote {
+    path: string;
+    flashcards: Flashcard[];
+    parentPath: string;
+    parsedCards: ParsedCard[];
+
+    constructor(path: string) {
+        this.path = path;
+        this.flashcards = [];
+        this.parentPath = "";
+        this.parsedCards = [];
+    }
+
+    async initialize() {
+        this.parsedCards = await parseFileText(this.path);
+        try {
+            this.flashcards = generateFlashcardsArray(this.parsedCards);
+        } catch (e) {
+            console.error(e);
+            throw new Error("initialize: You have invalid flashcards in your file.");
+        }
+        return this;
+    }
 }
