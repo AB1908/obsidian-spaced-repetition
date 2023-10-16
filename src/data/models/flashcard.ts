@@ -162,6 +162,7 @@ export class FlashcardNote {
     }
 
     async initialize() {
+        this.parentPath = getAnnotationFilePath(this.path);
         this.parsedCards = await parseFileText(this.path);
         try {
             this.flashcards = generateFlashcardsArray(this.parsedCards);
