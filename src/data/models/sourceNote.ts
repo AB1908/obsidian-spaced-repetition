@@ -4,14 +4,16 @@ import {
     getFileContents,
     getMetadataForFile,
     getParentOrFilename,
+    getTFileForPath,
     updateCardOnDisk
 } from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
-import { type Flashcard, generateFlashcardsArray, schedulingMetadataForResponse } from "src/data/models/flashcard";
-import { parseFileText } from "src/data/parser";
+import { type Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/scheduling";
+import { TFile } from "obsidian";
+import { plugin } from "src/main";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
