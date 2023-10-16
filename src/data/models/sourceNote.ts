@@ -239,13 +239,14 @@ export class SourceNote implements frontbook {
             );
         }
 
-        this.name = getParentOrFilename(this.flashcardsPath);
-        this.parsedCards = await parseFileText(this.flashcardsPath);
-        try {
-            this.flashcards = generateFlashcardsArray(this.parsedCards);
-        } catch (e) {
-            console.error(e);
-            throw new Error("initialize: You have invalid flashcards in your file.");
+        this.name = getParentOrFilename(this.path);
+
+        // done: join on parsed flashcards
+        // do i need a global flashcards array?
+        // it does align with my roadmap of allowing tag based grouping as I would need a global index there as well
+        this.flashcardNote = plugin.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
+        if (this.flashcardNote === null) {
+            throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
         }
         this.generateReviewDeck();
         return this;
