@@ -4,6 +4,7 @@ import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import type { SourceNote } from "src/data/models/sourceNote";
+import { FlashcardIndex } from "src/data/models/flashcard";
 
 export interface PluginData {
     settings: SRSettings;
@@ -27,10 +28,11 @@ export default class SRPlugin extends Plugin {
     // todo: fix type
     public notesWithFlashcards: SourceNote[];
     public bookNotesPaths: string[];
-    public flashcardNotes: any[]; // should have path and array of flashcards?
+    public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
 
     async onload(): Promise<void> {
         await this.loadPluginData();
+        this.flashcardIndex = await new FlashcardIndex().initialize();
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         plugin = this;
 
