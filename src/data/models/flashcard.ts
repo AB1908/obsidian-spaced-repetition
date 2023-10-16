@@ -148,7 +148,7 @@ export function generateFlashcardsArray(parsedCardsArray: ParsedCard[]) {
     return out;
 }
 
-class FlashcardNote {
+export class FlashcardNote {
     path: string;
     flashcards: Flashcard[];
     parentPath: string;
@@ -173,7 +173,7 @@ class FlashcardNote {
     }
 }
 
-class FlashcardIndex {
+export class FlashcardIndex {
     flashcardNotes: FlashcardNote[];
 
     constructor() {
