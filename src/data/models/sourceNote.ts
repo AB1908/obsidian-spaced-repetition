@@ -168,12 +168,14 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
     return out;
 }
 
-// todo: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
+// done: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
 // move to some other file instead
+// done: how can the return type for this be undefined? WTF??
 export function getAnnotationFilePath(path: string) {
     const metadata = getMetadataForFile(path);
     const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
-    if (!annotationFromYaml) return;
+    if (!annotationFromYaml)
+        throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
     const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
     return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
 }
