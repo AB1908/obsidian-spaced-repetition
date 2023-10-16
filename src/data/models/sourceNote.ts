@@ -229,15 +229,13 @@ export class SourceNote implements frontbook {
     // think of decoupling that later down the line?
 
     async initialize() {
-        const annotationTFile = getAnnotationFilePath(this.flashcardsPath);
-        if (annotationTFile) {
-            this.path = annotationTFile.path;
-            this.bookSections = bookSections(
-                getMetadataForFile(annotationTFile.path),
-                await getFileContents(annotationTFile.path),
-                this.flashcards
-            );
-        }
+        // done: fix unnecessary annotation path extraction
+        // const annotationTFile = getTFileForPath(this.path);
+        this.bookSections = bookSections(
+            getMetadataForFile(this.path),
+            await getFileContents(this.path),
+            this.flashcards
+        );
 
         this.name = getParentOrFilename(this.path);
 
