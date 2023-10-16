@@ -204,6 +204,7 @@ export class SourceNote implements frontbook {
     // this is because it is easier to test here
     // also makes front end simpler in terms of routes and state management
     reviewDeck: Flashcard[];
+    flashcardNote: FlashcardNote;
 
     constructor(path: string) {
         this.id = nanoid(8);
