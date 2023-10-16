@@ -194,6 +194,7 @@ class FlashcardIndex {
             }
         }
         this.flashcardNotes = notesWithFlashcards;
+        console.log("Card Coverage: Flashcard index successfully initialized");
         return this;
     }
 }
