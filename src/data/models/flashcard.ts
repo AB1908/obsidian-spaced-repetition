@@ -167,7 +167,7 @@ class FlashcardNote {
             this.flashcards = generateFlashcardsArray(this.parsedCards);
         } catch (e) {
             console.error(e);
-            throw new Error("initialize: You have invalid flashcards in your file.");
+            throw new Error(e);
         }
         return this;
     }
