@@ -177,7 +177,12 @@ export function getAnnotationFilePath(path: string) {
     if (!annotationFromYaml)
         throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
     const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
-    return app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
+    const destinationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
+    if (destinationTFile instanceof TFile) {
+        return destinationTFile.path;
+    } else {
+        throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
+    }
 }
 
 // DONE rewrite to use ids instead of doing object equality
