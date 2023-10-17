@@ -192,21 +192,15 @@ export function getAnnotationFilePath(path: string) {
 export interface frontbook {
     id: string;
     name: string;
-    flashcardsPath: string | null;
-    parsedCards: ParsedCard[];
-    flashcards: Flashcard[];
     path: string;
     bookSections: BookMetadataSections;
 }
 
 export class SourceNote implements frontbook {
     path: string;
-    bookSections: (annotation | Heading)[];
-    flashcards: Flashcard[];
+    bookSections: BookMetadataSections;
     id: string;
     name: string;
-    parsedCards: ParsedCard[];
-    flashcardsPath: string | null;
     reviewIndex: number;
     // even though this is a subset of this.flashcards, we need this as we are maintaining this as state internally
     // and not passing it to the frontend
