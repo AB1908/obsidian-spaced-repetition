@@ -202,12 +202,18 @@ export class SourceNote implements frontbook {
     id: string;
     name: string;
     reviewIndex: number;
-    // even though this is a subset of this.flashcards, we need this as we are maintaining this as state internally
-    // and not passing it to the frontend
-    // this is because it is easier to test here
-    // also makes front end simpler in terms of routes and state management
+    // even though this is a subset of this.flashcards, we need this as we are maintaining this as
+    // state internally and not passing it to the frontend
+    // this is because it is easier to test here and also makes front end simpler in terms of
+    // routes and state management
+    // however, there may be better approaches
     reviewDeck: Flashcard[];
-    flashcardNote: FlashcardNote;
+    // i feel like i need a factory method that creates a SourceNoteWithFLashcards
+    // and a SourceNote
+    flashcardNote: FlashcardNote | null;
+    // todo: think of a way to not use plugin
+    // the reason I need it is because to find the corresponding flashcard note
+    plugin: SRPlugin;
 
     constructor(path: string) {
         this.id = nanoid(8);
