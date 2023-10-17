@@ -247,7 +247,7 @@ export class SourceNote implements frontbook {
         this.bookSections = bookSections(
             getMetadataForFile(this.path),
             await getFileContents(this.path),
-            this.flashcards
+            this.flashcardNote?.flashcards || []
         );
 
         this.name = getParentOrFilename(this.path);
