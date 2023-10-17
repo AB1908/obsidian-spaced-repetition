@@ -196,6 +196,7 @@ export interface frontbook {
     bookSections: BookMetadataSections;
 }
 
+//todo: split review related logic into separate class??
 export class SourceNote implements frontbook {
     path: string;
     bookSections: BookMetadataSections;
@@ -260,12 +261,9 @@ export class SourceNote implements frontbook {
         return this;
     }
 
-    // So regenerate the review deck, and then check if it has anything.
     canBeReviewed() {
         return this.reviewDeck.length != 0;
     }
-
-    // Sometimes, we may have finished reviewing a deck. We shouldn't allow reviewing it again.
 
     annotations() {
         return this.bookSections.filter((t): t is annotation => isAnnotation(t));
@@ -301,6 +299,10 @@ export class SourceNote implements frontbook {
         this.reviewDeck = [];
     }
 
+    // write to disk first
+    // then updated parsed card index
+    // though that state might go out of sync depending on how fast we call it
+    // todo: debounce?
     // todo: think differently?
     async processCardReview(flashcardId: string, reviewResponse: ReviewResponse) {
         const card = this.flashcardNote.flashcards.filter(t => t.id === flashcardId)[0];
@@ -313,20 +315,18 @@ export class SourceNote implements frontbook {
         this.updateFlashcard(flashcardId, updatedSchedulingMetadata);
     }
 
+    // Sometimes, we may have finished reviewing a deck. We shouldn't allow reviewing it again.
+    // So regenerate the review deck, and then check if it has anything.
     private generateReviewDeck() {
         this.reviewDeck = this.flashcardNote?.flashcards.filter(t => t.isDue()) || [];
         this.shuffleReviewDeck();
     }
 
-    // write to disk first
-    // then updated parsed card index
-    // though that state might go out of sync depending on how fast we call it
-    // todo: debounce?
-
     // copied from https://stackoverflow.com/a/12646864/13285428
+    // can also use Array.prototype.shuffle(), but it is an Obsidian extension to the
+    // Array prototype and makes testing difficult as I'd have to do some sort of
+    // patching to use the Obsidian Array prototype in my tests
     private shuffleReviewDeck() {
-        // can also use this, but it is an Obsidian extension to the Array prototype
-        // this.reviewDeck.shuffle();
         for (let i = this.reviewDeck.length - 1; i > 0; i--) {
             const j = Math.floor(Math.random() * (i + 1));
             [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
