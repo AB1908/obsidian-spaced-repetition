@@ -303,7 +303,7 @@ export class SourceNote implements frontbook {
 
     // todo: think differently?
     async processCardReview(flashcardId: string, reviewResponse: ReviewResponse) {
-        const card = this.flashcards.filter(t => t.id === flashcardId)[0];
+        const card = this.flashcardNote.flashcards.filter(t => t.id === flashcardId)[0];
         const updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
             interval: card.interval,
             ease: card.ease,
@@ -314,7 +314,7 @@ export class SourceNote implements frontbook {
     }
 
     private generateReviewDeck() {
-        this.reviewDeck = this.flashcards.filter(t => t.isDue());
+        this.reviewDeck = this.flashcardNote?.flashcards.filter(t => t.isDue()) || [];
         this.shuffleReviewDeck();
     }
 
@@ -334,11 +334,11 @@ export class SourceNote implements frontbook {
     }
 
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
-        this.flashcards.forEach((card: Flashcard, index: number) => {
+        this.flashcardNote.flashcards.forEach((card: Flashcard, index: number) => {
             if (card.id == flashcardId) {
-                this.flashcards[index].dueDate = updatedSchedulingMetadata.dueDate;
-                this.flashcards[index].ease = updatedSchedulingMetadata.ease;
-                this.flashcards[index].interval = updatedSchedulingMetadata.interval;
+                this.flashcardNote.flashcards[index].dueDate = updatedSchedulingMetadata.dueDate;
+                this.flashcardNote.flashcards[index].ease = updatedSchedulingMetadata.ease;
+                this.flashcardNote.flashcards[index].interval = updatedSchedulingMetadata.interval;
             }
         });
     }
@@ -346,7 +346,7 @@ export class SourceNote implements frontbook {
     // todo: feels like disk update should be put somewhere else, like parsedcard should have its
     // own class
     private async updateParsedCard(card: Flashcard, updatedSchedulingMetadata: SchedulingMetadata) {
-        const parsedCardCopy = this.parsedCards.filter((parsedCard: ParsedCard) => parsedCard.id === card.parsedCardId)[0];
+        const parsedCardCopy = this.flashcardNote.parsedCards.filter((parsedCard: ParsedCard) => parsedCard.id === card.parsedCardId)[0];
         const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
 
         const updatedParsedCard = {
@@ -361,7 +361,7 @@ export class SourceNote implements frontbook {
         const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
 
         if (writeSuccessful) {
-            this.parsedCards.forEach((value, index, array) => {
+            this.flashcardNote.parsedCards.forEach((value, index, array) => {
                 if (value.id === parsedCardCopy.id) {
                     array[index] = updatedParsedCard;
                 }
