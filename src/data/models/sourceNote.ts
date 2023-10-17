@@ -371,3 +371,30 @@ export class SourceNote implements frontbook {
         }
     }
 }
+
+export class SourceNoteIndex {
+    sourceNotes: SourceNote[]
+
+    constructor() {
+        this.sourceNotes = [];
+    }
+
+    async initialize(plugin: SRPlugin) {
+        //todo: parameterize
+        const filePaths = filePathsWithTag("review/book");
+        const notesWithAnnotations = filePaths.map((t: string) => new SourceNote(t, plugin));
+        for (const t of notesWithAnnotations) {
+            try {
+                await t.initialize();
+            } catch (e) {
+                // WARNING! this is dangerous, I am catching other errors and just assuming that
+                // these are this error
+                console.error(e);
+                console.error(`init: unable to initialize source note ${t.path}`);
+            }
+        }
+        this.sourceNotes = notesWithAnnotations;
+        console.log("Card Coverage: Source note index successfully initialized");
+        return this;
+    }
+}
