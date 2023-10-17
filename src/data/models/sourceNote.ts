@@ -240,6 +240,10 @@ export class SourceNote implements frontbook {
     async initialize() {
         // done: fix unnecessary annotation path extraction
         // const annotationTFile = getTFileForPath(this.path);
+        this.flashcardNote = this.plugin.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
+        if (this.flashcardNote === null) {
+            // throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
+        }
         this.bookSections = bookSections(
             getMetadataForFile(this.path),
             await getFileContents(this.path),
@@ -251,10 +255,7 @@ export class SourceNote implements frontbook {
         // done: join on parsed flashcards
         // do i need a global flashcards array?
         // it does align with my roadmap of allowing tag based grouping as I would need a global index there as well
-        this.flashcardNote = plugin.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
-        if (this.flashcardNote === null) {
-            throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
-        }
+        // plugin does not exist here, what to do?
         this.generateReviewDeck();
         return this;
     }
