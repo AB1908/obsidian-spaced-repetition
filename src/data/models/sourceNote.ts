@@ -215,13 +215,15 @@ export class SourceNote implements frontbook {
     // the reason I need it is because to find the corresponding flashcard note
     plugin: SRPlugin;
 
-    constructor(path: string) {
+    constructor(path: string, plugin: SRPlugin) {
         this.id = nanoid(8);
         this.name = "";
         this.path = path;
         this.bookSections = [];
         this.reviewIndex = -1;
         this.reviewDeck = [];
+        this.plugin = plugin;
+        this.flashcardNote = null;
     }
 
     // first initialize all the basic attributes of the book/note
