@@ -5,6 +5,7 @@ import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import type { SourceNote } from "src/data/models/sourceNote";
 import { FlashcardIndex } from "src/data/models/flashcard";
+import { SourceNoteIndex } from "src/data/models/sourceNote";
 
 export interface PluginData {
     settings: SRSettings;
@@ -29,12 +30,12 @@ export default class SRPlugin extends Plugin {
     public notesWithFlashcards: SourceNote[];
     public bookNotesPaths: string[];
     public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
+    private sourceNoteIndex: SourceNoteIndex;
 
     async onload(): Promise<void> {
         await this.loadPluginData();
         this.flashcardIndex = await new FlashcardIndex().initialize();
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        plugin = this;
+        this.sourceNoteIndex = await new SourceNoteIndex().initialize(this);
 
         appIcon();
 
@@ -51,6 +52,9 @@ export default class SRPlugin extends Plugin {
         });
 
         this.addSettingTab(new SRSettingTab(this.app, this));
+
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        plugin = this;
 
         console.log("SRS Plugin loaded");
     }
