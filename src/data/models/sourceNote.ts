@@ -44,7 +44,7 @@ export function isAnnotation(section: BookMetadataSection): section is annotatio
 // todo: should this be part of the Book class??
 export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[]) {
     if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
-    let output: (BookMetadataSection)[] = [];
+    let output: BookMetadataSections = [];
     let headingIndex = 0;
     const fileTextArray = fileText.split("\n");
     const annotationsWithFlashcards = new Set(flashcards.map(t => t.parentId));
