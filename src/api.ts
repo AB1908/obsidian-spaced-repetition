@@ -223,7 +223,7 @@ export function getBookById(bookId: string): frontEndBook {
         id: book.id,
         name: book.name,
         counts: {
-            flashcards: maturityCounts(book.flashcards),
+            flashcards: maturityCounts(book.flashcardNote.flashcards || []),
             annotations: {
                 withFlashcards: annotationsWithFlashcards.size,
                 withoutFlashcards: annotationsWithoutFlashcards.size
