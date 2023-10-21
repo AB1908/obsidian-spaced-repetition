@@ -36,6 +36,8 @@ export default class SRPlugin extends Plugin {
         await this.loadPluginData();
         this.flashcardIndex = await new FlashcardIndex().initialize();
         this.sourceNoteIndex = await new SourceNoteIndex().initialize(this);
+        // todo: eventually remove this and add access method for sourcenoteindex
+        this.notesWithFlashcards = this.sourceNoteIndex.sourceNotes;
 
         appIcon();
 
