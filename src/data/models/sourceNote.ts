@@ -211,7 +211,7 @@ export class SourceNote implements frontbook {
     reviewDeck: Flashcard[];
     // i feel like i need a factory method that creates a SourceNoteWithFLashcards
     // and a SourceNote
-    flashcardNote: FlashcardNote | null;
+    flashcardNote: FlashcardNote;
     // todo: think of a way to not use plugin
     // the reason I need it is because to find the corresponding flashcard note
     plugin: SRPlugin;
