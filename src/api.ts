@@ -164,7 +164,7 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
 
 export function getBooks(): ReviewBook[] {
     // todo: refactor
-    return plugin.notesWithFlashcards.map(t => {
+    return plugin.sourceNoteIndex.sourceNotes.map(t => {
         return {
             id: t.id,
             name: t.name,
@@ -227,7 +227,7 @@ export interface NotesWithoutBooks {
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
-    const notesWithReviewDecks = new Set(plugin.notesWithFlashcards.map(t => t.path).map(t => getParentOrFilename(t)));
+    const notesWithReviewDecks = new Set(plugin.sourceNoteIndex.sourceNotes.map(t => t.path).map(t => getParentOrFilename(t)));
     return plugin.bookNotesPaths
         .filter(t => !notesWithReviewDecks.has(getParentOrFilename(t)))
         .map(t => getParentFolderPathAndName(t));
