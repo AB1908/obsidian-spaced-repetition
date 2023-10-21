@@ -1,14 +1,14 @@
-import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
-import { calculateDelayBeforeReview, createFlashcard, Flashcard, maturityCounts } from "src/data/models/flashcard";
-import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
-import { generateSectionsTree } from "src/data/models/bookTree";
-import { findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
-import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { getParentFolderPathAndName, getParentOrFilename, updateCardOnDisk } from "src/data/disk";
-import { plugin } from "src/main";
-import type { annotation } from "src/data/models/annotations";
-import type { ReviewBook } from "src/routes/notes-home-page";
-import type { FrontendFlashcard } from "src/routes/review";
+import {CardType, type ReviewResponse} from "src/scheduler/scheduling";
+import {calculateDelayBeforeReview, createFlashcard, Flashcard, maturityCounts} from "src/data/models/flashcard";
+import {createParsedCard, type ParsedCard} from "src/data/models/parsedCard";
+import {generateSectionsTree} from "src/data/models/bookTree";
+import {findNextHeader, isAnnotation, isHeading} from "src/data/models/sourceNote";
+import {cardTextGenerator, generateCardAsStorageFormat} from "src/data/utils/TextGenerator";
+import {getParentFolderPathAndName, getParentOrFilename, updateCardOnDisk} from "src/data/disk";
+import {plugin} from "src/main";
+import type {annotation} from "src/data/models/annotations";
+import type {ReviewBook} from "src/routes/notes-home-page";
+import type {FrontendFlashcard} from "src/routes/review";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -29,12 +29,12 @@ import type { FrontendFlashcard } from "src/routes/review";
 // TODO: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
 
 export function getAnnotationById(annotationId: string, bookId: string) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     return book.annotations().filter((t: annotation) => t.id === annotationId)[0];
 }
 
 export function getNextCard(bookId: string) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -45,7 +45,7 @@ export function getNextCard(bookId: string) {
 }
 
 export function getCurrentCard(bookId: string) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -55,7 +55,7 @@ export function getCurrentCard(bookId: string) {
 }
 
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
     // already has flashcards
     const flashcard: FrontendFlashcard = book.flashcardNote.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
@@ -70,7 +70,7 @@ export async function updateFlashcardSchedulingMetadata(
     bookId: string,
     reviewResponse: ReviewResponse
 ) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     await book.processCardReview(flashcardId, reviewResponse);
     return true;
 }
@@ -79,7 +79,7 @@ export async function updateFlashcardSchedulingMetadata(
 // TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
@@ -93,7 +93,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
 
 // TODO: create abstraction
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
@@ -125,7 +125,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
 
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
     // todo: shouldn't this throw an error since this is an impossible condition to reach?
@@ -158,11 +158,12 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 }
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     return book.flashcardNote.flashcards.filter(t => t.parentId === annotationId);
 }
 
 export function getBooks(): ReviewBook[] {
+    // todo: refactor
     return plugin.notesWithFlashcards.map(t => {
         return {
             id: t.id,
@@ -188,12 +189,8 @@ interface frontEndBook {
     id: string;
 }
 
-function extracted(id: string) {
-    return plugin.sourceNoteIndex.getBook(id);
-}
-
 export function getBookById(bookId: string): frontEndBook {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     const annotationsWithFlashcards = new Set(...book.flashcardNote.flashcards.map(t => t.parentId));
     const annotationsWithoutFlashcards = new Set<string>();
     for (const annotation of book.annotations()) {
@@ -215,7 +212,7 @@ export function getBookById(bookId: string): frontEndBook {
 }
 
 export function getSectionTreeForBook(bookId: string) {
-    const book = extracted(bookId);
+    const book = plugin.sourceNoteIndex.getBook(bookId);
     const children = generateSectionsTree(book.bookSections);
     return {
         id: book.id,
