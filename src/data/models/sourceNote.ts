@@ -269,6 +269,17 @@ export class SourceNote implements frontbook {
         return this.bookSections.filter((t): t is annotation => isAnnotation(t));
     }
 
+    annotationCoverage() {
+        const annotationsWithFlashcards = new Set(...this.flashcardNote.flashcards.map(t => t.parentId));
+        const annotationsWithoutFlashcards = new Set<string>();
+        for (const annotation of this.annotations()) {
+            if (!annotationsWithFlashcards.has(annotation.id)) {
+                annotationsWithoutFlashcards.add(annotation.id);
+            }
+        }
+        return {annotationsWithFlashcards, annotationsWithoutFlashcards};
+    }
+
     startReviewing() {
         this.reviewIndex = 0;
     }

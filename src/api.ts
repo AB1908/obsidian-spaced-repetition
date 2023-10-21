@@ -191,13 +191,7 @@ interface frontEndBook {
 
 export function getBookById(bookId: string): frontEndBook {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    const annotationsWithFlashcards = new Set(...book.flashcardNote.flashcards.map(t => t.parentId));
-    const annotationsWithoutFlashcards = new Set<string>();
-    for (const annotation of book.annotations()) {
-        if (!annotationsWithFlashcards.has(annotation.id)) {
-            annotationsWithoutFlashcards.add(annotation.id);
-        }
-    }
+    const {annotationsWithFlashcards, annotationsWithoutFlashcards} = book.annotationCoverage();
     return {
         id: book.id,
         name: book.name,
