@@ -397,4 +397,12 @@ export class SourceNoteIndex {
         console.log("Card Coverage: Source note index successfully initialized");
         return this;
     }
+
+    getBook(bookId: string) {
+        const book = this.sourceNotes.filter(t => t.id === bookId)[0];
+        if (!book) {
+            throw new Error(`No book found for id ${bookId}`);
+        }
+        return book;
+    }
 }

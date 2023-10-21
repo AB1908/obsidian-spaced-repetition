@@ -189,11 +189,7 @@ interface frontEndBook {
 }
 
 function extracted(id: string) {
-    const book = plugin.sourceNoteIndex.sourceNotes.filter(t => t.id === id)[0];
-    if (!book) {
-        throw new Error(`No book found for id ${id}`);
-    }
-    return book;
+    return plugin.sourceNoteIndex.getBook(id);
 }
 
 export function getBookById(bookId: string): frontEndBook {
