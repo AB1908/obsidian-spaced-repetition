@@ -29,19 +29,12 @@ import type { FrontendFlashcard } from "src/routes/review";
 // TODO: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
 
 export function getAnnotationById(annotationId: string, bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        return null;
-    }
-
+    const book = extracted(bookId);
     return book.annotations().filter((t: annotation) => t.id === annotationId)[0];
 }
 
 export function getNextCard(bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        new Error("You should have a book id here");
-    }
+    const book = extracted(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -52,10 +45,7 @@ export function getNextCard(bookId: string) {
 }
 
 export function getCurrentCard(bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        new Error("getCurrentCard: book id not found");
-    }
+    const book = extracted(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -80,11 +70,7 @@ export async function updateFlashcardSchedulingMetadata(
     bookId: string,
     reviewResponse: ReviewResponse
 ) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        new Error(`${bookId}: book does not exist`);
-    }
-
+    const book = extracted(bookId);
     await book.processCardReview(flashcardId, reviewResponse);
     return true;
 }
