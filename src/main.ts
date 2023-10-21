@@ -30,7 +30,7 @@ export default class SRPlugin extends Plugin {
     public notesWithFlashcards: SourceNote[];
     public bookNotesPaths: string[];
     public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
-    private sourceNoteIndex: SourceNoteIndex;
+    public sourceNoteIndex: SourceNoteIndex;
 
     async onload(): Promise<void> {
         await this.loadPluginData();
