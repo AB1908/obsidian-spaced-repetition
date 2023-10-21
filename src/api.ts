@@ -65,10 +65,7 @@ export function getCurrentCard(bookId: string) {
 }
 
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        throw new Error("getFlashcardById: book not found");
-    }
+    const book = extracted(bookId);
     const flashcard: FrontendFlashcard = book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
         return { ...t, delayBeforeReview: calculateDelayBeforeReview(t.dueDate) };
     })[0] ?? null;
@@ -94,10 +91,7 @@ export async function updateFlashcardSchedulingMetadata(
 // TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        throw new Error("book not found");
-    }
+    const book = extracted(bookId);
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
@@ -111,11 +105,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
 
 // TODO: create abstraction
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        //todo: throw exception!
-        throw new Error("book not found");
-    }
+    const book = extracted(bookId);
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
@@ -147,11 +137,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
 
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    // todo: this should also throw error
-    if (!book) {
-        return null;
-    }
+    const book = extracted(bookId);
     const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
     // todo: shouldn't this throw an error since this is an impossible condition to reach?
@@ -184,10 +170,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 }
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === bookId)[0];
-    if (!book) {
-        return;
-    }
+    const book = extracted(bookId);
     return book.flashcards.filter(t => t.parentId === annotationId);
 }
 
@@ -217,11 +200,16 @@ interface frontEndBook {
     id: string;
 }
 
-export function getBookById(id: string): frontEndBook {
+function extracted(id: string) {
     const book = plugin.notesWithFlashcards.filter(t => t.id === id)[0];
     if (!book) {
-        throw new Error(`getBookById: No book found for id ${id}`);
+        throw new Error(`No book found for id ${id}`);
     }
+    return book;
+}
+
+export function getBookById(bookId: string): frontEndBook {
+    const book = extracted(bookId);
     const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.parentId));
     const annotationsWithoutFlashcards = new Set<string>();
     for (const annotation of book.annotations()) {
@@ -242,11 +230,8 @@ export function getBookById(id: string): frontEndBook {
     };
 }
 
-export function getSectionTreeForBook(id: string) {
-    const book = plugin.notesWithFlashcards.filter(t => t.id === id)[0];
-    if (!book) {
-        throw new Error(`getSectionTreeForBook: No book found for id ${id}`);
-    }
+export function getSectionTreeForBook(bookId: string) {
+    const book = extracted(bookId);
     const children = generateSectionsTree(book.bookSections);
     return {
         id: book.id,
