@@ -66,7 +66,9 @@ export function getCurrentCard(bookId: string) {
 
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     const book = extracted(bookId);
-    const flashcard: FrontendFlashcard = book.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
+    // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
+    // already has flashcards
+    const flashcard: FrontendFlashcard = book.flashcardNote.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
         return { ...t, delayBeforeReview: calculateDelayBeforeReview(t.dueDate) };
     })[0] ?? null;
     if (flashcard == null) throw new Error(`getFlashcardById: flashcard not found for id ${flashcardId}`);
@@ -95,10 +97,10 @@ export async function createFlashcardForAnnotation(question: string, answer: str
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
-        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, book.flashcardsPath, annotationId);
-        book.parsedCards.push(parsedCard);
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, book.flashcardNote.path, annotationId);
+        book.flashcardNote.parsedCards.push(parsedCard);
         card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
-        book.flashcards.push(card);
+        book.flashcardNote.flashcards.push(card);
     }
     return true;
 }
@@ -109,23 +111,23 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
-        let flashcardCopy = book.flashcards.filter(t => t.id === flashcardId)[0];
-        const parsedCardCopy = book.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
+        let flashcardCopy = book.flashcardNote.flashcards.filter(t => t.id === flashcardId)[0];
+        const parsedCardCopy = book.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
         const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
         parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
 
         const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
         const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
         if (writeSuccessful) {
-            book.parsedCards.forEach((value, index) => {
+            book.flashcardNote.parsedCards.forEach((value, index) => {
                 if (value.id === parsedCardCopy.id) {
-                    book.parsedCards[index] = parsedCardCopy;
+                    book.flashcardNote.parsedCards[index] = parsedCardCopy;
                 }
             });
             flashcardCopy = createFlashcard(parsedCardCopy, question, answer);
-            book.flashcards.forEach((t, i) => {
+            book.flashcardNote.flashcards.forEach((t, i) => {
                 if (t.id === flashcardId) {
-                    book.flashcards[i] = flashcardCopy;
+                    book.flashcardNote.flashcards[i] = flashcardCopy;
                 }
             });
         } else {
@@ -151,7 +153,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 
     // WTF is this???
     const flashcardCountForAnnotation: Record<string, number> = {};
-    for (const id of book.flashcards.map(t => t.parentId)) {
+    for (const id of book.flashcardNote.flashcards.map(t => t.parentId)) {
         flashcardCountForAnnotation[id] = flashcardCountForAnnotation[id] ? flashcardCountForAnnotation[id] + 1 : 1;
     }
 
@@ -171,7 +173,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
     const book = extracted(bookId);
-    return book.flashcards.filter(t => t.parentId === annotationId);
+    return book.flashcardNote.flashcards.filter(t => t.parentId === annotationId);
 }
 
 export function getBooks(): ReviewBook[] {
@@ -179,7 +181,7 @@ export function getBooks(): ReviewBook[] {
         return {
             id: t.id,
             name: t.name,
-            counts: maturityCounts(t.flashcards)
+            counts: maturityCounts(t.flashcardNote?.flashcards || [])
         };
     });
 }
@@ -210,7 +212,7 @@ function extracted(id: string) {
 
 export function getBookById(bookId: string): frontEndBook {
     const book = extracted(bookId);
-    const annotationsWithFlashcards = new Set(...book.flashcards.map(t => t.parentId));
+    const annotationsWithFlashcards = new Set(...book.flashcardNote.flashcards.map(t => t.parentId));
     const annotationsWithoutFlashcards = new Set<string>();
     for (const annotation of book.annotations()) {
         if (!annotationsWithFlashcards.has(annotation.id)) {
@@ -239,7 +241,7 @@ export function getSectionTreeForBook(bookId: string) {
         // done: fix this type casting asap
         children: children,
         counts: {
-            flashcards: maturityCounts(book.flashcards)
+            flashcards: maturityCounts(book.flashcardNote.flashcards || [])
         }
     };
 }
