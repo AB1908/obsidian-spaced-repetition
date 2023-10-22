@@ -1,6 +1,7 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
+    createFlashcardsFileForBook,
     filePathsWithTag,
     getFileContents,
     getMetadataForFile,
@@ -381,6 +382,14 @@ export class SourceNote implements frontbook {
         } else {
             //empty
         }
+    }
+
+    async createFlashcardNote() {
+        const {filename, path} = generateFlashcardsFileNameAndPath(this.path);
+        await createFlashcardsFileForBook(this.path, path);
+        this.flashcardNote = await new FlashcardNote(path);
+        // WARN: this seems hacky, should I create another method?
+        this.flashcardNote.parentPath = this.path;
     }
 }
 
