@@ -26,7 +26,7 @@ import type {FrontendFlashcard} from "src/routes/review";
 //     }
 // }
 
-// TODO: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
+// WARN: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
 
 export function getAnnotationById(annotationId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
@@ -164,7 +164,8 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
 
 export function getBooks(): ReviewBook[] {
     // todo: refactor
-    return plugin.sourceNoteIndex.sourceNotes.map(t => {
+    const booksToReview = plugin.sourceNoteIndex.getBooksForReview();
+    return booksToReview.map(t => {
         return {
             id: t.id,
             name: t.name,
