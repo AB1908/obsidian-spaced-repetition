@@ -1,4 +1,4 @@
-import { TagCache, TFile, TFolder } from "obsidian";
+import { TagCache, TFile } from "obsidian";
 import {ANNOTATIONS_YAML_KEY} from "src/data/models/sourceNote";
 
 export async function writeCardToDisk(path: string, text: string) {
@@ -76,24 +76,6 @@ export function getFolderNameFromPath(path: string) {
     } else {
         throw new Error(`getFolderNameFromPath: Folder not found for path ${path}`);
     }
-}
-
-export function generateFlashcardsFileNameAndPath(bookPath: string) {
-    const tfile = getTFileForPath(bookPath);
-    let filename, parentPath;
-    // example of path at root level:
-    // "Folder 1/File.md": parent is "Folder 1"
-    // "Test.md": parent is "/"
-    // I need to generate "/Test - Flashcards.md" or "Folder 1/Flashcards.md"
-    if (tfile.parent.name) { // tfile has its own folder, reuse the folder
-        filename = "Flashcards.md";
-        parentPath = `${tfile.parent.path}`;
-    } else { // the tfile is at the root level, use original filename
-        filename = `${tfile.basename} - Flashcards.md`;
-        parentPath = ``;
-    }
-    const path = `${parentPath}/${filename}`
-    return {filename, path};
 }
 
 // takes a book path, finds parent if any and creates flashcard file
