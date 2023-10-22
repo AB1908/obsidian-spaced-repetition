@@ -1,8 +1,5 @@
 import React from "react";
-import { getNotesWithoutReview, NotesWithoutBooks } from "src/api";
-import { plugin } from "src/main";
-import { createFlashcardsFileForBook } from "src/data/disk";
-import { SourceNote } from "src/data/models/sourceNote";
+import { createFlashcardNoteForSourceNote, getNotesWithoutReview, NotesWithoutBooks } from "src/api";
 import { useNavigate } from "react-router-dom";
 import { useLoaderData } from "react-router";
 
@@ -15,16 +12,12 @@ export function BookCreator() {
     const bookList = useLoaderData() as NotesWithoutBooks[];
     const navigate = useNavigate();
 
-    async function clickHandler(path: string) {
+    async function clickHandler(bookId: string) {
+        // todo fix
         // some logic here to create that new file
         // todo: refactor and move to api.ts
-        await createFlashcardsFileForBook(path);
-        const newBook = new SourceNote(`${path}/Flashcards.md`);
-        await newBook.initialize();
-        // add this to array of books
-        plugin.notesWithFlashcards.push(newBook);
-        // redirect to the new book id
-        navigate(`/books/${newBook.id}`, { replace: true });
+        await createFlashcardNoteForSourceNote(bookId);
+        navigate(`/books/${bookId}`, { replace: true });
     }
 
     return (
