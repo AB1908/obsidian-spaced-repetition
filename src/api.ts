@@ -230,3 +230,11 @@ export interface NotesWithoutBooks {
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
     return plugin.sourceNoteIndex.getSourcesWithoutFlashcards();
 }
+
+export async function createFlashcardNoteForSourceNote(bookId: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    await book.createFlashcardNote();
+    // todo: there is an edge case here where multiple clicks to add to multiple
+    // index writes
+    plugin.flashcardIndex.addFlashcardNoteToIndex(book.flashcardNote);
+}
