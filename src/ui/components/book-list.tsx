@@ -25,7 +25,7 @@ export function BookCreator() {
             <p>Which book do you want to review?</p>
             <ul>
                 {bookList.map(t=> {
-                        return <li onClick={async () => await clickHandler(t.path)}>{t.name}</li>;
+                        return <li onClick={async () => await clickHandler(t.id)}>{t.name}</li>;
                     }
                 )}
             </ul>

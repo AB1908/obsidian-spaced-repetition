@@ -222,7 +222,7 @@ export function getSectionTreeForBook(bookId: string) {
 
 export interface NotesWithoutBooks {
     name: string;
-    path: string;
+    id: string;
 }
 
 // todo: expand to also include other notes and not just books
