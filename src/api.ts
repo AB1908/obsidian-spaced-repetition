@@ -164,7 +164,7 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
 
 export function getSourcesForReview(): ReviewBook[] {
     // todo: refactor
-    const booksToReview = plugin.sourceNoteIndex.getBooksForReview();
+    const booksToReview = plugin.sourceNoteIndex.getSourcesForReview();
     return booksToReview.map(t => {
         return {
             id: t.id,
