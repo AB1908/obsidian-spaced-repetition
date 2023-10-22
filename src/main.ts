@@ -27,7 +27,6 @@ export let plugin: SRPlugin;
 export default class SRPlugin extends Plugin {
     public data: PluginData;
     // todo: fix type
-    public notesWithFlashcards: SourceNote[];
     public bookNotesPaths: string[];
     public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
     public sourceNoteIndex: SourceNoteIndex;
@@ -36,8 +35,7 @@ export default class SRPlugin extends Plugin {
         await this.loadPluginData();
         this.flashcardIndex = await new FlashcardIndex().initialize();
         this.sourceNoteIndex = await new SourceNoteIndex().initialize(this);
-        // todo: eventually remove this and add access method for sourcenoteindex
-        this.notesWithFlashcards = this.sourceNoteIndex.sourceNotes;
+        // done: eventually remove this and add access method for sourcenoteindex
 
         appIcon();
 
