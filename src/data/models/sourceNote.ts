@@ -420,4 +420,8 @@ export class SourceNoteIndex {
     getSourcesForReview() {
         return this.sourceNotes.filter(t=>t.flashcardNote);
     }
+
+    getSourcesWithoutFlashcards(): SourceNote[] {
+        return this.sourceNotes.filter(t => !t.flashcardNote);
+    }
 }
