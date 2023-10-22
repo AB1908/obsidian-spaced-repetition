@@ -4,7 +4,7 @@ import {setIcon} from "obsidian";
 import {Link} from "react-router-dom";
 import {CardCount} from "src/ui/components/card-counts";
 import {Icon} from "src/routes/root";
-import {getBooks} from "src/api";
+import {getSourcesForReview} from "src/api";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export interface ReviewBook {
@@ -23,7 +23,7 @@ export interface FlashCount {
 // TODO: use more realistic data??
 export function notesLoader() {
     if (USE_ACTUAL_BACKEND) {
-        return getBooks();
+        return getSourcesForReview();
     } else {
         return fetch("http://localhost:3000/bookReview");
     }
