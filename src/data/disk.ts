@@ -78,19 +78,41 @@ export function getFolderNameFromPath(path: string) {
     }
 }
 
-export async function createFlashcardsFileForBook(bookPath: string) {
-    // todo: refactor
-    const tfolder = app.vault.getAbstractFileByPath(bookPath);
-    if (!(tfolder instanceof TFolder)) {
+export function generateFlashcardsFileNameAndPath(bookPath: string) {
+    const tfile = app.vault.getAbstractFileByPath(bookPath);
+    let filename, parentPath;
+    // example of path at root level:
+    // "Folder 1/File.md": parent is "Folder 1"
+    // "Test.md": parent is "/"
+    // I need to generate "/Test - Flashcards.md" or "Folder 1/Flashcards.md"
+    if (tfile instanceof TFile) {
+        if (tfile.parent.name) { // tfile has its own folder, reuse the folder
+            filename = "Flashcards.md";
+            parentPath = `${tfile.parent.path}`;
+        } else { // the tfile is at the root level, use original filename
+            filename = `${tfile.basename} - Flashcards.md`;
+            parentPath = ``;
+        }
+    } else {
         throw new Error(`createFlashcardsFileForBook: Folder not found for path ${bookPath}`);
     }
+    const path = `${parentPath}/${filename}`
+    return {filename, path};
+}
+
+// takes a book path, finds parent if any and creates flashcard file
+// todo: refactor to move business logic up one layer
+export async function createFlashcardsFileForBook(bookPath: string, path: string) {
+    let sourceNotePath;
+    // use sourcenote path
+    sourceNotePath = `${bookPath.replace(".md", "")}`;
     const fileContents = `---
-${ANNOTATIONS_YAML_KEY}: "[[${tfolder.path}/Annotations]]"
+${ANNOTATIONS_YAML_KEY}: "[[${sourceNotePath}]]"
 ---
 
 #flashcards
 `;
-    await app.vault.create(`${tfolder.path}/Flashcards.md`, fileContents);
+    await app.vault.create(path, fileContents);
 }
 
 export function getParentFolderPathAndName(filePath: string) {
