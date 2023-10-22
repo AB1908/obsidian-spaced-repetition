@@ -417,7 +417,7 @@ export class SourceNoteIndex {
         return book;
     }
 
-    getBooksForReview() {
+    getSourcesForReview() {
         return this.sourceNotes.filter(t=>t.flashcardNote);
     }
 }
