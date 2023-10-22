@@ -198,4 +198,11 @@ export class FlashcardIndex {
         console.log("Card Coverage: Flashcard index successfully initialized");
         return this;
     }
+
+    addFlashcardNoteToIndex(flashcardNote: FlashcardNote) {
+        if (this.flashcardNotes.find(t => t.path === flashcardNote.path)) {
+            throw new Error(`addFlashcardNoteToIndex: ${flashcardNote.path} is already in the index`);
+        }
+        this.flashcardNotes.push(flashcardNote);
+    }
 }
