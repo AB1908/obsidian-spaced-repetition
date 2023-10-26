@@ -85,7 +85,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
         // TODO: error handling
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, book.flashcardNote.path, annotationId);
         book.flashcardNote.parsedCards.push(parsedCard);
-        card = new Flashcard(parsedCard.id, question, answer, null, annotationId);
+        card = new Flashcard(parsedCard.id, question, answer, undefined, annotationId);
         book.flashcardNote.flashcards.push(card);
     }
     return true;
