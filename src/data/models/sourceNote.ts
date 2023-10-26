@@ -147,7 +147,7 @@ export function findNextHeader(section: RawBookSection | BookMetadataSection, se
     return -1;
 }
 
-export function updateHeaders(cacheItem: annotation, sections: BookMetadataSections, key: keyof Count) {
+export function updateHeaders(cacheItem: annotation | paragraph, sections: BookMetadataSections, key: keyof Count) {
     const previousHeadingIndex = findPreviousHeader(cacheItem, sections);
     let previousHeading = sections[previousHeadingIndex] as Heading;
     while (previousHeading != null) {
@@ -258,7 +258,12 @@ export class SourceNote implements frontbook {
 
         this.name = getParentOrFilename(this.path);
 
-        this.tags = null;
+        if (this.plugin.fileTagsMap.has(this.path)) {
+            // @ts-ignore
+            this.tags = this.plugin.fileTagsMap.get(this.path);
+        } else {
+            throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`)
+        }
 
         // done: join on parsed flashcards
         // do i need a global flashcards array?
