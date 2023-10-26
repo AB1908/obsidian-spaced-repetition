@@ -2,36 +2,42 @@
 
 exports[`bookSections 1`] = `
 [
+  {
+    "hasFlashcards": false,
+    "id": "0",
+    "text": "#book/review",
+    "wasIdPresent": false,
+  },
   Heading {
     "children": [],
     "counts": {
-      "with": 2,
-      "without": 0,
+      "with": 0,
+      "without": 2,
     },
-    "id": "0",
+    "id": "1",
     "level": 1,
     "name": "Header 1",
   },
   {
-    "hasFlashcards": true,
+    "hasFlashcards": false,
     "highlight": "Onen i estel Edain, u-chebin estel anim.
 This is another line.",
-    "id": "93813",
+    "id": "93812",
     "note": "",
     "type": "notes",
   },
   Heading {
     "children": [],
     "counts": {
-      "with": 1,
-      "without": 0,
+      "with": 0,
+      "without": 1,
     },
-    "id": "1",
+    "id": "2",
     "level": 2,
     "name": "SubHeader 1",
   },
   {
-    "hasFlashcards": true,
+    "hasFlashcards": false,
     "highlight": "Onen i estel Edain, u-chebin estel anim.",
     "id": "93813",
     "note": "What a beautiful line by Tolkien",
@@ -40,17 +46,17 @@ This is another line.",
   Heading {
     "children": [],
     "counts": {
-      "with": 1,
-      "without": 0,
+      "with": 0,
+      "without": 1,
     },
-    "id": "2",
+    "id": "3",
     "level": 1,
     "name": "Header 2",
   },
   {
-    "hasFlashcards": true,
+    "hasFlashcards": false,
     "highlight": "Onen i estel Edain, u-chebin estel anim.",
-    "id": "93813",
+    "id": "93814",
     "note": "What a beautiful line by Tolkien
 This is another line.",
     "type": "notes",
@@ -58,18 +64,18 @@ This is another line.",
   Heading {
     "children": [],
     "counts": {
-      "with": 1,
-      "without": 0,
+      "with": 0,
+      "without": 1,
     },
-    "id": "3",
+    "id": "4",
     "level": 1,
     "name": "Last header",
   },
   {
-    "hasFlashcards": true,
+    "hasFlashcards": false,
     "highlight": "Onen i estel Edain, u-chebin estel anim.
 This is another line.",
-    "id": "93813",
+    "id": "93815",
     "note": "What a beautiful line by Tolkien",
     "type": "notes",
   },
