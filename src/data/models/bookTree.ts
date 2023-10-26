@@ -1,5 +1,4 @@
-import type { annotation } from "src/data/models/annotations";
-import { findPreviousHeader, type Heading, isHeading } from "src/data/models/sourceNote";
+import { BookMetadataSections, findPreviousHeader, type Heading, isHeading } from "src/data/models/sourceNote";
 
 // KILL: switch to DFS/BFS?
 // Need this to be able to call countAnnotations
