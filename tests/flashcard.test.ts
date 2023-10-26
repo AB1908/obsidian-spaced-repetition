@@ -14,8 +14,8 @@ describe("createFlashcards", () => {
                 cardText: "This is a question\n?\nThis is an answer",
                 metadataText: "<!--SR:93813-->",
                 lineNo: -1,
-                cardType: CardType.MultiLineBasic
-            }
+                cardType: CardType.MultiLineBasic,
+            },
         ];
         expect(generateFlashcardsArray(parsedCards)).toMatchInlineSnapshot(`
             [
