@@ -411,6 +411,20 @@ export class SourceNoteIndex {
     }
 
     async initialize(plugin: SRPlugin) {
+        // iterate over tags in plugin
+        // create set from tags in note
+        // check membership of tag
+        const tagsInSettings = ["review/note", "review/book"];
+        const pathsWithAllowedTags  = new Set<string>();
+        for (let [path, tags] of plugin.fileTagsMap) {
+            const tagSet = new Set(tags);
+            for (let tag of tagsInSettings) {
+                if (tagSet.has(tag)) {
+                    pathsWithAllowedTags.add(path);
+                    break;
+                }
+            }
+        }
         //todo: parameterize
         const filePaths = filePathsWithTag("review/book");
         const notesWithAnnotations = filePaths.map((t: string) => new SourceNote(t, plugin));
