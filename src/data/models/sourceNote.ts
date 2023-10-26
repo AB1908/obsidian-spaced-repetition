@@ -16,10 +16,11 @@ import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata 
 import type { ReviewResponse } from "src/scheduler/scheduling";
 import { TFile } from "obsidian";
 import type SRPlugin from "src/main";
+import { paragraph } from "src/data/models/paragraphs";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
-export type BookMetadataSection = Heading | annotation;
+export type BookMetadataSection = Heading | annotation | paragraph;
 export type BookMetadataSections = BookMetadataSection[];
 
 // TODO: this is not really a "book" per se
