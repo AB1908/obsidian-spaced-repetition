@@ -426,8 +426,8 @@ export class SourceNoteIndex {
             }
         }
         //todo: parameterize
-        const filePaths = filePathsWithTag("review/book");
-        const notesWithAnnotations = filePaths.map((t: string) => new SourceNote(t, plugin));
+        // const filePaths = filePathsWithTag("review/note");
+        const notesWithAnnotations = Array.from(pathsWithAllowedTags.keys()).map((t: string) => new SourceNote(t, plugin));
         for (const t of notesWithAnnotations) {
             try {
                 await t.initialize();
