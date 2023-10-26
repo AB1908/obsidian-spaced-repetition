@@ -205,6 +205,7 @@ export class SourceNote implements frontbook {
     id: string;
     name: string;
     reviewIndex: number;
+    tags: string[];
     // even though this is a subset of this.flashcards, we need this as we are maintaining this as
     // state internally and not passing it to the frontend
     // this is because it is easier to test here and also makes front end simpler in terms of
@@ -227,6 +228,7 @@ export class SourceNote implements frontbook {
         this.reviewDeck = [];
         this.plugin = plugin;
         this.flashcardNote = null;
+        this.tags = [];
     }
 
     // first initialize all the basic attributes of the book/note
@@ -254,6 +256,8 @@ export class SourceNote implements frontbook {
         );
 
         this.name = getParentOrFilename(this.path);
+
+        this.tags = null;
 
         // done: join on parsed flashcards
         // do i need a global flashcards array?
