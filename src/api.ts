@@ -162,7 +162,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
     }
     let annotations = book.bookSections
         .slice(selectedSectionIndex, nextHeadingIndex)
-        .filter((t): t is annotation => isAnnotation(t));
+        .filter((t): t is (annotation|paragraph) => isAnnotationOrParagraph(t));
 
     // WTF is this???
     const flashcardCountForAnnotation: Record<string, number> = {};
@@ -172,7 +172,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 
     annotations = annotations.map(t => {
         return {
-            ...t,
+            ...transform(t),
             flashcardCount: flashcardCountForAnnotation[t.id] || 0
         };
     });
