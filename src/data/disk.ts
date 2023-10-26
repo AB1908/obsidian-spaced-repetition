@@ -1,5 +1,5 @@
 import { TagCache, TFile } from "obsidian";
-import {ANNOTATIONS_YAML_KEY} from "src/data/models/sourceNote";
+import { ANNOTATIONS_YAML_KEY } from "src/data/models/sourceNote";
 
 export async function writeCardToDisk(path: string, text: string) {
     await app.vault.append(getTFileForPath(path), text);
@@ -43,6 +43,30 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
         }
     }
     return filePaths;
+}
+
+export function fileTags() {
+    let fileMap = new Map<string,string>();
+    let fileCache = structuredClone(app.metadataCache.fileCache);
+    let metadataCache = structuredClone(app.metadataCache.metadataCache);
+    for (let key of Object.keys(fileCache)) {
+        fileMap.set(fileCache[key].hash, key);
+    }
+    const tagMap = new Map<string, string[]>();
+    const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag)};
+    for (let [hash, path] of fileMap) {
+        const frontmatterTags = metadataCache[hash]?.frontmatter?.tags;
+        const tagsArray = frontmatterTags || [];
+        const fileTags = metadataCache[hash]?.tags;
+        if (fileTags) {
+            let tags = transformTags(fileTags);
+            // todo: need to check if there can be pound symbols within a tag's text
+            tags = tags.map(t => t.replace("#", ""));
+            tagsArray.push(...tags);
+        }
+        tagMap.set(path, tagsArray);
+    }
+    return tagMap;
 }
 
 export function filePathsWithTag(tag: string) {
