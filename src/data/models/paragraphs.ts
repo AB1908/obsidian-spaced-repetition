@@ -3,7 +3,7 @@ import { getFileContents, getMetadataForFile } from "../disk";
 import { Flashcard } from "./flashcard";
 import { Heading } from "./sourceNote";
 
-interface paragraph {
+export interface paragraph {
     id: string,
     text: string,
     wasIdPresent: boolean,
