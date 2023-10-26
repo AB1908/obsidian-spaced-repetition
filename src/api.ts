@@ -154,7 +154,12 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
     if ((!selectedSection) || (!isHeading(selectedSection))) {
         return null;
     }
-    const nextHeadingIndex = findNextHeader(selectedSection, book.bookSections);
+    let nextHeadingIndex = findNextHeader(selectedSection, book.bookSections);
+    // todo: write a test for this
+    if (nextHeadingIndex == -1) {
+        // if no next heading, we want to extract till end of file
+        nextHeadingIndex = book.bookSections.length;
+    }
     let annotations = book.bookSections
         .slice(selectedSectionIndex, nextHeadingIndex)
         .filter((t): t is annotation => isAnnotation(t));
