@@ -123,6 +123,28 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     return true;
 }
 
+function isParagraph(section: BookMetadataSection): section is paragraph {
+    return (section as paragraph).wasIdPresent !== undefined;
+}
+
+export function isAnnotationOrParagraph(section: BookMetadataSection): section is (annotation|paragraph) {
+    return isAnnotation(section) || isParagraph(section);
+}
+
+function transform(p: paragraph|annotation): annotation {
+    if (isAnnotation(p)) {
+        return p;
+    } else {
+        return {
+            id: p.id,
+            type: "",
+            note: "",
+            highlight: p.text,
+            hasFlashcards: p.hasFlashcards
+        };
+    }
+}
+
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
