@@ -20,7 +20,6 @@ describe("createFlashcards", () => {
         expect(generateFlashcardsArray(parsedCards)).toMatchInlineSnapshot(`
             [
               Flashcard {
-                "annotationId": "93813",
                 "answerText": "This is an answer",
                 "cardType": 2,
                 "context": null,
@@ -29,6 +28,7 @@ describe("createFlashcards", () => {
                 "flag": null,
                 "id": "0",
                 "interval": null,
+                "parentId": "93813",
                 "parsedCardId": "aaaaaaaa",
                 "questionText": "This is a question",
                 "siblings": [],
