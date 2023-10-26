@@ -55,7 +55,7 @@ exports[`getParagraphFromFile 2`] = `
     "name": "Relating study and test",
   },
   {
-    "hasFlashcards": true,
+    "hasFlashcards": false,
     "id": "hjhjhlkap",
     "text": "What is episodic memory?
 NO one knows ^hjhjhlkap",
