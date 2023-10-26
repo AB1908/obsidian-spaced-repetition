@@ -65,7 +65,18 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             if (headings === undefined) throw new Error("bookSections: no headings in file");
             output.push(new Heading(headings[headingIndex]));
             headingIndex++;
-        } else {
+        } else if (cacheItem.type == "paragraph") {
+                const start = cacheItem.position.start.line;
+                const end = cacheItem.position.end.line + 1;
+                const paragraph = {
+                    id: cacheItem.id || nanoid(8),
+                    text: fileTextArray.slice(start,end).join("\n"),
+                    wasIdPresent: cacheItem.id ? true : false,
+                }
+                output.push({
+                    ...paragraph,
+                    hasFlashcards: blocksWithFlashcards.has(paragraph.id), ...paragraph,
+                })
             // TODO: Any edge cases?
         }
     }
