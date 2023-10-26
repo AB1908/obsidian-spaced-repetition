@@ -43,7 +43,7 @@ export function generateTree(sections: Heading[]) {
     return sections.filter(t => isHeading(t) && t.level == 1);
 }
 
-export function generateSectionsTree(sections: (annotation | Heading)[]) {
+export function generateSectionsTree(sections: BookMetadataSections) {
     const headings: Heading[] = structuredClone(sections.filter((t): t is Heading => isHeading(t)));
     return generateTree(headings);
 }
