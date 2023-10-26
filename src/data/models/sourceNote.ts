@@ -50,14 +50,14 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
     let output: BookMetadataSections = [];
     let headingIndex = 0;
     const fileTextArray = fileText.split("\n");
-    const annotationsWithFlashcards = new Set(flashcards.map(t => t.parentId));
+    const blocksWithFlashcards = new Set(flashcards.map(t => t.parentId));
     if (metadata.sections == null) throw new Error("bookSections: file has no sections");
     for (const cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
             const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
             // todo: I think I've fucked up the ordering for assignment with spread
-            output.push({ hasFlashcards: annotationsWithFlashcards.has(annotation.id), ...annotation });
+            output.push({ hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation });
         } else if (cacheItem.type === "heading") {
             const headings = metadata?.headings;
             // todo: again, this is another case of an interesting type problem like in paragraphs.ts
