@@ -17,6 +17,7 @@ import type { ReviewResponse } from "src/scheduler/scheduling";
 import { TFile } from "obsidian";
 import type SRPlugin from "src/main";
 import { paragraph } from "src/data/models/paragraphs";
+import { isAnnotationOrParagraph } from "src/api";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -289,7 +290,7 @@ export class SourceNote implements frontbook {
     }
 
     annotations() {
-        return this.bookSections.filter((t): t is annotation => isAnnotation(t));
+        return this.bookSections.filter((t): t is (annotation|paragraph) => isAnnotationOrParagraph(t));
     }
 
     annotationCoverage() {
