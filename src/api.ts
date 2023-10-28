@@ -78,14 +78,25 @@ export async function updateFlashcardSchedulingMetadata(
     return true;
 }
 
+function addBlockIdToParagraph(block: paragraph) {
+    return `${block.text} ^${block.id}`;
+}
+
 // DONE: add logic to update in storage
 // TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     let card;
     const book = plugin.sourceNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
-        // TODO: Fix hardcoded path, should come from deckNote obj
+        // done: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
+        // need to check if block is a paragraph or an annotation
+        const block = book.bookSections.filter(t=>t.id === annotationId)[0];
+        // I feel like this should be abstracted away into the class for a source note with paragraph
+        if (isParagraph(block) && !block.wasIdPresent) {
+            const text = addBlockIdToParagraph(block);
+            await updateCardOnDisk(book.path, block.text, text);
+        }
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, book.flashcardNote.path, annotationId);
         book.flashcardNote.parsedCards.push(parsedCard);
         card = new Flashcard(parsedCard.id, question, answer, undefined, annotationId);
