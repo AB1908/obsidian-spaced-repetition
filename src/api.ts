@@ -2,13 +2,14 @@ import {CardType, type ReviewResponse} from "src/scheduler/scheduling";
 import {calculateDelayBeforeReview, createFlashcard, Flashcard, maturityCounts} from "src/data/models/flashcard";
 import {createParsedCard, type ParsedCard} from "src/data/models/parsedCard";
 import {generateSectionsTree} from "src/data/models/bookTree";
-import {findNextHeader, isAnnotation, isHeading} from "src/data/models/sourceNote";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import {cardTextGenerator, generateCardAsStorageFormat} from "src/data/utils/TextGenerator";
-import {getParentFolderPathAndName, getParentOrFilename, updateCardOnDisk} from "src/data/disk";
+import { updateCardOnDisk } from "src/data/disk";
 import {plugin} from "src/main";
 import type {annotation} from "src/data/models/annotations";
 import type {ReviewBook} from "src/routes/notes-home-page";
 import type {FrontendFlashcard} from "src/routes/review";
+import { paragraph } from "src/data/models/paragraphs";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
@@ -28,9 +29,11 @@ import type {FrontendFlashcard} from "src/routes/review";
 
 // WARN: NOTE THAT THESE ARE ALL USING SHALLOW COPIES!
 
-export function getAnnotationById(annotationId: string, bookId: string) {
+// TODO: refactor this, not immediately apparent why we need transform
+// hint: because you have paragraphs as well
+export function getAnnotationById(blockId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    return book.annotations().filter((t: annotation) => t.id === annotationId)[0];
+    return transform(book.annotations().filter((t: BookMetadataSection) => t.id === blockId)[0]);
 }
 
 export function getNextCard(bookId: string) {
