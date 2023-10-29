@@ -32,6 +32,7 @@ export enum FLAG {
 
 const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d+),(?<ease>\d+))/g;
 // For now, annotation ids are only numerical
+// todo: fix this regex because paragraphs can have arbitrary length id
 const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{3,8})/g;
 
 export interface FlashcardMetadata {
@@ -62,15 +63,17 @@ export function parseMetadata(text: string): FlashcardMetadata {
     if (annotationId == null) {
         throw new Error("how can this not have an annotation id");
     }
-    if (scheduling === undefined)
+    if (scheduling === undefined) {
+        // todo: refactor and ultimately write a better parser
+        const parentId = text.matchAll(/<!--SR:(?<parentId>.*)-->/g).next().value?.groups.parentId;
         return {
             flag: null,
-            annotationId: annotationId,
+            annotationId: parentId,
             dueDate: null,
             interval: null,
             ease: null
         };
-    else
+    } else
         return {
             flag: stringToFlag(scheduling.groups.flag),
             annotationId: annotationId,
