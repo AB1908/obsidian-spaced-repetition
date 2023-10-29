@@ -21,10 +21,20 @@ describe("metadata parser", () => {
     });
 
     test("only highlight", () => {
-        // <!--SR:!2022-11-14,2,230!2022-11-14,2,210!2022-11-14,2,190-->
         const metadata = "<!--SR:12345-->";
         expect(parseMetadata(metadata)).toEqual({
             annotationId: "12345",
+            flag: null,
+            dueDate: null,
+            interval: null,
+            ease: null,
+        });
+    });
+
+    test("block with long annotation id", () => {
+        const metadata = "testing\n?\ntestin\n<!--SR:hjhjhlkap-->";
+        expect(parseMetadata(metadata)).toEqual({
+            annotationId: "hjhjhlkap",
             flag: null,
             dueDate: null,
             interval: null,
