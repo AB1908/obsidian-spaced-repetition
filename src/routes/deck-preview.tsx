@@ -63,14 +63,14 @@ export function DeckLandingPage() {
                     className={"tree-item-flair sr-deck-counts "}
                     // backgroundColor="#4caf50"
                 >
-                    {book.counts.annotations.withFlashcards}
+                    {book.counts.annotations.withoutFlashcards}
                 </span>
                 <span
                     // aria-label={t(this.props.cardType)}
                     className={"tree-item-flair sr-deck-counts "}
                     // backgroundColor="#4caf50"
                 >
-                    {book.counts.annotations.withoutFlashcards}
+                    {book.counts.annotations.withFlashcards}
                 </span>
             </h4>
             {/*    TODO: Add the untested highlight counts as well?*/}
