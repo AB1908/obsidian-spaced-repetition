@@ -57,10 +57,10 @@ export function ReviewDeck() {
     const params = useParams<keyof ReviewLoaderParams>();
     const navigate = useNavigate();
 
-    function flashcardResponseHandler(reviewResponse: number) {
+    async function flashcardResponseHandler(reviewResponse: number) {
         if (params.flashcardId == null) throw new Error("ReviewDeck: flashcardId cannot be null or undefined");
         if (params.bookId == null) throw new Error("ReviewDeck: bookId cannot be null or undefined");
-        const result = updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
+        await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
         const nextCardId = getNextCard(params.bookId)?.id;
         if (nextCardId) {
             navigate(`./../${nextCardId}`, {replace: true});
