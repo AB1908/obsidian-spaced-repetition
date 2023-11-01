@@ -294,7 +294,7 @@ export class SourceNote implements frontbook {
     }
 
     annotationCoverage() {
-        const annotationsWithFlashcards = new Set(...this.flashcardNote.flashcards.map(t => t.parentId));
+        const annotationsWithFlashcards = new Set(this.flashcardNote.flashcards.map(t => t.parentId));
         const annotationsWithoutFlashcards = new Set<string>();
         for (const annotation of this.annotations()) {
             if (!annotationsWithFlashcards.has(annotation.id)) {
