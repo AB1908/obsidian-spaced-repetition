@@ -67,11 +67,12 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             output.push(new Heading(headings[headingIndex]));
             headingIndex++;
         } else if (cacheItem.type == "paragraph") {
+            // todo: test coverage
                 const start = cacheItem.position.start.line;
                 const end = cacheItem.position.end.line + 1;
                 const paragraph = {
                     id: cacheItem.id || nanoid(8),
-                    text: fileTextArray.slice(start,end).join("\n"),
+                    text: fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, ""),
                     wasIdPresent: cacheItem.id ? true : false,
                 }
                 output.push({
