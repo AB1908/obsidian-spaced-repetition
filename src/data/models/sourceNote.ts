@@ -2,7 +2,6 @@ import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook,
-    filePathsWithTag,
     getFileContents,
     getMetadataForFile,
     getParentOrFilename,
