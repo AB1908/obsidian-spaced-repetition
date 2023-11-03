@@ -1,7 +1,9 @@
-import React, {useEffect, useState} from "react";
+import React, {useEffect, useRef, useState} from "react";
 import {redirect, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
 import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/api";
 import {CardBack, CardFront} from "src/ui/components/flashcard";
+import {setIcon} from "obsidian";
+import {Icon} from "src/routes/root";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -56,6 +58,16 @@ export function ReviewDeck() {
     const location = useLocation();
     const params = useParams<keyof ReviewLoaderParams>();
     const navigate = useNavigate();
+    const editButton = useRef<HTMLDivElement>(null);
+    console.log(useLocation().pathname)
+
+    useEffect(() => {
+        const editIcon: Icon = "lucide-pencil";
+        //todo: figure out how to fix this
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        setIcon(editButton.current, editIcon);
+    }, []);
 
     async function flashcardResponseHandler(reviewResponse: number) {
         if (params.flashcardId == null) throw new Error("ReviewDeck: flashcardId cannot be null or undefined");
@@ -69,6 +81,10 @@ export function ReviewDeck() {
         }
     }
 
+    function editButtonClickHandler() {
+        navigate("edit");
+    }
+
     // reset state when we navigate to a new flashcard
     // todo: think of cleaner way to do this as it is slow
     useEffect(() => {
@@ -76,6 +92,11 @@ export function ReviewDeck() {
     }, [location]);
 
     return (<>
+        <div className={"buttons"}>
+            <button onClick={() => editButtonClickHandler()}>
+                <div ref={editButton}></div>
+            </button>
+        </div>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
         {!isQuestion && (<CardBack currentCard={currentCard} clickHandler={flashcardResponseHandler}/>)}
