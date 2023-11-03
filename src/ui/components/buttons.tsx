@@ -24,7 +24,7 @@ export function Button({ text, id, clickHandler }: { text: string, id: string, c
 
 export function CancelButton() {
     return (
-        <button>
+        <button type={"button"}>
             <Link to={"./.."}>
             Cancel
             </Link>
