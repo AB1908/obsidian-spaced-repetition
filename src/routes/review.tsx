@@ -1,5 +1,5 @@
 import React, {useEffect, useRef, useState} from "react";
-import {redirect, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
+import {redirect, useLoaderData, useNavigate, useParams} from "react-router-dom";
 import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/api";
 import {CardBack, CardFront} from "src/ui/components/flashcard";
 import {setIcon} from "obsidian";
@@ -55,11 +55,9 @@ export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
 export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const [isQuestion, setIsQuestion] = useState(true);
-    const location = useLocation();
     const params = useParams<keyof ReviewLoaderParams>();
     const navigate = useNavigate();
     const editButton = useRef<HTMLDivElement>(null);
-    console.log(useLocation().pathname)
 
     useEffect(() => {
         const editIcon: Icon = "lucide-pencil";
