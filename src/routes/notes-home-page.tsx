@@ -67,7 +67,7 @@ export function Notes() {
                                 <div className={"tree-item-inner"}>
                                     {book.name}
                                 </div>
-                                <div className={"coverage-stats"}>
+                                <div className={"tree-item-outer"}>
                                     <PendingFlashcardCount count={book.pendingFlashcards}/>
                                     <CoverageBadge coverageFraction={book.annotationCoverage}/>
                                     <FlashcardProgress progressFraction={book.flashcardProgress}/>
@@ -116,7 +116,7 @@ function FlashcardProgress({progressFraction}: {progressFraction: number}) {
 }
 
 function PendingFlashcardCount(props: { count: number }) {
-    return <div className="tree-item-flair-outer">
+    return <div className={"pending-flashcard-count"}>
         <span>
             <span>
                 {props.count}
