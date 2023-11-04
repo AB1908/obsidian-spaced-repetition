@@ -97,3 +97,17 @@ export function DeckCounts({counts}: {counts: FlashCount}) {
         </div>
     );
 }
+
+function FlashcardProgress({progressFraction}: {progressFraction: number}) {
+    return <progress value={progressFraction} className={"flashcard-progress"}></progress>;
+}
+
+function PendingFlashcardCount(props: { count: number }) {
+    return <div className="tree-item-flair-outer">
+        <span>
+            <span>
+                {props.count}
+            </span>
+        </span>
+    </div>;
+}
