@@ -2,6 +2,30 @@
 /*    overflow: auto;*/
 /*}*/
 
+.tree-item-outer {
+    display: flex;
+    align-items: center;
+}
+
+.sr-coverage-badge {
+    width: 1em;
+    height: 1em;
+    border-radius: 50%;
+    margin: 0 5px;
+}
+
+.sr-coverage-badge.poor {
+    background-color: indianred;
+}
+
+.sr-coverage-badge.average {
+    background-color: coral;
+}
+
+.sr-coverage-badge.good {
+    background-color: lightgreen;
+}
+
 body:not(.native-scrollbars) .modal-back-button {
     left: 12px;
 }
