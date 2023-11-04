@@ -8,9 +8,11 @@ import {getSourcesForReview} from "src/api";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 
 export interface ReviewBook {
-    id:         string;
-    name:       string;
-    counts: FlashCount;
+    id:                 string;
+    name:               string;
+    pendingFlashcards:  number;
+    annotationCoverage: number;
+    flashcardProgress:  number;
 }
 
 export interface FlashCount {
@@ -52,7 +54,11 @@ export function Notes() {
                                 <div className={"tree-item-inner"}>
                                     {book.name}
                                 </div>
-                                <DeckCounts counts={book.counts}/>
+                                <div className={"coverage-stats"}>
+                                    <PendingFlashcardCount count={book.pendingFlashcards}/>
+                                    <CoverageBadge coverageFraction={book.annotationCoverage}/>
+                                    <FlashcardProgress progressFraction={book.flashcardProgress}/>
+                                </div>
                             </li>
                         </Link>
                     )
