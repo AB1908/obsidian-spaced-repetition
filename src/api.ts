@@ -1,14 +1,18 @@
-import {CardType, type ReviewResponse} from "src/scheduler/scheduling";
-import {calculateDelayBeforeReview, createFlashcard, Flashcard, maturityCounts} from "src/data/models/flashcard";
-import {createParsedCard, type ParsedCard} from "src/data/models/parsedCard";
-import {generateSectionsTree} from "src/data/models/bookTree";
+import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
+import {
+    calculateDelayBeforeReview,
+    Flashcard,
+    maturityCounts
+} from "src/data/models/flashcard";
+import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
+import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
-import {cardTextGenerator, generateCardAsStorageFormat} from "src/data/utils/TextGenerator";
+import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk } from "src/data/disk";
-import {plugin} from "src/main";
-import type {annotation} from "src/data/models/annotations";
-import type {ReviewBook} from "src/routes/notes-home-page";
-import type {FrontendFlashcard} from "src/routes/review";
+import { plugin} from "src/main";
+import type { annotation } from "src/data/models/annotations";
+import type { ReviewBook } from "src/routes/notes-home-page";
+import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
 
 // TODO: Cloze cards
@@ -111,28 +115,31 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
-        let flashcardCopy = book.flashcardNote.flashcards.filter(t => t.id === flashcardId)[0];
+        // todo: refactor
+        let flashcardCopy: Flashcard;
+        book.flashcardNote.flashcards.forEach((t,i) => {
+            if (t.id === flashcardId) {
+                flashcardCopy = t;
+            }
+        });
         const parsedCardCopy = book.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
         const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
         parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
 
         const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
-        if (writeSuccessful) {
-            book.flashcardNote.parsedCards.forEach((value, index) => {
-                if (value.id === parsedCardCopy.id) {
-                    book.flashcardNote.parsedCards[index] = parsedCardCopy;
-                }
-            });
-            flashcardCopy = createFlashcard(parsedCardCopy, question, answer);
-            book.flashcardNote.flashcards.forEach((t, i) => {
-                if (t.id === flashcardId) {
-                    book.flashcardNote.flashcards[i] = flashcardCopy;
-                }
-            });
-        } else {
-            throw new Error("not implemented");
-        }
+        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        book.flashcardNote.parsedCards.forEach((value, index) => {
+            if (value.id === parsedCardCopy.id) {
+                book.flashcardNote.parsedCards[index] = parsedCardCopy;
+            }
+        });
+        book.flashcardNote.flashcards.forEach((t, i) => {
+            if (t.id === flashcardId) {
+                flashcardCopy.questionText = question;
+                flashcardCopy.answerText = answer;
+                book.flashcardNote.flashcards[i] = flashcardCopy;
+            }
+        });
     }
     return true;
 }
