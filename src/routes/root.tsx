@@ -17,7 +17,6 @@ export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
         //@ts-ignore
         setIcon(backButton.current, back);
         navigate("/books");
-        console.log("here")
     }, []);
 
     function onClick() {
