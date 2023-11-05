@@ -17,6 +17,7 @@ export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
         //@ts-ignore
         setIcon(backButton.current, back);
         navigate("/books");
+        console.log("here")
     }, []);
 
     function onClick() {
@@ -34,7 +35,7 @@ export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
                 onClick={() => handleCloseButton()}
             />
             <div className={"modal-title"}>
-                Spaced Repetition
+            Card Coverage
             </div>
             <div className={"modal-content sr-modal-content"}>
                 <Outlet />
