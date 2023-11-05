@@ -78,23 +78,25 @@ export function Tree(props: {
     render: (t: Heading) => ReactNode;
 }) {
     const treeItems = props.data["children"];
-    return <>{treeItems.map((heading: Heading) => {
-        const subHeadings = heading.children;
-        if (subHeadings?.length) {
-            return (
-                <CollapsibleTreeEntry
-                    key={heading.id}
-                    renderItem={() => props.render(heading)}
-                    renderRest={() => <Tree data={heading} render={props.render} />}
-                />
-            );
-        } else {
-            return (
-                <NonCollapsibleTreeEntry
-                    key={heading.id}
-                    render={() => props.render(heading)}
-                />
-            );
-        }
-    })}</>;
+    return <>
+        {treeItems.map((heading: Heading) => {
+            const subHeadings = heading.children;
+            if (subHeadings?.length) {
+                return (
+                    <CollapsibleTreeEntry
+                        key={heading.id}
+                        renderItem={() => props.render(heading)}
+                        renderRest={() => <Tree data={heading} render={props.render} />}
+                    />
+                );
+            } else {
+                return (
+                    <NonCollapsibleTreeEntry
+                        key={heading.id}
+                        render={() => props.render(heading)}
+                    />
+                );
+            }
+        })}
+    </>;
 }
