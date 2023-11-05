@@ -5,7 +5,8 @@ import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNote";
-import {fileTags} from "src/data/disk";
+import { fileTags } from "src/data/disk";
+import { Index } from "src/data/models";
 
 export interface PluginData {
     settings: SRSettings;
@@ -32,14 +33,18 @@ export default class SRPlugin extends Plugin {
     public sourceNoteIndex: SourceNoteIndex;
     // todo: move this down into the index
     public fileTagsMap: Map<string, string[]>; // { "path": [array of tags] }
+    public index: Index;
 
     async onload(): Promise<void> {
         await this.loadPluginData();
         // First need to initialize tags as the source notes will use this
+        this.index = new Index();
+        this.flashcardIndex = new FlashcardIndex();
+        this.sourceNoteIndex = new SourceNoteIndex();
         this.app.workspace.onLayoutReady(async () => {
             this.fileTagsMap = fileTags();
-            this.flashcardIndex = await new FlashcardIndex().initialize();
-            this.sourceNoteIndex = await new SourceNoteIndex().initialize(this);
+            this.flashcardIndex = await this.flashcardIndex.initialize();
+            this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
         })
         // done: eventually remove this and add access method for sourcenoteindex
 

@@ -17,6 +17,7 @@ import { TFile } from "obsidian";
 import type SRPlugin from "src/main";
 import { paragraph } from "src/data/models/paragraphs";
 import { isAnnotationOrParagraph } from "src/api";
+import { plugin } from "src/main";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -57,7 +58,9 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
         if (cacheItem.type === "callout") {
             const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
             // todo: I think I've fucked up the ordering for assignment with spread
-            output.push({ hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation });
+            let item = { hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation };
+            output.push(item);
+            plugin.index.addToAnnotationIndex(item);
         } else if (cacheItem.type === "heading") {
             const headings = metadata?.headings;
             // todo: again, this is another case of an interesting type problem like in paragraphs.ts
@@ -74,10 +77,12 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
                     text: fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, ""),
                     wasIdPresent: cacheItem.id ? true : false,
                 }
-                output.push({
-                    ...paragraph,
-                    hasFlashcards: blocksWithFlashcards.has(paragraph.id), ...paragraph,
-                })
+            let item = {
+                ...paragraph,
+                hasFlashcards: blocksWithFlashcards.has(paragraph.id), ...paragraph,
+            };
+            plugin.index.addToAnnotationIndex(item);
+            output.push(item)
             // TODO: Any edge cases?
         }
     }
