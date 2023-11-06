@@ -25,22 +25,18 @@ export function PreviewExistingFlashcards() {
     const flashcards = useLoaderData() as Flashcard[];
     return (
         <>
-            <div>
+            <div className={"sr-flashcard-preview"}>
                 {flashcards.length != 0 &&
                     (<>
+
                         <p>
                             Existing questions:
                         </p>
-                        <ul>
+                        <ul className={"sr-flashcard-tree"}>
                             {flashcards.map((t) => (
                                 <Link to={`${t.id}`} key={t.id} replace>
-                                    <li>
-                                        <p>
-                                            {t.questionText}
-                                        </p>
-                                        <p>
-                                            {t.answerText}
-                                        </p>
+                                    <li className={"sr-flashcard tree-item-self is-clickable"}>
+                                        {t.questionText}
                                     </li>
                                 </Link>
                             ))}
