@@ -12,7 +12,7 @@ export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
 
     useEffect(() => {
         const back: Icon = "arrow-left";
-        //todo: figure out how to fix this
+        // todo: figure out how to fix this
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         setIcon(backButton.current, back);
