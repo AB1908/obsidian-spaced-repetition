@@ -6,7 +6,7 @@ import React from "react";
 
 export function Section({section}: { section: book }) {
     const sectionId: string = section.id;
-    return <Link to={`${sectionId}/annotations`}>
+    return <Link to={`${sectionId}/annotations`} className={"sr-section"}>
         <div className="sr-deck tree-item-inner">
             {section.name}
             <span>
