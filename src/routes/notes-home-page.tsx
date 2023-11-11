@@ -1,18 +1,19 @@
 import {useLoaderData} from "react-router";
 import React, {useEffect, useRef} from "react";
-import {setIcon} from "obsidian";
-import {Link} from "react-router-dom";
-import {CardCount} from "src/ui/components/card-counts";
-import {Icon} from "src/routes/root";
-import {getSourcesForReview} from "src/api";
-import {USE_ACTUAL_BACKEND} from "src/routes/review";
+import { setIcon } from "obsidian";
+import { Link } from "react-router-dom";
+import { CardCount } from "src/ui/components/card-counts";
+import { Icon } from "src/routes/root";
+import { getSourcesForReview } from "src/api";
+import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { maturityCounts } from "src/data/models/flashcard";
 
 export interface ReviewBook {
     id:                 string;
     name:               string;
     pendingFlashcards:  number;
     annotationCoverage: number;
-    flashcardProgress:  number;
+    flashcardProgress:  ReturnType<typeof maturityCounts>;
 }
 
 export interface FlashCount {
@@ -48,12 +49,11 @@ export function Notes() {
     // TODO: rewrite to use props
     const iconRef = useRef(null);
     const deckArray = useLoaderData() as ReviewBook[];
-
     useEffect(() => {
         const plus: Icon = "plus-circle";
         // todo: fix this
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-        //@ts-ignore
+        // @ts-ignore
         setIcon(iconRef.current, plus);
     }, []);
 
@@ -69,8 +69,7 @@ export function Notes() {
                                 </div>
                                 <div className={"tree-item-outer"}>
                                     <PendingFlashcardCount count={book.pendingFlashcards}/>
-                                    <CoverageBadge coverageFraction={book.annotationCoverage}/>
-                                    <FlashcardProgress progressFraction={book.flashcardProgress}/>
+                                    <FlashcardProgress progressFraction={book.annotationCoverage} flashcardsCount={book.flashcardProgress}/>
                                 </div>
                             </li>
                         </Link>
@@ -111,8 +110,19 @@ export function DeckCounts({counts}: {counts: FlashCount}) {
     );
 }
 
-function FlashcardProgress({progressFraction}: {progressFraction: number}) {
-    return <progress value={progressFraction} className={"flashcard-progress"}></progress>;
+function FlashcardProgress({progressFraction, flashcardsCount}: {progressFraction: number, flashcardsCount: ReturnType<typeof maturityCounts>}) {
+    const {learning, mature, new: newCount} = flashcardsCount;
+    let totalFlashcardsCount = mature + learning + newCount;
+    let number = (newCount+learning)*100/totalFlashcardsCount;
+    let number1 = newCount*100/totalFlashcardsCount;
+    return <div className={"progress"}>
+        <div style={{
+                width: `${progressFraction*100}%`,
+                backgroundImage: `linear-gradient(90deg,#f28f68 ${number1}%,#8bcf69 ${number1}%,#8bcf69 ${number}%,#719fd1 ${number}%,#719fd1 100%)`,
+            }}
+        >
+        </div>
+    </div>;
 }
 
 function PendingFlashcardCount(props: { count: number }) {

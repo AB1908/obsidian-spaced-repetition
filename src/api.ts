@@ -230,15 +230,14 @@ export function getSourcesForReview(): ReviewBook[] {
         const {annotationsWithFlashcards, annotationsWithoutFlashcards} = t.annotationCoverage();
         const annotationsWithFlashcardsCount = annotationsWithFlashcards.size;
         const annotationsWithoutFlashcardsCount = annotationsWithoutFlashcards.size;
-        const {learning, mature, new: newCount} = maturityCounts(t.flashcardNote.flashcards || []);
+        const progress = maturityCounts(t.flashcardNote.flashcards || []);
         let annotationCoverage = annotationsWithFlashcardsCount/(annotationsWithFlashcardsCount+annotationsWithoutFlashcardsCount);
-        let flashcardProgress = mature/(mature+learning+newCount);
         return {
             id: t.id,
             name: t.name,
             pendingFlashcards: t.reviewDeck.length,
             annotationCoverage: annotationCoverage,
-            flashcardProgress: flashcardProgress
+            flashcardProgress: progress
         };
     });
 }
