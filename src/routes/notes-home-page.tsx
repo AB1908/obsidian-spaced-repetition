@@ -32,19 +32,6 @@ export function notesLoader() {
     }
 }
 
-function CoverageBadge({coverageFraction}: {coverageFraction: number}) {
-    let coverageStatus: string;
-    // todo: parameterize?
-    if (coverageFraction < 0.33) {
-        coverageStatus = "poor";
-    } else if (coverageFraction < 0.66) {
-        coverageStatus = "average";
-    } else {
-        coverageStatus = "good";
-    }
-    return <div className={`sr-coverage-badge ${coverageStatus}`}></div>;
-}
-
 export function Notes() {
     // TODO: rewrite to use props
     const iconRef = useRef(null);
