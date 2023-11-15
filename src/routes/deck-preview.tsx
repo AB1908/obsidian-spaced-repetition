@@ -1,9 +1,9 @@
 import React from "react";
-import {Link, Outlet} from "react-router-dom";
-import {useLoaderData} from "react-router";
-import {DeckCounts, FlashCount} from "src/routes/notes-home-page";
-import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getBookById} from "src/api";
+import { Link, Outlet, useNavigate } from "react-router-dom";
+import { useLoaderData } from "react-router";
+import { DeckCounts } from "src/routes/notes-home-page";
+import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { frontEndBook, getBookById } from "src/api";
 
 interface DeckLoaderParams {
     bookId: string;
