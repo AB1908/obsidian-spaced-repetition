@@ -20,15 +20,19 @@ export function BookCreator() {
         navigate(`/books/${bookId}`, { replace: true });
     }
 
-    return (
-        <>
-            <p>Which book do you want to review?</p>
-            <ul>
-                {bookList.map(t=> {
-                        return <li onClick={async () => await clickHandler(t.id)}>{t.name}</li>;
-                    }
-                )}
-            </ul>
-        </>
-    );
+    if (bookList.length) {
+        return (
+            <>
+                <p>Which book do you want to review?</p>
+                <ul>
+                    {bookList.map(t=> {
+                            return <li onClick={async () => await clickHandler(t.id)}>{t.name}</li>;
+                        }
+                    )}
+                </ul>
+            </>
+        );
+    } else {
+        return <p>To see a note here, add the tag <code>#review/note</code> to your note.</p>;
+    }
 }
