@@ -242,7 +242,7 @@ export function getSourcesForReview(): ReviewBook[] {
     });
 }
 
-interface frontEndBook {
+export interface frontEndBook {
     counts: {
         annotations: {
             withFlashcards: number;
@@ -256,14 +256,16 @@ interface frontEndBook {
     };
     name: string;
     id: string;
+    canBeReviewed: boolean;
 }
 
 export function getBookById(bookId: string): frontEndBook {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    const {annotationsWithFlashcards, annotationsWithoutFlashcards} = book.annotationCoverage();
+    const { annotationsWithFlashcards, annotationsWithoutFlashcards } = book.annotationCoverage();
     return {
         id: book.id,
         name: book.name,
+        canBeReviewed: book.canBeReviewed(),
         counts: {
             flashcards: maturityCounts(book.flashcardNote.flashcards || []),
             annotations: {
