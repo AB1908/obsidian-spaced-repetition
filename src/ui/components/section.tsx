@@ -8,7 +8,9 @@ export function Section({section}: { section: book }) {
     const sectionId: string = section.id;
     return <Link to={`${sectionId}/annotations`} className={"sr-section"}>
         <div className="sr-deck tree-item-inner">
-            {section.name}
+            <span>
+                {section.name}
+            </span>
             <span>
                 {/*TODO: look into changing these class names? These ugly yo*/}
                 <span className={"yes-tests tree-item-flair sr-test-counts"}>
