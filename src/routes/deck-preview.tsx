@@ -16,39 +16,21 @@ export function deckLoader({params}: {params: DeckLoaderParams}) {
         return fetch(`http://localhost:3000/books/${params.bookId}`);
 }
 
-export interface Book {
-    id: string;
-    name: string;
-    counts: Counts;
-}
-
-interface Counts {
-    flashcards: FlashCount;
-    annotations: Count;
-}
-
-interface Count {
-    withFlashcards: number;
-    withoutFlashcards: number;
-}
-
 export function BookButtons() {
+    const navigate = useNavigate();
+    const book = useLoaderData() as frontEndBook;
     return <p>
         <Link to={"chapters"}>
             <button>
                 Create New Cards
             </button>
         </Link>
-        <Link to={"review"}>
-            <button>
-                Review
-            </button>
-        </Link>
+        <input type={"button"} onClick={() => navigate("review")} disabled={!book.canBeReviewed} value={"Review"}/>
     </p>;
 }
 
 export function DeckLandingPage() {
-    const book = useLoaderData() as Book;
+    const book = useLoaderData() as frontEndBook;
     return (
         <>
             <h3>
