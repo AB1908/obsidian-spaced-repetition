@@ -41,7 +41,8 @@ export const children: RouteObject[] = [
         children: [
             {
                 path: "",
-                element: <BookButtons />
+                element: <BookButtons />,
+                loader: deckLoader,
             },
             {
                 path: "chapters",
