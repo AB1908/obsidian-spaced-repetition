@@ -25,7 +25,9 @@ export function BookButtons() {
                 Create New Cards
             </button>
         </Link>
-        <input type={"button"} onClick={() => navigate("review")} disabled={!book.canBeReviewed} value={"Review"}/>
+        <button onClick={() => navigate("review")} disabled={!book.canBeReviewed}>
+            Review
+        </button>
     </p>;
 }
 
