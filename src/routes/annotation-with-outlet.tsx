@@ -4,7 +4,7 @@ import React, { useEffect, useRef } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationById, getNextAnnotationId, getPreviousAnnotationId } from "src/api";
-import type { AnnotationsLoaderParams } from "src/ui/components/highlights";
+import type { AnnotationsLoaderParams } from "src/routes/highlights";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { setIcon } from "obsidian";
 import { Icon } from "src/routes/root";
@@ -42,7 +42,7 @@ export function AnnotationWithOutlet() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         setIcon(nextButtonRef.current, front);
-    }, []);
+    }, [location]);
 
 // todo: disable allowing switching on preview existing flashcards route
     return (

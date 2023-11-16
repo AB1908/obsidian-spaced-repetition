@@ -6,7 +6,7 @@ import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-previe
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/routes/review";
 import { cardLoader, creationAction, updateAction, UpsertCard } from "src/routes/upsert-card";
-import { AnnotationList, annotationsLoader } from "src/ui/components/highlights";
+import { AnnotationList, annotationsLoader } from "src/routes/highlights";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
 import { highlightLoader, PreviewExistingFlashcards } from "src/routes/preview-existing-flashcards";
 import { ChooseCardType } from "src/routes/choose-card-type";
