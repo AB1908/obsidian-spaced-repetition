@@ -1,9 +1,11 @@
 import {useLoaderData} from "react-router";
 import {Link} from "react-router-dom";
-import React from "react";
+import React, { useEffect, useRef } from "react";
 import {USE_ACTUAL_BACKEND} from "src/routes/review";
 import {getFlashcardsForAnnotation} from "src/api";
 import {Flashcard} from "src/data/models/flashcard";
+import { Icon } from "src/routes/root";
+import { setIcon } from "obsidian";
 
 interface HighlightParams {
     bookId: string;
@@ -21,8 +23,35 @@ export function highlightLoader({params}: {params: HighlightParams}) {
     }
 }
 
+function NewComponent(props: {
+    t: Flashcard,
+    i: number,
+    onClick: () => void
+}) {
+    const deleteButtonRef = useRef<HTMLDivElement>(null);
+    const deleteIcon: Icon = "trash";
+
+    useEffect(() => {
+        // todo: figure out how to fix this
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
+        setIcon(deleteButtonRef.current, deleteIcon);
+        // setIcon(deleteButtonRefs.current, deleteIcon);
+    }, []);
+    return <li className={"sr-flashcard tree-item-self is-clickable"}>
+        <Link to={`${props.t.id}`} replace>
+            {props.t.questionText}
+        </Link>
+        <button>
+            <div ref={deleteButtonRef} onClick={props.onClick}>
+            </div>
+        </button>
+    </li>;
+}
+
 export function PreviewExistingFlashcards() {
     const flashcards = useLoaderData() as Flashcard[];
+
     return (
         <>
             <div className={"sr-flashcard-preview"}>
@@ -33,12 +62,9 @@ export function PreviewExistingFlashcards() {
                             Existing questions:
                         </p>
                         <ul className={"sr-flashcard-tree"}>
-                            {flashcards.map((t) => (
-                                <Link to={`${t.id}`} key={t.id} replace>
-                                    <li className={"sr-flashcard tree-item-self is-clickable"}>
-                                        {t.questionText}
-                                    </li>
-                                </Link>
+                            {flashcards.map((t, i) => (
+                                    <NewComponent key={t.id} t={t} i={i}
+                                                  onClick={() => console.log("clicked")}/>
                             ))}
                         </ul>
                     </>)
