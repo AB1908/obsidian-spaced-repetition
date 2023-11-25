@@ -1,8 +1,8 @@
 import React from "react";
 import {textInterval} from "src/scheduler/scheduling";
-import {Link} from "react-router-dom";
-import {Platform} from "obsidian";
-import {plugin} from "src/main";
+import { useNavigate } from "react-router-dom";
+import { Platform } from "obsidian";
+import { plugin } from "src/main";
 
 export function ShowAnswerButton(props: {handleShowAnswerButton: () => void}) {
     return (
@@ -23,12 +23,11 @@ export function Button({ text, id, clickHandler }: { text: string, id: string, c
 }
 
 export function CancelButton() {
+    const navigate = useNavigate();
     return (
-        <Link to={"./.."} replace>
-            <button type={"button"} className={"mod-cancel"}>
-                Cancel
-            </button>
-        </Link>
+        <button type={"button"} className={"mod-cancel"} onClick={() => navigate(-1)} >
+            Cancel
+        </button>
     );
 }
 
