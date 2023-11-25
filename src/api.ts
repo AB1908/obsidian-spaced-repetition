@@ -40,21 +40,6 @@ export function getAnnotationById(blockId: string, bookId: string) {
     return transform(book.annotations().filter((t: BookMetadataSection) => t.id === blockId)[0]);
 }
 
-// todo: refactor annotations into own class object and delegate next previous implementation?
-export function getNextAnnotationId(blockId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
-    let annotations = book.annotations();
-    let find = annotations.findIndex(t => t.id === blockId);
-    return annotations[find+1]?.id || null;
-}
-
-export function getPreviousAnnotationId(blockId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
-    let annotations = book.annotations();
-    let find = annotations.findIndex(t => t.id === blockId);
-    return annotations[find-1]?.id || null;
-}
-
 export function getNextCard(bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {

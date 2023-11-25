@@ -23,6 +23,16 @@ export async function annotationLoader({ params }: {
         return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
 }
 
+function getPreviousAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
+    let find = annotations.findIndex(t => t.id === blockId);
+    return annotations[find-1]?.id || null;
+}
+
+function getNextAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
+    let find = annotations.findIndex(t => t.id === blockId);
+    return annotations[find+1]?.id || null;
+}
+
 export function AnnotationWithOutlet() {
     const annotation = useLoaderData() as annotation;
     const backButtonRef = useRef<HTMLDivElement>(null);
