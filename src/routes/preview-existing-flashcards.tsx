@@ -39,7 +39,7 @@ function NewComponent(props: {
         // setIcon(deleteButtonRefs.current, deleteIcon);
     }, []);
     return <li className={"sr-flashcard tree-item-self is-clickable"}>
-        <Link to={`${props.t.id}`} replace>
+        <Link to={`${props.t.id}`}>
             {props.t.questionText}
         </Link>
         <button>
