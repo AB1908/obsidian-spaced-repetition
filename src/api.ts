@@ -43,14 +43,16 @@ export function getAnnotationById(blockId: string, bookId: string) {
 // todo: refactor annotations into own class object and delegate next previous implementation?
 export function getNextAnnotationId(blockId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    let find = book.annotations().findIndex(t => t.id === blockId);
-    return book.annotations()[find+1]?.id || null;
+    let annotations = book.annotations();
+    let find = annotations.findIndex(t => t.id === blockId);
+    return annotations[find+1]?.id || null;
 }
 
 export function getPreviousAnnotationId(blockId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    let find = book.annotations().findIndex(t => t.id === blockId);
-    return book.annotations()[find-1]?.id || null;
+    let annotations = book.annotations();
+    let find = annotations.findIndex(t => t.id === blockId);
+    return annotations[find-1]?.id || null;
 }
 
 export function getNextCard(bookId: string) {
