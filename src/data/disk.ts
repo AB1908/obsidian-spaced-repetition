@@ -110,9 +110,10 @@ export async function createFlashcardsFileForBook(bookPath: string, path: string
     sourceNotePath = `${bookPath.replace(".md", "")}`;
     const fileContents = `---
 ${ANNOTATIONS_YAML_KEY}: "[[${sourceNotePath}]]"
+tags:
+  - flashcards
 ---
 
-#flashcards
 `;
     await app.vault.create(path, fileContents);
 }
