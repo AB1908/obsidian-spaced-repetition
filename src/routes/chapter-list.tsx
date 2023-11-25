@@ -28,8 +28,9 @@ export function ChapterList() {
     return (
         <>
             <p>Add flashcards from:</p>
-
-            <Tree data={book} render={(child: Heading) => <Section section={child} />} />
+            <div className={"chapter-tree"}>
+                <Tree data={book} render={(child: Heading) => <Section section={child} />} />
+            </div>
         </>
     );
 }
