@@ -69,41 +69,48 @@ export const children: RouteObject[] = [
     },
     {
         path: "/books/:bookId/chapters/:sectionId/annotations",
-        element: <AnnotationList />,
         //todo: conditional logic for intermediate page where we display existing flashcards
-        loader: annotationsLoader
-    },
-    // TODO: make these children and use layout routes?
-    {
-        path: "/books/:bookId/chapters/:chapterId/annotations/:annotationId",
-        element: <AnnotationWithOutlet />,
-        loader: annotationLoader,
+        loader: annotationsLoader,
+        id: "annotationsList",
         children: [
             {
-                path: "flashcards",
-                element: <PreviewExistingFlashcards />,
-                loader: highlightLoader
+                path: "",
+                element: <AnnotationList />,
+                loader: annotationsLoader,
             },
             {
-                path: "flashcards/new",
-                element: <ChooseCardType />
-            },
-            {
-                // TODO: this should be refactored into a single add with params for type of card
-                path: "flashcards/:flashcardId",
-                element: <UpsertCard />,
-                action: updateAction,
-                loader: cardLoader
-            },
-            {
-                // TODO: this should be refactored into a single add with params for type of card
-                path: "flashcards/new/regular",
-                element: <UpsertCard />,
-                action: creationAction,
-                loader: cardLoader
+                path: ":annotationId",
+                element: <AnnotationWithOutlet />,
+                loader: annotationLoader,
+                children: [
+                    {
+                        path: "flashcards",
+                        element: <PreviewExistingFlashcards />,
+                        loader: highlightLoader
+                    },
+                    {
+                        path: "flashcards/new",
+                        element: <ChooseCardType />
+                    },
+                    {
+                        // TODO: this should be refactored into a single add with params for type of card
+                        path: "flashcards/:flashcardId",
+                        element: <UpsertCard />,
+                        action: updateAction,
+                        loader: cardLoader
+                    },
+                    {
+                        // TODO: this should be refactored into a single add with params for type of card
+                        path: "flashcards/new/regular",
+                        element: <UpsertCard />,
+                        action: creationAction,
+                        loader: cardLoader
+                    }
+                ]
             }
         ]
-    }
+    },
+    // TODO: make these children and use layout routes?
     // {
     //     // TODO: this should be refactored into a single add with params for type of card
     //     path: routes.createClozeCard,
