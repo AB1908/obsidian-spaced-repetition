@@ -21,6 +21,16 @@ export async function updateCardOnDisk(path: string, originalText: string, updat
     return true;
 }
 
+export async function deleteCardOnDisk(path: string, originalText: string) {
+    const tfile = getTFileForPath(path);
+    if (tfile === null)
+        return false;
+    const originalFileText = await app.vault.read(tfile);
+    const updatedFileText = originalFileText.replace(originalText, "");
+    await app.vault.modify(tfile, updatedFileText);
+    return true;
+}
+
 function setOfHashesWithTags(tag: string) {
     const findTag = (tag: string) => (t: TagCache) => t.tag.includes(tag);
     const hashSet = new Set<string>();
