@@ -1,11 +1,12 @@
-import {useLoaderData} from "react-router";
-import {Link} from "react-router-dom";
+import { useLoaderData } from "react-router";
+import { Form, Link, useParams } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
-import {USE_ACTUAL_BACKEND} from "src/routes/review";
-import {getFlashcardsForAnnotation} from "src/api";
-import {Flashcard} from "src/data/models/flashcard";
+import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
+import { Flashcard } from "src/data/models/flashcard";
 import { Icon } from "src/routes/root";
 import { setIcon } from "obsidian";
+import { AnnotationLoaderParams } from "src/routes/annotation-with-outlet";
 
 interface HighlightParams {
     bookId: string;
@@ -23,29 +24,30 @@ export function highlightLoader({params}: {params: HighlightParams}) {
     }
 }
 
-function NewComponent(props: {
-    t: Flashcard,
-    i: number,
-    onClick: () => void
+function FlashcardPreview(props: {
+    id: string,
+    questionText: string,
 }) {
     const deleteButtonRef = useRef<HTMLDivElement>(null);
     const deleteIcon: Icon = "trash";
+    const params = useParams<keyof AnnotationLoaderParams>();
 
     useEffect(() => {
         // todo: figure out how to fix this
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
         setIcon(deleteButtonRef.current, deleteIcon);
-        // setIcon(deleteButtonRefs.current, deleteIcon);
     }, []);
     return <li className={"sr-flashcard tree-item-self is-clickable"}>
-        <Link to={`${props.t.id}`}>
-            {props.t.questionText}
+        <Link to={`${props.id}`}>
+            {props.questionText}
         </Link>
-        <button>
-            <div ref={deleteButtonRef} onClick={props.onClick}>
-            </div>
-        </button>
+        <Form method={"delete"}>
+            <button value={props.id} name={"flashcardId"}>
+                <div ref={deleteButtonRef}>
+                </div>
+            </button>
+        </Form>
     </li>;
 }
 
@@ -61,12 +63,11 @@ export function PreviewExistingFlashcards() {
                         <p>
                             Existing questions:
                         </p>
-                        <ul className={"sr-flashcard-tree"}>
-                            {flashcards.map((t, i) => (
-                                    <NewComponent key={t.id} t={t} i={i}
-                                                  onClick={() => console.log("clicked")}/>
-                            ))}
-                        </ul>
+                            <ul className={"sr-flashcard-tree"}>
+                                {flashcards.map((t, i) => (
+                                    <FlashcardPreview key={t.id} questionText={t.questionText} id={t.id}/>
+                                ))}
+                            </ul>
                     </>)
                 }
                 {/*TODO: This shouldn't be here I guess*/}
@@ -78,4 +79,11 @@ export function PreviewExistingFlashcards() {
             </div>
         </>
     );
+}
+
+// todo: fix any
+export async function deleteFlashcardAction({params, request}: {params: any, request: any}) {
+    const data = await request.formData();
+    await deleteFlashcard(params.bookId, data.get("flashcardId"));
+    return null;
 }

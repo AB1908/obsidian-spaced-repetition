@@ -8,7 +8,11 @@ import { ReviewDeck, reviewLoader } from "src/routes/review";
 import { cardLoader, creationAction, updateAction, UpsertCard } from "src/routes/upsert-card";
 import { AnnotationList, annotationsLoader } from "src/routes/highlights";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
-import { highlightLoader, PreviewExistingFlashcards } from "src/routes/preview-existing-flashcards";
+import {
+    deleteFlashcardAction,
+    highlightLoader,
+    PreviewExistingFlashcards
+} from "src/routes/preview-existing-flashcards";
 import { ChooseCardType } from "src/routes/choose-card-type";
 import React from "react";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
@@ -86,7 +90,8 @@ export const children: RouteObject[] = [
                     {
                         path: "flashcards",
                         element: <PreviewExistingFlashcards />,
-                        loader: highlightLoader
+                        loader: highlightLoader,
+                        action: deleteFlashcardAction
                     },
                     {
                         path: "flashcards/new",
