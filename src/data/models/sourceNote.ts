@@ -1,7 +1,7 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
-    createFlashcardsFileForBook,
+    createFlashcardsFileForBook, deleteCardOnDisk,
     getFileContents,
     getMetadataForFile,
     getParentOrFilename,
@@ -9,15 +9,17 @@ import {
     updateCardOnDisk
 } from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
-import { type Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
+import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/scheduling";
 import { TFile } from "obsidian";
 import type SRPlugin from "src/main";
 import { paragraph } from "src/data/models/paragraphs";
-import { isAnnotationOrParagraph } from "src/api";
+import {addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph} from "src/api";
 import { plugin } from "src/main";
+import {CardType} from "src/scheduler/scheduling";
+import {createParsedCard} from "src/data/models/parsedCard";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -371,6 +373,23 @@ export class SourceNote implements frontbook {
             const j = Math.floor(Math.random() * (i + 1));
             [(this.reviewDeck)[i], (this.reviewDeck)[j]] = [(this.reviewDeck)[j], (this.reviewDeck)[i]];
         }
+    }
+
+// DONE: add logic to update in storage
+    async createFlashcard(annotationId: string, question: string, answer: string, cardType: CardType.MultiLineBasic) {
+        // done: Fix hardcoded path, should come from deckNote obj
+        // TODO: error handling
+        // need to check if block is a paragraph or an annotation
+        const block = this.bookSections.filter(t => t.id === annotationId)[0];
+        // I feel like this should be abstracted away into the class for a source note with paragraph
+        if (isParagraph(block) && !block.wasIdPresent) {
+            const text = addBlockIdToParagraph(block);
+            await updateCardOnDisk(this.path, block.text, text);
+        }
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.flashcardNote.path, annotationId);
+        this.flashcardNote.parsedCards.push(parsedCard);
+        const card = new Flashcard(parsedCard.id, question, answer, undefined, annotationId);
+        this.flashcardNote.flashcards.push(card);
     }
 
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
