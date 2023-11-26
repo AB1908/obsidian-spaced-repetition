@@ -35,7 +35,6 @@ export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAn
 
         <div className={"modal-button-container"}>
             <SubmitButton/>
-            {/*TODO: Replace with useNavigate and use history?*/}
             <CancelButton/>
         </div>
     </Form>;
