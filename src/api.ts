@@ -4,7 +4,6 @@ import {
     Flashcard,
     maturityCounts
 } from "src/data/models/flashcard";
-import { createParsedCard, type ParsedCard } from "src/data/models/parsedCard";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
@@ -49,6 +48,12 @@ export function getNextCard(bookId: string) {
         book.nextReviewCard();
         return book.getReviewCard();
     }
+}
+
+export async function deleteFlashcard(bookId: string, flashcardId: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+
+    await book.deleteFlashcard(flashcardId);
 }
 
 export function getCurrentCard(bookId: string) {

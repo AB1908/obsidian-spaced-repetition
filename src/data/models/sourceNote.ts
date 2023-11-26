@@ -392,6 +392,16 @@ export class SourceNote implements frontbook {
         this.flashcardNote.flashcards.push(card);
     }
 
+    async deleteFlashcard(id: string) {
+        const flashcard = this.flashcardNote.flashcards.filter(t => t.id === id)[0];
+        const parsedCard = this.flashcardNote.parsedCards.filter(t => t.id === flashcard.parsedCardId)[0];
+        const text = generateCardAsStorageFormat(parsedCard);
+        // I feel like this should be abstracted away into the class for a source note with paragraph
+        await deleteCardOnDisk(this.flashcardNote.path, text);
+        this.flashcardNote.flashcards = this.flashcardNote.flashcards.filter(t=>t.id !== id);
+        this.flashcardNote.parsedCards = this.flashcardNote.parsedCards.filter(t => t.id !== flashcard.parsedCardId);
+    }
+
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
         this.flashcardNote.flashcards.forEach((card: Flashcard, index: number) => {
             if (card.id == flashcardId) {
