@@ -1,4 +1,4 @@
-import { generatePath, matchPath, Outlet, useLoaderData, useRouteLoaderData } from "react-router";
+import { generatePath, matchPath, Outlet, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
 import React, { useEffect, useRef } from "react";
 import type { annotation } from "src/data/models/annotations";
