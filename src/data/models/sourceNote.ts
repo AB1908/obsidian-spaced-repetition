@@ -231,6 +231,7 @@ export class SourceNote implements frontbook {
     // this is because it is easier to test here and also makes front end simpler in terms of
     // routes and state management
     // however, there may be better approaches
+    // todo: reviewDeck may need to be its own class as review states will be important for implementing navigation
     reviewDeck: Flashcard[];
     // i feel like i need a factory method that creates a SourceNoteWithFLashcards
     // and a SourceNote
