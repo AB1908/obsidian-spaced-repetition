@@ -400,6 +400,7 @@ export class SourceNote implements frontbook {
         await deleteCardOnDisk(this.flashcardNote.path, text);
         this.flashcardNote.flashcards = this.flashcardNote.flashcards.filter(t=>t.id !== id);
         this.flashcardNote.parsedCards = this.flashcardNote.parsedCards.filter(t => t.id !== flashcard.parsedCardId);
+        this.reviewDeck = this.reviewDeck.filter(t=>t.id !== id);
     }
 
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
