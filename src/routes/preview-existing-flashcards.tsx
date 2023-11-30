@@ -1,5 +1,4 @@
-import { useLoaderData } from "react-router";
-import { Form, Link, useParams } from "react-router-dom";
+import { Form, Link, useParams, useLoaderData } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
