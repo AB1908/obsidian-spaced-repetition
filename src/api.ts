@@ -173,6 +173,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
         // if no next heading, we want to extract till end of file
         nextHeadingIndex = book.bookSections.length;
     }
+    // todo: refactor to unify isAnnotationOrParagraph usage
     let annotations = book.bookSections
         .slice(selectedSectionIndex, nextHeadingIndex)
         .filter((t): t is (annotation|paragraph) => isAnnotationOrParagraph(t));
