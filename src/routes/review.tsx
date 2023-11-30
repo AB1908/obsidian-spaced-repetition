@@ -1,6 +1,12 @@
 import React, {useEffect, useRef, useState} from "react";
 import {redirect, useLoaderData, useLocation, useNavigate, useParams} from "react-router-dom";
-import {getCurrentCard, getFlashcardById, getNextCard, updateFlashcardSchedulingMetadata} from "src/api";
+import {
+    deleteFlashcard,
+    getCurrentCard,
+    getFlashcardById,
+    getNextCard,
+    updateFlashcardSchedulingMetadata
+} from "src/api";
 import {CardBack, CardFront} from "src/ui/components/flashcard";
 import {setIcon} from "obsidian";
 import {Icon} from "src/routes/root";
@@ -58,21 +64,29 @@ export function ReviewDeck() {
     const params = useParams<keyof ReviewLoaderParams>();
     const navigate = useNavigate();
     const editButton = useRef<HTMLDivElement>(null);
+    const deleteButton = useRef<HTMLDivElement>(null);
     const location = useLocation();
+    const nextCardId = getNextCard(params.bookId)?.id;
 
     useEffect(() => {
         const editIcon: Icon = "lucide-pencil";
+        const deleteIcon: Icon = "trash";
         //todo: figure out how to fix this
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         setIcon(editButton.current, editIcon);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        setIcon(deleteButton.current, deleteIcon);
     }, []);
 
+
+    // todo: think about moving these
+    // would have to deal with redirects again I guess
     async function flashcardResponseHandler(reviewResponse: number) {
         if (params.flashcardId == null) throw new Error("ReviewDeck: flashcardId cannot be null or undefined");
         if (params.bookId == null) throw new Error("ReviewDeck: bookId cannot be null or undefined");
         await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
-        const nextCardId = getNextCard(params.bookId)?.id;
         if (nextCardId) {
             navigate(`./../${nextCardId}`, {replace: true});
         } else {
@@ -84,6 +98,16 @@ export function ReviewDeck() {
         navigate("edit");
     }
 
+    async function deleteButtonHandler() {
+        await deleteFlashcard(params.bookId, params.flashcardId);
+        if (nextCardId) {
+            navigate(`./../${nextCardId}`, {replace: true});
+        } else {
+            navigate("./../..", {replace: true});
+        }
+        return null;
+    }
+
     // reset state when we navigate to a new flashcard
     // todo: think of cleaner way to do this as it is slow
     useEffect(() => {
@@ -93,8 +117,12 @@ export function ReviewDeck() {
     return (<>
         <div className={"buttons"}>
             <button onClick={() => editButtonClickHandler()}>
-                <div ref={editButton}></div>
+                <div ref={editButton}/>
             </button>
+            <button onClick={() => deleteButtonHandler()}>
+                <div ref={deleteButton}/>
+            </button>
+
         </div>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
