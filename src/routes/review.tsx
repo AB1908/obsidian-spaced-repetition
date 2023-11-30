@@ -91,7 +91,7 @@ export function ReviewDeck() {
         if (nextCardId) {
             navigate(`./../${nextCardId}`, {replace: true});
         } else {
-            navigate("./../..", {replace: true});
+            navigate(-1);
         }
         setIsQuestion(() => true);
     }
