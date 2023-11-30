@@ -67,7 +67,6 @@ export function ReviewDeck() {
     const deleteButton = useRef<HTMLDivElement>(null);
     const skipButton = useRef<HTMLDivElement>(null);
     const location = useLocation();
-    const nextCardId = getNextCard(params.bookId)?.id;
 
     useEffect(() => {
         const editIcon: Icon = "lucide-pencil";
@@ -88,6 +87,7 @@ export function ReviewDeck() {
 
     // todo: think about moving these
     function navigateToNextCard() {
+        const nextCardId = getNextCard(params.bookId)?.id || null;
         if (nextCardId) {
             navigate(`./../${nextCardId}`, {replace: true});
         } else {
