@@ -338,7 +338,7 @@ export class SourceNote implements frontbook {
 
     finishReviewing() {
         this.reviewIndex = -1;
-        this.reviewDeck = [];
+        this.generateReviewDeck();
     }
 
     // write to disk first
