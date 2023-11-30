@@ -4,7 +4,7 @@ import { Tags } from "src/routes/tags";
 import { Notes, notesLoader } from "src/routes/notes-home-page";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-preview";
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
-import { ReviewDeck, reviewLoader } from "src/routes/review";
+import { EditCard, editCardAction, ReviewDeck, reviewLoader } from "src/routes/review";
 import { cardLoader, creationAction, updateAction, UpsertCard } from "src/routes/upsert-card";
 import { AnnotationList, annotationsLoader } from "src/routes/highlights";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
@@ -67,8 +67,8 @@ export const children: RouteObject[] = [
     },
     {
         path: "/books/:bookId/review/:flashcardId/edit",
-        element: <UpsertCard />,
-        action: updateAction,
+        element: <EditCard />,
+        action: editCardAction,
         loader: cardLoader
     },
     {
