@@ -93,6 +93,7 @@ export function ReviewDeck() {
         } else {
             navigate("./../..", {replace: true});
         }
+        setIsQuestion(() => true);
     }
 
 // would have to deal with redirects again I guess
@@ -116,11 +117,9 @@ export function ReviewDeck() {
         navigateToNextCard();
     }
 
-    // reset state when we navigate to a new flashcard
-    // todo: think of cleaner way to do this as it is slow
-    useEffect(() => {
-        setIsQuestion(() => true);
-    }, [location]);
+    function previousButtonHandler() {
+
+    }
 
     return (<>
         <div className={"buttons"}>
