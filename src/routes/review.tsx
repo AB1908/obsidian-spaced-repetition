@@ -65,12 +65,14 @@ export function ReviewDeck() {
     const navigate = useNavigate();
     const editButton = useRef<HTMLDivElement>(null);
     const deleteButton = useRef<HTMLDivElement>(null);
+    const skipButton = useRef<HTMLDivElement>(null);
     const location = useLocation();
     const nextCardId = getNextCard(params.bookId)?.id;
 
     useEffect(() => {
         const editIcon: Icon = "lucide-pencil";
         const deleteIcon: Icon = "trash";
+        const skipIcon: Icon = "skip-forward";
         //todo: figure out how to fix this
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
@@ -78,6 +80,9 @@ export function ReviewDeck() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         //@ts-ignore
         setIcon(deleteButton.current, deleteIcon);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        //@ts-ignore
+        setIcon(skipButton.current, skipIcon);
     }, []);
 
 
@@ -107,6 +112,10 @@ export function ReviewDeck() {
         navigateToNextCard();
     }
 
+    function skipButtonHandler() {
+        navigateToNextCard();
+    }
+
     // reset state when we navigate to a new flashcard
     // todo: think of cleaner way to do this as it is slow
     useEffect(() => {
@@ -121,7 +130,9 @@ export function ReviewDeck() {
             <button onClick={() => deleteButtonHandler()}>
                 <div ref={deleteButton}/>
             </button>
-
+            <button onClick={() => skipButtonHandler()}>
+                <div ref={skipButton}/>
+            </button>
         </div>
         {isQuestion && (<CardFront currentCard={currentCard} handleShowAnswerButton={() => setIsQuestion(false)}/>)}
 
