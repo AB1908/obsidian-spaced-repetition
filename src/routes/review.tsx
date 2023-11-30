@@ -82,16 +82,20 @@ export function ReviewDeck() {
 
 
     // todo: think about moving these
-    // would have to deal with redirects again I guess
-    async function flashcardResponseHandler(reviewResponse: number) {
-        if (params.flashcardId == null) throw new Error("ReviewDeck: flashcardId cannot be null or undefined");
-        if (params.bookId == null) throw new Error("ReviewDeck: bookId cannot be null or undefined");
-        await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
+    function navigateToNextCard() {
         if (nextCardId) {
             navigate(`./../${nextCardId}`, {replace: true});
         } else {
             navigate("./../..", {replace: true});
         }
+    }
+
+// would have to deal with redirects again I guess
+    async function flashcardResponseHandler(reviewResponse: number) {
+        if (params.flashcardId == null) throw new Error("ReviewDeck: flashcardId cannot be null or undefined");
+        if (params.bookId == null) throw new Error("ReviewDeck: bookId cannot be null or undefined");
+        await updateFlashcardSchedulingMetadata(params.flashcardId, params.bookId, reviewResponse);
+        navigateToNextCard();
     }
 
     function editButtonClickHandler() {
@@ -100,12 +104,7 @@ export function ReviewDeck() {
 
     async function deleteButtonHandler() {
         await deleteFlashcard(params.bookId, params.flashcardId);
-        if (nextCardId) {
-            navigate(`./../${nextCardId}`, {replace: true});
-        } else {
-            navigate("./../..", {replace: true});
-        }
-        return null;
+        navigateToNextCard();
     }
 
     // reset state when we navigate to a new flashcard
