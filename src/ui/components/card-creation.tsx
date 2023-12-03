@@ -1,6 +1,8 @@
 import React from "react";
-import {Form} from "react-router-dom";
-import {CancelButton, SubmitButton} from "src/ui/components/buttons";
+import { Form, useLoaderData, useNavigate, useParams } from "react-router-dom";
+import { CancelButton, SubmitButton } from "src/ui/components/buttons";
+import { createFlashcardForAnnotation, updateFlashcardContentsById } from "src/api";
+import { FrontendFlashcard } from "src/routes/review";
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
     const labelText = props.htmlFor[0].toUpperCase() + props.htmlFor.slice(1);
@@ -28,11 +30,26 @@ export function ClozeCardForm(props: any) {
 
 export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
     // todo: add some sort of header signifying the type of card being added
-    return <Form method="post" className={"sr-card-form"} replace>
-        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
-                            defaultValue={props.defaultQuestionValue}/>
-        <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"} defaultValue={props.defaultAnswerValue}/>
+    const currentCard = useLoaderData() as FrontendFlashcard;
+    const params = useParams();
+    const navigate = useNavigate();
 
+    async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
+        e.preventDefault();
+        if (params.flashcardId) {
+            await updateFlashcardContentsById(params.flashcardId, e.target.question.value, e.target.answer.value, params.bookId);
+            navigate("./..", {replace: true});
+        } else {
+            await createFlashcardForAnnotation(e.target.question.value, e.target.answer.value, params.annotationId, params.bookId);
+            navigate(-2);
+        }
+    }
+
+    return <Form method="post" className={"sr-card-form"} replace onSubmit={(event) => submitButtonHandler(event)}>
+        <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
+                            defaultValue={currentCard?.questionText}/>
+        <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"}
+                            defaultValue={currentCard?.answerText}/>
         <div className={"modal-button-container"}>
             <SubmitButton/>
             <CancelButton/>
