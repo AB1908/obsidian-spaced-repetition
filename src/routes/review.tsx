@@ -111,8 +111,8 @@ export function ReviewDeck() {
     }
 
     async function deleteButtonHandler() {
-        await deleteFlashcard(params.bookId, params.flashcardId);
         navigateToNextCard();
+        await deleteFlashcard(params.bookId, params.flashcardId);
     }
 
     function skipButtonHandler() {
