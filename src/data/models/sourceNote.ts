@@ -20,6 +20,7 @@ import {addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph} from "src/a
 import { plugin } from "src/main";
 import {CardType} from "src/scheduler/scheduling";
 import {createParsedCard} from "src/data/models/parsedCard";
+import {parseMetadata} from "src/data/parser";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -389,7 +390,7 @@ export class SourceNote implements frontbook {
         }
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.flashcardNote.path, annotationId);
         this.flashcardNote.parsedCards.push(parsedCard);
-        const card = new Flashcard(parsedCard.id, question, answer, undefined, annotationId);
+        const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
         this.flashcardNote.flashcards.push(card);
     }
 
