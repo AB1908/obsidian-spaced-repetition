@@ -239,6 +239,11 @@ export interface frontEndBook {
     canBeReviewed: boolean;
 }
 
+export function resetBookReviewState(bookId: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    book.resetReview();
+}
+
 export function getBookById(bookId: string): frontEndBook {
     const book = plugin.sourceNoteIndex.getBook(bookId);
     const { annotationsWithFlashcards, annotationsWithoutFlashcards } = book.annotationCoverage();
