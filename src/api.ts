@@ -207,6 +207,7 @@ export function getSourcesForReview(): ReviewBook[] {
     // todo: refactor
     const booksToReview = plugin.sourceNoteIndex.getSourcesForReview();
     return booksToReview.map(t => {
+        t.resetReview();
         const {annotationsWithFlashcards, annotationsWithoutFlashcards} = t.annotationCoverage();
         const annotationsWithFlashcardsCount = annotationsWithFlashcards.size;
         const annotationsWithoutFlashcardsCount = annotationsWithoutFlashcards.size;
