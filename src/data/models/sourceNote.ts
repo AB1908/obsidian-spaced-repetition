@@ -404,6 +404,11 @@ export class SourceNote implements frontbook {
         this.reviewDeck = this.reviewDeck.filter(t=>t.id !== id);
     }
 
+    resetReview() {
+        this.generateReviewDeck();
+        this.reviewIndex = -1;
+    }
+
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
         this.flashcardNote.flashcards.forEach((card: Flashcard, index: number) => {
             if (card.id == flashcardId) {
