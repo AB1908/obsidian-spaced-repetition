@@ -1,19 +1,18 @@
 import React from "react";
-import { Link, Outlet, useNavigate } from "react-router-dom";
-import { useLoaderData } from "react-router";
+import { Link, Outlet, useNavigate, useLoaderData } from "react-router-dom";
 import { DeckCounts } from "src/routes/notes-home-page";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
-import { frontEndBook, getBookById } from "src/api";
+import { frontEndBook, getBookById, resetBookReviewState } from "src/api";
 
 interface DeckLoaderParams {
     bookId: string;
 }
 
 export function deckLoader({params}: {params: DeckLoaderParams}) {
-    if (USE_ACTUAL_BACKEND)
-        return getBookById(params.bookId);
-    else
-        return fetch(`http://localhost:3000/books/${params.bookId}`);
+    console.log("side effect")
+    // warn: performing side effect!
+    resetBookReviewState(params.bookId);
+    return getBookById(params.bookId);
 }
 
 export function BookButtons() {
