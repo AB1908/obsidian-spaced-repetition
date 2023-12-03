@@ -1,10 +1,9 @@
-import {useLoaderData} from "react-router";
-import {redirect} from "react-router-dom";
 import React from "react";
-import {DefaultCardForm} from "src/ui/components/card-creation";
-import {createFlashcardForAnnotation, getFlashcardById, updateFlashcardContentsById} from "src/api";
-import {Flashcard} from "src/data/models/flashcard";
-import {USE_ACTUAL_BACKEND} from "src/routes/review";
+import { useLoaderData } from "react-router";
+import { DefaultCardForm } from "src/ui/components/card-creation";
+import { getFlashcardById } from "src/api";
+import { Flashcard } from "src/data/models/flashcard";
+import { USE_ACTUAL_BACKEND } from "src/routes/review";
 
 export interface CardLoaderParams {
     bookId: string;
@@ -39,23 +38,11 @@ export function UpsertCard() {
 }
 
 // todo: fix any
-export async function creationAction({params, request}: {params: any, request: any}): Promise<Response> {
-    // done: Add logic to update the deck
-    const data = await request.formData();
-    // done: call the right api instead, there shouldn't be any actual update logic
-    // I have access to bookId, sectionId, annotationId
-    await createFlashcardForAnnotation(data.get("question"), data.get("answer"), params.annotationId, params.bookId);
-    // todo(fix): need strong typing for params as this is causing route substitution errors
-    return redirect(`/books/${params.bookId}/chapters/${params.sectionId}/annotations/${params.annotationId}/flashcards`);
+export async function creationAction({params, request}: {params: any, request: any}): Promise<null> {
+    return null;
 }
 
 // todo: fix any
-export async function updateAction({params, request}: {params: any, request: any}): Promise<Response> {
-    // DONE: Add logic to update the deck
-    const data = await request.formData();
-    // DONE: call the right api instead, there shouldn' be any actual update logic
-    // I have access to bookId, sectionId, annotationId
-    await updateFlashcardContentsById(params.flashcardId, data.get("question"), data.get("answer"), params.bookId);
-    // return redirect(`/books/${params.bookId}/chapters/${params.chapterId}/annotations/${params.annotationId}/flashcards`);
-    return redirect("./..");
+export async function updateAction({params, request}: {params: any, request: any}): Promise<null> {
+    return null;
 }
