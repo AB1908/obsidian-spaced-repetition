@@ -18,13 +18,19 @@ export function deckLoader({params}: {params: DeckLoaderParams}) {
 export function BookButtons() {
     const navigate = useNavigate();
     const book = useLoaderData() as frontEndBook;
+
+    function clickHandler() {
+        if (book.canBeReviewed)
+            navigate("review");
+    }
+
     return <p>
         <Link to={"chapters"}>
             <button>
                 Create New Cards
             </button>
         </Link>
-        <button onClick={() => navigate("review")} disabled={!book.canBeReviewed}>
+        <button onClick={() => clickHandler()} disabled={!book.canBeReviewed}>
             Review
         </button>
     </p>;
