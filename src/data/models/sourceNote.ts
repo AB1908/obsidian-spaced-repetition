@@ -135,9 +135,14 @@ export function findPreviousHeader(section: RawBookSection | BookMetadataSection
                 continue;
             }
         }
-        if ("level" in currentSection)
+        // TODO: refactor to split into two different functions because unifying the section vs header parent finding
+        // implementation means coupling things unnecessarily.
+        // See commit introducing this comment
+        if (("level" in section) && ("level" in currentSection) && (currentSection.level+1 == section.level))
             // we've finally reached a header
             // return it
+            return index;
+        else if (!("level" in section) && ("level" in currentSection))
             return index;
         index--;
     }
