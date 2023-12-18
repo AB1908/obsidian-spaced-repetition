@@ -111,6 +111,27 @@ export class Heading {
 
 }
 
+export function findPreviousHeaderForSection(section: annotation|paragraph, sections: (RawBookSection|BookMetadataSection)[]) {
+    let index = sections.indexOf(section);
+    while (index >= 0) {
+        const currentSection: (RawBookSection|BookMetadataSection) = sections[index];
+        if (section == currentSection) {
+            // we are on the same item lol
+            // decrement and continue
+            index--;
+            continue;
+        }
+        // todo: convert to idiomatic type check?
+        // TODO: refactor to split into two different functions because unifying the section vs header parent finding
+        // implementation means coupling things unnecessarily.
+        // See commit introducing this comment
+        if (!("level" in section) && ("level" in currentSection))
+            return index;
+        index--;
+    }
+    return -1;
+}
+
 export function findPreviousHeaderForHeading(section: Heading, sections: (RawBookSection|BookMetadataSection)[]) {
     let index = sections.indexOf(section);
     // top level headers don't have a parent
@@ -173,7 +194,7 @@ export function findNextHeader(section: RawBookSection | BookMetadataSection, se
 }
 
 export function updateHeaders(cacheItem: annotation | paragraph, sections: BookMetadataSections, key: keyof Count) {
-    const previousHeadingIndex = findPreviousHeader(cacheItem, sections);
+    const previousHeadingIndex = findPreviousHeaderForSection(cacheItem, sections);
     let previousHeading = sections[previousHeadingIndex] as Heading;
     while (previousHeading != null) {
         previousHeading.counts[key]++;
