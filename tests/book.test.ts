@@ -1,4 +1,11 @@
-import { bookSections, findNextHeader, findPreviousHeader } from "src/data/models/sourceNote";
+import {
+    type BookMetadataSection,
+    type Heading,
+    type RawBookSection,
+    bookSections,
+    findNextHeader,
+    findPreviousHeaderForHeading
+} from "src/data/models/sourceNote";
 import { beforeEach } from "@jest/globals";
 import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
 import type { SectionCache } from "obsidian";
@@ -34,7 +41,7 @@ test.skip("bookSections", () => {
     ).toMatchSnapshot();
 });
 
-let input: SectionCache[];
+let input: (RawBookSection|BookMetadataSection)[];
 
 const sectionsGenerator = () => [
     {
@@ -75,23 +82,23 @@ const sectionsGenerator = () => [
 ];
 describe("findPreviousHeader", () => {
     beforeEach(() => {
-        input = sectionsGenerator() as SectionCache[];
+        input = sectionsGenerator() as (RawBookSection|BookMetadataSection)[];
     });
 
     test("should return null for a top level header", () => {
-        expect(findPreviousHeader(input[6] as SectionCache, input as SectionCache[])).toBe(4);
-        expect(findPreviousHeader(input[0] as SectionCache, input as SectionCache[])).toBe(-1);
+        expect(findPreviousHeaderForHeading(input[6] as Heading, input as SectionCache[])).toBe(4);
+        expect(findPreviousHeaderForHeading(input[0] as Heading, input as SectionCache[])).toBe(-1);
     });
     test("should return a top level header for a subheader", () => {
-        expect(findPreviousHeader(input[4] as SectionCache, input as SectionCache[])).toBe(0);
-        expect(findPreviousHeader(input[2] as SectionCache, input as SectionCache[])).toBe(0);
+        expect(findPreviousHeaderForHeading(input[4] as Heading, input as SectionCache[])).toBe(0);
+        expect(findPreviousHeaderForHeading(input[2] as Heading, input as SectionCache[])).toBe(0);
     });
     // TODO: test for subsubheaders :(
     test("should return a top level header for an annotation under it", () => {
-        expect(findPreviousHeader(input[1] as SectionCache, input as SectionCache[])).toBe(0);
+        expect(findPreviousHeaderForHeading(input[1] as Heading, input as SectionCache[])).toBe(0);
     });
     test("should return a sub header for an annotation under it", () => {
-        expect(findPreviousHeader(input[3] as SectionCache, input as SectionCache[])).toBe(2);
+        expect(findPreviousHeaderForHeading(input[3] as Heading, input as SectionCache[])).toBe(2);
     });
 });
 
@@ -101,8 +108,8 @@ describe("generateHeaderCounts", () => {
     });
 
     test("should return null for a top level header", () => {
-        expect(findPreviousHeader(input[6] as SectionCache, input as SectionCache[])).toBe(4);
-        expect(findPreviousHeader(input[0] as SectionCache, input as SectionCache[])).toBe(-1);
+        expect(findPreviousHeaderForHeading(input[6] as Heading, input as SectionCache[])).toBe(4);
+        expect(findPreviousHeaderForHeading(input[0] as Heading, input as SectionCache[])).toBe(-1);
     });
     // test("should return a top level header for a subheader", () => {
     //     expect(findPreviousHeader(input as SectionCache[], input[4] as SectionCache)).toBe(0);
@@ -304,6 +311,6 @@ describe("booktree", () => {
                 },
             },
         ];
-        expect(findPreviousHeader(input[8], input)).toBe(0);
+        expect(findPreviousHeaderForHeading(input[8], input)).toBe(0);
     });
 });
