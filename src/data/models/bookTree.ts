@@ -1,4 +1,4 @@
-import { BookMetadataSections, findPreviousHeader, type Heading, isHeading } from "src/data/models/sourceNote";
+import { BookMetadataSections, findPreviousHeaderForHeading, type Heading, isHeading } from "src/data/models/sourceNote";
 
 // KILL: switch to DFS/BFS?
 // Need this to be able to call countAnnotations
@@ -15,7 +15,7 @@ export function generateTree(sections: Heading[]) {
     while (i < sections.length) {
         const cacheItem = sections[i];
         if (!isHeading(cacheItem)) {
-            prevHeader = findPreviousHeader(cacheItem, sections);
+            prevHeader = findPreviousHeaderForHeading(cacheItem, sections);
             const previousHeader = sections[prevHeader] as Heading;
             if (prevHeader != null) {
                 previousHeader.children.push(cacheItem);
@@ -32,7 +32,7 @@ export function generateTree(sections: Heading[]) {
         while (sectionIndex < sections.length) {
             const each = sections[sectionIndex];
             if ((isHeading(each)) && (each.level == headingLevel)) {
-                const prevHeader = findPreviousHeader(each, sections);
+                const prevHeader = findPreviousHeaderForHeading(each, sections);
                 const previousHeader = sections[prevHeader] as Heading;
                 previousHeader.children.push(each);
             }

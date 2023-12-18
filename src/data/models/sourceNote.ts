@@ -111,7 +111,7 @@ export class Heading {
 
 }
 
-export function findPreviousHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
+export function findPreviousHeaderForHeading(section: Heading, sections: (RawBookSection|BookMetadataSection)[]) {
     let index = sections.indexOf(section);
     // top level headers don't have a parent
     // done: consider changing this to -1 so we have a consistent return type
@@ -119,7 +119,7 @@ export function findPreviousHeader(section: RawBookSection | BookMetadataSection
         if (section.level == 1) return -1;
     }
     while (index >= 0) {
-        const currentSection: typeof section = sections[index];
+        const currentSection: (RawBookSection|BookMetadataSection) = sections[index];
         if (section == currentSection) {
             // we are on the same item lol
             // decrement and continue
@@ -177,7 +177,7 @@ export function updateHeaders(cacheItem: annotation | paragraph, sections: BookM
     let previousHeading = sections[previousHeadingIndex] as Heading;
     while (previousHeading != null) {
         previousHeading.counts[key]++;
-        previousHeading = sections[findPreviousHeader(previousHeading, sections)] as Heading;
+        previousHeading = sections[findPreviousHeaderForHeading(previousHeading, sections)] as Heading;
     }
 }
 
