@@ -8,4 +8,6 @@ module.exports = {
             jest.fn(() => false);
         },
     },
+    Modal: jest.fn().mockImplementation(),
+    Plugin: jest.fn().mockImplementation(),
 };
