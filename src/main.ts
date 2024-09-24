@@ -4,9 +4,9 @@ import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { SourceNoteIndex } from "src/data/models/sourceNote";
 import { fileTags } from "src/data/disk";
 import { Index } from "src/data/models";
+import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
 
 export interface PluginData {
     settings: SRSettings;
@@ -45,7 +45,7 @@ export default class SRPlugin extends Plugin {
             this.fileTagsMap = fileTags();
             this.flashcardIndex = await this.flashcardIndex.initialize();
             this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
-        })
+        });
         // done: eventually remove this and add access method for sourcenoteindex
 
         appIcon();

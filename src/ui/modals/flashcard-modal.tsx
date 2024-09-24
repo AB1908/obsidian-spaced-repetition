@@ -6,8 +6,8 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { Root } from "src/routes/root";
 import { children } from "src/routes/routes";
 import ErrorPage from "src/routes/errorPage";
-import { SourceNoteIndex} from "src/data/models/sourceNote";
 import { FlashcardIndex } from "src/data/models/flashcard";
+import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
 
 /*
 books by title or id?
