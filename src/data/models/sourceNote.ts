@@ -1,7 +1,9 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
+import { TFile } from "obsidian";
 import { nanoid } from "nanoid";
 import {
-    createFlashcardsFileForBook, deleteCardOnDisk,
+    createFlashcardsFileForBook,
+    deleteCardOnDisk,
     getFileContents,
     getMetadataForFile,
     getParentOrFilename,
@@ -11,16 +13,15 @@ import {
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
+import { createParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/scheduling";
-import { TFile } from "obsidian";
+import { CardType } from "src/scheduler/scheduling";
 import type SRPlugin from "src/main";
-import { paragraph } from "src/data/models/paragraphs";
-import {addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph} from "src/api";
 import { plugin } from "src/main";
-import {CardType} from "src/scheduler/scheduling";
-import {createParsedCard} from "src/data/models/parsedCard";
-import {parseMetadata} from "src/data/parser";
+import { paragraph } from "src/data/models/paragraphs";
+import { addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph } from "src/api";
+import { parseMetadata } from "src/data/parser";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -222,6 +223,9 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
 // done: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
 // move to some other file instead
 // done: how can the return type for this be undefined? WTF??
+// todo: figure out how to make backcompat
+// problem here is that not every existing file will have annotationFromYaml
+// so need to be able to gracefully move users over somehow
 export function getAnnotationFilePath(path: string) {
     const metadata = getMetadataForFile(path);
     const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
@@ -480,63 +484,6 @@ export class SourceNote implements frontbook {
         this.flashcardNote = await new FlashcardNote(path);
         // WARN: this seems hacky, should I create another method?
         this.flashcardNote.parentPath = this.path;
-    }
-}
-
-export class SourceNoteIndex {
-    sourceNotes: SourceNote[]
-
-    constructor() {
-        this.sourceNotes = [];
-    }
-
-    async initialize(plugin: SRPlugin) {
-        // iterate over tags in plugin
-        // create set from tags in note
-        // check membership of tag
-        const tagsInSettings = ["review/note", "review/book"];
-        const pathsWithAllowedTags  = new Set<string>();
-        for (let [path, tags] of plugin.fileTagsMap) {
-            const tagSet = new Set(tags);
-            for (let tag of tagsInSettings) {
-                if (tagSet.has(tag)) {
-                    pathsWithAllowedTags.add(path);
-                    break;
-                }
-            }
-        }
-        //todo: parameterize
-        // const filePaths = filePathsWithTag("review/note");
-        const notesWithAnnotations = Array.from(pathsWithAllowedTags.keys()).map((t: string) => new SourceNote(t, plugin));
-        for (const t of notesWithAnnotations) {
-            try {
-                await t.initialize();
-            } catch (e) {
-                // WARNING! this is dangerous, I am catching other errors and just assuming that
-                // these are this error
-                console.error(e);
-                console.error(`init: unable to initialize source note ${t.path}`);
-            }
-        }
-        this.sourceNotes = notesWithAnnotations;
-        console.log("Card Coverage: Source note index successfully initialized");
-        return this;
-    }
-
-    getBook(bookId: string) {
-        const book = this.sourceNotes.filter(t => t.id === bookId)[0];
-        if (!book) {
-            throw new Error(`No book found for id ${bookId}`);
-        }
-        return book;
-    }
-
-    getSourcesForReview() {
-        return this.sourceNotes.filter(t=>t.flashcardNote);
-    }
-
-    getSourcesWithoutFlashcards(): SourceNote[] {
-        return this.sourceNotes.filter(t => !t.flashcardNote);
     }
 }
 
