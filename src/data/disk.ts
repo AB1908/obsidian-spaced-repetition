@@ -56,15 +56,15 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
 }
 
 export function fileTags() {
-    let fileMap = new Map<string,string>();
-    let fileCache = structuredClone(app.metadataCache.fileCache);
-    let metadataCache = structuredClone(app.metadataCache.metadataCache);
-    for (let key of Object.keys(fileCache)) {
+    const fileMap = new Map<string,string>();
+    const fileCache = structuredClone(app.metadataCache.fileCache);
+    const metadataCache = structuredClone(app.metadataCache.metadataCache);
+    for (const key of Object.keys(fileCache)) {
         fileMap.set(fileCache[key].hash, key);
     }
     const tagMap = new Map<string, string[]>();
-    const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag)};
-    for (let [hash, path] of fileMap) {
+    const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag);};
+    for (const [hash, path] of fileMap) {
         const frontmatterTags = metadataCache[hash]?.frontmatter?.tags;
         const tagsArray = frontmatterTags || [];
         const fileTags = metadataCache[hash]?.tags;
@@ -90,7 +90,7 @@ export async function getFileContents(path: string) {
 
 export function getParentOrFilename(path: string) {
     // TODO: What if root folder?
-    let tFileForPath = getTFileForPath(path);
+    const tFileForPath = getTFileForPath(path);
     // files at root folder level return "" for parent name
     return tFileForPath.parent?.name || tFileForPath.basename;
 }
@@ -115,9 +115,8 @@ export function getFolderNameFromPath(path: string) {
 // takes a book path, finds parent if any and creates flashcard file
 // todo: refactor to move business logic up one layer
 export async function createFlashcardsFileForBook(bookPath: string, path: string) {
-    let sourceNotePath;
     // use sourcenote path
-    sourceNotePath = `${bookPath.replace(".md", "")}`;
+    const sourceNotePath = `${bookPath.replace(".md", "")}`;
     const fileContents = `---
 ${ANNOTATIONS_YAML_KEY}: "[[${sourceNotePath}]]"
 tags:
