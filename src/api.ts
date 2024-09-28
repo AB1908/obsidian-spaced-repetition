@@ -8,7 +8,7 @@ import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk } from "src/data/disk";
-import { plugin } from "src/main";
+import { flashcardIndex, plugin, sourceNoteIndex } from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
@@ -67,14 +67,14 @@ export function getCurrentCard(bookId: string) {
 }
 
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
     // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
     // already has flashcards
-    const flashcard: FrontendFlashcard = book.flashcardNote.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
-        return { ...t, delayBeforeReview: calculateDelayBeforeReview(t.dueDate) };
-    })[0] ?? null;
-    if (flashcard == null) throw new Error(`getFlashcardById: flashcard not found for id ${flashcardId}`);
-    return flashcard;
+    const flashcard: Flashcard | undefined = flashcardIndex.flashcards.get(flashcardId);
+    if (flashcard == undefined) throw new Error(`getFlashcardById: flashcard not found for id ${flashcardId}`);
+    return {
+        ...flashcard,
+        delayBeforeReview: calculateDelayBeforeReview(flashcard.dueDate)
+    };
 }
 
 export async function updateFlashcardSchedulingMetadata(
