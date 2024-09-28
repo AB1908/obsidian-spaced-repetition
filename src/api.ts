@@ -1,6 +1,5 @@
 import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
 import {
-    calculateDelayBeforeReview,
     Flashcard,
     maturityCounts
 } from "src/data/models/flashcard";
@@ -13,6 +12,7 @@ import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
+import { calculateDelayBeforeReview } from "src/utils";
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {

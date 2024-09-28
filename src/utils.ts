@@ -1,3 +1,5 @@
+import { moment } from "obsidian";
+
 type Hex = number;
 
 // https://stackoverflow.com/a/69019874
@@ -53,4 +55,11 @@ export function cyrb53(str: string, seed = 0): string {
     h1 = Math.imul(h1 ^ (h1 >>> 16), 2246822507) ^ Math.imul(h2 ^ (h2 >>> 13), 3266489909);
     h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
     return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
+}
+
+// todo: move into controller?
+export function calculateDelayBeforeReview(due: string) {
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    return Math.abs(moment().valueOf() - moment(due).valueOf());
 }
