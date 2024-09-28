@@ -1,52 +1,11 @@
 import { createFlashcardForAnnotation, getFlashcardById } from "src/api";
 import { plugin } from "src/main";
+import { FlashcardIndex } from "src/data/models/flashcard";
 
 jest.mock("../src/data/disk", () => {
     return {
         // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
         writeCardToDisk: (path: string, text: string) => {
-        }
-    };
-});
-
-jest.mock("../src/main", () => {
-    return {
-        plugin: {
-            notesWithFlashcards: [
-                {
-                    id: "ibJ6QFl4",
-                    flashcardsPath: "Memory - A Very Short Introduction/Flashcards.md",
-                    name: "Memory - A Very Short Introduction",
-                    parsedCards: [
-                        {
-                            id: "u-72tWEW",
-                            notePath: "Memory - A Very Short Introduction/Flashcards.md",
-                            cardText:
-                                "What is cued recall?\n?\nCued recall is where we cue recall by presenting some information.",
-                            metadataText: "<!--SR:5769!L,2023-09-02,2,250-->",
-                            lineNo: -1,
-                            cardType: 2
-                        }
-                    ],
-                    flashcards: [
-                        {
-                            id: "pBri5QNB",
-                            cardType: 2,
-                            context: null,
-                            dueDate: "2023-09-02",
-                            ease: 250,
-                            interval: 2,
-                            annotationId: "5769",
-                            flag: "L",
-                            siblings: [],
-                            parsedCardId: "u-72tWEW",
-                            questionText: "What is cued recall?",
-                            answerText:
-                                "Cued recall is where we cue recall by presenting some information."
-                        }
-                    ]
-                }
-            ]
         }
     };
 });
@@ -65,7 +24,37 @@ jest.mock("../src/data/models/flashcard", () => {
     };
 });
 
+jest.mock("../src/main", () => {
+       return {
+        __esModule: true, // Use it when dealing with esModules
+        plugin: { flashcardIndex: null },
+    };
+});
+
+
+
 describe("getFlashcardById", () => {
+    beforeEach(() => {
+        plugin.flashcardIndex = new FlashcardIndex();
+        plugin.flashcardIndex.flashcards = new Map();
+        plugin.flashcardIndex.flashcards.set("pBri5QNB",
+            {
+                id: "pBri5QNB",
+                cardType: 2,
+                context: null,
+                dueDate: "2023-09-02",
+                ease: 250,
+                interval: 2,
+                annotationId: "5769",
+                flag: "L",
+                siblings: [],
+                parsedCardId: "u-72tWEW",
+                questionText: "What is cued recall?",
+                answerText:
+                    "Cued recall is where we cue recall by presenting some information."
+            }
+        );
+    });
     test("retrieves a flashcard successfully", () => {
         expect(getFlashcardById("pBri5QNB", "ibJ6QFl4")).toStrictEqual({
             id: "pBri5QNB",
