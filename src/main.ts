@@ -24,8 +24,6 @@ const DEFAULT_DATA: PluginData = {
 };
 
 export let plugin: SRPlugin;
-export let sourceNoteIndex: SourceNoteIndex;
-export let flashcardIndex: FlashcardIndex;
 
 export default class SRPlugin extends Plugin {
     public data: PluginData;
@@ -47,8 +45,6 @@ export default class SRPlugin extends Plugin {
             this.fileTagsMap = fileTags();
             this.flashcardIndex = await this.flashcardIndex.initialize();
             this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
-            flashcardIndex = this.flashcardIndex;
-            sourceNoteIndex = this.sourceNoteIndex;
         });
         // done: eventually remove this and add access method for sourcenoteindex
 

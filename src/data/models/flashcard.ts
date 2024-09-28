@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import { FLAG, FlashcardMetadata, parseCardText, parseFileText, parseMetadata } from "src/data/parser";
 import { moment, Notice } from "obsidian";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
-import { flashcardIndex, plugin } from "src/main";
+import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
 import {getAnnotationFilePath, SourceNote} from "src/data/models/sourceNote";
 import { filePathsWithTag } from "src/data/disk";

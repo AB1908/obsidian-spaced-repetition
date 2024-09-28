@@ -1,6 +1,8 @@
 import { createFlashcardForAnnotation, getFlashcardById } from "src/api";
-import { plugin } from "src/main";
-import { FlashcardIndex } from "src/data/models/flashcard";
+import { plugin, sourceNoteIndex } from "src/main";
+import { Flashcard, FlashcardIndex, FlashcardNote } from "src/data/models/flashcard";
+import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
+import { SourceNote } from "src/data/models/sourceNote";
 
 jest.mock("../src/data/disk", () => {
     return {
