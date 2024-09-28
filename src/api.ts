@@ -69,7 +69,7 @@ export function getCurrentCard(bookId: string) {
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
     // already has flashcards
-    const flashcard: Flashcard | undefined = flashcardIndex.flashcards.get(flashcardId);
+    const flashcard: Flashcard | undefined = plugin.flashcardIndex.flashcards.get(flashcardId);
     if (flashcard == undefined) throw new Error(`getFlashcardById: flashcard not found for id ${flashcardId}`);
     return {
         ...flashcard,
