@@ -1,10 +1,10 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
-import { TFile } from "obsidian";
 import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook,
     deleteCardOnDisk,
     getFileContents,
+    getFileFromLinkText,
     getMetadataForFile,
     getParentOrFilename,
     getTFileForPath,
@@ -232,12 +232,7 @@ export function getAnnotationFilePath(path: string) {
     if (!annotationFromYaml)
         throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
     const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
-    const destinationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
-    if (destinationTFile instanceof TFile) {
-        return destinationTFile.path;
-    } else {
-        throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
-    }
+    return getFileFromLinkText(annotationLinkText, path);
 }
 
 // DONE rewrite to use ids instead of doing object equality

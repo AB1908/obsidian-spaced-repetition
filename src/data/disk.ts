@@ -138,3 +138,12 @@ export function getParentFolderPathAndName(filePath: string) {
         throw new Error(`getFolderNameFromPath: Folder not found for path ${filePath}`);
     }
 }
+
+export function getFileFromLinkText(annotationLinkText: string, path: string) {
+    const destinationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
+    if (destinationTFile instanceof TFile) {
+        return destinationTFile.path;
+    } else {
+        throw new Error(`${path} does not have a valid parent in metadata`);
+    }
+}
