@@ -65,7 +65,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
         if (cacheItem.type === "callout") {
             const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
             // todo: I think I've fucked up the ordering for assignment with spread
-            let item = { hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation };
+            const item = { hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation };
             output.push(item);
             plugin.index.addToAnnotationIndex(item);
         } else if (cacheItem.type === "heading") {
@@ -83,13 +83,13 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
                     id: cacheItem.id || nanoid(8),
                     text: fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, ""),
                     wasIdPresent: cacheItem.id ? true : false,
-                }
-            let item = {
+                };
+            const item = {
                 ...paragraph,
                 hasFlashcards: blocksWithFlashcards.has(paragraph.id), ...paragraph,
             };
             plugin.index.addToAnnotationIndex(item);
-            output.push(item)
+            output.push(item);
             // TODO: Any edge cases?
         }
     }
@@ -254,7 +254,7 @@ export class SourceNote implements frontbook {
     id: string;
     name: string;
     reviewIndex: number;
-    tags: string[];
+    tags: string[] | undefined;
     // even though this is a subset of this.flashcards, we need this as we are maintaining this as
     // state internally and not passing it to the frontend
     // this is because it is easier to test here and also makes front end simpler in terms of
@@ -277,7 +277,6 @@ export class SourceNote implements frontbook {
         this.reviewIndex = -1;
         this.reviewDeck = [];
         this.plugin = plugin;
-        this.flashcardNote = null;
         this.tags = [];
     }
 
@@ -308,10 +307,9 @@ export class SourceNote implements frontbook {
         this.name = getParentOrFilename(this.path);
 
         if (this.plugin.fileTagsMap.has(this.path)) {
-            // @ts-ignore
             this.tags = this.plugin.fileTagsMap.get(this.path);
         } else {
-            throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`)
+            throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`);
         }
 
         // done: join on parsed flashcards
@@ -477,9 +475,9 @@ export class SourceNote implements frontbook {
     }
 
     async createFlashcardNote() {
-        const {filename, path} = generateFlashcardsFileNameAndPath(this.path);
+        const {path} = generateFlashcardsFileNameAndPath(this.path);
         await createFlashcardsFileForBook(this.path, path);
-        this.flashcardNote = await new FlashcardNote(path);
+        this.flashcardNote = new FlashcardNote(path);
         // WARN: this seems hacky, should I create another method?
         this.flashcardNote.parentPath = this.path;
     }
@@ -497,8 +495,8 @@ export function generateFlashcardsFileNameAndPath(bookPath: string) {
         parentPath = `${(getParentPath(tfile))}`;
     } else { // the tfile is at the root level, use original filename
         filename = `${(getBasename(tfile))} - Flashcards.md`;
-        parentPath = ``;
+        parentPath = "";
     }
-    const path = `${parentPath}/${filename}`
+    const path = `${parentPath}/${filename}`;
     return {filename, path};
 }

@@ -212,7 +212,7 @@ export function getSourcesForReview(): ReviewBook[] {
         const annotationsWithFlashcardsCount = annotationsWithFlashcards.size;
         const annotationsWithoutFlashcardsCount = annotationsWithoutFlashcards.size;
         const progress = maturityCounts(t.flashcardNote.flashcards || []);
-        let annotationCoverage = annotationsWithFlashcardsCount/(annotationsWithFlashcardsCount+annotationsWithoutFlashcardsCount);
+        const annotationCoverage = annotationsWithFlashcardsCount/(annotationsWithFlashcardsCount+annotationsWithoutFlashcardsCount);
         return {
             id: t.id,
             name: t.name,
