@@ -1,0 +1,414 @@
+{
+  "tags": [
+    {
+      "tag": "#research",
+      "position": {
+        "start": {
+          "line": 40,
+          "col": 2,
+          "offset": 1376
+        },
+        "end": {
+          "line": 40,
+          "col": 11,
+          "offset": 1385
+        }
+      }
+    }
+  ],
+  "headings": [
+    {
+      "heading": "Introduction",
+      "level": 1,
+      "position": {
+        "start": {
+          "line": 11,
+          "col": 0,
+          "offset": 425
+        },
+        "end": {
+          "line": 11,
+          "col": 14,
+          "offset": 439
+        }
+      }
+    },
+    {
+      "heading": "1% BETTER EVERY DAY",
+      "level": 2,
+      "position": {
+        "start": {
+          "line": 24,
+          "col": 0,
+          "offset": 760
+        },
+        "end": {
+          "line": 24,
+          "col": 22,
+          "offset": 782
+        }
+      }
+    },
+    {
+      "heading": "WHY SMALL HABITS MAKE A BIG DIFFERENCE",
+      "level": 2,
+      "position": {
+        "start": {
+          "line": 26,
+          "col": 0,
+          "offset": 784
+        },
+        "end": {
+          "line": 26,
+          "col": 41,
+          "offset": 825
+        }
+      }
+    },
+    {
+      "heading": "THE PLATEAU OF LATENT POTENTIAL",
+      "level": 2,
+      "position": {
+        "start": {
+          "line": 33,
+          "col": 0,
+          "offset": 1012
+        },
+        "end": {
+          "line": 33,
+          "col": 34,
+          "offset": 1046
+        }
+      }
+    },
+    {
+      "heading": "FORGET ABOUT GOALS, FOCUS ON SYSTEMS INSTEAD",
+      "level": 2,
+      "position": {
+        "start": {
+          "line": 35,
+          "col": 0,
+          "offset": 1048
+        },
+        "end": {
+          "line": 35,
+          "col": 47,
+          "offset": 1095
+        }
+      }
+    },
+    {
+      "heading": "A SYSTEM OF ATOMIC HABITS",
+      "level": 2,
+      "position": {
+        "start": {
+          "line": 57,
+          "col": 0,
+          "offset": 1626
+        },
+        "end": {
+          "line": 57,
+          "col": 28,
+          "offset": 1654
+        }
+      }
+    },
+    {
+      "heading": "2: How Your Habits Shape Your Identity (and Vice Versa)",
+      "level": 1,
+      "position": {
+        "start": {
+          "line": 59,
+          "col": 0,
+          "offset": 1656
+        },
+        "end": {
+          "line": 59,
+          "col": 57,
+          "offset": 1713
+        }
+      }
+    },
+    {
+      "heading": "THREE LAYERS OF BEHAVIOR CHANGE",
+      "level": 2,
+      "position": {
+        "start": {
+          "line": 61,
+          "col": 0,
+          "offset": 1715
+        },
+        "end": {
+          "line": 61,
+          "col": 34,
+          "offset": 1749
+        }
+      }
+    }
+  ],
+  "sections": [
+    {
+      "type": "yaml",
+      "position": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 8,
+          "col": 3,
+          "offset": 422
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 11,
+          "col": 0,
+          "offset": 425
+        },
+        "end": {
+          "line": 11,
+          "col": 14,
+          "offset": 439
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 13,
+          "col": 0,
+          "offset": 441
+        },
+        "end": {
+          "line": 17,
+          "col": 2,
+          "offset": 567
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 19,
+          "col": 0,
+          "offset": 569
+        },
+        "end": {
+          "line": 22,
+          "col": 2,
+          "offset": 758
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 24,
+          "col": 0,
+          "offset": 760
+        },
+        "end": {
+          "line": 24,
+          "col": 22,
+          "offset": 782
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 26,
+          "col": 0,
+          "offset": 784
+        },
+        "end": {
+          "line": 26,
+          "col": 41,
+          "offset": 825
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 28,
+          "col": 0,
+          "offset": 827
+        },
+        "end": {
+          "line": 31,
+          "col": 2,
+          "offset": 1010
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 33,
+          "col": 0,
+          "offset": 1012
+        },
+        "end": {
+          "line": 33,
+          "col": 34,
+          "offset": 1046
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 35,
+          "col": 0,
+          "offset": 1048
+        },
+        "end": {
+          "line": 35,
+          "col": 47,
+          "offset": 1095
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 37,
+          "col": 0,
+          "offset": 1097
+        },
+        "end": {
+          "line": 40,
+          "col": 11,
+          "offset": 1385
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 42,
+          "col": 0,
+          "offset": 1387
+        },
+        "end": {
+          "line": 45,
+          "col": 2,
+          "offset": 1466
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 47,
+          "col": 0,
+          "offset": 1468
+        },
+        "end": {
+          "line": 50,
+          "col": 2,
+          "offset": 1552
+        }
+      }
+    },
+    {
+      "type": "callout",
+      "position": {
+        "start": {
+          "line": 52,
+          "col": 0,
+          "offset": 1554
+        },
+        "end": {
+          "line": 55,
+          "col": 2,
+          "offset": 1624
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 57,
+          "col": 0,
+          "offset": 1626
+        },
+        "end": {
+          "line": 57,
+          "col": 28,
+          "offset": 1654
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 59,
+          "col": 0,
+          "offset": 1656
+        },
+        "end": {
+          "line": 59,
+          "col": 57,
+          "offset": 1713
+        }
+      }
+    },
+    {
+      "type": "heading",
+      "position": {
+        "start": {
+          "line": 61,
+          "col": 0,
+          "offset": 1715
+        },
+        "end": {
+          "line": 61,
+          "col": 34,
+          "offset": 1749
+        }
+      }
+    }
+  ],
+  "frontmatter": {
+    "path": "Book Exports/Clear, James - Atomic habits_ an easy & proven way to build good habits & break bad ones (2018, Penguin Publishing Group_Avery) - libgen.li.mrexpt",
+    "title": " Clear, James - Atomic habits_ an easy & proven way to build good habits & break bad ones (2018, Penguin Publishing Group_Avery) - libgen.li.epub",
+    "author": null,
+    "lastExportedTimestamp": 1693031566934,
+    "lastExportedID": 15567,
+    "tags": [
+      "review/book"
+    ]
+  },
+  "frontmatterLinks": [],
+  "frontmatterPosition": {
+    "start": {
+      "line": 0,
+      "col": 0,
+      "offset": 0
+    },
+    "end": {
+      "line": 8,
+      "col": 3,
+      "offset": 422
+    }
+  }
+}

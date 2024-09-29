@@ -1,0 +1,135 @@
+{
+  "sections": [
+    {
+      "type": "yaml",
+      "position": {
+        "start": {
+          "line": 0,
+          "col": 0,
+          "offset": 0
+        },
+        "end": {
+          "line": 4,
+          "col": 3,
+          "offset": 56
+        }
+      }
+    },
+    {
+      "type": "paragraph",
+      "position": {
+        "start": {
+          "line": 7,
+          "col": 0,
+          "offset": 59
+        },
+        "end": {
+          "line": 9,
+          "col": 5,
+          "offset": 72
+        }
+      }
+    },
+    {
+      "type": "html",
+      "position": {
+        "start": {
+          "line": 10,
+          "col": 0,
+          "offset": 73
+        },
+        "end": {
+          "line": 10,
+          "col": 19,
+          "offset": 92
+        }
+      }
+    },
+    {
+      "type": "paragraph",
+      "position": {
+        "start": {
+          "line": 12,
+          "col": 0,
+          "offset": 94
+        },
+        "end": {
+          "line": 14,
+          "col": 3,
+          "offset": 105
+        }
+      }
+    },
+    {
+      "type": "html",
+      "position": {
+        "start": {
+          "line": 15,
+          "col": 0,
+          "offset": 106
+        },
+        "end": {
+          "line": 15,
+          "col": 38,
+          "offset": 144
+        }
+      }
+    },
+    {
+      "type": "paragraph",
+      "position": {
+        "start": {
+          "line": 17,
+          "col": 0,
+          "offset": 146
+        },
+        "end": {
+          "line": 19,
+          "col": 8,
+          "offset": 160
+        }
+      }
+    },
+    {
+      "type": "html",
+      "position": {
+        "start": {
+          "line": 20,
+          "col": 0,
+          "offset": 161
+        },
+        "end": {
+          "line": 20,
+          "col": 19,
+          "offset": 180
+        }
+      }
+    }
+  ],
+  "frontmatter": {
+    "annotations": "[[Untitled]]",
+    "tags": [
+      "flashcards"
+    ]
+  },
+  "frontmatterLinks": [
+    {
+      "key": "annotations",
+      "link": "Untitled",
+      "original": "[[Untitled]]",
+      "displayText": "Untitled"
+    }
+  ],
+  "frontmatterPosition": {
+    "start": {
+      "line": 0,
+      "col": 0,
+      "offset": 0
+    },
+    "end": {
+      "line": 4,
+      "col": 3,
+      "offset": 56
+    }
+  }
+}
