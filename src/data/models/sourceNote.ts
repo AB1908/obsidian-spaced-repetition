@@ -3,10 +3,13 @@ import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook,
     deleteCardOnDisk,
+    getBasename,
     getFileContents,
     getFileFromLinkText,
     getMetadataForFile,
+    getParentName,
     getParentOrFilename,
+    getParentPath,
     getTFileForPath,
     updateCardOnDisk
 } from "src/data/disk";
@@ -489,11 +492,11 @@ export function generateFlashcardsFileNameAndPath(bookPath: string) {
     // "Folder 1/File.md": parent is "Folder 1"
     // "Test.md": parent is "/"
     // I need to generate "/Test - Flashcards.md" or "Folder 1/Flashcards.md"
-    if (tfile.parent.name) { // tfile has its own folder, reuse the folder
+    if (getParentName(tfile)) { // tfile has its own folder, reuse the folder
         filename = "Flashcards.md";
-        parentPath = `${tfile.parent.path}`;
+        parentPath = `${(getParentPath(tfile))}`;
     } else { // the tfile is at the root level, use original filename
-        filename = `${tfile.basename} - Flashcards.md`;
+        filename = `${(getBasename(tfile))} - Flashcards.md`;
         parentPath = ``;
     }
     const path = `${parentPath}/${filename}`

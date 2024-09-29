@@ -147,3 +147,15 @@ export function getFileFromLinkText(annotationLinkText: string, path: string) {
         throw new Error(`${path} does not have a valid parent in metadata`);
     }
 }
+
+export function getParentPath(tfile: TFile) {
+    return tfile.parent.path;
+}
+
+export function getParentName(tfile: TFile) {
+    return tfile.parent.name;
+}
+
+export function getBasename(tfile: TFile) {
+    return tfile.basename;
+}
