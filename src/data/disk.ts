@@ -148,14 +148,14 @@ export function getFileFromLinkText(annotationLinkText: string, path: string) {
     }
 }
 
-export function getParentPath(tfile: TFile) {
-    return tfile.parent.path;
+export function getParentPath(path: string) {
+    return getTFileForPath(path).parent.path;
 }
 
-export function getParentName(tfile: TFile) {
-    return tfile.parent.name;
+export function getParentName(path: string) {
+    return getTFileForPath(path).parent.name;
 }
 
-export function getBasename(tfile: TFile) {
-    return tfile.basename;
+export function getBasename(path: string) {
+    return getTFileForPath(path).basename;
 }

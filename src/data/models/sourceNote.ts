@@ -10,7 +10,6 @@ import {
     getParentName,
     getParentOrFilename,
     getParentPath,
-    getTFileForPath,
     updateCardOnDisk
 } from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
@@ -484,17 +483,16 @@ export class SourceNote implements frontbook {
 }
 
 export function generateFlashcardsFileNameAndPath(bookPath: string) {
-    const tfile = getTFileForPath(bookPath);
     let filename, parentPath;
     // example of path at root level:
     // "Folder 1/File.md": parent is "Folder 1"
     // "Test.md": parent is "/"
     // I need to generate "/Test - Flashcards.md" or "Folder 1/Flashcards.md"
-    if (getParentName(tfile)) { // tfile has its own folder, reuse the folder
+    if (getParentName(bookPath)) { // tfile has its own folder, reuse the folder
         filename = "Flashcards.md";
-        parentPath = `${(getParentPath(tfile))}`;
+        parentPath = `${(getParentPath(bookPath))}`;
     } else { // the tfile is at the root level, use original filename
-        filename = `${(getBasename(tfile))} - Flashcards.md`;
+        filename = `${(getBasename(bookPath))} - Flashcards.md`;
         parentPath = "";
     }
     const path = `${parentPath}/${filename}`;
