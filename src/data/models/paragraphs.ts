@@ -24,7 +24,7 @@ export async function extractParagraphs(filePath: string, flashcards: Flashcard[
     const fileContentsArray = fileContents.split("\n");
     const processedData: paragraph[] = [];
     const paragraphsWithFlashcards = new Set(flashcards.map(t => t.parentId));
-    for (let section of paragraphsOrHeadings) {
+    for (const section of paragraphsOrHeadings) {
         if (section.type == "paragraph") {
             const start = section.position.start.line;
             const end = section.position.end.line + 1;
@@ -32,17 +32,18 @@ export async function extractParagraphs(filePath: string, flashcards: Flashcard[
                 id: section.id || nanoid(8),
                 text: fileContentsArray.slice(start,end).join("\n"),
                 wasIdPresent: section.id ? true : false,
-            }
+            };
             processedData.push({
                 ...paragraph,
                 hasFlashcards: paragraphsWithFlashcards.has(paragraph.id), ...paragraph,
-            })
+            });
         } else if (section.type == "heading") {
             // todo: this is an interesting type problem
             // whenever section.type is heading
             // we are guaranteed that headings is not null
             // therefore, we shouldn't have to worry about headings being undefined
             // and won't need to catch errors for that scenario
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             // @ts-ignore
             processedData.push(new Heading(headings[headingIndex++]));
         }
