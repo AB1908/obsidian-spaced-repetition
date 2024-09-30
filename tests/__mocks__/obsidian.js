@@ -10,4 +10,11 @@ module.exports = {
     },
     Modal: jest.fn().mockImplementation(),
     Plugin: jest.fn().mockImplementation(),
+    app: {
+        vault: {
+            // eslint-disable-next-line @typescript-eslint/no-empty-function
+            append: jest.fn(async () => {}),
+            create: jest.fn(),
+        }
+    }
 };
