@@ -103,15 +103,6 @@ export function getMetadataForFile(path: string) {
     return app.metadataCache.getFileCache(tfile);
 }
 
-export function getFolderNameFromPath(path: string) {
-    const tfile = app.vault.getAbstractFileByPath(path);
-    if (tfile instanceof TFile) {
-        return tfile.parent.name;
-    } else {
-        throw new Error(`getFolderNameFromPath: Folder not found for path ${path}`);
-    }
-}
-
 // takes a book path, finds parent if any and creates flashcard file
 // todo: refactor to move business logic up one layer
 export async function createFlashcardsFileForBook(bookPath: string, path: string) {
@@ -125,18 +116,6 @@ tags:
 
 `;
     await app.vault.create(path, fileContents);
-}
-
-export function getParentFolderPathAndName(filePath: string) {
-    const tfile = app.vault.getAbstractFileByPath(filePath);
-    if (tfile instanceof TFile) {
-        return {
-            name: tfile.parent.name,
-            path: tfile.parent.path
-        };
-    } else {
-        throw new Error(`getFolderNameFromPath: Folder not found for path ${filePath}`);
-    }
 }
 
 export function getFileFromLinkText(annotationLinkText: string, path: string) {
