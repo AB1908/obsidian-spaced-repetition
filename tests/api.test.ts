@@ -4,12 +4,7 @@ import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
 import { SourceNote } from "src/data/models/sourceNote";
 
-jest.mock("../src/data/disk", () => {
-    return {
-        // eslint-disable-next-line @typescript-eslint/no-empty-function,@typescript-eslint/no-unused-vars
-        writeCardToDisk: (path: string, text: string) => {},
-    };
-});
+jest.mock("../src/data/disk");
 
 jest.mock("../src/utils", () => {
     // Require the original module to not be mocked...
