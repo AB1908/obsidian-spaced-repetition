@@ -4,7 +4,7 @@ import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
 import { SourceNote } from "src/data/models/sourceNote";
 
-jest.mock("../src/data/disk");
+jest.mock("src/data/disk");
 
 jest.mock("../src/utils", () => {
     // Require the original module to not be mocked...
@@ -24,40 +24,46 @@ jest.mock("../src/main", () => {
 });
 
 describe("getFlashcardById", () => {
-    beforeEach(() => {
+    beforeEach(async () => {
         plugin.flashcardIndex = new FlashcardIndex();
-        plugin.flashcardIndex.flashcards = new Map();
-        plugin.flashcardIndex.flashcards.set("pBri5QNB", {
-            id: "pBri5QNB",
-            cardType: 2,
-            context: null,
-            dueDate: "2023-09-02",
-            ease: 250,
-            interval: 2,
-            annotationId: "5769",
-            flag: "L",
-            siblings: [],
-            parsedCardId: "u-72tWEW",
-            questionText: "What is cued recall?",
-            answerText: "Cued recall is where we cue recall by presenting some information.",
-        });
+        await plugin.flashcardIndex.initialize();
+        // plugin.flashcardIndex.flashcards = new Map();
+        // plugin.flashcardIndex.flashcards.set("pBri5QNB", {
+        //     id: "pBri5QNB",
+        //     cardType: 2,
+        //     context: null,
+        //     dueDate: "2023-09-02",
+        //     ease: 250,
+        //     interval: 2,
+        //     annotationId: "5769",
+        //     flag: "L",
+        //     siblings: [],
+        //     parsedCardId: "u-72tWEW",
+        //     questionText: "What is cued recall?",
+        //     answerText: "Cued recall is where we cue recall by presenting some information.",
+        // });
     });
     test("retrieves a flashcard successfully", () => {
-        expect(getFlashcardById("pBri5QNB", "ibJ6QFl4")).toStrictEqual({
-            id: "pBri5QNB",
-            cardType: 2,
-            context: null,
-            dueDate: "2023-09-02",
-            ease: 250,
-            interval: 2,
-            delayBeforeReview: 63836018,
-            annotationId: "5769",
-            flag: "L",
-            siblings: [],
-            parsedCardId: "u-72tWEW",
-            questionText: "What is cued recall?",
-            answerText: "Cued recall is where we cue recall by presenting some information.",
-        });
+        expect(getFlashcardById("2", "ibJ6QFl4")).toMatchInlineSnapshot(
+            {},
+            `
+            {
+              "answerText": "Plateau of Latent Potential",
+              "cardType": 2,
+              "context": null,
+              "delayBeforeReview": 63836018,
+              "dueDate": "2023-09-10",
+              "ease": 230,
+              "flag": "L",
+              "id": "2",
+              "interval": 6,
+              "parentId": "15538",
+              "parsedCardId": "0",
+              "questionText": "For a habit to persist, you need to keep at it long enough to break through a barrier. What is this barrier called?",
+              "siblings": [],
+            }
+        `
+        );
         expect(() => getFlashcardById("aaaa", "ibJ6QFl4")).toThrowError();
     });
 });
