@@ -16,8 +16,6 @@ export function filePathsWithTag(tag: string): string[] {
     return [ "Atomic Habits/Flashcards.md", "Memory - A Very Short Introduction/Flashcards.md", "Untitled - Flashcards.md"];
 }
 
-const getFileContents = (path: string) => readFileSync(path);
-
 const getParentOrFilename = (path: string) => {
     if (path == "Atomic Habits/Annotations.md")
         return "Atomic Habits";
@@ -36,7 +34,6 @@ const outputLoader = (path: string) => {
 };
 
 export function getMetadataForFile(path: string) {
-    console.log("mock");
     const outputFileName = inputContents.filter(t=> t.path == path && t.fileName && t.fileName.includes("getMetadataForFile"))[0].fileName;
     return JSON.parse(outputLoader(outputFileName));
 }
@@ -44,4 +41,9 @@ export function getMetadataForFile(path: string) {
 export function getFileFromLinkText(annotationLinkText: string, path: string) {
     const outputFileName = inputContents.filter(t=> t.path == path && t.fileName && t.fileName.includes("getFileFromLinkText"))[0].fileName;
     return JSON.parse(outputLoader(outputFileName));
+}
+
+export async function getFileContents(path: string) {
+    const outputFileName = inputContents.filter(t=> t.path == path && t.fileName && t.fileName.includes("getFileContents"))[0].fileName;
+    return JSON.parse(outputLoader(outputFileName))["obj"];
 }
