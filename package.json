@@ -36,6 +36,7 @@
         "eslint": "^8.3.0",
         "jest": "^27.4.5",
         "jest-27-expect-message": "^1.1.0",
+        "jest-test-gen": "^1.4.3",
         "json-server": "^0.17.3",
         "obsidian": "^0.15.4",
         "prettier": "^2.5.1",
