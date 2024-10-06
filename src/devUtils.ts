@@ -29,12 +29,13 @@ export function getParamNames(func: Function) {
 export function logArgs(inputArgs: IArguments, outputArgs: any) {
     const paramNames = getParamNames(inputArgs.callee);
     const input = {};
+    const rand = nanoid(5);
     paramNames.forEach((elem, index) => input[elem] = inputArgs[index]);
     const funcName = inputArgs.callee.name;
-    const timeString = moment().format();
-    const rand = nanoid(5);
-    const inputFileName = `${funcName}-input-${rand}`;
     const outputFileName = `${funcName}-output-${rand}`;
+    input["fileName"] = outputFileName;
+    const timeString = moment().format();
+    const inputFileName = `${funcName}-input-${rand}`;
     writeToDirectory(inputFileName, JSON.stringify(removeCircular(input)));
     writeToDirectory(outputFileName, JSON.stringify(removeCircular(outputArgs)));
     console.group(funcName);
@@ -58,6 +59,7 @@ async function writeJSON(obj: any, name?: string) {
 
 function removeCircular(obj: any) {
     let copy;
+    debugger;
     if ((typeof obj) == "object" && !(Array.isArray(obj))) {
         copy = Object.assign({}, obj);
         for (const key of Object.keys(copy)) {
