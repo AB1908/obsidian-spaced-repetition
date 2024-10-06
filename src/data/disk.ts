@@ -79,7 +79,7 @@ export function fileTags() {
     return tagMap;
 }
 
-export function filePathsWithTag(tag: string) {
+export function filePathsWithTag(tag: string): string[] {
     const hashSet = setOfHashesWithTags(tag);
     return findFilesWithHashInSet(hashSet);
 }
