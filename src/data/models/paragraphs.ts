@@ -16,7 +16,7 @@ export async function extractParagraphs(filePath: string, flashcards: Flashcard[
     // get blocks with blockid if present
     const paragraphsOrHeadings = metadata?.sections?.filter(t => t.type == "paragraph" || t.type == "heading");
     if (!paragraphsOrHeadings) {
-        throw new Error(`getParagraphsFromFile: no paragraphs found in file ${filePath}`)
+        throw new Error(`getParagraphsFromFile: no paragraphs found in file ${filePath}`);
     }
     let headingIndex = 0;
     const headings = metadata?.headings;
