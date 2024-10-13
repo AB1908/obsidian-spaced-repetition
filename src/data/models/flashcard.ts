@@ -179,6 +179,7 @@ export class FlashcardIndex {
     }
 
     async initialize() {
+        // todo: remove hardcoding of tag
         const filePaths = filePathsWithTag("flashcards");
         const notesWithFlashcards = filePaths.map((t: string) => new FlashcardNote(t));
         for (const t of notesWithFlashcards) {
