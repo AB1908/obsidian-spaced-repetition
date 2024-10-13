@@ -6,7 +6,7 @@ import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
 import { getAnnotationFilePath } from "src/data/models/sourceNote";
-import { filePathsWithTag } from "src/data/disk";
+import { filePathsWithTag, getCurrentDateIsoString } from "src/data/disk";
 import { calculateDelayBeforeReview } from "src/utils";
 
 export interface AbstractFlashcard {
@@ -57,7 +57,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
     isDue() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return this.dueDate === null || this.dueDate <= moment().format("YYYY-MM-DD");
+        return this.dueDate === null || this.dueDate <= getCurrentDateIsoString();
     }
 }
 
