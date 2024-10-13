@@ -65,7 +65,3 @@ export class FlashcardModal extends Modal {
         this.modalElReactRoot.unmount();
     }
 }
-
-// todo: move elsewhere?
-export async function init() {
-}

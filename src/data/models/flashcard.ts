@@ -9,22 +9,7 @@ import { getAnnotationFilePath } from "src/data/models/sourceNote";
 import { filePathsWithTag, getCurrentDateIsoString } from "src/data/disk";
 import { calculateDelayBeforeReview } from "src/utils";
 
-export interface AbstractFlashcard {
-    id: string,
-    questionText: string,
-    answerText: string,
-    context: string,
-    cardType: number,
-    siblings: string[],
-    interval: number,
-    ease: number,
-    dueDate: string,
-    parentId: string,
-    // this is to update the card so that I can avoid nesting additional objects inside this one
-    parsedCardId: string,
-}
-
-export abstract class AbstractFlashcard implements AbstractFlashcard {
+export abstract class AbstractFlashcard {
     answerText: string;
     cardType: number;
     context: string;

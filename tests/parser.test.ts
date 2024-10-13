@@ -197,11 +197,7 @@ describe("generateTree", () => {
 
 describe("parseFlashcard", () => {
     test("parses a flashcard with only annotation id", async () => {
-        const flashcard = "This is a question\n?\nThis is an answer\n<!--SR:93813-->";
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        jest.mocked(getFileContents).mockImplementation(async (path: string) => {
-            return flashcard;
-        });
         expect(await parseFileText("sample path")).toEqual([
             {
                 id: "aaaaaaaa",

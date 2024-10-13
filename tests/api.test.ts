@@ -25,7 +25,6 @@ describe("getFlashcardById", () => {
     beforeEach(async () => {
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
-        // await plugin.flashcardIndex.initialize();
     });
     test("retrieves a flashcard successfully", () => {
         expect(getFlashcardById("2", "ibJ6QFl4")).toMatchInlineSnapshot(
