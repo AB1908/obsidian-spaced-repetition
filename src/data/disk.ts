@@ -55,6 +55,8 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
     return filePaths;
 }
 
+// todo: refactor to move business logic into higher layer
+// todo: replace metadataCache usage with clean abstraction to reduce mocking problems
 export function fileTags() {
     const fileMap = new Map<string,string>();
     const fileCache = structuredClone(app.metadataCache.fileCache);
