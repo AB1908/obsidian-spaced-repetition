@@ -1,21 +1,27 @@
-import { SourceNote } from "src/data/models/sourceNote";
-import { FlashcardNote } from "src/data/models/flashcard";
+import { FlashcardIndex } from "src/data/models/flashcard";
 import { annotation } from "src/data/models/annotations";
 import { paragraph } from "src/data/models/paragraphs";
+import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
+import SRPlugin from "src/main";
+import { fileTags } from "src/data/disk";
 
 export class Index {
-    sourceNoteIndex: Map<string, SourceNote>;
-    flashcardNoteIndex: Map<string, FlashcardNote>;
-    annotationIndex: Map<string, (paragraph|annotation)>
+    sourceNoteIndex: SourceNoteIndex;
+    flashcardIndex: FlashcardIndex;
+    annotationIndex: Map<string, (paragraph|annotation)>;
+    fileTagsMap: Map<string, string[]>; // { "path": [array of tags] }
 
     constructor() {
         this.annotationIndex = new Map<string, paragraph | annotation>();
-        this.flashcardNoteIndex = new Map<string, FlashcardNote>();
-        this.sourceNoteIndex = new Map<string, SourceNote>();
+        this.flashcardIndex = new FlashcardIndex();
+        this.sourceNoteIndex = new SourceNoteIndex();
+        this.fileTagsMap = new Map<string, string[]>();
     }
 
-    initialize() {
-
+    async initialize(plugin: SRPlugin) {
+        await this.flashcardIndex.initialize();
+        await this.sourceNoteIndex.initialize(plugin);
+        this.fileTagsMap = fileTags();
     }
 
     addToAnnotationIndex(block: annotation|paragraph) {

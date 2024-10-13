@@ -4,9 +4,9 @@ import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { fileTags } from "src/data/disk";
 import { Index } from "src/data/models";
 import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
+import * as console from "node:console";
 
 export interface PluginData {
     settings: SRSettings;
@@ -26,28 +26,28 @@ const DEFAULT_DATA: PluginData = {
 export let plugin: SRPlugin;
 
 export default class SRPlugin extends Plugin {
+
+    get fileTagsMap(): Map<string, string[]> {
+        return this.index.fileTagsMap;
+    }
+    get flashcardIndex(): FlashcardIndex {
+        return this.index.flashcardIndex;
+    }
+    get sourceNoteIndex(): SourceNoteIndex {
+        return this.index.sourceNoteIndex;
+    }
+
     public data: PluginData;
     // todo: fix type
     public bookNotesPaths: string[];
-    public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
-    public sourceNoteIndex: SourceNoteIndex;
-    // todo: move this down into the index
-    public fileTagsMap: Map<string, string[]>; // { "path": [array of tags] }
     public index: Index;
 
     async onload(): Promise<void> {
         await this.loadPluginData();
-        // First need to initialize tags as the source notes will use this
         this.index = new Index();
-        this.flashcardIndex = new FlashcardIndex();
-        this.sourceNoteIndex = new SourceNoteIndex();
         this.app.workspace.onLayoutReady(async () => {
-            this.index.initialize();
-            this.fileTagsMap = fileTags();
-            this.flashcardIndex = await this.flashcardIndex.initialize();
-            this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
+            await this.index.initialize(this);
         });
-        // done: eventually remove this and add access method for sourcenoteindex
 
         appIcon();
 
