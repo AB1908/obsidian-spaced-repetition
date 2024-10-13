@@ -23,6 +23,10 @@ jest.mock("../src/main", () => {
 
 describe("getFlashcardById", () => {
     beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -50,7 +54,7 @@ describe("getFlashcardById", () => {
         expect(() => getFlashcardById("aaaa", "ibJ6QFl4")).toThrowError();
     });
     afterEach(() => {
-        jest.clearAllMocks();
+        jest.resetAllMocks();
     });
 });
 
@@ -108,19 +112,23 @@ describe("getFlashcardById", () => {
 //     });
 // });
 
+jest.mock("nanoid", () => {
+    return {nanoid: jest.fn()};
+});
+
 describe("createFlashcardForAnnotation", () => {
     beforeEach(async () => {
-        jest.clearAllMocks();
-        plugin.fileTagsMap = fileTags();
-        plugin.flashcardIndex = new FlashcardIndex();
-        plugin.sourceNoteIndex = new SourceNoteIndex();
+        jest.resetAllMocks();
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
 
     test("should write a flashcard to the right file", async () => {
         expect(
-            await createFlashcardForAnnotation("add block id?", "true", "tmi3ktJd", "166")
+            await createFlashcardForAnnotation("add block id?", "true", "tmi3ktJd", "84")
         ).toMatchInlineSnapshot(`true`);
         // {
         //     "path": "Untitled - Flashcards.md",
@@ -130,7 +138,7 @@ describe("createFlashcardForAnnotation", () => {
     });
 
     afterEach(() => {
-        jest.clearAllMocks();
+        jest.resetAllMocks();
     });
 });
 
