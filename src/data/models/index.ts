@@ -10,6 +10,8 @@ export class Index {
 
     constructor() {
         this.annotationIndex = new Map<string, paragraph | annotation>();
+        this.flashcardNoteIndex = new Map<string, FlashcardNote>();
+        this.sourceNoteIndex = new Map<string, SourceNote>();
     }
 
     initialize() {

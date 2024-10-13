@@ -42,6 +42,7 @@ export default class SRPlugin extends Plugin {
         this.flashcardIndex = new FlashcardIndex();
         this.sourceNoteIndex = new SourceNoteIndex();
         this.app.workspace.onLayoutReady(async () => {
+            this.index.initialize();
             this.fileTagsMap = fileTags();
             this.flashcardIndex = await this.flashcardIndex.initialize();
             this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
