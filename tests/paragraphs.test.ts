@@ -1,11 +1,5 @@
-import { bookSections, findNextHeader, findPreviousHeaderForHeading } from "src/data/models/sourceNote";
-import { beforeEach } from "@jest/globals";
-import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
-import type { SectionCache } from "obsidian";
 import type { Flashcard } from "src/data/models/flashcard";
-import { getFileContents } from "src/data/disk";
 import { extractParagraphs } from "src/data/models/paragraphs";
-
 
 jest.mock("../src/main", () => {});
 
@@ -147,33 +141,3 @@ test("getParagraphFromFile", async () => {
     flashcards[0].annotationId = "hjhjhlkap";
     expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
 });
-
-// const t = [
-//   {
-//     "children": [],
-//     "counts": {
-//       "with": 0,
-//       "without": 0,
-//     },
-//     "id": "0",
-//     "level": 1,
-//     "name": "Chapter 3: Pulling the rabbit out of the hat",
-//   },
-//   {
-//     "children": [],
-//     "counts": {
-//       "with": 0,
-//       "without": 0,
-//     },
-//     "id": "1",
-//     "level": 2,
-//     "name": "Relating study and test",
-//   },
-//   {
-//     "hasFlashcards": false,
-//     "id": "hjhjhlkap",
-//     "text": `What is episodic memory?
-// NO one knows ^hjhjhlkap`,
-//     "wasIdPresent": true,
-//   },
-// ];

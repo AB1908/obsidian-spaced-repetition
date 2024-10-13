@@ -1,6 +1,5 @@
 import type { SectionCache } from "obsidian";
 import { Flashcard } from "src/data/models/flashcard";
-import { paragraph } from "src/data/models/paragraphs";
 import {
     type BookMetadataSection,
     bookSections,
@@ -8,13 +7,11 @@ import {
     findPreviousHeaderForHeading,
     findPreviousHeaderForSection,
     generateFlashcardsFileNameAndPath,
-    generateHeaderCounts,
     getAnnotationFilePath,
     type Heading,
     isAnnotation,
     isHeading,
     type RawBookSection,
-    SourceNote,
     updateHeaders
 } from "src/data/models/sourceNote";
 import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
