@@ -52,6 +52,9 @@ describe("getFlashcardById", () => {
         );
         expect(() => getFlashcardById("aaaa", "ibJ6QFl4")).toThrowError();
     });
+    afterEach(() => {
+        jest.clearAllMocks();
+    });
 });
 
 // describe("updateFlashcardQuestion", () => {
@@ -128,6 +131,10 @@ describe("createFlashcardForAnnotation", () => {
         //     "text": "\nadd block id?\n?\ntrue\n<!--SR:tmi3ktJd-->\n",
         //     "fileName": "writeCardToDisk-output-M5Nha"
         // }
+    });
+
+    afterEach(() => {
+        jest.clearAllMocks();
     });
 });
 
