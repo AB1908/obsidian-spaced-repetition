@@ -19,9 +19,11 @@ export class Index {
     }
 
     async initialize(plugin: SRPlugin) {
+        // this needs to be initialized before everything else
+        // todo: add logic in other inits to make sure fileTagsMap is inited first
+        this.fileTagsMap = fileTags();
         await this.flashcardIndex.initialize();
         await this.sourceNoteIndex.initialize(plugin);
-        this.fileTagsMap = fileTags();
     }
 
     addToAnnotationIndex(block: annotation|paragraph) {
