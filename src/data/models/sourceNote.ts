@@ -295,7 +295,7 @@ export class SourceNote implements frontbook {
         // const annotationTFile = getTFileForPath(this.path);
         this.flashcardNote = this.plugin.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
         if (this.flashcardNote === null) {
-            // throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
+            throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
         }
         this.bookSections = bookSections(
             getMetadataForFile(this.path),
