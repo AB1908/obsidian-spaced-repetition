@@ -3,9 +3,7 @@ import { FlashcardModal } from "src/ui/modals/flashcard-modal";
 import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
-import { FlashcardIndex } from "src/data/models/flashcard";
 import { Index } from "src/data/models";
-import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
 import * as console from "node:console";
 
 export interface PluginData {
@@ -26,17 +24,6 @@ const DEFAULT_DATA: PluginData = {
 export let plugin: SRPlugin;
 
 export default class SRPlugin extends Plugin {
-
-    get fileTagsMap(): Map<string, string[]> {
-        return this.index.fileTagsMap;
-    }
-    get flashcardIndex(): FlashcardIndex {
-        return this.index.flashcardIndex;
-    }
-    get sourceNoteIndex(): SourceNoteIndex {
-        return this.index.sourceNoteIndex;
-    }
-
     public data: PluginData;
     // todo: fix type
     public bookNotesPaths: string[];

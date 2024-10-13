@@ -293,7 +293,7 @@ export class SourceNote implements frontbook {
     async initialize() {
         // done: fix unnecessary annotation path extraction
         // const annotationTFile = getTFileForPath(this.path);
-        this.flashcardNote = this.plugin.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
+        this.flashcardNote = this.plugin.index.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
         if (this.flashcardNote === null) {
             throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
         }
@@ -305,8 +305,8 @@ export class SourceNote implements frontbook {
 
         this.name = getParentOrFilename(this.path);
 
-        if (this.plugin.fileTagsMap.has(this.path)) {
-            this.tags = this.plugin.fileTagsMap.get(this.path);
+        if (this.plugin.index.fileTagsMap.has(this.path)) {
+            this.tags = this.plugin.index.fileTagsMap.get(this.path);
         } else {
             throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`);
         }

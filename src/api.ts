@@ -35,12 +35,12 @@ import { calculateDelayBeforeReview } from "src/utils";
 // TODO: refactor this, not immediately apparent why we need transform
 // hint: because you have paragraphs as well
 export function getAnnotationById(blockId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     return transform(book.annotations().filter((t: BookMetadataSection) => t.id === blockId)[0]);
 }
 
 export function getNextCard(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -51,13 +51,13 @@ export function getNextCard(bookId: string) {
 }
 
 export async function deleteFlashcard(bookId: string, flashcardId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
 
     await book.deleteFlashcard(flashcardId);
 }
 
 export function getCurrentCard(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -69,7 +69,7 @@ export function getCurrentCard(bookId: string) {
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
     // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
     // already has flashcards
-    const flashcard: Flashcard | undefined = plugin.flashcardIndex.flashcards.get(flashcardId);
+    const flashcard: Flashcard | undefined = plugin.index.flashcardIndex.flashcards.get(flashcardId);
     if (flashcard == undefined) throw new Error(`getFlashcardById: flashcard not found for id ${flashcardId}`);
     return {
         ...flashcard,
@@ -82,7 +82,7 @@ export async function updateFlashcardSchedulingMetadata(
     bookId: string,
     reviewResponse: ReviewResponse
 ) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     await book.processCardReview(flashcardId, reviewResponse);
     return true;
 }
@@ -94,7 +94,7 @@ export function addBlockIdToParagraph(block: paragraph) {
 
 // TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
         await book.createFlashcard(annotationId, question, answer, cardType);
     }
@@ -103,7 +103,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
 
 // TODO: create abstraction
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
@@ -160,7 +160,7 @@ function transform(p: paragraph|annotation): annotation {
 
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
     // todo: shouldn't this throw an error since this is an impossible condition to reach?
@@ -199,13 +199,13 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 }
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     return book.flashcardNote.flashcards.filter(t => t.parentId === annotationId);
 }
 
 export function getSourcesForReview(): ReviewBook[] {
     // todo: refactor
-    const booksToReview = plugin.sourceNoteIndex.getSourcesForReview();
+    const booksToReview = plugin.index.sourceNoteIndex.getSourcesForReview();
     return booksToReview.map(t => {
         t.resetReview();
         const {annotationsWithFlashcards, annotationsWithoutFlashcards} = t.annotationCoverage();
@@ -241,12 +241,12 @@ export interface frontEndBook {
 }
 
 export function resetBookReviewState(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     book.resetReview();
 }
 
 export function getBookById(bookId: string): frontEndBook {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     const { annotationsWithFlashcards, annotationsWithoutFlashcards } = book.annotationCoverage();
     return {
         id: book.id,
@@ -263,7 +263,7 @@ export function getBookById(bookId: string): frontEndBook {
 }
 
 export function getSectionTreeForBook(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     const children = generateSectionsTree(book.bookSections);
     return {
         id: book.id,
@@ -284,13 +284,13 @@ export interface NotesWithoutBooks {
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
-    return plugin.sourceNoteIndex.getSourcesWithoutFlashcards();
+    return plugin.index.sourceNoteIndex.getSourcesWithoutFlashcards();
 }
 
 export async function createFlashcardNoteForSourceNote(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.index.sourceNoteIndex.getBook(bookId);
     await book.createFlashcardNote();
     // todo: there is an edge case here where multiple clicks to add to multiple
     // index writes
-    plugin.flashcardIndex.addFlashcardNoteToIndex(book.flashcardNote);
+    plugin.index.flashcardIndex.addFlashcardNoteToIndex(book.flashcardNote);
 }

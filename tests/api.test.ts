@@ -1,8 +1,5 @@
 import { createFlashcardForAnnotation, getFlashcardById } from "src/api";
 import { plugin } from "src/main";
-import { FlashcardIndex } from "src/data/models/flashcard";
-import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
-import { fileTags } from "src/data/disk";
 import { Index } from "src/data/models";
 
 jest.mock("src/data/disk");
@@ -119,8 +116,7 @@ describe("createFlashcardForAnnotation", () => {
         plugin.flashcardIndex = new FlashcardIndex();
         plugin.sourceNoteIndex = new SourceNoteIndex();
         plugin.index = new Index();
-        await plugin.flashcardIndex.initialize();
-        await plugin.sourceNoteIndex.initialize(plugin);
+        await plugin.index.initialize(plugin);
     });
 
     test("should write a flashcard to the right file", async () => {

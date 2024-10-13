@@ -14,7 +14,7 @@ export class SourceNoteIndex {
         // check membership of tag
         const tagsInSettings = ["review/note", "review/book"];
         const pathsWithAllowedTags = new Set<string>();
-        for (let [path, tags] of plugin.fileTagsMap) {
+        for (let [path, tags] of plugin.index.fileTagsMap) {
             const tagSet = new Set(tags);
             for (let tag of tagsInSettings) {
                 if (tagSet.has(tag)) {
