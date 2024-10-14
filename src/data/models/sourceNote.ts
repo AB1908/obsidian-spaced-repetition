@@ -414,9 +414,19 @@ export class SourceNote implements frontbook {
             await updateCardOnDisk(this.path, block.text, text);
         }
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.flashcardNote.path, annotationId);
-        this.flashcardNote.parsedCards.push(parsedCard);
+        this.addParsedCardToIndex(parsedCard);
         const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
-        this.flashcardNote.flashcards.push(card);
+        this.addFlashcardToIndex(card);
+        return card.id;
+    }
+
+    addParsedCardToIndex(parsedCard: ParsedCard) {
+        this.flashcardNote.parsedCards.push(parsedCard);
+    }
+
+    addFlashcardToIndex(flashcard: Flashcard) {
+        this.flashcardNote.flashcards.push(flashcard);
+        this.plugin.index.flashcardIndex.flashcards.set(flashcard.id, flashcard);
     }
 
     async deleteFlashcard(id: string) {
