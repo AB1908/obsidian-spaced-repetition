@@ -96,9 +96,8 @@ export function addBlockIdToParagraph(block: paragraph) {
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
-        await book.createFlashcard(annotationId, question, answer, cardType);
+        return await book.createFlashcard(annotationId, question, answer, cardType);
     }
-    return true;
 }
 
 // TODO: create abstraction
