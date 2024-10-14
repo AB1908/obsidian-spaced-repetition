@@ -41,11 +41,7 @@ export async function getFileContents(path: string) {
     return JSON.parse(outputLoader(outputFileName))["obj"];
 }
 
-export async function writeCardToDisk(path: string, text: string) {
-    return jest.fn(() => {return {path ,text};});
-    // const outputFileName = inputContents.filter(t=> t.path == path && t.fileName && t.fileName.includes("getFileContents"))[0].fileName;
-    // return;
-}
+export const writeCardToDisk = jest.fn(async (path, string) => {});
 
 export function fileTags() {
     // @ts-ignore
