@@ -1,6 +1,13 @@
-import { createFlashcardForAnnotation, getFlashcardById } from "src/api";
+import {
+    createFlashcardForAnnotation, createFlashcardNoteForSourceNote,
+    getAnnotationById,
+    getFlashcardById,
+    getNotesWithoutReview,
+    getSectionTreeForBook
+} from "src/api";
 import { plugin } from "src/main";
 import { Index } from "src/data/models";
+import { writeCardToDisk } from "src/data/disk";
 
 jest.mock("src/data/disk");
 
@@ -113,28 +120,53 @@ describe("getFlashcardById", () => {
 // });
 
 jest.mock("nanoid", () => {
-    return {nanoid: jest.fn()};
+    return { nanoid: jest.fn() };
 });
 
 describe("createFlashcardForAnnotation", () => {
     beforeEach(async () => {
         jest.resetAllMocks();
+        // todo: fix ts error
         const nanoid = require("nanoid");
         let value = 0;
         nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        // let {writeCardToDisk} = require("src/data/disk");
+        // writeCardToDisk = diskMock.mockImplementation(async (path, text) => {console.log("hello there")});
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
 
     test("should write a flashcard to the right file", async () => {
-        expect(
-            await createFlashcardForAnnotation("add block id?", "true", "tmi3ktJd", "84")
-        ).toMatchInlineSnapshot(`true`);
-        // {
-        //     "path": "Untitled - Flashcards.md",
-        //     "text": "\nadd block id?\n?\ntrue\n<!--SR:tmi3ktJd-->\n",
-        //     "fileName": "writeCardToDisk-output-M5Nha"
-        // }
+        const flashcardId = await createFlashcardForAnnotation(
+            "add block id?",
+            "true",
+            "tmi3ktJd",
+            "84"
+        );
+        expect(flashcardId).toMatchInlineSnapshot(`"151"`);
+        expect(writeCardToDisk).toHaveBeenCalled();
+        expect(writeCardToDisk).toHaveBeenCalledWith(
+            "Untitled - Flashcards.md",
+            "\nadd block id?\n?\ntrue\n<!--SR:tmi3ktJd-->\n"
+        );
+        // @ts-expect-error because if flashcardId is undefined, then the expect from earlier
+        // should fail anyway
+        expect(plugin.index.flashcardIndex.flashcards.get(flashcardId)).toMatchInlineSnapshot(`
+            Flashcard {
+              "answerText": "true",
+              "cardType": 2,
+              "context": null,
+              "dueDate": null,
+              "ease": null,
+              "flag": null,
+              "id": "151",
+              "interval": null,
+              "parentId": "tmi3ktJd",
+              "parsedCardId": "150",
+              "questionText": "add block id?",
+              "siblings": [],
+            }
+        `);
     });
 
     afterEach(() => {
@@ -172,3 +204,100 @@ describe("createFlashcardForAnnotation", () => {
 //         expect(() => boundDelete(id)).toThrow();
 //     });
 // });
+
+describe("getAnnotationById", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+    });
+    test("retrieves paragraph correctly", () => {
+        expect(getAnnotationById("tmi3ktJd", "84")).toMatchInlineSnapshot(`
+            {
+              "hasFlashcards": true,
+              "highlight": "I have some other text here.
+            This has no block id.
+            Let's see what happens. ",
+              "id": "tmi3ktJd",
+              "note": "",
+              "type": "",
+            }
+        `);
+    });
+    test("fails to retrieve annotation", () => {
+        expect(() => getAnnotationById("abcd", "82")).toThrowError();
+    });
+    test("retrieves annotation correctly", () => {
+        expect(getAnnotationById("15551", "82")).toMatchInlineSnapshot(`
+            {
+              "hasFlashcards": false,
+              "highlight": "Problem #3: Goals restrict your happiness.",
+              "id": "15551",
+              "note": "",
+              "type": "notes",
+            }
+        `);
+    });
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe("getSectionTreeForBook", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("generates correct JSON for book tree", () => {
+        expect(getSectionTreeForBook("83")).toMatchSnapshot();
+    });
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe("getNotesWithoutReview", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("lists notes that don't have flashcards", () => {
+        expect(getNotesWithoutReview()).toMatchInlineSnapshot(`[]`);
+    });
+    test.todo("write test case with different initial state");
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe.skip("createFlashcardNoteForSourceNote", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("lists notes that don't have flashcards", () => {
+        expect(createFlashcardNoteForSourceNote("82")).toMatchInlineSnapshot(`[]`);
+    });
+    test.todo("write test case with different initial state");
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
