@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`getParagraphFromFile 1`] = `
+exports[`extractParagraphs should extract an array of headers from text 1`] = `
 [
   Heading {
     "children": [],
@@ -32,7 +32,7 @@ NO one knows ^hjhjhlkap",
 ]
 `;
 
-exports[`getParagraphFromFile 2`] = `
+exports[`extractParagraphs should extract an array of headers from text 2`] = `
 [
   Heading {
     "children": [],

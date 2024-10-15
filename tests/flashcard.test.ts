@@ -6,6 +6,12 @@ import { generateFlashcardsArray } from "src/data/models/flashcard";
 jest.mock("../src/main", () => {});
 
 describe("createFlashcards", () => {
+    beforeEach(async () => {
+        // todo: fix ts error
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+    });
     test("should create a flashcard array", () => {
         const parsedCards = [
             {
@@ -35,5 +41,8 @@ describe("createFlashcards", () => {
               },
             ]
         `);
+    });
+    afterEach(() => {
+       jest.resetAllMocks();
     });
 });

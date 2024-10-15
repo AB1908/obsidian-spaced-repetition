@@ -1,7 +1,7 @@
 import type { Flashcard } from "src/data/models/flashcard";
 import { extractParagraphs } from "src/data/models/paragraphs";
 
-jest.mock("../src/main", () => {});
+jest.mock("../src/main");
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/data/disk", () => {
@@ -107,7 +107,7 @@ jest.mock("../src/data/disk", () => {
                         "id": "hjhjhlkap"
                     }
                 }
-            }
+            };
         },
         getFileContents: (path: string) => {
             return `# Chapter 3: Pulling the rabbit out of the hat
@@ -117,27 +117,38 @@ jest.mock("../src/data/disk", () => {
 What is episodic memory?
 NO one knows ^hjhjhlkap`;
         }
-    }
+    };
 });
 
-test("getParagraphFromFile", async () => {
-    const flashcards = [
-        {
-            "annotationId": "93813",
-            "answerText": "This is an answer",
-            "cardType": 2,
-            "context": null,
-            "dueDate": null,
-            "ease": null,
-            "flag": null,
-            "id": "b4cYyMuF",
-            "interval": null,
-            "parsedCardId": "aaaaaaaa",
-            "questionText": "This is a question",
-            "siblings": []
-        }
-    ];
-    expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
-    flashcards[0].annotationId = "hjhjhlkap";
-    expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
+describe("extractParagraphs", () => {
+    beforeEach(async () => {
+        // todo: fix ts error
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+    });
+    test("should extract an array of headers from text", async () => {
+        const flashcards = [
+            {
+                "annotationId": "93813",
+                "answerText": "This is an answer",
+                "cardType": 2,
+                "context": null,
+                "dueDate": null,
+                "ease": null,
+                "flag": null,
+                "id": "b4cYyMuF",
+                "interval": null,
+                "parsedCardId": "aaaaaaaa",
+                "questionText": "This is a question",
+                "siblings": []
+            }
+        ];
+        expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
+        flashcards[0].annotationId = "hjhjhlkap";
+        expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
+    });
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
 });
