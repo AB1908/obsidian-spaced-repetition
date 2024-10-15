@@ -119,10 +119,6 @@ describe("getFlashcardById", () => {
 //     });
 // });
 
-jest.mock("nanoid", () => {
-    return { nanoid: jest.fn() };
-});
-
 describe("createFlashcardForAnnotation", () => {
     beforeEach(async () => {
         jest.resetAllMocks();
@@ -130,8 +126,6 @@ describe("createFlashcardForAnnotation", () => {
         const nanoid = require("nanoid");
         let value = 0;
         nanoid.nanoid.mockImplementation((size?) => (value++).toString());
-        // let {writeCardToDisk} = require("src/data/disk");
-        // writeCardToDisk = diskMock.mockImplementation(async (path, text) => {console.log("hello there")});
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
