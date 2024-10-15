@@ -1,9 +1,13 @@
 import {
-    createFlashcardForAnnotation, createFlashcardNoteForSourceNote,
+    createFlashcardForAnnotation,
+    createFlashcardNoteForSourceNote,
     getAnnotationById,
+    getAnnotationsForSection,
+    getBookById,
     getFlashcardById,
+    getFlashcardsForAnnotation,
     getNotesWithoutReview,
-    getSectionTreeForBook
+    getSectionTreeForBook,
 } from "src/api";
 import { plugin } from "src/main";
 import { Index } from "src/data/models";
@@ -291,6 +295,168 @@ describe.skip("createFlashcardNoteForSourceNote", () => {
         expect(createFlashcardNoteForSourceNote("82")).toMatchInlineSnapshot(`[]`);
     });
     test.todo("write test case with different initial state");
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe("getBookById", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("retrieves a book correctly", () => {
+        expect(getBookById("82")).toMatchInlineSnapshot(`
+            {
+              "canBeReviewed": true,
+              "counts": {
+                "annotations": {
+                  "withFlashcards": 2,
+                  "withoutFlashcards": 5,
+                },
+                "flashcards": {
+                  "learning": 2,
+                  "mature": 0,
+                  "new": 0,
+                },
+              },
+              "id": "82",
+              "name": "Atomic Habits",
+            }
+        `);
+    });
+    test("fails if book does not exist", () => {
+        expect(() => getBookById("asdf")).toThrowErrorMatchingInlineSnapshot(
+            `"No book found for id asdf"`
+        );
+    });
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe("getFlashcardsForAnnotation", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("retrieves all flashcards for an annotation", () => {
+        expect(getFlashcardsForAnnotation("hjhjhlkap", "84")).toMatchInlineSnapshot(`
+            [
+              Flashcard {
+                "answerText": "homie",
+                "cardType": 2,
+                "context": null,
+                "dueDate": null,
+                "ease": null,
+                "flag": null,
+                "id": "78",
+                "interval": null,
+                "parentId": "hjhjhlkap",
+                "parsedCardId": "74",
+                "questionText": "ryder",
+                "siblings": [],
+              },
+              Flashcard {
+                "answerText": "Card not",
+                "cardType": 2,
+                "context": null,
+                "dueDate": null,
+                "ease": null,
+                "flag": null,
+                "id": "80",
+                "interval": null,
+                "parentId": "hjhjhlkap",
+                "parsedCardId": "76",
+                "questionText": "New",
+                "siblings": [],
+              },
+            ]
+        `);
+    });
+    test("returns empty array if there are no annotations", () => {
+        expect(getFlashcardsForAnnotation("hlksdjfa", "84")).toMatchInlineSnapshot(`[]`);
+    });
+    test("throws error if book not found", () => {
+        expect(() =>
+            getFlashcardsForAnnotation("hlksdjfa", "askd")
+        ).toThrowErrorMatchingInlineSnapshot(`"No book found for id askd"`);
+    });
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe("getAnnotationsForSection", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("lists notes that don't have flashcards", () => {
+        expect(getAnnotationsForSection("89", "82")).toMatchInlineSnapshot(`
+            {
+              "annotations": [
+                {
+                  "flashcardCount": 0,
+                  "hasFlashcards": false,
+                  "highlight": "What’s the difference between systems and goals? It’s a distinction I first learned from Scott Adams, the cartoonist behind the Dilbert comic. Goals are about the results you want to achieve. Systems are about the processes that lead to those results.",
+                  "id": "15544",
+                  "note": "#research",
+                  "type": "notes",
+                },
+                {
+                  "flashcardCount": 0,
+                  "hasFlashcards": false,
+                  "highlight": "Problem #1: Winners and losers have the same goals.",
+                  "id": "15548",
+                  "note": "",
+                  "type": "notes",
+                },
+                {
+                  "flashcardCount": 0,
+                  "hasFlashcards": false,
+                  "highlight": "Problem #2: Achieving a goal is only a momentary change.",
+                  "id": "15550",
+                  "note": "",
+                  "type": "notes",
+                },
+                {
+                  "flashcardCount": 0,
+                  "hasFlashcards": false,
+                  "highlight": "Problem #3: Goals restrict your happiness.",
+                  "id": "15551",
+                  "note": "",
+                  "type": "notes",
+                },
+              ],
+              "id": "89",
+              "title": "FORGET ABOUT GOALS, FOCUS ON SYSTEMS INSTEAD",
+            }
+        `);
+    });
+    test("returns null if there are no annotations for that section", () => {
+        expect(getAnnotationsForSection("askdf", "82")).toMatchInlineSnapshot(`null`);
+    });
+    test("throws an error if book not found", () => {
+        expect(() =>
+            getAnnotationsForSection("askdf", "293102")
+        ).toThrowErrorMatchingInlineSnapshot(`"No book found for id 293102"`);
+    });
     afterEach(() => {
         jest.resetAllMocks();
     });
