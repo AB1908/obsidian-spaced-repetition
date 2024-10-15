@@ -1,14 +1,9 @@
-import { parseFileText } from "src/data/parser";
+import { extractParsedCards, parseFileText } from "src/data/parser";
 import { CardType } from "src/scheduler/scheduling";
 import { generateTree } from "src/data/models/bookTree";
-import { getFileContents } from "src/data/disk";
 import { Heading } from "src/data/models/sourceNote";
 
 jest.mock("../src/data/disk");
-jest.mock("nanoid", () => ({
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    nanoid: (number: number) => "aaaaaaaa",
-}));
 
 jest.mock("../src/main", () => {
     return {
@@ -195,12 +190,23 @@ describe("generateTree", () => {
     });
 });
 
-describe("parseFlashcard", () => {
-    test("parses a flashcard with only annotation id", async () => {
+describe("extractParsedCards", () => {
+    beforeEach(async () => {
+        // todo: fix ts error
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+    });
+    test("parses a flashcard with only annotation id", () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        expect(await parseFileText("sample path")).toEqual([
+        expect(
+            extractParsedCards(
+                "This is a question\n?\nThis is an answer\n<!--SR:93813-->",
+                "sample path"
+            )
+        ).toEqual([
             {
-                id: "aaaaaaaa",
+                id: "0",
                 notePath: "sample path",
                 cardText: "This is a question\n?\nThis is an answer",
                 metadataText: "<!--SR:93813-->",
@@ -213,12 +219,9 @@ describe("parseFlashcard", () => {
         const flashcard =
             "This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        jest.mocked(getFileContents).mockImplementation(async (path: string) => {
-            return flashcard;
-        });
-        expect(await parseFileText("sample path")).toEqual([
+        expect(extractParsedCards(flashcard, "sample path")).toEqual([
             {
-                id: "aaaaaaaa",
+                id: "0",
                 notePath: "sample path",
                 cardText: "This is a question\n?\nThis is an answer",
                 metadataText: "<!--SR:93813!L,2021-04-05,99,270-->",
@@ -227,5 +230,69 @@ describe("parseFlashcard", () => {
             },
         ]);
     });
-    test.todo("parses multiple flashcards");
+    // todo: rethink this
+    // not required if I test it with actual file contents
+    test.skip("parses multiple flashcards", () => {});
+
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
+});
+
+describe("parseFileText", () => {
+    beforeEach(async () => {
+        // todo: fix ts error
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+    });
+    test("generates an array of multiple flashcards given file text", async () => {
+        expect(await parseFileText("Untitled - Flashcards.md")).toMatchInlineSnapshot(`
+            [
+              {
+                "cardText": "ryder
+            ?
+            homie",
+                "cardType": 2,
+                "id": "0",
+                "lineNo": -1,
+                "metadataText": "<!--SR:hjhjhlkap-->",
+                "notePath": "Untitled - Flashcards.md",
+              },
+              {
+                "cardText": "asfsf
+            ?
+            324",
+                "cardType": 2,
+                "id": "1",
+                "lineNo": -1,
+                "metadataText": "<!--SR:hjhjhlkap!L,2024-03-20,3,250-->",
+                "notePath": "Untitled - Flashcards.md",
+              },
+              {
+                "cardText": "New
+            ?
+            Card not",
+                "cardType": 2,
+                "id": "2",
+                "lineNo": -1,
+                "metadataText": "<!--SR:hjhjhlkap-->",
+                "notePath": "Untitled - Flashcards.md",
+              },
+              {
+                "cardText": "new
+            ?
+            question",
+                "cardType": 2,
+                "id": "3",
+                "lineNo": -1,
+                "metadataText": "<!--SR:tmi3ktJd-->",
+                "notePath": "Untitled - Flashcards.md",
+              },
+            ]
+        `);
+    });
+    afterEach(() => {
+        jest.resetAllMocks();
+    });
 });
