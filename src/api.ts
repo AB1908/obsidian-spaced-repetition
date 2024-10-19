@@ -39,7 +39,8 @@ export function getAnnotationById(blockId: string, bookId: string) {
     return transform(book.annotations().filter((t: BookMetadataSection) => t.id === blockId)[0]);
 }
 
-export function getNextCard(bookId: string) {
+export function getNextCard(bookId: string | undefined) {
+    if (!bookId) throw new Error(`getNextCard: book not found`);
     const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
@@ -50,7 +51,9 @@ export function getNextCard(bookId: string) {
     }
 }
 
-export async function deleteFlashcard(bookId: string, flashcardId: string) {
+export async function deleteFlashcard(bookId: string | undefined, flashcardId: string | undefined) {
+    if (!bookId) throw new Error(`deleteFlashcard: book doesn't exist`);
+    if (!flashcardId) throw new Error(`deleteFlashcard: can't delete a flashcard that doesn't exist`);
     const book = plugin.index.sourceNoteIndex.getBook(bookId);
 
     await book.deleteFlashcard(flashcardId);
