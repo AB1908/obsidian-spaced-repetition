@@ -1,3 +1,4 @@
+/* eslint-disable quotes */
 import {
     createFlashcardForAnnotation,
     createFlashcardNoteForSourceNote,
@@ -8,10 +9,12 @@ import {
     getFlashcardsForAnnotation,
     getNotesWithoutReview,
     getSectionTreeForBook,
+    getSourcesForReview,
+    updateFlashcardContentsById,
 } from "src/api";
 import { plugin } from "src/main";
 import { Index } from "src/data/models";
-import { writeCardToDisk } from "src/data/disk";
+import { updateCardOnDisk, writeCardToDisk } from "src/data/disk";
 
 jest.mock("src/data/disk");
 
@@ -21,7 +24,7 @@ jest.mock("../src/utils", () => {
     return {
         __esModule: true, // Use it when dealing with esModules
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        calculateDelayBeforeReview: jest.fn((due: string) => 63836018),
+        calculateDelayBeforeReview: jest.fn((_due: string) => 63836018),
     };
 });
 
@@ -35,9 +38,10 @@ jest.mock("../src/main", () => {
 describe("getFlashcardById", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -127,9 +131,10 @@ describe("createFlashcardForAnnotation", () => {
     beforeEach(async () => {
         jest.resetAllMocks();
         // todo: fix ts error
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -206,9 +211,10 @@ describe("createFlashcardForAnnotation", () => {
 describe("getAnnotationById", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -247,9 +253,10 @@ describe("getAnnotationById", () => {
 describe("getSectionTreeForBook", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -265,9 +272,10 @@ describe("getSectionTreeForBook", () => {
 describe("getNotesWithoutReview", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -284,9 +292,10 @@ describe("getNotesWithoutReview", () => {
 describe.skip("createFlashcardNoteForSourceNote", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -303,9 +312,10 @@ describe.skip("createFlashcardNoteForSourceNote", () => {
 describe("getBookById", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -343,9 +353,10 @@ describe("getBookById", () => {
 describe("getFlashcardsForAnnotation", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -400,9 +411,10 @@ describe("getFlashcardsForAnnotation", () => {
 describe("getAnnotationsForSection", () => {
     beforeEach(async () => {
         // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -459,5 +471,104 @@ describe("getAnnotationsForSection", () => {
     });
     afterEach(() => {
         jest.resetAllMocks();
+    });
+});
+
+describe("getSourcesForReview", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("should list flashcard decks json", () => {
+        expect(getSourcesForReview()).toMatchInlineSnapshot(`
+            [
+              {
+                "annotationCoverage": 0.2857142857142857,
+                "flashcardProgress": {
+                  "learning": 2,
+                  "mature": 0,
+                  "new": 0,
+                },
+                "id": "82",
+                "name": "Atomic Habits",
+                "pendingFlashcards": 2,
+              },
+              {
+                "annotationCoverage": 0.11475409836065574,
+                "flashcardProgress": {
+                  "learning": 14,
+                  "mature": 21,
+                  "new": 0,
+                },
+                "id": "83",
+                "name": "Memory - A Very Short Introduction",
+                "pendingFlashcards": 32,
+              },
+              {
+                "annotationCoverage": 1,
+                "flashcardProgress": {
+                  "learning": 1,
+                  "mature": 0,
+                  "new": 3,
+                },
+                "id": "84",
+                "name": "Untitled",
+                "pendingFlashcards": 4,
+              },
+            ]
+        `);
+    });
+});
+
+describe("updateFlashcardContentsById", () => {
+    beforeEach(async () => {
+        // todo: can't figure out a way to reset nanoid automatically
+        // eslint-disable-next-line @typescript-eslint/no-var-requires
+        const nanoid = require("nanoid");
+        let value = 0;
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        plugin.index = new Index();
+        await plugin.index.initialize(plugin);
+        global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
+    });
+    test("should update a flashcard", async () => {
+        const initialFlashcardCount = plugin.index.flashcardIndex.flashcards.size;
+        await updateFlashcardContentsById("2", "New question", "new answer", "82");
+        expect(plugin.index.flashcardIndex.flashcards.get("2")).toMatchInlineSnapshot(`
+            Flashcard {
+              "answerText": "new answer",
+              "cardType": 2,
+              "context": null,
+              "dueDate": "2023-09-10",
+              "ease": 230,
+              "flag": "L",
+              "id": "2",
+              "interval": 6,
+              "parentId": "15538",
+              "parsedCardId": "0",
+              "questionText": "New question",
+              "siblings": [],
+            }
+        `);
+        expect(updateCardOnDisk).toHaveBeenCalledWith(
+            "Atomic Habits/Flashcards.md", `
+For a habit to persist, you need to keep at it long enough to break through a barrier. What is this barrier called?
+?
+Plateau of Latent Potential
+<!--SR:15538!L,2023-09-10,6,230-->
+`, `
+New question
+?
+new answer
+<!--SR:15538!L,2023-09-10,6,230-->
+`
+        );
+        expect(plugin.index.flashcardIndex.flashcards.size).toEqual(initialFlashcardCount);
     });
 });
