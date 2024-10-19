@@ -10,7 +10,7 @@ describe("createFlashcards", () => {
         // todo: fix ts error
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("should create a flashcard array", () => {
         const parsedCards = [

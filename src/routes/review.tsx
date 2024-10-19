@@ -144,7 +144,7 @@ export function ReviewDeck() {
 export function EditCard() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const params = useParams();
-    const annotation = getAnnotationById(currentCard.parentId, params.bookId)
+    const annotation = getAnnotationById(currentCard.parentId, params.bookId);
     const navigate = useNavigate();
 
     async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {

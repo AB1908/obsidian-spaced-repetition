@@ -195,7 +195,7 @@ describe("extractParsedCards", () => {
         // todo: fix ts error
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("parses a flashcard with only annotation id", () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -244,7 +244,7 @@ describe("parseFileText", () => {
         // todo: fix ts error
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("generates an array of multiple flashcards given file text", async () => {
         expect(await parseFileText("Untitled - Flashcards.md")).toMatchInlineSnapshot(`

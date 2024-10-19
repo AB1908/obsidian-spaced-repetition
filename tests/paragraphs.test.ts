@@ -125,7 +125,7 @@ describe("extractParagraphs", () => {
         // todo: fix ts error
         const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((size?) => (value++).toString());
+        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("should extract an array of headers from text", async () => {
         const flashcards = [
