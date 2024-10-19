@@ -142,5 +142,6 @@ export function getBasename(path: string) {
 }
 
 export function getCurrentDateIsoString() {
+    // @ts-expect-error for some reason, moment constructor has eslint error
     return moment().format("YYYY-MM-DD");
 }
