@@ -1,5 +1,5 @@
-import {schedule, ReviewResponse, textInterval} from "src/scheduler/scheduling";
-import {DEFAULT_SETTINGS} from "src/settings";
+import { DEFAULT_SETTINGS } from "src/settings";
+import { ReviewResponse, schedule, textInterval } from "src/scheduler/scheduling";
 
 jest.mock("../src/main", () => {
         return {
