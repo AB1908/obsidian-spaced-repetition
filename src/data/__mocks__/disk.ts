@@ -43,6 +43,8 @@ export async function getFileContents(path: string) {
 
 export const writeCardToDisk = jest.fn(async (path, string) => {});
 
+export const updateCardOnDisk = jest.fn(async (path, originalText, updatedText) => {});
+
 export function fileTags() {
     // @ts-ignore
     return new Map([
