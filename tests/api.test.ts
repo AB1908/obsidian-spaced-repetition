@@ -15,6 +15,8 @@ import {
 import { plugin } from "src/main";
 import { Index } from "src/data/models";
 import { updateCardOnDisk, writeCardToDisk } from "src/data/disk";
+import { mocked } from "jest-mock";
+import { nanoid } from "nanoid";
 
 jest.mock("src/data/disk");
 
@@ -35,13 +37,12 @@ jest.mock("../src/main", () => {
     };
 });
 
+const mockedNanoid = mocked(nanoid, true);
+
 describe("getFlashcardById", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -130,11 +131,8 @@ describe("getFlashcardById", () => {
 describe("createFlashcardForAnnotation", () => {
     beforeEach(async () => {
         jest.resetAllMocks();
-        // todo: fix ts error
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -210,11 +208,8 @@ describe("createFlashcardForAnnotation", () => {
 
 describe("getAnnotationById", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
     });
@@ -252,11 +247,8 @@ describe("getAnnotationById", () => {
 
 describe("getSectionTreeForBook", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -271,11 +263,8 @@ describe("getSectionTreeForBook", () => {
 
 describe("getNotesWithoutReview", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -291,11 +280,8 @@ describe("getNotesWithoutReview", () => {
 
 describe.skip("createFlashcardNoteForSourceNote", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -311,11 +297,8 @@ describe.skip("createFlashcardNoteForSourceNote", () => {
 
 describe("getBookById", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -352,11 +335,8 @@ describe("getBookById", () => {
 
 describe("getFlashcardsForAnnotation", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -410,11 +390,8 @@ describe("getFlashcardsForAnnotation", () => {
 
 describe("getAnnotationsForSection", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -476,11 +453,8 @@ describe("getAnnotationsForSection", () => {
 
 describe("getSourcesForReview", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
@@ -528,11 +502,8 @@ describe("getSourcesForReview", () => {
 
 describe("updateFlashcardContentsById", () => {
     beforeEach(async () => {
-        // todo: can't figure out a way to reset nanoid automatically
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
         plugin.index = new Index();
         await plugin.index.initialize(plugin);
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));

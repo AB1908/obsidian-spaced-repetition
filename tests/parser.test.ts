@@ -2,6 +2,8 @@ import { extractParsedCards, parseFileText } from "src/data/parser";
 import { CardType } from "src/scheduler/scheduling";
 import { generateTree } from "src/data/models/bookTree";
 import { Heading } from "src/data/models/sourceNote";
+import { mocked } from "jest-mock";
+import { nanoid } from "nanoid";
 
 jest.mock("../src/data/disk");
 
@@ -192,10 +194,8 @@ describe("generateTree", () => {
 
 describe("extractParsedCards", () => {
     beforeEach(async () => {
-        // todo: fix ts error
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("parses a flashcard with only annotation id", () => {
         // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -239,12 +239,12 @@ describe("extractParsedCards", () => {
     });
 });
 
+const mockedNanoid = mocked(nanoid, true);
+
 describe("parseFileText", () => {
     beforeEach(async () => {
-        // todo: fix ts error
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("generates an array of multiple flashcards given file text", async () => {
         expect(await parseFileText("Untitled - Flashcards.md")).toMatchInlineSnapshot(`

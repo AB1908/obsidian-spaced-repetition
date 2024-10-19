@@ -1,16 +1,17 @@
 import { CardType } from "src/scheduler/scheduling";
-
 import { generateFlashcardsArray } from "src/data/models/flashcard";
+import { mocked } from "jest-mock";
+import { nanoid } from "nanoid";
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/main", () => {});
 
+const mockedNanoid = mocked(nanoid, true);
+
 describe("createFlashcards", () => {
     beforeEach(async () => {
-        // todo: fix ts error
-        const nanoid = require("nanoid");
         let value = 0;
-        nanoid.nanoid.mockImplementation((_size?: number) => (value++).toString());
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
     });
     test("should create a flashcard array", () => {
         const parsedCards = [
