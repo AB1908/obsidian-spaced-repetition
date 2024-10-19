@@ -1,7 +1,6 @@
 import React from "react";
 import { Link, Outlet, useNavigate, useLoaderData } from "react-router-dom";
 import { DeckCounts } from "src/routes/notes-home-page";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { frontEndBook, getBookById, resetBookReviewState } from "src/api";
 
 interface DeckLoaderParams {
@@ -9,7 +8,6 @@ interface DeckLoaderParams {
 }
 
 export function deckLoader({params}: {params: DeckLoaderParams}) {
-    console.log("side effect")
     // warn: performing side effect!
     resetBookReviewState(params.bookId);
     return getBookById(params.bookId);
