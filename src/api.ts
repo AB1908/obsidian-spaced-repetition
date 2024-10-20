@@ -1,12 +1,12 @@
 import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
-import {
-    Flashcard,
-    maturityCounts
-} from "src/data/models/flashcard";
+import { Flashcard, maturityCounts } from "src/data/models/flashcard";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
-import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { updateCardOnDisk } from "src/data/disk";
+import {
+    BookMetadataSection,
+    findNextHeader,
+    isAnnotation,
+    isHeading,
+} from "src/data/models/sourceNote";
 import { plugin } from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
@@ -110,30 +110,7 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
         // todo: refactor
-        let flashcardCopy: Flashcard;
-        book.flashcardNote.flashcards.forEach((t,i) => {
-            if (t.id === flashcardId) {
-                flashcardCopy = t;
-            }
-        });
-        const parsedCardCopy = book.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
-        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
-
-        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
-        book.flashcardNote.parsedCards.forEach((value, index) => {
-            if (value.id === parsedCardCopy.id) {
-                book.flashcardNote.parsedCards[index] = parsedCardCopy;
-            }
-        });
-        book.flashcardNote.flashcards.forEach((t, i) => {
-            if (t.id === flashcardId) {
-                flashcardCopy.questionText = question;
-                flashcardCopy.answerText = answer;
-                book.flashcardNote.flashcards[i] = flashcardCopy;
-            }
-        });
+        await book.updateFlashcardContents(flashcardId, question, answer, cardType);
     }
     return true;
 }

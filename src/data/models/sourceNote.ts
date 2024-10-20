@@ -16,9 +16,13 @@ import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { createParsedCard } from "src/data/models/parsedCard";
-import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
-import type { ReviewResponse } from "src/scheduler/scheduling";
-import { CardType } from "src/scheduler/scheduling";
+import {
+    cardTextGenerator,
+    generateCardAsStorageFormat,
+    metadataTextGenerator,
+    SchedulingMetadata
+} from "src/data/utils/TextGenerator";
+import { CardType, ReviewResponse } from "src/scheduler/scheduling";
 import type SRPlugin from "src/main";
 import { plugin } from "src/main";
 import { paragraph } from "src/data/models/paragraphs";
@@ -445,6 +449,28 @@ export class SourceNote implements frontbook {
         this.reviewIndex = -1;
     }
 
+    async updateFlashcardContents(flashcardId: string, question: string, answer: string, cardType: CardType.MultiLineBasic) {
+        const flashcardCopy = this.flashcardNote.flashcards.filter(t=>t.id === flashcardId)[0];
+        const parsedCardCopy = this.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        this.flashcardNote.parsedCards.forEach((value, index) => {
+            if (value.id === parsedCardCopy.id) {
+                this.flashcardNote.parsedCards[index] = parsedCardCopy;
+            }
+        });
+        this.flashcardNote.flashcards.forEach((t, i) => {
+            if (t.id === flashcardId) {
+                flashcardCopy.questionText = question;
+                flashcardCopy.answerText = answer;
+                this.flashcardNote.flashcards[i] = flashcardCopy;
+            }
+        });
+    }
+
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
         this.flashcardNote.flashcards.forEach((card: Flashcard, index: number) => {
             if (card.id == flashcardId) {
@@ -508,3 +534,4 @@ export function generateFlashcardsFileNameAndPath(bookPath: string) {
     const path = `${parentPath}/${filename}`;
     return {filename, path};
 }
+
