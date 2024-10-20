@@ -110,7 +110,8 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
         // TODO: Fix hardcoded path, should come from deckNote obj
         // TODO: error handling
         // todo: refactor
-        await book.updateFlashcardContents(flashcardId, question, answer, cardType);
+        const newFlashcard = await book.updateFlashcardContents(flashcardId, question, answer, cardType);
+        plugin.index.flashcardIndex.flashcards.set(flashcardId, newFlashcard);
     }
     return true;
 }

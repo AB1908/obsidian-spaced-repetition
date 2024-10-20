@@ -449,19 +449,19 @@ export class SourceNote implements frontbook {
         this.reviewIndex = -1;
     }
 
+    // this method is here because once flashcard is replaced
+    // the flashcard index needs ot be updated
+    // the flashcard note's flashcard list also needs to be updated
     async updateFlashcardContents(flashcardId: string, question: string, answer: string, cardType: CardType.MultiLineBasic) {
         const flashcardCopy = this.flashcardNote.flashcards.filter(t=>t.id === flashcardId)[0];
-        const parsedCardCopy = this.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
-        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
-
-        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        const newParsedCard = await this.updateParsedCardCardText(flashcardCopy.parsedCardId, question, answer, cardType);
+        // todo: replace once we've got a map going here
         this.flashcardNote.parsedCards.forEach((value, index) => {
-            if (value.id === parsedCardCopy.id) {
-                this.flashcardNote.parsedCards[index] = parsedCardCopy;
+            if (value.id === newParsedCard.id) {
+                this.flashcardNote.parsedCards[index] = newParsedCard;
             }
         });
+        // todo: move into class? feels like weird exposed implementation detail
         this.flashcardNote.flashcards.forEach((t, i) => {
             if (t.id === flashcardId) {
                 flashcardCopy.questionText = question;
@@ -469,6 +469,17 @@ export class SourceNote implements frontbook {
                 this.flashcardNote.flashcards[i] = flashcardCopy;
             }
         });
+        return flashcardCopy;
+    }
+
+    private async updateParsedCardCardText(parsedCardId: string, question: string, answer: string, cardType: CardType.MultiLineBasic) {
+        const parsedCardCopy = this.flashcardNote.parsedCards.filter(t => t.id === parsedCardId)[0];
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        return parsedCardCopy;
     }
 
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
