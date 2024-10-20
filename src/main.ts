@@ -4,7 +4,6 @@ import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { Index } from "src/data/models";
-import * as console from "node:console";
 
 export interface PluginData {
     settings: SRSettings;
