@@ -541,5 +541,6 @@ new answer
 `
         );
         expect(plugin.index.flashcardIndex.flashcards.size).toEqual(initialFlashcardCount);
+        // todo: add expect for matching index contents
     });
 });
