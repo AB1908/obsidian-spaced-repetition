@@ -28,7 +28,7 @@ export function ClozeCardForm(props: any) {
     </Form>;
 }
 
-export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
+export function DefaultCardForm() {
     // todo: add some sort of header signifying the type of card being added
     const currentCard = useLoaderData() as FrontendFlashcard;
     const params = useParams();
