@@ -1,4 +1,4 @@
-import { Form, Link, useParams, useLoaderData } from "react-router-dom";
+import { Form, Link, useLoaderData } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
@@ -62,7 +62,7 @@ export function PreviewExistingFlashcards() {
                             Existing questions:
                         </p>
                             <ul className={"sr-flashcard-tree"}>
-                                {flashcards.map((t, i) => (
+                                {flashcards.map((t, _i) => (
                                     <FlashcardPreview key={t.id} questionText={t.questionText} id={t.id}/>
                                 ))}
                             </ul>
