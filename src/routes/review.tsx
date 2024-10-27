@@ -177,5 +177,5 @@ export function EditCard() {
 }
 
 export async function editCardAction() {
-    return null
+    return null;
 }
