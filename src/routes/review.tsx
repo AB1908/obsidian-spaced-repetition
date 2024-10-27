@@ -155,7 +155,7 @@ export function EditCard() {
     // todo: think about removing unknown cast
     // remember edit is literally not reachable without the two params
     // so should never throw error
-    const {bookId, flashcardId} = useParams() as unknown as CardLoaderParams;
+    const {bookId, flashcardId} = useParams<keyof CardLoaderParams>() as CardLoaderParams;
     const annotation = getAnnotationById(currentCard.parentId, bookId);
     const navigate = useNavigate();
     const submitButtonHandler: FormEventHandler<EditCardFormElements> = async (e) => {

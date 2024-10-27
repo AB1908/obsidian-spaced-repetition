@@ -31,7 +31,8 @@ export function ClozeCardForm(props: any) {
 export function DefaultCardForm() {
     // todo: add some sort of header signifying the type of card being added
     const currentCard = useLoaderData() as FrontendFlashcard;
-    const params = useParams();
+    // https://stackoverflow.com/a/71146532 for guidance on useParams typing
+    const params = useParams<keyof FlashcardParams>() as FlashcardParams;
     const navigate = useNavigate();
 
     // use button handler instead of action because button can behave differently based on route
