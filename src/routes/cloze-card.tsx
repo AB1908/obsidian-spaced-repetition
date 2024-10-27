@@ -14,14 +14,14 @@ export function clozeLoader() {
 
 export function ClozeCard() {
     // DONE: add loader logic
-    const highlight = useLoaderData();
-    const {flashcardId} = useParams();
-    const flashcardIndex = Number(flashcardId);
-    const defaultClozeValue = highlight.flashcards[flashcardIndex]?.questionText || "";
-    return (
-        <>
-            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-            <ClozeCardForm defaultClozeValue={defaultClozeValue}/>
-        </>
-    );
+    // const highlight = useLoaderData();
+    // const {flashcardId} = useParams();
+    // const flashcardIndex = Number(flashcardId);
+    // const defaultClozeValue = highlight.flashcards[flashcardIndex]?.questionText || "";
+    // return (
+    //     <>
+    //         <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
+    //         <ClozeCardForm defaultClozeValue={defaultClozeValue}/>
+    //     </>
+    // );
 }
