@@ -1,8 +1,9 @@
-import React from "react";
+import React, { FormEventHandler } from "react";
 import { Form, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { CancelButton, SubmitButton } from "src/ui/components/buttons";
 import { createFlashcardForAnnotation, updateFlashcardContentsById } from "src/api";
-import { FrontendFlashcard } from "src/routes/review";
+import { EditCardFormElements, FrontendFlashcard } from "src/routes/review";
+import { AnnotationLoaderParams } from "src/routes/annotation-with-outlet";
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
     const labelText = props.htmlFor[0].toUpperCase() + props.htmlFor.slice(1);
@@ -28,26 +29,31 @@ export function ClozeCardForm(props: any) {
     </Form>;
 }
 
+interface FlashcardParams extends AnnotationLoaderParams {
+    flashcardId: string;
+}
+
 export function DefaultCardForm() {
     // todo: add some sort of header signifying the type of card being added
     const currentCard = useLoaderData() as FrontendFlashcard;
     // https://stackoverflow.com/a/71146532 for guidance on useParams typing
     const params = useParams<keyof FlashcardParams>() as FlashcardParams;
     const navigate = useNavigate();
-
     // use button handler instead of action because button can behave differently based on route
-    async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
+    const submitButtonHandler: FormEventHandler<EditCardFormElements> = async (e) => {
+        // Arrow function idea copied from https://stackoverflow.com/a/76491499
+        // was having problems properly typing the event object
         e.preventDefault();
         if (params.flashcardId) {
-            await updateFlashcardContentsById(params.flashcardId, e.target.question.value, e.target.answer.value, params.bookId);
+            await updateFlashcardContentsById(params.flashcardId, e.currentTarget.question.value, e.currentTarget.answer.value, params.bookId);
             navigate("./..", {replace: true});
         } else {
-            await createFlashcardForAnnotation(e.target.question.value, e.target.answer.value, params.annotationId, params.bookId);
+            await createFlashcardForAnnotation(e.currentTarget.question.value, e.currentTarget.answer.value, params.annotationId, params.bookId);
             navigate(-2);
         }
-    }
+    };
 
-    return <Form method="post" className={"sr-card-form"} replace onSubmit={(event) => submitButtonHandler(event)}>
+    return <Form method="post" className={"sr-card-form"} replace onSubmit={submitButtonHandler}>
         <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
                             defaultValue={currentCard?.questionText}/>
         <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"}

@@ -145,7 +145,7 @@ export function ReviewDeck() {
 }
 
 // typing idea stolen from https://stackoverflow.com/a/68253165
-interface EditCardFormElements extends HTMLFormElement {
+export interface EditCardFormElements extends HTMLFormElement {
     question: HTMLInputElement;
     answer: HTMLInputElement;
 }
