@@ -256,7 +256,7 @@ describe("parseFileText", () => {
                 "cardType": 2,
                 "id": "0",
                 "lineNo": -1,
-                "metadataText": "<!--SR:hjhjhlkap-->",
+                "metadataText": "<!--SR:hjhjhlka-->",
                 "notePath": "Untitled - Flashcards.md",
               },
               {
@@ -266,7 +266,7 @@ describe("parseFileText", () => {
                 "cardType": 2,
                 "id": "1",
                 "lineNo": -1,
-                "metadataText": "<!--SR:hjhjhlkap!L,2024-03-20,3,250-->",
+                "metadataText": "<!--SR:hjhjhlka!L,2024-03-20,3,250-->",
                 "notePath": "Untitled - Flashcards.md",
               },
               {
@@ -276,7 +276,7 @@ describe("parseFileText", () => {
                 "cardType": 2,
                 "id": "2",
                 "lineNo": -1,
-                "metadataText": "<!--SR:hjhjhlkap-->",
+                "metadataText": "<!--SR:hjhjhlka-->",
                 "notePath": "Untitled - Flashcards.md",
               },
               {

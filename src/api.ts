@@ -35,6 +35,8 @@ import { calculateDelayBeforeReview } from "src/utils";
 // TODO: refactor this, not immediately apparent why we need transform
 // hint: because you have paragraphs as well
 export function getAnnotationById(blockId: string, bookId: string) {
+    // TODO: add support for arbitrary length id
+    if (blockId.length > 8) throw new Error("ID length not yet supported");
     if (!bookId) throw new Error("getAnnotationById: bookId required");
     const book = plugin.index.sourceNoteIndex.getBook(bookId);
     return transform(book.annotations().filter((t: BookMetadataSection) => t.id === blockId)[0]);

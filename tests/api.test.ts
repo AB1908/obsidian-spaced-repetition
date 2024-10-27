@@ -342,7 +342,7 @@ describe("getFlashcardsForAnnotation", () => {
         global.structuredClone = (val) => JSON.parse(JSON.stringify(val));
     });
     test("retrieves all flashcards for an annotation", () => {
-        expect(getFlashcardsForAnnotation("hjhjhlkap", "84")).toMatchInlineSnapshot(`
+        expect(getFlashcardsForAnnotation("hjhjhlka", "84")).toMatchInlineSnapshot(`
             [
               Flashcard {
                 "answerText": "homie",
@@ -353,9 +353,23 @@ describe("getFlashcardsForAnnotation", () => {
                 "flag": null,
                 "id": "78",
                 "interval": null,
-                "parentId": "hjhjhlkap",
+                "parentId": "hjhjhlka",
                 "parsedCardId": "74",
                 "questionText": "ryder",
+                "siblings": [],
+              },
+              Flashcard {
+                "answerText": "324",
+                "cardType": 2,
+                "context": null,
+                "dueDate": "2024-03-20",
+                "ease": 250,
+                "flag": "L",
+                "id": "79",
+                "interval": 3,
+                "parentId": "hjhjhlka",
+                "parsedCardId": "75",
+                "questionText": "asfsf",
                 "siblings": [],
               },
               Flashcard {
@@ -367,7 +381,7 @@ describe("getFlashcardsForAnnotation", () => {
                 "flag": null,
                 "id": "80",
                 "interval": null,
-                "parentId": "hjhjhlkap",
+                "parentId": "hjhjhlka",
                 "parsedCardId": "76",
                 "questionText": "New",
                 "siblings": [],
@@ -528,12 +542,14 @@ describe("updateFlashcardContentsById", () => {
             }
         `);
         expect(updateCardOnDisk).toHaveBeenCalledWith(
-            "Atomic Habits/Flashcards.md", `
+            "Atomic Habits/Flashcards.md",
+            `
 For a habit to persist, you need to keep at it long enough to break through a barrier. What is this barrier called?
 ?
 Plateau of Latent Potential
 <!--SR:15538!L,2023-09-10,6,230-->
-`, `
+`,
+            `
 New question
 ?
 new answer
