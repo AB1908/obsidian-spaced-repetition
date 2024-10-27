@@ -26,12 +26,12 @@ export async function annotationLoader({ params }: LoaderFunctionArgs & {
 }
 
 function getPreviousAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
-    let find = annotations.findIndex(t => t.id === blockId);
+    const find = annotations.findIndex(t => t.id === blockId);
     return annotations[find-1]?.id || null;
 }
 
 function getNextAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
-    let find = annotations.findIndex(t => t.id === blockId);
+    const find = annotations.findIndex(t => t.id === blockId);
     return annotations[find+1]?.id || null;
 }
 
@@ -95,7 +95,7 @@ function pathGenerator(path: string, params: any, annotationId: string) {
     const viewFlashcardsPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards";
     const inChildRoute = [updateFlashcardPath, newRegularFlashcardPath, newFlashcardPath, viewFlashcardsPath].some((routePath) => {
         return matchPath(routePath, path);
-    })
+    });
     if (inChildRoute) {
         return generatePath(viewFlashcardsPath, {...params, annotationId});
     } else {
