@@ -16,7 +16,7 @@ export function cardLoader({params}: LoaderFunctionArgs & {params: CardLoaderPar
         return null;
     }
     if (USE_ACTUAL_BACKEND) {
-        return getFlashcardById(params.flashcardId, params.bookId);
+        return getFlashcardById(params.flashcardId);
     } else {
         return fetch(`http://localhost:3000/flashcards/${params.flashcardId}`);
     }

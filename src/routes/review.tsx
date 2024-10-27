@@ -52,7 +52,7 @@ export async function reviewLoader({params}: LoaderFunctionArgs & {params: Revie
         } else {
             flashcardId = params.flashcardId;
         }
-        return getFlashcardById(flashcardId, params.bookId);
+        return getFlashcardById(flashcardId);
     } else {
         if (params.flashcardId == null) {
             const response = await fetch(`http://localhost:3000/review/${params.bookId}`);

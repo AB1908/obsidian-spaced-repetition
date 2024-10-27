@@ -43,7 +43,7 @@ export function getAnnotationById(blockId: string, bookId: string) {
 }
 
 export function getNextCard(bookId: string | undefined) {
-    if (!bookId) throw new Error(`getNextCard: book not found`);
+    if (!bookId) throw new Error("getNextCard: book not found");
     const book = plugin.index.sourceNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
@@ -55,8 +55,8 @@ export function getNextCard(bookId: string | undefined) {
 }
 
 export async function deleteFlashcard(bookId: string | undefined, flashcardId: string | undefined) {
-    if (!bookId) throw new Error(`deleteFlashcard: book doesn't exist`);
-    if (!flashcardId) throw new Error(`deleteFlashcard: can't delete a flashcard that doesn't exist`);
+    if (!bookId) throw new Error("deleteFlashcard: book doesn't exist");
+    if (!flashcardId) throw new Error("deleteFlashcard: can't delete a flashcard that doesn't exist");
     const book = plugin.index.sourceNoteIndex.getBook(bookId);
 
     await book.deleteFlashcard(flashcardId);
@@ -72,7 +72,7 @@ export function getCurrentCard(bookId: string) {
     }
 }
 
-export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
+export function getFlashcardById(flashcardId: string): FrontendFlashcard {
     // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
     // already has flashcards
     const flashcard: Flashcard | undefined = plugin.index.flashcardIndex.flashcards.get(flashcardId);

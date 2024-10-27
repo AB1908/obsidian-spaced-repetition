@@ -47,7 +47,7 @@ describe("getFlashcardById", () => {
         await plugin.index.initialize(plugin);
     });
     test("retrieves a flashcard successfully", () => {
-        expect(getFlashcardById("2", "ibJ6QFl4")).toMatchInlineSnapshot(
+        expect(getFlashcardById("2")).toMatchInlineSnapshot(
             {},
             `
             {
@@ -67,7 +67,7 @@ describe("getFlashcardById", () => {
             }
         `
         );
-        expect(() => getFlashcardById("aaaa", "ibJ6QFl4")).toThrowError();
+        expect(() => getFlashcardById("aaaa")).toThrowError();
     });
     afterEach(() => {
         jest.resetAllMocks();
