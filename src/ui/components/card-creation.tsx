@@ -34,6 +34,7 @@ export function DefaultCardForm() {
     const params = useParams();
     const navigate = useNavigate();
 
+    // use button handler instead of action because button can behave differently based on route
     async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
         if (params.flashcardId) {
