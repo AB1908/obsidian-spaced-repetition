@@ -1,8 +1,6 @@
 import React from "react";
-import { useLoaderData } from "react-router";
 import { DefaultCardForm } from "src/ui/components/card-creation";
 import { getFlashcardById } from "src/api";
-import { Flashcard } from "src/data/models/flashcard";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 
 export interface CardLoaderParams {
@@ -27,22 +25,9 @@ export function cardLoader({params}: {params: CardLoaderParams}) {
 // The path is basically being used as a bit of state but not explicitly so.
 // Is there a better way of doing this?
 export function UpsertCard() {
-    const flashcard = useLoaderData() as Flashcard;
-    const defaultQuestionValue = flashcard?.questionText || "";
-    const defaultAnswerValue = flashcard?.answerText || "";
     return (
         <>
-            <DefaultCardForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue}/>
+            <DefaultCardForm />
         </>
     );
-}
-
-// todo: fix any
-export async function creationAction({params, request}: {params: any, request: any}): Promise<null> {
-    return null;
-}
-
-// todo: fix any
-export async function updateAction({params, request}: {params: any, request: any}): Promise<null> {
-    return null;
 }

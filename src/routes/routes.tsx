@@ -5,7 +5,7 @@ import { Notes, notesLoader } from "src/routes/notes-home-page";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-preview";
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
 import { EditCard, editCardAction, ReviewDeck, reviewLoader } from "src/routes/review";
-import { cardLoader, creationAction, updateAction, UpsertCard } from "src/routes/upsert-card";
+import { cardLoader, UpsertCard } from "src/routes/upsert-card";
 import { AnnotationList, annotationsLoader } from "src/routes/highlights";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
 import {
@@ -101,14 +101,12 @@ export const children: RouteObject[] = [
                         // TODO: this should be refactored into a single add with params for type of card
                         path: "flashcards/:flashcardId",
                         element: <UpsertCard />,
-                        action: updateAction,
                         loader: cardLoader
                     },
                     {
                         // TODO: this should be refactored into a single add with params for type of card
                         path: "flashcards/new/regular",
                         element: <UpsertCard />,
-                        action: creationAction,
                         loader: cardLoader
                     }
                 ]
