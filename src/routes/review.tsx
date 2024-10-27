@@ -13,6 +13,7 @@ import { Icon } from "src/routes/root";
 import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
 import { TextInputWithLabel } from "src/ui/components/card-creation";
 import { CancelButton } from "src/ui/components/buttons";
+import { CardLoaderParams } from "src/routes/upsert-card";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -143,13 +144,16 @@ export function ReviewDeck() {
 
 export function EditCard() {
     const currentCard = useLoaderData() as FrontendFlashcard;
-    const params = useParams();
-    const annotation = getAnnotationById(currentCard.parentId, params.bookId);
+    // todo: think about removing unknown cast
+    // remember edit is literally not reachable without the two params
+    // so should never throw error
+    const {bookId, flashcardId} = useParams() as unknown as CardLoaderParams;
+    const annotation = getAnnotationById(currentCard.parentId, bookId);
     const navigate = useNavigate();
 
     async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
-        await updateFlashcardContentsById(params.flashcardId, e.target.question.value, e.target.answer.value, params.bookId);
+        await updateFlashcardContentsById(flashcardId, e.target.question.value, e.target.answer.value, bookId);
         navigate(-1);
     }
 
