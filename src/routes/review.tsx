@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { FormEventHandler, useEffect, useRef, useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import {
     deleteFlashcard, getAnnotationById,
@@ -120,9 +120,10 @@ export function ReviewDeck() {
         navigateToNextCard();
     }
 
-    function previousButtonHandler() {
-
-    }
+    // todo: might need this?
+    // function previousButtonHandler() {
+    //
+    // }
 
     return (<>
         <div className={"buttons"}>
@@ -142,6 +143,12 @@ export function ReviewDeck() {
     </>);
 }
 
+// typing idea stolen from https://stackoverflow.com/a/68253165
+interface EditCardFormElements extends HTMLFormElement {
+    question: HTMLInputElement;
+    answer: HTMLInputElement;
+}
+
 export function EditCard() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     // todo: think about removing unknown cast
@@ -150,19 +157,19 @@ export function EditCard() {
     const {bookId, flashcardId} = useParams() as unknown as CardLoaderParams;
     const annotation = getAnnotationById(currentCard.parentId, bookId);
     const navigate = useNavigate();
-
-    async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
+    const submitButtonHandler: FormEventHandler<EditCardFormElements> = async (e) => {
+        // Arrow function idea copied from https://stackoverflow.com/a/76491499
         e.preventDefault();
-        await updateFlashcardContentsById(flashcardId, e.target.question.value, e.target.answer.value, bookId);
+        await updateFlashcardContentsById(flashcardId, e.currentTarget.question.value, e.currentTarget.answer.value, bookId);
         navigate(-1);
-    }
+    };
 
     return (
         <>
             <div className={"sr-annotation"}>
                 <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note} />
             </div>
-            <Form method="post" className={"sr-card-form"} replace onSubmit={(event) => submitButtonHandler(event)}>
+            <Form method="post" className={"sr-card-form"} replace onSubmit={submitButtonHandler}>
                 <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
                                     defaultValue={currentCard.questionText}/>
                 <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"}
