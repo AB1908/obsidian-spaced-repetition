@@ -5,7 +5,7 @@ import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
 import { Icon } from "src/routes/root";
 import { setIcon } from "obsidian";
-import { AnnotationLoaderParams } from "src/routes/annotation-with-outlet";
+import { type LoaderFunctionArgs } from "react-router";
 
 interface HighlightParams {
     bookId: string;
@@ -13,7 +13,7 @@ interface HighlightParams {
     annotationId: string;
 }
 
-export function highlightLoader({params}: {params: HighlightParams}) {
+export function highlightLoader({params}: LoaderFunctionArgs & {params: HighlightParams}) {
     // todo: use redirect
     if (USE_ACTUAL_BACKEND) {
         return getFlashcardsForAnnotation(params.annotationId, params.bookId);
@@ -29,7 +29,6 @@ function FlashcardPreview(props: {
 }) {
     const deleteButtonRef = useRef<HTMLDivElement>(null);
     const deleteIcon: Icon = "trash";
-    const params = useParams<keyof AnnotationLoaderParams>();
 
     useEffect(() => {
         // todo: figure out how to fix this

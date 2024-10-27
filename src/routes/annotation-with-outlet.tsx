@@ -9,12 +9,13 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { setIcon } from "obsidian";
 import { Icon } from "src/routes/root";
 import { paragraph } from "src/data/models/paragraphs";
+import { type LoaderFunctionArgs } from "react-router";
 
 export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
     annotationId: string;
 }
 
-export async function annotationLoader({ params }: {
+export async function annotationLoader({ params }: LoaderFunctionArgs & {
     params: AnnotationLoaderParams
 }) {
     // todo: use redirect

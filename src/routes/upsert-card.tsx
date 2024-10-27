@@ -2,13 +2,14 @@ import React from "react";
 import { DefaultCardForm } from "src/ui/components/card-creation";
 import { getFlashcardById } from "src/api";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { type LoaderFunctionArgs } from "react-router";
 
 export interface CardLoaderParams {
     bookId: string;
     flashcardId: string;
 }
 
-export function cardLoader({params}: {params: CardLoaderParams}) {
+export function cardLoader({params}: LoaderFunctionArgs & {params: CardLoaderParams}) {
     // we arrived here from an existing flashcard
     // todo: potentially split into different component and loader? this seems error prone
     if (params.flashcardId === undefined) {

@@ -2,12 +2,13 @@ import React from "react";
 import { Link, Outlet, useNavigate, useLoaderData } from "react-router-dom";
 import { DeckCounts } from "src/routes/notes-home-page";
 import { frontEndBook, getBookById, resetBookReviewState } from "src/api";
+import { type LoaderFunctionArgs } from "react-router";
 
 interface DeckLoaderParams {
     bookId: string;
 }
 
-export function deckLoader({params}: {params: DeckLoaderParams}) {
+export function deckLoader({params}: LoaderFunctionArgs & {params: DeckLoaderParams}) {
     // warn: performing side effect!
     resetBookReviewState(params.bookId);
     return getBookById(params.bookId);

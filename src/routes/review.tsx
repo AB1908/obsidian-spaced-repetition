@@ -14,6 +14,7 @@ import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
 import { TextInputWithLabel } from "src/ui/components/card-creation";
 import { CancelButton } from "src/ui/components/buttons";
 import { CardLoaderParams } from "src/routes/upsert-card";
+import { type LoaderFunctionArgs } from "react-router";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -38,7 +39,7 @@ interface ReviewLoaderParams {
 // So I need to fetch the first flashcard in the queue
 // And then redirect myself to that flashcard
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
-export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
+export async function reviewLoader({params}: LoaderFunctionArgs & {params: ReviewLoaderParams}) {
     if (USE_ACTUAL_BACKEND) {
         let flashcardId = null;
         if (params.flashcardId == null) {
