@@ -13,6 +13,7 @@ jest.mock("src/data/disk", () => {
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
         "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
         "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
+        "updateCardOnDisk_2025-12-25T10-00-02_ccccc.json",
         "deleteCardOnDisk.json",
         "writeCardToDisk.json",
     ]);
@@ -262,10 +263,18 @@ describe("updateFlashcardContentsById", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should update flashcard contents by id", () => {
-        expect(
-            updateFlashcardContentsById("tWxSv_No", "question", "answer", "t0000010")
-        ).toMatchInlineSnapshot(`Promise {}`);
+    test("should update flashcard contents by id", async () => {
+        const result = await updateFlashcardContentsById(
+            "t0000008", // Corrected flashcard ID
+            "new question",
+            "new answer",
+            "t0000010"
+        );
+        expect(result).toBe(true);
+
+        const updatedCard = getFlashcardById("t0000008", "t0000010");
+        expect(updatedCard.questionText).toBe("new question");
+        expect(updatedCard.answerText).toBe("new answer");
     });
 });
 // getAnnotationsForSection
