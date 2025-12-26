@@ -1,21 +1,6 @@
 import {plugin} from "src/main";
 import {FrontendFlashcard} from "src/routes/review";
-
-export enum ReviewResponse {
-    Easy,
-    Good,
-    Hard,
-    Reset,
-}
-
-// Flashcards
-export enum CardType {
-    SingleLineBasic,
-    SingleLineReversed,
-    MultiLineBasic,
-    MultiLineReversed,
-    Cloze,
-}
+import { ReviewResponse } from "./CardType";
 
 export function schedule(
     response: ReviewResponse,
@@ -24,6 +9,7 @@ export function schedule(
     delayBeforeReview: number,
 ): { ease: number; interval: number } {
     delayBeforeReview = Math.max(0, Math.floor(delayBeforeReview / (24 * 3600 * 1000)));
+    // todo: remove plugin reference
     const settingsObj = plugin.data.settings;
     if (isNaN(interval)) {
         throw Error("invalid interval");

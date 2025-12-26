@@ -1,4 +1,5 @@
-import { CardType, type ReviewResponse } from "src/scheduler/scheduling";
+import { type ReviewResponse } from "./scheduler/CardType";
+import { CardType } from "./scheduler/CardType";
 import {
     Flashcard,
     maturityCounts
