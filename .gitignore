@@ -18,4 +18,4 @@ build
 # coverage
 coverage
 .aider*
-D:/plugin-testing/Plugin Testing/.obsidian/plugins/obsidian-spaced-repetition/main.js
+.env
