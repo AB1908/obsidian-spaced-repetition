@@ -36,6 +36,7 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
     // todo: move this down into the index
     public fileTagsMap: Map<string, string[]>; // { "path": [array of tags] }
     public index: Index;
+    private isInitialized = false;
 
     async onload(): Promise<void> {
         await this.loadPluginData();
@@ -52,6 +53,12 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
         this.flashcardIndex = new FlashcardIndex();
         this.sourceNoteIndex = new SourceNoteIndex();
         this.app.workspace.onLayoutReady(async () => {
+            console.log("Layout ready, checking metadata...");
+
+            await this.onceMetadataLoaded();
+
+            console.log("Metadata is definitely ready now!");
+            this.isInitialized = true;
             this.fileTagsMap = fileTags();
             this.flashcardIndex = await this.flashcardIndex.initialize();
             this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
@@ -80,6 +87,28 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
     // eslint-disable-next-line @typescript-eslint/no-empty-function
     onunload(): void {
 
+    }
+
+    async onceMetadataLoaded() {
+        // 1. Wait for the layout to be ready first
+        await new Promise((resolve) => {
+            this.app.workspace.onLayoutReady(() => resolve(null));
+        });
+
+        // 2. Check if the cache is already initialized
+        // @ts-ignore - 'initialized' is an internal property but very stable
+        if (this.app.metadataCache.initialized) {
+            return;
+        }
+
+        // 3. If not initialized, wait for the 'resolved' event
+        return new Promise((resolve) => {
+            const eventRef = this.app.metadataCache.on('resolved', () => {
+                this.app.metadataCache.offref(eventRef); // Clean up the listener
+                resolve(null);
+            });
+            this.registerEvent(eventRef);
+        });
     }
 
     async loadPluginData(): Promise<void> {
