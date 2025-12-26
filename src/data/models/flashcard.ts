@@ -7,26 +7,11 @@ import { moment, Notice } from "obsidian";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
-import { getAnnotationFilePath } from "../disk";
+import { getAnnotationFilePath } from "src/data/disk";
 import { filePathsWithTag } from "src/data/disk";
-import { calculateDelayBeforeReview } from "./calculateDelayBeforeReview";
+import { calculateDelayBeforeReview } from "src/utils";
 
-export interface AbstractFlashcard {
-    id: string,
-    questionText: string,
-    answerText: string,
-    context: string,
-    cardType: number,
-    siblings: string[],
-    interval: number,
-    ease: number,
-    dueDate: string,
-    parentId: string,
-    // this is to update the card so that I can avoid nesting additional objects inside this one
-    parsedCardId: string,
-}
-
-export abstract class AbstractFlashcard implements AbstractFlashcard {
+export abstract class AbstractFlashcard {
     answerText: string;
     cardType: number;
     context: string;
@@ -59,7 +44,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
     isDue() {
         // eslint-disable-next-line @typescript-eslint/ban-ts-comment
         // @ts-ignore
-        return this.dueDate === null || this.dueDate <= moment().format("YYYY-MM-DD");
+        return this.dueDate === null || this.dueDate <= getCurrentDateIsoString();
     }
 }
 
@@ -157,11 +142,12 @@ export class FlashcardNote {
         this.parsedCards = [];
     }
 
-    async initialize() {
+    async initialize(flashcardIndex: FlashcardIndex) {
         this.parentPath = getAnnotationFilePath(this.path);
         this.parsedCards = await parseFileText(this.path);
         try {
             this.flashcards = generateFlashcardsArray(this.parsedCards);
+            this.flashcards.forEach(t => flashcardIndex.flashcards.set(t.id, t));
         } catch (e) {
             console.error(e);
             throw new Error(e);
@@ -172,17 +158,20 @@ export class FlashcardNote {
 
 export class FlashcardIndex {
     flashcardNotes: FlashcardNote[];
+    flashcards: Map<string, Flashcard>;
 
     constructor() {
         this.flashcardNotes = [];
+        this.flashcards = new Map<string, Flashcard>();
     }
 
     async initialize() {
+        // todo: remove hardcoding of tag
         const filePaths = filePathsWithTag("flashcards");
         const notesWithFlashcards = filePaths.map((t: string) => new FlashcardNote(t));
         for (const t of notesWithFlashcards) {
             try {
-                await t.initialize();
+                await t.initialize(this);
             } catch (e) {
                 // WARNING! this is dangerous, I am catching other errors and just assuming that these are this error
                 console.error(e);

@@ -9,12 +9,13 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { setIcon } from "obsidian";
 import { Icon } from "src/routes/root";
 import { paragraph } from "src/data/models/paragraphs";
+import { type LoaderFunctionArgs } from "react-router";
 
 export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
     annotationId: string;
 }
 
-export async function annotationLoader({ params }: {
+export async function annotationLoader({ params }: LoaderFunctionArgs & {
     params: AnnotationLoaderParams
 }) {
     // todo: use redirect
@@ -25,12 +26,12 @@ export async function annotationLoader({ params }: {
 }
 
 function getPreviousAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
-    let find = annotations.findIndex(t => t.id === blockId);
+    const find = annotations.findIndex(t => t.id === blockId);
     return annotations[find-1]?.id || null;
 }
 
 function getNextAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
-    let find = annotations.findIndex(t => t.id === blockId);
+    const find = annotations.findIndex(t => t.id === blockId);
     return annotations[find+1]?.id || null;
 }
 
@@ -94,7 +95,7 @@ function pathGenerator(path: string, params: any, annotationId: string) {
     const viewFlashcardsPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards";
     const inChildRoute = [updateFlashcardPath, newRegularFlashcardPath, newFlashcardPath, viewFlashcardsPath].some((routePath) => {
         return matchPath(routePath, path);
-    })
+    });
     if (inChildRoute) {
         return generatePath(viewFlashcardsPath, {...params, annotationId});
     } else {

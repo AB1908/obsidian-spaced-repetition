@@ -31,10 +31,6 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
     public data: PluginData;
     // todo: fix type
     public bookNotesPaths: string[];
-    public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
-    public sourceNoteIndex: SourceNoteIndex;
-    // todo: move this down into the index
-    public fileTagsMap: Map<string, string[]>; // { "path": [array of tags] }
     public index: Index;
     private isInitialized = false;
 
@@ -50,8 +46,6 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
         // });
 
         this.index = new Index();
-        this.flashcardIndex = new FlashcardIndex();
-        this.sourceNoteIndex = new SourceNoteIndex();
         this.app.workspace.onLayoutReady(async () => {
             console.log("Layout ready, checking metadata...");
 

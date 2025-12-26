@@ -1,18 +1,14 @@
-import { bookSections, findNextHeader, findPreviousHeaderForHeading } from "src/data/models/sourceNote";
-import { beforeEach } from "@jest/globals";
-import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
-import type { SectionCache } from "obsidian";
 import type { Flashcard } from "src/data/models/flashcard";
-import { getFileContents } from "src/data/disk";
 import { extractParagraphs } from "src/data/models/paragraphs";
+import { nanoid } from "nanoid";
+import { mocked } from "jest-mock";
 
-
-jest.mock("../src/main", () => {});
+jest.mock("../src/main");
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/data/disk", () => {
     return {
-        getMetadataForFile: (path: string) => {
+        getMetadataForFile: (_path: string) => {
             return {
                 "headings": [
                     {
@@ -113,9 +109,9 @@ jest.mock("../src/data/disk", () => {
                         "id": "hjhjhlkap"
                     }
                 }
-            }
+            };
         },
-        getFileContents: (path: string) => {
+        getFileContents: (_path: string) => {
             return `# Chapter 3: Pulling the rabbit out of the hat
 
 ## Relating study and test
@@ -123,57 +119,38 @@ jest.mock("../src/data/disk", () => {
 What is episodic memory?
 NO one knows ^hjhjhlkap`;
         }
-    }
+    };
 });
 
-test("getParagraphFromFile", async () => {
-    const flashcards = [
-        {
-            "annotationId": "93813",
-            "answerText": "This is an answer",
-            "cardType": 2,
-            "context": null,
-            "dueDate": null,
-            "ease": null,
-            "flag": null,
-            "id": "b4cYyMuF",
-            "interval": null,
-            "parsedCardId": "aaaaaaaa",
-            "questionText": "This is a question",
-            "siblings": []
-        }
-    ];
-    expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
-    flashcards[0].annotationId = "hjhjhlkap";
-    expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
-});
+const mockedNanoid = mocked(nanoid, true);
 
-// const t = [
-//   {
-//     "children": [],
-//     "counts": {
-//       "with": 0,
-//       "without": 0,
-//     },
-//     "id": "0",
-//     "level": 1,
-//     "name": "Chapter 3: Pulling the rabbit out of the hat",
-//   },
-//   {
-//     "children": [],
-//     "counts": {
-//       "with": 0,
-//       "without": 0,
-//     },
-//     "id": "1",
-//     "level": 2,
-//     "name": "Relating study and test",
-//   },
-//   {
-//     "hasFlashcards": false,
-//     "id": "hjhjhlkap",
-//     "text": `What is episodic memory?
-// NO one knows ^hjhjhlkap`,
-//     "wasIdPresent": true,
-//   },
-// ];
+describe("extractParagraphs", () => {
+    beforeEach(async () => {
+        let value = 0;
+        mockedNanoid.mockImplementation((_size?: number) => (value++).toString());
+    });
+    test("should extract an array of headers from text", async () => {
+        const flashcards = [
+            {
+                "annotationId": "93813",
+                "answerText": "This is an answer",
+                "cardType": 2,
+                "context": null,
+                "dueDate": null,
+                "ease": null,
+                "flag": null,
+                "id": "b4cYyMuF",
+                "interval": null,
+                "parsedCardId": "aaaaaaaa",
+                "questionText": "This is a question",
+                "siblings": []
+            }
+        ];
+        expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
+        flashcards[0].annotationId = "hjhjhlkap";
+        expect(await extractParagraphs("", flashcards as unknown as Flashcard[])).toMatchSnapshot();
+    });
+    afterEach(() => {
+        jest.restoreAllMocks();
+    });
+});

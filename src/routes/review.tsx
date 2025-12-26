@@ -1,4 +1,4 @@
-import React, {useEffect, useRef, useState} from "react";
+import React, { FormEventHandler, useEffect, useRef, useState } from "react";
 import { Form, redirect, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import {
     deleteFlashcard, getAnnotationById,
@@ -13,6 +13,8 @@ import { Icon } from "src/routes/root";
 import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
 import { TextInputWithLabel } from "src/ui/components/card-creation";
 import { CancelButton } from "src/ui/components/buttons";
+import { CardLoaderParams } from "src/routes/upsert-card";
+import { type LoaderFunctionArgs } from "react-router";
 
 export const USE_ACTUAL_BACKEND = true;
 
@@ -37,7 +39,7 @@ interface ReviewLoaderParams {
 // So I need to fetch the first flashcard in the queue
 // And then redirect myself to that flashcard
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
-export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
+export async function reviewLoader({params}: LoaderFunctionArgs & {params: ReviewLoaderParams}) {
     if (USE_ACTUAL_BACKEND) {
         let flashcardId = null;
         if (params.flashcardId == null) {
@@ -50,7 +52,7 @@ export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
         } else {
             flashcardId = params.flashcardId;
         }
-        return getFlashcardById(flashcardId, params.bookId);
+        return getFlashcardById(flashcardId);
     } else {
         if (params.flashcardId == null) {
             const response = await fetch(`http://localhost:3000/review/${params.bookId}`);
@@ -119,9 +121,10 @@ export function ReviewDeck() {
         navigateToNextCard();
     }
 
-    function previousButtonHandler() {
-
-    }
+    // todo: might need this?
+    // function previousButtonHandler() {
+    //
+    // }
 
     return (<>
         <div className={"buttons"}>
@@ -141,24 +144,33 @@ export function ReviewDeck() {
     </>);
 }
 
+// typing idea stolen from https://stackoverflow.com/a/68253165
+export interface EditCardFormElements extends HTMLFormElement {
+    question: HTMLInputElement;
+    answer: HTMLInputElement;
+}
+
 export function EditCard() {
     const currentCard = useLoaderData() as FrontendFlashcard;
-    const params = useParams();
-    const annotation = getAnnotationById(currentCard.parentId, params.bookId)
+    // todo: think about removing unknown cast
+    // remember edit is literally not reachable without the two params
+    // so should never throw error
+    const {bookId, flashcardId} = useParams<keyof CardLoaderParams>() as CardLoaderParams;
+    const annotation = getAnnotationById(currentCard.parentId, bookId);
     const navigate = useNavigate();
-
-    async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
+    const submitButtonHandler: FormEventHandler<EditCardFormElements> = async (e) => {
+        // Arrow function idea copied from https://stackoverflow.com/a/76491499
         e.preventDefault();
-        await updateFlashcardContentsById(params.flashcardId, e.target.question.value, e.target.answer.value, params.bookId);
+        await updateFlashcardContentsById(flashcardId, e.currentTarget.question.value, e.currentTarget.answer.value, bookId);
         navigate(-1);
-    }
+    };
 
     return (
         <>
             <div className={"sr-annotation"}>
                 <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note} />
             </div>
-            <Form method="post" className={"sr-card-form"} replace onSubmit={(event) => submitButtonHandler(event)}>
+            <Form method="post" className={"sr-card-form"} replace onSubmit={submitButtonHandler}>
                 <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
                                     defaultValue={currentCard.questionText}/>
                 <TextInputWithLabel className={"sr-answer-input"} htmlFor={"answer"}
@@ -173,5 +185,5 @@ export function EditCard() {
 }
 
 export async function editCardAction() {
-    return null
+    return null;
 }

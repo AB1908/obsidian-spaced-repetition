@@ -18,6 +18,7 @@ export function consoleEnd(obj: any) {
 
 const STRIP_COMMENTS = /((\/\/.*$)|(\/\*[\s\S]*?\*\/))/mg;
 const ARGUMENT_NAMES = /([^\s,]+)/g;
+// eslint-disable-next-line @typescript-eslint/ban-types
 export function getParamNames(func: Function) {
     const fnStr = func.toString().replace(STRIP_COMMENTS, "");
     let result = fnStr.slice(fnStr.indexOf("(") + 1, fnStr.indexOf(")")).match(ARGUMENT_NAMES);
@@ -29,18 +30,27 @@ export function getParamNames(func: Function) {
 export function logArgs(inputArgs: IArguments, outputArgs: any) {
     const paramNames = getParamNames(inputArgs.callee);
     const input = {};
+    const rand = nanoid(5);
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
     paramNames.forEach((elem, index) => input[elem] = inputArgs[index]);
     const funcName = inputArgs.callee.name;
-    const timeString = moment().format();
-    const rand = nanoid(5);
-    const inputFileName = `${funcName}-input-${rand}`;
     const outputFileName = `${funcName}-output-${rand}`;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    input["fileName"] = outputFileName;
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    const timeString = moment().format();
+    const inputFileName = `${funcName}-input-${rand}`;
     writeToDirectory(inputFileName, JSON.stringify(removeCircular(input)));
     writeToDirectory(outputFileName, JSON.stringify(removeCircular(outputArgs)));
     console.group(funcName);
     console.group("inputs");
     for (const key of Object.keys(input)) {
         console.group(key);
+        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+        // @ts-ignore
         console.log(input[key]);
         console.groupEnd();
     }

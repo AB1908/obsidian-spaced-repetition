@@ -6,8 +6,8 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { Root } from "src/routes/root";
 import { children } from "src/routes/routes";
 import ErrorPage from "src/routes/errorPage";
-import { SourceNoteIndex} from "src/data/models/sourceNote";
 import { FlashcardIndex } from "src/data/models/flashcard";
+import { SourceNoteIndex } from "src/data/models/sourceNoteIndex";
 
 /*
 books by title or id?
@@ -50,9 +50,7 @@ export class FlashcardModal extends Modal {
     async onOpen(): Promise<void> {
         // todo: refactor to move business logic out of modal creation
         // todo: refactor tag into a plugin setting
-        this.plugin.flashcardIndex = await new FlashcardIndex().initialize();
-        this.plugin.sourceNoteIndex = await new SourceNoteIndex().initialize(this.plugin);
-        // this.plugin.notesWithFlashcards = await init();
+        await this.plugin.index.initialize(this.plugin);
         this.modalElReactRoot = createRoot(this.modalEl);
         this.modalElReactRoot.render(
             <>
@@ -66,8 +64,4 @@ export class FlashcardModal extends Modal {
     onClose(): void {
         this.modalElReactRoot.unmount();
     }
-}
-
-// todo: move elsewhere?
-export async function init() {
 }

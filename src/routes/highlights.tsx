@@ -2,13 +2,16 @@ import React from "react";
 import { Link, useLoaderData, useLocation } from "react-router-dom";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationsForSection } from "src/api";
+import { type LoaderFunctionArgs } from "react-router";
 
 export interface AnnotationsLoaderParams {
     bookId: string;
     sectionId: string;
 }
 
-export function annotationsLoader({params}: {params: AnnotationsLoaderParams}) {
+// https://github.com/remix-run/react-router/discussions/11244#discussioncomment-8347707
+// inspiration for LoaderFunctionArgs typing fix
+export function annotationsLoader({params}: LoaderFunctionArgs & {params: AnnotationsLoaderParams}) {
     if (USE_ACTUAL_BACKEND)
         return getAnnotationsForSection(params.sectionId, params.bookId);
     else

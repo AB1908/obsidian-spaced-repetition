@@ -1,13 +1,27 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
+<<<<<<< HEAD
     createFlashcardsFileForBook, deleteCardOnDisk, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
     getParentOrFilename, updateCardOnDisk
+=======
+    createFlashcardsFileForBook,
+    deleteCardOnDisk,
+    getBasename,
+    getFileContents,
+    getFileFromLinkText,
+    getMetadataForFile,
+    getParentName,
+    getParentOrFilename,
+    getParentPath,
+    updateCardOnDisk
+>>>>>>> ff7797c6e8075d18b66ee8181c075d944a8e23ed
 } from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
+<<<<<<< HEAD
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/CardType";
 import { paragraph } from "src/data/models/paragraphs";
@@ -16,6 +30,21 @@ import { CardType } from "src/scheduler/CardType";
 import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
 import { SourceNoteDependencies } from "src/data/models/dependencies";
+=======
+import { createParsedCard } from "src/data/models/parsedCard";
+import {
+    cardTextGenerator,
+    generateCardAsStorageFormat,
+    metadataTextGenerator,
+    SchedulingMetadata
+} from "src/data/utils/TextGenerator";
+import { CardType, ReviewResponse } from "src/scheduler/scheduling";
+import type SRPlugin from "src/main";
+import { plugin } from "src/main";
+import { paragraph } from "src/data/models/paragraphs";
+import { addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph } from "src/api";
+import { parseMetadata } from "src/data/parser";
+>>>>>>> ff7797c6e8075d18b66ee8181c075d944a8e23ed
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -56,7 +85,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
         if (cacheItem.type === "callout") {
             const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
             // todo: I think I've fucked up the ordering for assignment with spread
-            let item = { hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation };
+            const item = { hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation };
             output.push(item);
             plugin.index.addToAnnotationIndex(item);
         } else if (cacheItem.type === "heading") {
@@ -74,13 +103,13 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
                     id: cacheItem.id || nanoid(8),
                     text: fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, ""),
                     wasIdPresent: cacheItem.id ? true : false,
-                }
-            let item = {
+                };
+            const item = {
                 ...paragraph,
                 hasFlashcards: blocksWithFlashcards.has(paragraph.id), ...paragraph,
             };
             plugin.index.addToAnnotationIndex(item);
-            output.push(item)
+            output.push(item);
             // TODO: Any edge cases?
         }
     }
@@ -214,6 +243,24 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
     return out;
 }
 
+<<<<<<< HEAD
+=======
+// done: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
+// move to some other file instead
+// done: how can the return type for this be undefined? WTF??
+// todo: figure out how to make backcompat
+// problem here is that not every existing file will have annotationFromYaml
+// so need to be able to gracefully move users over somehow
+export function getAnnotationFilePath(path: string) {
+    const metadata = getMetadataForFile(path);
+    const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
+    if (!annotationFromYaml)
+        throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
+    const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
+    return getFileFromLinkText(annotationLinkText, path);
+}
+
+>>>>>>> ff7797c6e8075d18b66ee8181c075d944a8e23ed
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
 export interface frontbook {
@@ -230,7 +277,7 @@ export class SourceNote implements frontbook {
     id: string;
     name: string;
     reviewIndex: number;
-    tags: string[];
+    tags: string[] | undefined;
     // even though this is a subset of this.flashcards, we need this as we are maintaining this as
     // state internally and not passing it to the frontend
     // this is because it is easier to test here and also makes front end simpler in terms of
@@ -253,7 +300,6 @@ export class SourceNote implements frontbook {
         this.reviewIndex = -1;
         this.reviewDeck = [];
         this.plugin = plugin;
-        this.flashcardNote = null;
         this.tags = [];
     }
 
@@ -271,9 +317,9 @@ export class SourceNote implements frontbook {
     async initialize() {
         // done: fix unnecessary annotation path extraction
         // const annotationTFile = getTFileForPath(this.path);
-        this.flashcardNote = this.plugin.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
+        this.flashcardNote = this.plugin.index.flashcardIndex.flashcardNotes.filter(t=>t.parentPath === this.path)[0];
         if (this.flashcardNote === null) {
-            // throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
+            throw new Error(`initialize: corresponding flashcard note for ${this.path} could not be found`);
         }
         this.bookSections = bookSections(
             getMetadataForFile(this.path),
@@ -284,11 +330,10 @@ export class SourceNote implements frontbook {
 
         this.name = getParentOrFilename(this.path);
 
-        if (this.plugin.fileTagsMap.has(this.path)) {
-            // @ts-ignore
-            this.tags = this.plugin.fileTagsMap.get(this.path);
+        if (this.plugin.index.fileTagsMap.has(this.path)) {
+            this.tags = this.plugin.index.fileTagsMap.get(this.path);
         } else {
-            throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`)
+            throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`);
         }
 
         // done: join on parsed flashcards
@@ -394,9 +439,19 @@ export class SourceNote implements frontbook {
             await updateCardOnDisk(this.path, block.text, text);
         }
         const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.flashcardNote.path, annotationId);
-        this.flashcardNote.parsedCards.push(parsedCard);
+        this.addParsedCardToIndex(parsedCard);
         const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
-        this.flashcardNote.flashcards.push(card);
+        this.addFlashcardToIndex(card);
+        return card.id;
+    }
+
+    addParsedCardToIndex(parsedCard: ParsedCard) {
+        this.flashcardNote.parsedCards.push(parsedCard);
+    }
+
+    addFlashcardToIndex(flashcard: Flashcard) {
+        this.flashcardNote.flashcards.push(flashcard);
+        this.plugin.index.flashcardIndex.flashcards.set(flashcard.id, flashcard);
     }
 
     async deleteFlashcard(id: string) {
@@ -413,6 +468,39 @@ export class SourceNote implements frontbook {
     resetReview() {
         this.generateReviewDeck();
         this.reviewIndex = -1;
+    }
+
+    // this method is here because once flashcard is replaced
+    // the flashcard index needs ot be updated
+    // the flashcard note's flashcard list also needs to be updated
+    async updateFlashcardContents(flashcardId: string, question: string, answer: string, cardType: CardType.MultiLineBasic) {
+        const flashcardCopy = this.flashcardNote.flashcards.filter(t=>t.id === flashcardId)[0];
+        const newParsedCard = await this.updateParsedCardCardText(flashcardCopy.parsedCardId, question, answer, cardType);
+        // todo: replace once we've got a map going here
+        this.flashcardNote.parsedCards.forEach((value, index) => {
+            if (value.id === newParsedCard.id) {
+                this.flashcardNote.parsedCards[index] = newParsedCard;
+            }
+        });
+        // todo: move into class? feels like weird exposed implementation detail
+        this.flashcardNote.flashcards.forEach((t, i) => {
+            if (t.id === flashcardId) {
+                flashcardCopy.questionText = question;
+                flashcardCopy.answerText = answer;
+                this.flashcardNote.flashcards[i] = flashcardCopy;
+            }
+        });
+        return flashcardCopy;
+    }
+
+    private async updateParsedCardCardText(parsedCardId: string, question: string, answer: string, cardType: CardType.MultiLineBasic) {
+        const parsedCardCopy = this.flashcardNote.parsedCards.filter(t => t.id === parsedCardId)[0];
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        return parsedCardCopy;
     }
 
     private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
@@ -454,14 +542,15 @@ export class SourceNote implements frontbook {
     }
 
     async createFlashcardNote() {
-        const {filename, path} = generateFlashcardsFileNameAndPath(this.path);
+        const {path} = generateFlashcardsFileNameAndPath(this.path);
         await createFlashcardsFileForBook(this.path, path);
-        this.flashcardNote = await new FlashcardNote(path);
+        this.flashcardNote = new FlashcardNote(path);
         // WARN: this seems hacky, should I create another method?
         this.flashcardNote.parentPath = this.path;
     }
 }
 
+<<<<<<< HEAD
 export class SourceNoteIndex {
     sourceNotes: SourceNote[]
 
@@ -517,5 +606,22 @@ export class SourceNoteIndex {
     getSourcesWithoutFlashcards(): SourceNote[] {
         return this.sourceNotes.filter(t => !t.flashcardNote);
     }
+=======
+export function generateFlashcardsFileNameAndPath(bookPath: string) {
+    let filename, parentPath;
+    // example of path at root level:
+    // "Folder 1/File.md": parent is "Folder 1"
+    // "Test.md": parent is "/"
+    // I need to generate "/Test - Flashcards.md" or "Folder 1/Flashcards.md"
+    if (getParentName(bookPath)) { // tfile has its own folder, reuse the folder
+        filename = "Flashcards.md";
+        parentPath = `${(getParentPath(bookPath))}`;
+    } else { // the tfile is at the root level, use original filename
+        filename = `${(getBasename(bookPath))} - Flashcards.md`;
+        parentPath = "";
+    }
+    const path = `${parentPath}/${filename}`;
+    return {filename, path};
+>>>>>>> ff7797c6e8075d18b66ee8181c075d944a8e23ed
 }
 

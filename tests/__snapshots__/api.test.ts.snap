@@ -1,0 +1,570 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getSectionTreeForBook generates correct JSON for book tree 1`] = `
+{
+  "children": [
+    {
+      "children": [],
+      "counts": {
+        "with": 2,
+        "without": 7,
+      },
+      "id": "93",
+      "level": 1,
+      "name": "Chapter 1: You are your memory",
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "counts": {
+            "with": 1,
+            "without": 1,
+          },
+          "id": "95",
+          "level": 2,
+          "name": "The logic of memory: encoding, storage, and retrieval",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 7,
+            "without": 23,
+          },
+          "id": "96",
+          "level": 2,
+          "name": "Different kinds of memory: the functional structure of remembering",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 7,
+          },
+          "id": "97",
+          "level": 2,
+          "name": "Semantic, episodic, and procedural memory",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 2,
+          },
+          "id": "98",
+          "level": 2,
+          "name": "Explicit and implicit memory",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 4,
+          },
+          "id": "99",
+          "level": 2,
+          "name": "Different kinds of memory task:",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 2,
+          },
+          "id": "100",
+          "level": 2,
+          "name": "The experience of memory",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 2,
+          },
+          "id": "101",
+          "level": 2,
+          "name": "Levels of processing",
+        },
+      ],
+      "counts": {
+        "with": 9,
+        "without": 41,
+      },
+      "id": "94",
+      "level": 1,
+      "name": "Chapter 2: Mapping memories",
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "counts": {
+            "with": 1,
+            "without": 0,
+          },
+          "id": "103",
+          "level": 2,
+          "name": "Inferring memory from behaviour",
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 2,
+              },
+              "id": "105",
+              "level": 3,
+              "name": "Context retrieval",
+            },
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 2,
+              },
+              "id": "106",
+              "level": 3,
+              "name": "Familiarity",
+            },
+          ],
+          "counts": {
+            "with": 3,
+            "without": 6,
+          },
+          "id": "104",
+          "level": 2,
+          "name": "Retrieval: recall versus recognition",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 4,
+          },
+          "id": "107",
+          "level": 2,
+          "name": "The effect of context on recall and recognition",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 1,
+          },
+          "id": "108",
+          "level": 2,
+          "name": "Unconscious influences on memory",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 6,
+          },
+          "id": "109",
+          "level": 2,
+          "name": "Categories versus continuum?",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 1,
+            "without": 1,
+          },
+          "id": "110",
+          "level": 2,
+          "name": "Relating study and test",
+        },
+      ],
+      "counts": {
+        "with": 6,
+        "without": 19,
+      },
+      "id": "102",
+      "level": 1,
+      "name": "Chapter 3: Pulling the rabbit out of the hat",
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "counts": {
+            "with": 3,
+            "without": 3,
+          },
+          "id": "112",
+          "level": 2,
+          "name": "Forgetting",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 1,
+            "without": 4,
+          },
+          "id": "113",
+          "level": 2,
+          "name": "Flashbulb memories and the reminiscence bump",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 4,
+          },
+          "id": "114",
+          "level": 2,
+          "name": "Organization and errors in memory",
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 15,
+              },
+              "id": "116",
+              "level": 3,
+              "name": "Schemas – what we already know:",
+            },
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 2,
+              },
+              "id": "117",
+              "level": 3,
+              "name": "How does knowledge promote remembering?",
+            },
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 4,
+              },
+              "id": "118",
+              "level": 3,
+              "name": "How can knowledge lead to errors?",
+            },
+          ],
+          "counts": {
+            "with": 0,
+            "without": 21,
+          },
+          "id": "115",
+          "level": 2,
+          "name": "The effects of previous knowledge",
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 5,
+              },
+              "id": "120",
+              "level": 3,
+              "name": "Reality monitoring",
+            },
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 4,
+              },
+              "id": "121",
+              "level": 3,
+              "name": "Eyewitness testimony",
+            },
+          ],
+          "counts": {
+            "with": 0,
+            "without": 10,
+          },
+          "id": "119",
+          "level": 2,
+          "name": "Real versus imagined memories",
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 8,
+              },
+              "id": "123",
+              "level": 3,
+              "name": "False memories:",
+            },
+          ],
+          "counts": {
+            "with": 0,
+            "without": 11,
+          },
+          "id": "122",
+          "level": 2,
+          "name": "The misinformation effect",
+        },
+      ],
+      "counts": {
+        "with": 4,
+        "without": 58,
+      },
+      "id": "111",
+      "level": 1,
+      "name": "Chapter 4: Inaccuracies in memory",
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 2,
+          },
+          "id": "125",
+          "level": 2,
+          "name": "Memory and the brain",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 10,
+          },
+          "id": "126",
+          "level": 2,
+          "name": "Loss of memory after brain injury – the ‘amnesic syndrome’",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 5,
+          },
+          "id": "127",
+          "level": 2,
+          "name": "Testing amnesia",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 1,
+          },
+          "id": "128",
+          "level": 2,
+          "name": "Psychogenic amnesia",
+        },
+      ],
+      "counts": {
+        "with": 0,
+        "without": 18,
+      },
+      "id": "124",
+      "level": 1,
+      "name": "Chapter 5: Memory impairment",
+    },
+    {
+      "children": [
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 1,
+          },
+          "id": "131",
+          "level": 2,
+          "name": "Memory development",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 9,
+          },
+          "id": "132",
+          "level": 2,
+          "name": "Memory and ageing",
+        },
+      ],
+      "counts": {
+        "with": 0,
+        "without": 11,
+      },
+      "id": "129",
+      "level": 1,
+      "name": "Chapter 6: The seven ages of man",
+    },
+    {
+      "children": [
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 1,
+              },
+              "id": "135",
+              "level": 3,
+              "name": "The ‘hardware’",
+            },
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 0,
+              },
+              "id": "136",
+              "level": 3,
+              "name": "The ‘software",
+            },
+          ],
+          "counts": {
+            "with": 0,
+            "without": 1,
+          },
+          "id": "134",
+          "level": 2,
+          "name": "Can you improve your memory?",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 0,
+          },
+          "id": "137",
+          "level": 2,
+          "name": "Rehearsal",
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 0,
+              },
+              "id": "139",
+              "level": 3,
+              "name": "The benefits of spaced study",
+            },
+          ],
+          "counts": {
+            "with": 0,
+            "without": 0,
+          },
+          "id": "138",
+          "level": 2,
+          "name": "Expanding retrieval practice",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 0,
+          },
+          "id": "140",
+          "level": 2,
+          "name": "Meaning and memory",
+        },
+        {
+          "children": [
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 3,
+              },
+              "id": "142",
+              "level": 3,
+              "name": "Mnemonics",
+            },
+            {
+              "children": [],
+              "counts": {
+                "with": 0,
+                "without": 2,
+              },
+              "id": "143",
+              "level": 3,
+              "name": "Verbal mnemonics",
+            },
+          ],
+          "counts": {
+            "with": 0,
+            "without": 5,
+          },
+          "id": "141",
+          "level": 2,
+          "name": "External aids",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 1,
+          },
+          "id": "144",
+          "level": 2,
+          "name": "Remembering names",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 0,
+          },
+          "id": "145",
+          "level": 2,
+          "name": "Reflecting on our own learning",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 1,
+          },
+          "id": "146",
+          "level": 2,
+          "name": "The man with a perfect memory",
+        },
+        {
+          "children": [],
+          "counts": {
+            "with": 0,
+            "without": 0,
+          },
+          "id": "147",
+          "level": 2,
+          "name": "Final thoughts",
+        },
+      ],
+      "counts": {
+        "with": 0,
+        "without": 8,
+      },
+      "id": "133",
+      "level": 1,
+      "name": "Chapter 7: Improving memory",
+    },
+  ],
+  "counts": {
+    "flashcards": {
+      "learning": 14,
+      "mature": 21,
+      "new": 0,
+    },
+  },
+  "id": "83",
+  "name": "Memory - A Very Short Introduction",
+}
+`;

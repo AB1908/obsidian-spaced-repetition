@@ -5,8 +5,7 @@ import {getFileContents} from "src/data/disk";
 // TODO: parameterize separators??
 const CARDTEXT_REGEX = /(?<cardText>.*\n\?\n.*)\n(?<metadataText><!--SR:.*-->)/g;
 
-export async function parseFileText(path: string) {
-    const fileText = await getFileContents(path);
+export function extractParsedCards(fileText: string, path: string) {
     const cardMatchesArray = fileText.matchAll(CARDTEXT_REGEX);
     const parsedCardsArray: ParsedCard[] = [];
     for (const card of cardMatchesArray) {
@@ -14,6 +13,11 @@ export async function parseFileText(path: string) {
         parsedCardsArray.push(createParsedCardFromText(card.groups.cardText, CardType.MultiLineBasic, path, card.groups.metadataText));
     }
     return parsedCardsArray;
+}
+
+export async function parseFileText(path: string) {
+    const fileText = await getFileContents(path);
+    return extractParsedCards(fileText, path);
 }
 
 export function parseCardText(text: string): [string, string] {

@@ -1,4 +1,4 @@
-import { TagCache, TFile } from "obsidian";
+import { moment, TagCache, TFile } from "obsidian";
 import { ANNOTATIONS_YAML_KEY } from "src/data/models/sourceNote";
 
 export async function writeCardToDisk(path: string, text: string) {
@@ -55,16 +55,18 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
     return filePaths;
 }
 
+// todo: refactor to move business logic into higher layer
+// todo: replace metadataCache usage with clean abstraction to reduce mocking problems
 export function fileTags() {
-    let fileMap = new Map<string,string>();
-    let fileCache = structuredClone(app.metadataCache.fileCache);
-    let metadataCache = structuredClone(app.metadataCache.metadataCache);
-    for (let key of Object.keys(fileCache)) {
+    const fileMap = new Map<string,string>();
+    const fileCache = structuredClone(app.metadataCache.fileCache);
+    const metadataCache = structuredClone(app.metadataCache.metadataCache);
+    for (const key of Object.keys(fileCache)) {
         fileMap.set(fileCache[key].hash, key);
     }
     const tagMap = new Map<string, string[]>();
-    const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag)};
-    for (let [hash, path] of fileMap) {
+    const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag);};
+    for (const [hash, path] of fileMap) {
         const frontmatterTags = metadataCache[hash]?.frontmatter?.tags;
         const tagsArray = frontmatterTags || [];
         const fileTags = metadataCache[hash]?.tags;
@@ -79,7 +81,7 @@ export function fileTags() {
     return tagMap;
 }
 
-export function filePathsWithTag(tag: string) {
+export function filePathsWithTag(tag: string): string[] {
     const hashSet = setOfHashesWithTags(tag);
     return findFilesWithHashInSet(hashSet);
 }
@@ -90,7 +92,7 @@ export async function getFileContents(path: string) {
 
 export function getParentOrFilename(path: string) {
     // TODO: What if root folder?
-    let tFileForPath = getTFileForPath(path);
+    const tFileForPath = getTFileForPath(path);
     // files at root folder level return "" for parent name
     return tFileForPath.parent?.name || tFileForPath.basename;
 }
@@ -103,21 +105,11 @@ export function getMetadataForFile(path: string) {
     return app.metadataCache.getFileCache(tfile);
 }
 
-export function getFolderNameFromPath(path: string) {
-    const tfile = app.vault.getAbstractFileByPath(path);
-    if (tfile instanceof TFile) {
-        return tfile.parent.name;
-    } else {
-        throw new Error(`getFolderNameFromPath: Folder not found for path ${path}`);
-    }
-}
-
 // takes a book path, finds parent if any and creates flashcard file
 // todo: refactor to move business logic up one layer
 export async function createFlashcardsFileForBook(bookPath: string, path: string) {
-    let sourceNotePath;
     // use sourcenote path
-    sourceNotePath = `${bookPath.replace(".md", "")}`;
+    const sourceNotePath = `${bookPath.replace(".md", "")}`;
     const fileContents = `---
 ${ANNOTATIONS_YAML_KEY}: "[[${sourceNotePath}]]"
 tags:
@@ -128,15 +120,12 @@ tags:
     await app.vault.create(path, fileContents);
 }
 
-export function getParentFolderPathAndName(filePath: string) {
-    const tfile = app.vault.getAbstractFileByPath(filePath);
-    if (tfile instanceof TFile) {
-        return {
-            name: tfile.parent.name,
-            path: tfile.parent.path
-        };
+export function getFileFromLinkText(annotationLinkText: string, path: string) {
+    const destinationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
+    if (destinationTFile instanceof TFile) {
+        return destinationTFile.path;
     } else {
-        throw new Error(`getFolderNameFromPath: Folder not found for path ${filePath}`);
+        throw new Error(`${path} does not have a valid parent in metadata`);
     }
 }
 // done: this isn't necessarily an abstraction over Obsidian APIs and contains business logic

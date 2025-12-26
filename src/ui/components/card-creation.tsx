@@ -62,7 +62,8 @@ HelpPopup.displayName = 'HelpPopup';
 export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAnswerValue: string }) {
     // todo: add some sort of header signifying the type of card being added
     const currentCard = useLoaderData() as FrontendFlashcard;
-    const params = useParams();
+    // https://stackoverflow.com/a/71146532 for guidance on useParams typing
+    const params = useParams<keyof FlashcardParams>() as FlashcardParams;
     const navigate = useNavigate();
     const helpButton = useRef<HTMLDivElement>(null);
     const popupRef = useRef<HTMLDivElement>(null); // Ref for the popup
@@ -107,10 +108,10 @@ export function DefaultCardForm(props: { defaultQuestionValue: string, defaultAn
             await updateFlashcardContentsById(params.flashcardId, e.target.question.value, e.target.answer.value, params.bookId);
             navigate("./..", { replace: true });
         } else {
-            await createFlashcardForAnnotation(e.target.question.value, e.target.answer.value, params.annotationId, params.bookId);
+            await createFlashcardForAnnotation(e.currentTarget.question.value, e.currentTarget.answer.value, params.annotationId, params.bookId);
             navigate(-2);
         }
-    }
+    };
 
     return <Form method="post" className={"sr-card-form"} replace onSubmit={(event) => submitButtonHandler(event)}>
         <div className="sr-question-input-wrapper">

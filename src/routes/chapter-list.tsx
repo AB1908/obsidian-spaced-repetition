@@ -1,5 +1,5 @@
 import React from "react";
-import { useLoaderData } from "react-router";
+import { type LoaderFunctionArgs, useLoaderData } from "react-router";
 import type { Heading, book } from "src/data/models/sourceNote";
 import { Tree } from "src/ui/components/tree";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
@@ -12,7 +12,7 @@ export interface ChapterLoaderParams {
 
 // DONE: more realistic data
 // DONE: think of a better data structure for this, this is terrible
-export function chapterLoader({ params }: { params: ChapterLoaderParams }) {
+export function chapterLoader({ params }: LoaderFunctionArgs & { params: ChapterLoaderParams }) {
     if (USE_ACTUAL_BACKEND) {
         return getSectionTreeForBook(params.bookId);
     } else {
