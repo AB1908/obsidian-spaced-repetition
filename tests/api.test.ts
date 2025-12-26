@@ -402,8 +402,13 @@ describe("createFlashcardNoteForSourceNote", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should create flashcard note for source note", () => {
-        expect(createFlashcardNoteForSourceNote("t0000010")).toMatchInlineSnapshot(`Promise {}`);
+
+    test("should throw an error if a flashcard note already exists", async () => {
+        const bookId = "t0000010";
+        // This should fail because the setup in newFunction() already creates this note
+        await expect(createFlashcardNoteForSourceNote(bookId)).rejects.toThrow(
+            "addFlashcardNoteToIndex: Untitled - Flashcards.md is already in the index"
+        );
     });
 });
 
