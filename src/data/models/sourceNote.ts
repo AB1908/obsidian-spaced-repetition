@@ -9,13 +9,10 @@ import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
-import type { ReviewResponse } from "src/scheduler/scheduling";
-import { TFile } from "obsidian";
-import type SRPlugin from "src/main";
+import type { ReviewResponse } from "src/scheduler/CardType";
 import { paragraph } from "src/data/models/paragraphs";
 import {addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph} from "src/api";
-import { plugin } from "src/main";
-import {CardType} from "src/scheduler/scheduling";
+import { CardType } from "src/scheduler/CardType";
 import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
 

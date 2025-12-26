@@ -1,5 +1,5 @@
 import { parseFileText } from "src/data/parser";
-import { CardType } from "src/scheduler/scheduling";
+import { CardType } from "src/scheduler/CardType";
 import { generateTree } from "src/data/models/bookTree";
 import { getFileContents } from "src/data/disk";
 import { Heading } from "src/data/models/sourceNote";
