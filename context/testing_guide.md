@@ -32,3 +32,29 @@ To ensure `deleteCardOnDisk` is mocked:
     ```
     (Note: `output` is null because the function returns `Promise<void>`)
 2.  Add `"deleteCardOnDisk.json"` to the fixture list in `tests/api.test.ts`.
+
+## Common Testing Patterns & Issues
+
+### Global Test Setup (`newFunction`)
+Most tests in `api.test.ts` use a `newFunction()` helper inside `beforeEach`. This function creates a complete, in-memory instance of the plugin and its indices based on the fixtures. Be aware that this creates a "fully populated" state, which can make testing initial creation logic (e.g., `createFlashcardOnDisk`) tricky, as the entity may already exist. In such cases, the correct approach is to test the function's error-handling guard clause.
+
+### Handling Test Flakiness (`Math.random`)
+The review deck generation logic involves shuffling cards using `Math.random()`. This can cause tests that rely on card order (e.g., `getCurrentCard`) to be flaky.
+
+**Solution:** To ensure deterministic tests, spy on and mock `Math.random()` within the `describe` block for the test suite.
+```typescript
+describe("MyFlakyTest", () => {
+    let randomSpy: any;
+
+    beforeEach(async () => {
+        randomSpy = jest.spyOn(Math, "random").mockReturnValue(0.5); // Use a constant seed
+        await newFunction();
+    });
+
+    afterEach(() => {
+        randomSpy.mockRestore();
+    });
+
+    test("...", () => { /* ... */ });
+});
+```
