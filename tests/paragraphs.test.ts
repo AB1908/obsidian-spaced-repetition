@@ -9,6 +9,10 @@ import { extractParagraphs } from "src/data/models/paragraphs";
 
 jest.mock("../src/main", () => {});
 
+jest.mock("nanoid", () => ({
+    nanoid: () => "deterministic-id",
+}));
+
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/data/disk", () => {
     return {
