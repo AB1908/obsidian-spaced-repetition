@@ -6,7 +6,9 @@ import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNote";
 import { fileTags } from "src/data/disk";
+import { setPlugin } from "src/api";
 import { Index } from "src/data/models";
+import { SourceNoteDependencies } from "src/data/models/dependencies";
 
 export interface PluginData {
     settings: SRSettings;
@@ -25,7 +27,7 @@ const DEFAULT_DATA: PluginData = {
 
 export let plugin: SRPlugin;
 
-export default class SRPlugin extends Plugin {
+export default class SRPlugin extends Plugin implements SourceNoteDependencies {
     public data: PluginData;
     // todo: fix type
     public bookNotesPaths: string[];
@@ -37,7 +39,15 @@ export default class SRPlugin extends Plugin {
 
     async onload(): Promise<void> {
         await this.loadPluginData();
-        // First need to initialize tags as the source notes will use this
+
+        // eslint-disable-next-line @typescript-eslint/no-this-alias
+        plugin = this;
+        setPlugin(this);
+
+        // // First need to initialize tags as the source notes will use this
+        // this.app.workspace.onLayoutReady(async () => {
+        // });
+
         this.index = new Index();
         this.flashcardIndex = new FlashcardIndex();
         this.sourceNoteIndex = new SourceNoteIndex();
@@ -63,9 +73,6 @@ export default class SRPlugin extends Plugin {
         });
 
         this.addSettingTab(new SRSettingTab(this.app, this));
-
-        // eslint-disable-next-line @typescript-eslint/no-this-alias
-        plugin = this;
 
         console.log("SRS Plugin loaded");
     }

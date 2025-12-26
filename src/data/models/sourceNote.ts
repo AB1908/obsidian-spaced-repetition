@@ -15,6 +15,7 @@ import {addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph} from "src/a
 import { CardType } from "src/scheduler/CardType";
 import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
+import { SourceNoteDependencies } from "src/data/models/dependencies";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -43,7 +44,7 @@ export function isAnnotation(section: BookMetadataSection): section is annotatio
 }
 
 // todo: should this be part of the Book class??
-export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[]) {
+export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[], plugin: SourceNoteDependencies) {
     if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
     let output: BookMetadataSections = [];
     let headingIndex = 0;
@@ -242,9 +243,9 @@ export class SourceNote implements frontbook {
     flashcardNote: FlashcardNote;
     // todo: think of a way to not use plugin
     // the reason I need it is because to find the corresponding flashcard note
-    plugin: SRPlugin;
+    plugin: SourceNoteDependencies;
 
-    constructor(path: string, plugin: SRPlugin) {
+    constructor(path: string, plugin: SourceNoteDependencies) {
         this.id = nanoid(8);
         this.name = "";
         this.path = path;
@@ -277,7 +278,8 @@ export class SourceNote implements frontbook {
         this.bookSections = bookSections(
             getMetadataForFile(this.path),
             await getFileContents(this.path),
-            this.flashcardNote?.flashcards || []
+            this.flashcardNote?.flashcards || [],
+            this.plugin
         );
 
         this.name = getParentOrFilename(this.path);
@@ -467,7 +469,7 @@ export class SourceNoteIndex {
         this.sourceNotes = [];
     }
 
-    async initialize(plugin: SRPlugin) {
+    async initialize(plugin: SourceNoteDependencies) {
         // iterate over tags in plugin
         // create set from tags in note
         // check membership of tag
