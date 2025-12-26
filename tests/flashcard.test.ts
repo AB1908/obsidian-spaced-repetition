@@ -5,6 +5,10 @@ import { generateFlashcardsArray } from "src/data/models/flashcard";
 // eslint-disable-next-line @typescript-eslint/no-empty-function
 jest.mock("../src/main", () => {});
 
+jest.mock("nanoid", () => ({
+    nanoid: () => "deterministic-id",
+}));
+
 describe("createFlashcards", () => {
     test("should create a flashcard array", () => {
         const parsedCards = [
@@ -26,7 +30,7 @@ describe("createFlashcards", () => {
                 "dueDate": null,
                 "ease": null,
                 "flag": null,
-                "id": "0",
+                "id": "deterministic-id",
                 "interval": null,
                 "parentId": "93813",
                 "parsedCardId": "aaaaaaaa",
