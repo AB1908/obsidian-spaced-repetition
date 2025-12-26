@@ -1,10 +1,12 @@
 import { parseFileText } from "src/data/parser";
 import { CardType } from "src/scheduler/CardType";
 import { generateTree } from "src/data/models/bookTree";
-import { getFileContents } from "src/data/disk";
 import { Heading } from "src/data/models/sourceNote";
+import { getFileContents } from "../src/data/disk";
 
 jest.mock("../src/data/disk");
+const mockedGetFileContents = getFileContents as jest.Mock;
+
 jest.mock("nanoid", () => ({
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     nanoid: (number: number) => "aaaaaaaa",
@@ -196,12 +198,10 @@ describe("generateTree", () => {
 });
 
 describe("parseFlashcard", () => {
+    const flashcardText = "This is a question\n?\nThis is an answer\n<!--SR:93813-->\n\nThis is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
+
     test("parses a flashcard with only annotation id", async () => {
-        const flashcard = "This is a question\n?\nThis is an answer\n<!--SR:93813-->";
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        jest.mocked(getFileContents).mockImplementation(async (path: string) => {
-            return flashcard;
-        });
+        mockedGetFileContents.mockResolvedValue(flashcardText);
         expect(await parseFileText("sample path")).toEqual([
             {
                 id: "aaaaaaaa",
@@ -211,16 +211,27 @@ describe("parseFlashcard", () => {
                 lineNo: -1,
                 cardType: CardType.MultiLineBasic,
             },
+            { // Added the second flashcard expectation
+                id: "aaaaaaaa",
+                notePath: "sample path",
+                cardText: "This is a question\n?\nThis is an answer",
+                metadataText: "<!--SR:93813!L,2021-04-05,99,270-->",
+                lineNo: -1,
+                cardType: CardType.MultiLineBasic,
+            },
         ]);
     });
     test("parses a flashcard with full metadata", async () => {
-        const flashcard =
-            "This is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        jest.mocked(getFileContents).mockImplementation(async (path: string) => {
-            return flashcard;
-        });
+        mockedGetFileContents.mockResolvedValue(flashcardText);
         expect(await parseFileText("sample path")).toEqual([
+            {
+                id: "aaaaaaaa",
+                notePath: "sample path",
+                cardText: "This is a question\n?\nThis is an answer",
+                metadataText: "<!--SR:93813-->", // Expected first flashcard
+                lineNo: -1,
+                cardType: CardType.MultiLineBasic,
+            },
             {
                 id: "aaaaaaaa",
                 notePath: "sample path",
