@@ -1,12 +1,9 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
-    createFlashcardsFileForBook, deleteCardOnDisk,
-    getFileContents,
+    createFlashcardsFileForBook, deleteCardOnDisk, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
-    getParentOrFilename,
-    getTFileForPath,
-    updateCardOnDisk
+    getParentOrFilename, updateCardOnDisk
 } from "src/data/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
@@ -217,23 +214,6 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
         i++;
     }
     return out;
-}
-
-// done: this isn't necessarily an abstraction over Obsidian APIs and contains business logic
-// move to some other file instead
-// done: how can the return type for this be undefined? WTF??
-export function getAnnotationFilePath(path: string) {
-    const metadata = getMetadataForFile(path);
-    const annotationFromYaml = metadata?.frontmatter?.[ANNOTATIONS_YAML_KEY];
-    if (!annotationFromYaml)
-        throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
-    const annotationLinkText = annotationFromYaml.replaceAll(/[[\]]/g, "");
-    const destinationTFile = app.metadataCache.getFirstLinkpathDest(annotationLinkText, path);
-    if (destinationTFile instanceof TFile) {
-        return destinationTFile.path;
-    } else {
-        throw new Error(`getAnnotationFilePath: ${path} does not have a valid parent`);
-    }
 }
 
 // DONE rewrite to use ids instead of doing object equality
@@ -540,20 +520,3 @@ export class SourceNoteIndex {
     }
 }
 
-export function generateFlashcardsFileNameAndPath(bookPath: string) {
-    const tfile = getTFileForPath(bookPath);
-    let filename, parentPath;
-    // example of path at root level:
-    // "Folder 1/File.md": parent is "Folder 1"
-    // "Test.md": parent is "/"
-    // I need to generate "/Test - Flashcards.md" or "Folder 1/Flashcards.md"
-    if (tfile.parent.name) { // tfile has its own folder, reuse the folder
-        filename = "Flashcards.md";
-        parentPath = `${tfile.parent.path}`;
-    } else { // the tfile is at the root level, use original filename
-        filename = `${tfile.basename} - Flashcards.md`;
-        parentPath = ``;
-    }
-    const path = `${parentPath}/${filename}`
-    return {filename, path};
-}

@@ -5,7 +5,7 @@ import { moment, Notice } from "obsidian";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
-import {getAnnotationFilePath, SourceNote} from "src/data/models/sourceNote";
+import { getAnnotationFilePath } from "../disk";
 import { filePathsWithTag } from "src/data/disk";
 import { calculateDelayBeforeReview } from "./calculateDelayBeforeReview";
 
