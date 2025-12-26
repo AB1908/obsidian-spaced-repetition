@@ -1,0 +1,20 @@
+{
+  "method": "fileTags",
+  "capturedAt": "2025-12-07T19:37:20.517Z",
+  "input": [],
+  "output": [
+    [
+      "Untitled - Flashcards.md",
+      [
+        "flashcards"
+      ]
+    ],
+    [
+      "Untitled.md",
+      [
+        "review/book",
+        "review/note"
+      ]
+    ]
+  ]
+}

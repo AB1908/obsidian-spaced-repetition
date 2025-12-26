@@ -1,0 +1,9 @@
+{
+  "method": "generateFlashcardsFileNameAndPath",
+  "capturedAt": "2025-12-07T19:37:20.517Z",
+  "input": "Untitled.md",
+  "output": {
+    "filename": "Untitled - Flashcards.md",
+    "path": "Untitled - Flashcards.md"
+  }
+}

@@ -1,0 +1,200 @@
+{
+  "method": "getMetadataForFile",
+  "capturedAt": "2025-12-07T19:37:20.679Z",
+  "input": "Untitled - Flashcards.md",
+  "output": {
+    "sections": [
+      {
+        "type": "yaml",
+        "position": {
+          "start": {
+            "line": 0,
+            "col": 0,
+            "offset": 0
+          },
+          "end": {
+            "line": 4,
+            "col": 3,
+            "offset": 56
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 7,
+            "col": 0,
+            "offset": 59
+          },
+          "end": {
+            "line": 9,
+            "col": 5,
+            "offset": 72
+          }
+        }
+      },
+      {
+        "type": "html",
+        "position": {
+          "start": {
+            "line": 10,
+            "col": 0,
+            "offset": 73
+          },
+          "end": {
+            "line": 10,
+            "col": 37,
+            "offset": 110
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 12,
+            "col": 0,
+            "offset": 112
+          },
+          "end": {
+            "line": 14,
+            "col": 3,
+            "offset": 123
+          }
+        }
+      },
+      {
+        "type": "html",
+        "position": {
+          "start": {
+            "line": 15,
+            "col": 0,
+            "offset": 124
+          },
+          "end": {
+            "line": 15,
+            "col": 39,
+            "offset": 163
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 17,
+            "col": 0,
+            "offset": 165
+          },
+          "end": {
+            "line": 19,
+            "col": 8,
+            "offset": 179
+          }
+        }
+      },
+      {
+        "type": "html",
+        "position": {
+          "start": {
+            "line": 20,
+            "col": 0,
+            "offset": 180
+          },
+          "end": {
+            "line": 20,
+            "col": 37,
+            "offset": 217
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 22,
+            "col": 0,
+            "offset": 219
+          },
+          "end": {
+            "line": 24,
+            "col": 1,
+            "offset": 224
+          }
+        }
+      },
+      {
+        "type": "html",
+        "position": {
+          "start": {
+            "line": 25,
+            "col": 0,
+            "offset": 225
+          },
+          "end": {
+            "line": 25,
+            "col": 37,
+            "offset": 262
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 27,
+            "col": 0,
+            "offset": 264
+          },
+          "end": {
+            "line": 29,
+            "col": 14,
+            "offset": 307
+          }
+        }
+      },
+      {
+        "type": "html",
+        "position": {
+          "start": {
+            "line": 30,
+            "col": 0,
+            "offset": 308
+          },
+          "end": {
+            "line": 30,
+            "col": 18,
+            "offset": 326
+          }
+        }
+      }
+    ],
+    "frontmatter": {
+      "annotations": "[[Untitled]]",
+      "tags": [
+        "flashcards"
+      ]
+    },
+    "frontmatterPosition": {
+      "start": {
+        "line": 0,
+        "col": 0,
+        "offset": 0
+      },
+      "end": {
+        "line": 4,
+        "col": 3,
+        "offset": 56
+      }
+    },
+    "frontmatterLinks": [
+      {
+        "key": "annotations",
+        "link": "Untitled",
+        "original": "[[Untitled]]",
+        "displayText": "Untitled"
+      }
+    ]
+  }
+}
