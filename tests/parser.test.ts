@@ -197,6 +197,10 @@ describe("generateTree", () => {
     });
 });
 
+//todo: seems like we're parsing the same thing twice
+// fix it to test different types of values and maybe 
+// parse a card at a time and then test combos like 
+// in the current version
 describe("parseFlashcard", () => {
     const flashcardText = "This is a question\n?\nThis is an answer\n<!--SR:93813-->\n\nThis is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
 
