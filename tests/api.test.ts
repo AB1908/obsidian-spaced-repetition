@@ -14,6 +14,7 @@ jest.mock("src/data/disk", () => {
         "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
         "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
         "deleteCardOnDisk.json",
+        "writeCardToDisk.json",
     ]);
     return mock;
 });
@@ -244,10 +245,16 @@ describe("createFlashcardForAnnotation", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should create flashcard for annotation", () => {
-        expect(
-            createFlashcardForAnnotation("question", "answer", "tWxSv_No", "t0000010")
-        ).toMatchInlineSnapshot(`Promise {}`);
+    test("should create flashcard for annotation", async () => {
+        const result = await createFlashcardForAnnotation(
+            "question",
+            "answer",
+            "tWxSv_No",
+            "t0000010"
+        );
+        expect(result).toBe(true);
+        const cards = getFlashcardsForAnnotation("tWxSv_No", "t0000010");
+        expect(cards.some(c => c.questionText === "question")).toBe(true);
     });
 });
 // updateFlashcardContentsById
