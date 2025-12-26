@@ -247,6 +247,9 @@ export function resetBookReviewState(bookId: string) {
 
 export function getBookById(bookId: string): frontEndBook {
     const book = plugin.sourceNoteIndex.getBook(bookId);
+    if (book == null) {
+        throw new Error("getBookById: book not found");
+    }
     const { annotationsWithFlashcards, annotationsWithoutFlashcards } = book.annotationCoverage();
     return {
         id: book.id,
