@@ -7,6 +7,7 @@ import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
 import {getAnnotationFilePath, SourceNote} from "src/data/models/sourceNote";
 import { filePathsWithTag } from "src/data/disk";
+import { calculateDelayBeforeReview } from "./calculateDelayBeforeReview";
 
 export interface AbstractFlashcard {
     id: string,
@@ -74,13 +75,6 @@ export class Flashcard extends AbstractFlashcard {
         this.questionText = questionText;
         this.answerText = answerText;
     }
-}
-
-// todo: move into controller?
-export function calculateDelayBeforeReview(due: string) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-ignore
-    return Math.abs(moment().valueOf() - moment(due).valueOf());
 }
 
 // todo: rename to update card?
