@@ -25,14 +25,14 @@ export function Button({ text, id, clickHandler }: { text: string, id: string, c
 export function CancelButton() {
     const navigate = useNavigate();
     return (
-        <button type={"button"} className={"mod-cancel"} onClick={() => navigate(-1)} >
+        <button type={"button"} className={"mod-cancel sr-button"} onClick={() => navigate(-1)} >
             Cancel
         </button>
     );
 }
 
 export function SubmitButton() {
-    return <button type="submit" className={"mod-cta"}>Submit</button>;
+    return <button type="submit" className={"mod-cta sr-button"}>Submit</button>;
 }
 
 export function generateButtonText(hardInterval: number, goodInterval: number, easyInterval: number) {
