@@ -1,0 +1,9 @@
+{
+    "method": "updateCardOnDisk",
+    "input": [
+        "Untitled - Flashcards.md",
+        "\na\n?\nb\n<!--SR:tekXLAu8!L,2024-10-21,1,210-->\n",
+        "\na\n?\nb\n<!--SR:tekXLAu8!L,2029-05-17,1238,230-->\n"
+    ],
+    "output": true
+}

@@ -11,7 +11,8 @@ jest.mock("src/data/disk", () => {
         "fileTags_2025-12-07T19-37-20-516Z_u0wrbc.json",
         "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
-        "updateCardOnDisk.json",
+        "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
+        "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
         "deleteCardOnDisk.json",
     ]);
     return mock;
@@ -219,7 +220,7 @@ describe("addBlockIdToParagraph", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should add block id to paragraph", () => {
+    test("should add block id to paragraph", () => {
         expect(
             addBlockIdToParagraph({
                 id: "tWxSv_No",
