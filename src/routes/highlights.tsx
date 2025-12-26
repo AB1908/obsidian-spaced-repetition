@@ -1,5 +1,5 @@
 import React from "react";
-import { Link, useLoaderData } from "react-router-dom";
+import { Link, useLoaderData, useLocation } from "react-router-dom";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationsForSection } from "src/api";
 
@@ -50,8 +50,12 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 }
 
 function AnnotationListItem(props: { annotation: annotation }) {
-    return <div>
-        <Link to={`${props.annotation.id}/flashcards`}>
+    return <div id={props.annotation.id}>
+        <Link
+            to={`${props.annotation.id}/flashcards`}
+            state={{scrollId: props.annotation.id}}
+            onClick={() => sessionStorage.setItem('scrollToAnnotation', props.annotation.id)}
+        >
             <li className={"sr-highlight tree-item-self is-clickable"}>
                 <span className={"sr-annotation-text"}>
                     {props.annotation.highlight}
@@ -69,6 +73,27 @@ function AnnotationListItem(props: { annotation: annotation }) {
 
 export function AnnotationList() {
     const chapterData = useLoaderData() as SectionAnnotations;
+    const location = useLocation();
+
+    //todo: don't use direct DOM manipulation one day
+    React.useEffect(() => {
+        const scrollId = sessionStorage.getItem('scrollToAnnotation');
+        if (scrollId) {
+            const element = document.getElementById(scrollId);
+            if (element) {
+                element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+
+                // Add highlight class
+                element.classList.add('sr-annotation-highlighted');
+
+                // Remove the class after the animation finishes
+                setTimeout(() => {
+                    element.classList.remove('sr-annotation-highlighted');
+                }, 1500); // Must match animation duration
+            }
+            sessionStorage.removeItem('scrollToAnnotation');
+        }
+    }, [chapterData]);
 
     return (
         <>
@@ -79,16 +104,6 @@ export function AnnotationList() {
                 {chapterData.title}
             </h3>
             <HeaderWithCounts withCount={0} withoutCount={0}/>
-
-            {/*<>*/}
-            {/*    {uniqueHighlightColors.map((t: string)=>(*/}
-            {/*        <button*/}
-            {/*            className={`sr-highlight-filter${color == t ? " active" : ""}`}*/}
-            {/*            style={{"backgroundColor": `${t}`}}*/}
-            {/*            onClick={() => colorFilterHandler(t)}*/}
-            {/*        />*/}
-            {/*    ))}*/}
-            {/*</>*/}
 
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
