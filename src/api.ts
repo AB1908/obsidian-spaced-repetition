@@ -9,11 +9,16 @@ import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk } from "src/data/disk";
-import { plugin} from "src/main";
+import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
+
+let plugin: SRPlugin;
+export function setPlugin(p: SRPlugin) {
+    plugin = p;
+}
 
 // TODO: Cloze cards
 // export class ClozeFlashcard extends AbstractFlashcard {
