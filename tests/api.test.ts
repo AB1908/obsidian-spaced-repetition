@@ -179,23 +179,31 @@ describe("deleteFlashcard", () => {
 });
 // getCurrentCard
 describe("getCurrentCard", () => {
+    let randomSpy: any;
+
     beforeEach(async () => {
+        randomSpy = jest.spyOn(Math, "random").mockReturnValue(0.5);
         await newFunction();
     });
+
+    afterEach(() => {
+        randomSpy.mockRestore();
+    });
+
     test("should get current card", () => {
         expect(getCurrentCard("t0000010")).toMatchInlineSnapshot(`
             Flashcard {
-              "answerText": "b",
+              "answerText": "homie",
               "cardType": 2,
               "context": null,
-              "dueDate": "2024-10-21",
-              "ease": 210,
+              "dueDate": "2024-10-16",
+              "ease": 270,
               "flag": "L",
-              "id": "t0000008",
-              "interval": 1,
+              "id": "t0000005",
+              "interval": 4,
               "parentId": "tekXLAu8",
-              "parsedCardId": "t0000003",
-              "questionText": "a",
+              "parsedCardId": "t0000000",
+              "questionText": "ryder",
               "siblings": [],
             }
         `);
