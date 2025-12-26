@@ -1,4 +1,4 @@
-import {plugin} from "src/main";
+import { plugin } from "src/main";
 import {FrontendFlashcard} from "src/routes/review";
 import { ReviewResponse } from "./CardType";
 
