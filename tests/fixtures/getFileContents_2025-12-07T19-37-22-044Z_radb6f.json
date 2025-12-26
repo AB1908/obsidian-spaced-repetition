@@ -1,0 +1,6 @@
+{
+  "method": "getFileContents",
+  "capturedAt": "2025-12-07T19:37:22.045Z",
+  "input": "Untitled.md",
+  "output": "---\ntags: \n  - \"review/book\"\n  - \"review/note\"\n---\n\n# Chapter 3: Pulling the rabbit out of the hat\n\n## Relating study and test\n\nWhat is episodic memory?\nNO one knows ^tekXLAu8\n\nI have some other text here.\nThis has no block id.\nLet's see what happens. ^tWxSv_No"
+}

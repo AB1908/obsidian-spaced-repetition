@@ -1,0 +1,6 @@
+{
+  "method": "getFileContents",
+  "capturedAt": "2025-12-07T19:37:21.944Z",
+  "input": "Untitled - Flashcards.md",
+  "output": "---\nannotations: \"[[Untitled]]\"\ntags:\n  - flashcards\n---\n\n\nryder\n?\nhomie\n<!--SR:tekXLAu8!L,2024-10-16,4,270-->\n\nasfsf\n?\n324\n<!--SR:tekXLAu8!L,2025-07-06,266,250-->\n\nNew\n?\nCard not\n<!--SR:tekXLAu8!L,2024-10-16,4,270-->\n\na\n?\nb\n<!--SR:tekXLAu8!L,2024-10-21,1,210-->\n\nthis is a fixture question\n?\nfixture answer\n<!--SR:tWxSv_No-->\n"
+}
