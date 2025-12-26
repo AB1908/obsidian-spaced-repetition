@@ -12,6 +12,7 @@ jest.mock("src/data/disk", () => {
         "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
         "updateCardOnDisk.json",
+        "deleteCardOnDisk.json",
     ]);
     return mock;
 });
@@ -162,8 +163,17 @@ describe("deleteFlashcard", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should delete flashcard", () => {
-        expect(deleteFlashcard("t0000010", "tWxSv_No")).toMatchInlineSnapshot(`Promise {}`);
+    test("should delete flashcard", async () => {
+        const result = await deleteFlashcard("t0000010", "t0000008");
+        expect(result).toBeUndefined();
+    });
+
+    test("should throw when deleting non-existent flashcard", async () => {
+        await expect(
+            deleteFlashcard("t0000010", "nonexistent")
+        ).rejects.toThrowErrorMatchingInlineSnapshot(
+            `"Cannot read properties of undefined (reading 'parsedCardId')"`
+        );
     });
 });
 // getCurrentCard
