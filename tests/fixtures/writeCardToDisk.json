@@ -1,0 +1,8 @@
+{
+    "method": "writeCardToDisk",
+    "input": [
+        "Untitled - Flashcards.md",
+        "\nquestion\n?\nanswer\n<!--SR:tWxSv_No-->\n"
+    ],
+    "output": null
+}
