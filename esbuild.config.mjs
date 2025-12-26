@@ -10,6 +10,10 @@ if you want to view the source, please visit the github repository of this plugi
 
 const prod = process.argv[2] === "production";
 
+const pluginDir = process.env.OBSIDIAN_PLUGIN_DIR || ".";
+const outfile = `${pluginDir}/main.js`;
+
+
 esbuild
     .build({
         banner: {
@@ -25,7 +29,6 @@ esbuild
         sourcemap: "inline",
         sourcesContent: !prod,
         treeShaking: true,
-        outfile:
-            "build/main.js",
+        outfile,
     })
     .catch(() => process.exit(1));
