@@ -282,7 +282,7 @@ describe("getAnnotationsForSection", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should get annotations for section", () => {
+    test("should get annotations for section", () => {
         expect(getAnnotationsForSection("tWxSv_No", "t0000010")).toMatchInlineSnapshot(`null`);
     });
 });
