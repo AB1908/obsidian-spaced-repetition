@@ -45,6 +45,12 @@ export function AnnotationWithOutlet() {
     const nextAnnotationId = getNextAnnotationIdForSection(annotationsList.annotations, annotation.id);
 
     useEffect(() => {
+        if (annotation?.id) {
+            sessionStorage.setItem('scrollToAnnotation', annotation.id);
+        }
+    }, [annotation?.id]);
+
+    useEffect(() => {
         const back: Icon = "chevron-left";
         const front: Icon = "chevron-right";
         // todo: figure out how to fix this
