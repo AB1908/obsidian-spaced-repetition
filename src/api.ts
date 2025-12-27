@@ -8,12 +8,14 @@ import { calculateDelayBeforeReview } from "./data/models/calculateDelayBeforeRe
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { updateCardOnDisk } from "src/data/disk";
+import { updateCardOnDisk, findFilesByExtension, getAllFolders, moveFile, renameFile, createFile, getFileContents } from "src/data/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
+import { parseMoonReaderExport } from "./data/import/moonreader";
+import { generateAnnotationMarkdown } from "./data/utils/annotationGenerator";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -317,8 +319,90 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
         }
     }
 
-    return {
-        bookName: book.name,
-        sectionName
-    };
-}
+        return {
+
+            bookName: book.name,
+
+            sectionName
+
+        };
+
+    }
+
+    
+
+    export function getImportableExports() {
+
+        return findFilesByExtension("mrexpt");
+
+    }
+
+    
+
+    export function getDestinationFolders() {
+
+        return getAllFolders();
+
+    }
+
+    
+
+    export async function importMoonReaderExport(mrexptPath: string, targetFolderPath: string) {
+
+        const content = await getFileContents(mrexptPath);
+
+        const annotations = parseMoonReaderExport(content);
+
+        
+
+        // Normalize folder path: ensure no trailing slash, but handle root "/"
+
+        const folderPath = targetFolderPath === "/" ? "" : targetFolderPath;
+
+        const annotationsPath = folderPath ? `${folderPath}/Annotations.md` : "Annotations.md";
+
+        
+
+        // Check if Annotations.md already exists
+
+        const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
+
+        if (existingFile) {
+
+            await renameFile(annotationsPath, "Annotations_old.md");
+
+        }
+
+        
+
+        // Move mrexpt file to target folder
+
+        const fileName = mrexptPath.split("/").pop();
+
+        const newMrexptPath = folderPath ? `${folderPath}/${fileName}` : fileName;
+
+        if (newMrexptPath && mrexptPath !== newMrexptPath) {
+
+            await moveFile(mrexptPath, newMrexptPath);
+
+        }
+
+        
+
+        // Generate markdown
+
+        const markdown = annotations.map(generateAnnotationMarkdown).join("\n");
+
+        const title = `# Annotations for ${annotations[0]?.title || "Unknown Book"}\n\n`;
+
+        
+
+        await createFile(annotationsPath, title + markdown);
+
+        
+
+        return annotationsPath;
+
+    }
+
+    
