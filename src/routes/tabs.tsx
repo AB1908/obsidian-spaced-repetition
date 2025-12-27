@@ -11,6 +11,9 @@ export function Tabs() {
                 <NavLink to="/books" className={"sr-nav-link is-clickable"}>
                     Notes
                 </NavLink>
+                <NavLink to="/import" className={"sr-nav-link is-clickable"}>
+                    Import
+                </NavLink>
             </div>
             <Outlet/>
         </>
