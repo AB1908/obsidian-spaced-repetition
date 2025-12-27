@@ -27,19 +27,25 @@ describe("API Import Orchestrator", () => {
 
     test("importMoonReaderExport should move file and create annotations", async () => {
         // Setup Mocks
-        (disk.getFileContents as jest.Mock).mockResolvedValue(`#
+        (disk.getFileContents as jest.Mock).mockResolvedValue(`
+#
 123
 Gatsby
-Path
-LPath
+/sdcard/Books/Gatsby.epub
+/storage/emulated/0/Books/Gatsby.epub
 Chapter 1
 0
-0
-0
-0
-0
+100
+15
+-16711681
+1609459200000
 Highlight Text
-Note Text`);
+Note Text
+EmptyHighlightField // Corresponds to match[13]
+0
+0
+0
+`);
         (global as any).app.vault.getAbstractFileByPath.mockReturnValue(null); // No existing file
 
         // Act
