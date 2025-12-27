@@ -1,50 +1,33 @@
-# UI Architecture & Navigation Analysis
+# UI Component Architecture Guidelines
 
-## Current Navigation Implementation
-The application currently handles navigation between lists (e.g., `AnnotationList`) and details (`AnnotationWithOutlet`) using standard React Router patterns, but with a custom mechanism for preserving scroll position.
+This document outlines the principles guiding the development of user interface components within this project, particularly focusing on the decision to prefer single-responsibility components.
 
-### "Back Button" & Scroll Restoration
-The app faces a challenge common in "Master-Detail" interfaces where the detail view replaces the list view in the DOM (mobile-style navigation):
-1. User scrolls down a list (Scroll Y=500).
-2. User clicks an item. The list unmounts, and the Detail view mounts.
-3. User navigates "Back". The List remounts.
-4. **Goal:** The user should be returned to Scroll Y=500.
+## Principle: Prefer Single-Responsibility Components
 
-**Current Solution (Brittleness):**
-- **Mechanism:** `sessionStorage` is used as a "side channel" to store the ID of the last active item (`scrollToAnnotation`).
-- **Implementation:** 
-    - `AnnotationWithOutlet` writes to `sessionStorage` on mount.
-    - `AnnotationList` reads from `sessionStorage` on mount and calls `scrollIntoView()` on the matching element.
-- **Problem:** This manual restoration often races with the browser's native scroll restoration logic (especially when using `history.replace` vs `push`).
+**Motivation:**
+In the past, some UI components attempted to handle multiple rendering concerns or conditional display logic via props (e.g., `NoteAndHighlight`). While seemingly convenient, this approach led to:
+- Increased complexity and cognitive load for component users.
+- Reduced flexibility and reusability.
+- Potential for unintended side-effects or difficult-to-test scenarios.
+- Obscured the primary purpose of the component.
 
-## Architectural Coupling & Risks
+**Guidance:**
+Components should ideally have a single, well-defined responsibility. When a UI element has distinct visual representations or behaviors that are mutually exclusive, these should often be encapsulated in separate, focused components.
 
-### 1. Side-Channel State (sessionStorage)
-- **Risk:** Bypasses React lifecycle and Router state.
-- **Consequences:** Can lead to race conditions where the browser restores an old position *after* the component tries to scroll to the new one. Global keys in `sessionStorage` can conflict across tabs or different books.
-- **Recommendation:** Move this state into a **React Context** or a lightweight global store (e.g., Zustand) that wraps the `Outlet`. This binds the state to the navigation session's lifecycle.
+**Example: Displaying Annotation Content**
+- **Deprecated Approach:** A single `NoteAndHighlight` component attempting to toggle between showing a highlight, a note, or both based on a `displayMode` prop.
+- **New Approach:** Two distinct components:
+    - `HighlightBlock({ text })`: Renders only the highlighted text with specific styling.
+    - `NoteBlock({ text })`: Renders only the note text with specific styling.
+- **Benefits of New Approach:**
+    - **Clarity:** It's immediately clear what each component does.
+    - **Composition:** Parent components (e.g., `AnnotationWithOutlet`, `EditCard`) explicitly compose these smaller blocks to achieve the desired display, making their rendering logic more transparent.
+    - **Testability:** Each component is easier to test in isolation.
+    - **Reusability:** While currently specific, these single-purpose blocks are inherently more reusable in other contexts than a highly conditional multi-purpose component.
 
-### 2. DOM Coupling in Components
-- **Code:** `AnnotationList` uses `document.getElementById` and `scrollIntoView`.
-- **Risk:** Tightly couples the React component to the specific DOM structure and `id` attribute usage.
-- **Consequences:** Refactoring the list item (e.g., to a virtualized list) will break scrolling logic.
-- **Recommendation:** Encapsulate scroll logic in a custom hook (e.g., `useScrollToItem(id)`).
+## Impact on Development
 
-### 3. Hardcoded Route Paths
-- **Code:** `AnnotationWithOutlet` contains a `pathGenerator` with raw strings (`"/books/:bookId/..."`).
-- **Risk:** Duplicates the source of truth defined in `routes.tsx`.
-- **Consequences:** Changing a URL structure requires "shotgun surgery" across multiple files.
-- **Recommendation:** Centralize path generation in a helper file (e.g., `src/routes/paths.ts`) that exports functions like `getAnnotationPath(...)`.
-
-### 4. Data Dependency on Parent Routes
-- **Code:** `AnnotationWithOutlet` uses `useRouteLoaderData` to fetch sibling data for "Next/Previous" buttons.
-- **Risk:** Assumes a specific route nesting hierarchy.
-- **Consequences:** Refactoring the route nesting will break the child component's data access.
-- **Recommendation:** Use explicit prop passing or a dedicated "Navigation Context" provided by the parent layout.
-
-## Testing Strategy
-- Avoid testing the Router's internal navigation logic (integration tests).
-- Focus unit tests on the *behavior* of the components:
-    - **Write:** Does Component A save the ID?
-    - **Read:** Does Component B read the ID and attempt to scroll?
-- This isolates tests from the complexity of the browser's History API and Router implementation.
+This principle encourages:
+- **Modular Design:** Breaking down complex UI into manageable, focused parts.
+- **Predictable Behavior:** Components behave exactly as their name and props suggest, reducing surprises.
+- **Easier Refactoring:** Changes to one aspect of a display (e.g., how a highlight looks) are contained within its dedicated component.
