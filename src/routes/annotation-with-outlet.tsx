@@ -1,6 +1,5 @@
 import { generatePath, matchPath, Outlet, useLoaderData, useRouteLoaderData } from "react-router-dom";
-import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationById } from "src/api";
@@ -9,6 +8,7 @@ import { Link, useLocation, useParams } from "react-router-dom";
 import { setIcon } from "obsidian";
 import { Icon } from "src/routes/root";
 import { paragraph } from "src/data/models/paragraphs";
+import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 
 export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
     annotationId: string;
@@ -43,6 +43,8 @@ export function AnnotationWithOutlet() {
     const location = useLocation();
     const previousAnnotationId = getPreviousAnnotationIdForSection(annotationsList.annotations, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(annotationsList.annotations, annotation.id);
+    const [displayMode, setDisplayMode] = useState<'highlight' | 'note'>('highlight');
+
 
     useEffect(() => {
         if (annotation?.id) {
@@ -68,6 +70,22 @@ export function AnnotationWithOutlet() {
 
     return (
         <>
+            <div className={"sr-toggle-group"} style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
+                <button
+                    className={`sr-toggle-button ${displayMode === 'highlight' ? 'active' : ''}`}
+                    onClick={() => setDisplayMode('highlight')}
+                    aria-pressed={displayMode === 'highlight'}
+                >
+                    Highlight
+                </button>
+                <button
+                    className={`sr-toggle-button ${displayMode === 'note' ? 'active' : ''}`}
+                    onClick={() => setDisplayMode('note')}
+                    aria-pressed={displayMode === 'note'}
+                >
+                    Note
+                </button>
+            </div>
             <div className={"sr-annotation"}>
                 <div className={"annotation-nav is-clickable"}>
                     {previousAnnotationId != null &&
@@ -77,7 +95,10 @@ export function AnnotationWithOutlet() {
                         </Link>
                     }
                 </div>
-                <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note} />
+                {displayMode === 'highlight' ?
+                    <HighlightBlock text={annotation.highlight} /> :
+                    annotation.note && <NoteBlock text={annotation.note} />
+                }
                 <div className={"annotation-nav is-clickable"} >
                     {nextAnnotationId != null &&
                         <Link to={`${pathGenerator(location.pathname, params, nextAnnotationId)}`} replace className={"annotation-nav is-clickable"}>
