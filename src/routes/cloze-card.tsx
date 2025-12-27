@@ -1,8 +1,8 @@
 import {useLoaderData} from "react-router";
 import {useParams} from "react-router-dom";
-import {NoteAndHighlight} from "src/ui/components/note-and-highlight";
 import {ClozeCardForm} from "src/ui/components/card-creation";
 import React from "react";
+import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 
 export function clozeLoader() {
     // TODO: Add redirect if we have cloze card
@@ -12,16 +12,17 @@ export function clozeLoader() {
     };
 }
 
-export function ClozeCard() {
-    // DONE: add loader logic
-    const highlight = useLoaderData();
-    const {flashcardId} = useParams();
-    const flashcardIndex = Number(flashcardId);
-    const defaultClozeValue = highlight.flashcards[flashcardIndex]?.questionText || "";
-    return (
-        <>
-            <NoteAndHighlight highlightText={highlight.highlightContent} noteText={highlight.highlightNote}/>
-            <ClozeCardForm defaultClozeValue={defaultClozeValue}/>
-        </>
-    );
-}
+// export function ClozeCard() {
+//     // DONE: add loader logic
+//     const highlight = useLoaderData();
+//     const {flashcardId} = useParams();
+//     const flashcardIndex = Number(flashcardId);
+//     const defaultClozeValue = highlight.flashcards[flashcardIndex]?.questionText || "";
+//     return (
+//         <>
+//             <HighlightBlock text={highlight.highlightContent}/>
+//             {highlight.highlightNote && <NoteBlock text={highlight.highlightNote}/>}
+//             <ClozeCardForm defaultClozeValue={defaultClozeValue}/>
+//         </>
+//     );
+// }
