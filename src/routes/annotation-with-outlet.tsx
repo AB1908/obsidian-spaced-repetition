@@ -83,6 +83,7 @@ export function AnnotationWithOutlet() {
                     className={`sr-toggle-button ${displayMode === 'note' ? 'active' : ''}`}
                     onClick={() => setDisplayMode('note')}
                     aria-pressed={displayMode === 'note'}
+                    disabled={!annotation.note}
                 >
                     Note
                 </button>
