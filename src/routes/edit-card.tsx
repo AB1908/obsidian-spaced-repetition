@@ -1,7 +1,7 @@
 import React from "react";
 import { Form, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { getAnnotationById, updateFlashcardContentsById } from "src/api";
-import { NoteAndHighlight } from "src/ui/components/note-and-highlight";
+import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { TextInputWithLabel } from "src/ui/components/card-creation";
 import { CancelButton } from "src/ui/components/buttons";
 import type { FrontendFlashcard } from "src/routes/review";
@@ -21,7 +21,8 @@ export function EditCard() {
     return (
         <>
             <div className={"sr-annotation"}>
-                <NoteAndHighlight highlightText={annotation.highlight} noteText={annotation.note} />
+                <HighlightBlock text={annotation.highlight} />
+                {annotation.note && <NoteBlock text={annotation.note} />}
             </div>
             <Form method="post" className={"sr-card-form"} replace onSubmit={(event) => submitButtonHandler(event)}>
                 <TextInputWithLabel className={"sr-question-input"} htmlFor={"question"}
