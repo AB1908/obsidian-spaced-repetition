@@ -15,7 +15,7 @@ import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
 import { parseMoonReaderExport } from "./data/import/moonreader";
-import { generateAnnotationMarkdown } from "./data/utils/annotationGenerator";
+import { generateAnnotationMarkdown, generateMarkdownWithHeaders } from "./data/utils/annotationGenerator";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -389,11 +389,27 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
 
         
 
-        // Generate markdown
+                        // Generate markdown
 
-        const markdown = annotations.map(generateAnnotationMarkdown).join("\n");
+        
 
-        const title = `# Annotations for ${annotations[0]?.title || "Unknown Book"}\n\n`;
+                        const markdown = generateMarkdownWithHeaders(annotations);
+
+        
+
+                
+
+        
+
+                        // Robustly get the book title from the first actual annotation
+
+        
+
+                        const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
+
+        
+
+                        const title = `# Annotations for ${bookTitle}\n\n`;
 
         
 
