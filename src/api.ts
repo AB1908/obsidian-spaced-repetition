@@ -303,3 +303,22 @@ export async function createFlashcardNoteForSourceNote(bookId: string) {
     // index writes
     plugin.flashcardIndex.addFlashcardNoteToIndex(book.flashcardNote);
 }
+
+export function getBreadcrumbData(bookId: string, sectionId?: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    let sectionName: string | undefined;
+
+    if (sectionId) {
+        const chapter = book.bookSections.find(
+            (section) => "id" in section && section.id === sectionId
+        );
+        if (chapter && "name" in chapter && (chapter as any).level != undefined) {
+            sectionName = chapter.name;
+        }
+    }
+
+    return {
+        bookName: book.name,
+        sectionName
+    };
+}
