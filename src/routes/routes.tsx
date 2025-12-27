@@ -2,10 +2,11 @@ import { RouteObject } from "react-router-dom";
 import { Tabs } from "src/routes/tabs";
 import { Tags } from "src/routes/tags";
 import { Notes, notesLoader } from "src/routes/notes-home-page";
+import { ImportDashboard, importLoader } from "src/routes/import-export";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-preview";
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/routes/review";
-import { cardLoader, creationAction, updateAction, UpsertCard } from "src/routes/upsert-card";
+import { cardLoader, UpsertCard } from "src/routes/upsert-card";
 import { EditCard, editCardAction } from "src/routes/edit-card";
 import { AnnotationList, annotationsLoader } from "src/routes/highlights";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
@@ -31,6 +32,11 @@ export const children: RouteObject[] = [
                 path: "/books",
                 element: <Notes />,
                 loader: notesLoader
+            },
+            {
+                path: "/import",
+                element: <ImportDashboard />,
+                loader: importLoader
             }
         ]
     },
@@ -103,14 +109,12 @@ export const children: RouteObject[] = [
                         // TODO: this should be refactored into a single add with params for type of card
                         path: "flashcards/:flashcardId",
                         element: <UpsertCard />,
-                        action: updateAction,
                         loader: cardLoader
                     },
                     {
                         // TODO: this should be refactored into a single add with params for type of card
                         path: "flashcards/new/regular",
                         element: <UpsertCard />,
-                        action: creationAction,
                         loader: cardLoader
                     }
                 ]
