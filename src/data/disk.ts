@@ -175,3 +175,50 @@ export function generateFlashcardsFileNameAndPath(bookPath: string) {
     return { filename, path };
 }
 
+export function getAllFolders(): string[] {
+    // Get all folders in the vault
+    const folders: string[] = [];
+    const root = app.vault.getRoot();
+
+    function recurse(folder: any) {
+        if (folder.children) {
+            for (const child of folder.children) {
+                if (child.children) { // It's a folder
+                    folders.push(child.path);
+                    recurse(child);
+                }
+            }
+        }
+    }
+    
+    // Add root as option (represented as empty string or "/")
+    folders.push("/");
+    recurse(root);
+    return folders;
+}
+
+export async function moveFile(sourcePath: string, destinationPath: string) {
+    const file = getTFileForPath(sourcePath);
+    await app.fileManager.renameFile(file, destinationPath);
+}
+
+export function findFilesByExtension(extension: string): string[] {
+    return app.vault.getFiles()
+        .filter(t => t.extension === extension)
+        .map(t => t.path);
+}
+
+export async function renameFile(path: string, newName: string) {
+    const file = getTFileForPath(path);
+    const newPath = path.replace(file.name, newName);
+    await app.fileManager.renameFile(file, newPath);
+}
+
+export async function createFile(path: string, content: string) {
+    return await app.vault.create(path, content);
+}
+
+export async function createFolder(path: string) {
+    return await app.vault.createFolder(path);
+}
+
