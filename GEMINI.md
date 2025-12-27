@@ -55,6 +55,10 @@ This document serves as the primary context for Gemini's interaction with this r
 ### 3. Test-Driven Stability
 - **Rule:** Ensure tests pass before and after changes.
 - **Guidance:** When fixing bugs, ideally add a reproduction test case first. When adding features, include unit tests to cover the new logic.
+- **UI Testing Specifics:**
+    - **Global Setup:** `tests/setup.ts` should globally import `@testing-library/jest-dom` for extended DOM assertions. If not working consistently, explicitly import it in individual test files (`import '@testing-library/jest-dom';`).
+    - **React Router Hooks:** When testing components that use `react-router-dom` hooks (`useLoaderData`, `useParams`, `useLocation`, `useNavigate`, etc.), ensure these hooks are mocked using `jest.mock('react-router-dom', () => ({ ...jest.requireActual('react-router-dom'), ...mockedHooks }));`.
+    - **Internal Functions:** For functions defined and used within the same component file (e.g., `pathGenerator` in `annotation-with-outlet.tsx`), consider extracting them to a separate utility file (e.g., `src/utils/path-generators.ts`). This allows them to be mocked using `jest.mock` on the utility module or `jest.spyOn` on the imported function, improving test isolation.
 
 ---
 
