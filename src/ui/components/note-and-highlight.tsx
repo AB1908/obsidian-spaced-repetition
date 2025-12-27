@@ -1,16 +1,14 @@
 import React from "react";
 
-export function NoteAndHighlight({highlightText, noteText, displayMode}: { highlightText: string, noteText: string, displayMode: 'highlight' | 'note' }) {
+export function NoteAndHighlight({highlightText, noteText}: { highlightText: string, noteText: string }) {
     return <>
         <div className={"annotation-note"}>
-            {displayMode === 'highlight' &&
-                <blockquote className={"sr-blockquote-annotation"}>
-                    <p>
-                        {highlightText}
-                    </p>
-                </blockquote>
-            }
-            {displayMode === 'note' && noteText &&
+            <blockquote className={"sr-blockquote-annotation"}>
+                <p>
+                    {highlightText}
+                </p>
+            </blockquote>
+            {noteText &&
                 <blockquote className={"sr-blockquote-note"}>
                     <p>
                         {noteText}
