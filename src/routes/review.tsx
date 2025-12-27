@@ -104,7 +104,7 @@ export function ReviewDeck() {
     }
 
     function editButtonClickHandler() {
-        navigate("edit");
+        navigate(`/books/${params.bookId}/flashcards/${params.flashcardId}/edit`);
     }
 
     async function deleteButtonHandler() {
