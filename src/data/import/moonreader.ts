@@ -103,8 +103,8 @@ export function parseMoonReaderExport(content: string): MoonReaderAnnotation[] {
                 characters: record.characters,
                 color: record.color,
                 timestamp: record.timestamp,
-                highlight: record.bookmarkText, // Main highlighted text (Field 11)
-                note: record.noteTextRaw,      // User's note (Field 12)
+                highlight: record.highlightTextRaw.replace(/<BR>/g, "\n"), // Highlight from highlightTextRaw (Field 13)
+                note: record.noteTextRaw.replace(/<BR>/g, "\n"),      // Note from noteTextRaw (Field 12)
             });
         }
     }
