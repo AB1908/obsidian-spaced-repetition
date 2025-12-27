@@ -5,11 +5,54 @@ This document serves as the primary context for Gemini's interaction with this r
 ## Operational Principles
 
 ### 1. Atomic Commits
-- **Rule:** Commits must be atomic and focused on a single logical change.
-- **Guidance:** Do not mix configuration changes, documentation updates, and code fixes in the same commit unless they are strictly related (e.g., a code change that requires a config update).
+- **Rule:** Commits must be atomic and focused on a single logical change. A change is considered atomic if it can be understood, reviewed, and, if necessary, reverted independently without affecting unrelated work.
+- **Guidance:**
+    - Do not mix unrelated changes (e.g., bug fix and new feature) in a single commit.
+    - Do not mix configuration changes, documentation updates, and code fixes unless they are strictly co-dependent (e.g., a code change that *requires* a config update to function).
+- **Examples of an Atomic Change:**
+    - Implementing a single, small feature.
+    - Fixing one specific bug.
+    - Refactoring a single component or function.
+    - Adding tests for a specific component or feature.
+    - Updating a single dependency.
 - **Process:** Before committing, always check `git status` to ensure only relevant files are staged. Partial commits (`git add -p` or specific file paths) are preferred over `git add .`.
 
-### 2. Test-Driven Stability
+### 2. Commit Message Guidelines
+- **Rule:** All commit messages must adhere to the Conventional Commits specification.
+- **Format:**
+    ```
+    <type>(<scope>): <description>
+
+    [body]
+
+    [footer(s)]
+    ```
+- **Elements:**
+    - **`<type>` (Required):** Short, imperative, lowercase verb indicating the nature of the change.
+        - `feat`: A new feature (introduces new functionality).
+        - `fix`: A bug fix (corrects unexpected behavior).
+        - `refactor`: Code change that neither fixes a bug nor adds a feature (e.g., restructuring code for clarity).
+        - `test`: Adding or correcting tests.
+        - `docs`: Documentation only changes.
+        - `style`: Formatting, whitespace (no code meaning change).
+        - `perf`: Code change that improves performance.
+        - `build`: Changes affecting the build system or external dependencies.
+        - `ci`: Changes to CI configuration files and scripts.
+        - `chore`: Other changes that don't modify src or test files.
+        - `revert`: Reverts a previous commit.
+    - **`<scope>` (Optional):** A noun describing the part of the codebase affected. Examples: `(ui)`, `(api)`, `(routing)`, `(flashcard)`, `(tests)`.
+    - **`<description>` (Required):** Concise, imperative, present-tense summary of the change (max ~72 chars). Starts lowercase, no period.
+    - **`<body>` (Optional):** Longer explanation providing context, motivation, and detailed implementation notes. Explain *why* the change was made. Wrap lines at ~72 chars.
+    - **`<footer>(s)` (Optional):**
+        - `BREAKING CHANGE:`: Indicates a breaking API change. Include a description of the change and migration instructions. (e.g., `BREAKING CHANGE: <description>`)
+        - References: Link to issues (e.g., `Closes #123`, `Refs #456`).
+- **Examples:**
+    - `feat(ui): add highlight/note toggle to annotation view`
+    - `fix(review): prevent infinite loop in card navigation`
+    - `refactor(NoteAndHighlight)!: require displayMode prop` (Note the `!` for breaking changes in description)
+    - `test(annotation): add UI test for toggle functionality`
+
+### 3. Test-Driven Stability
 - **Rule:** Ensure tests pass before and after changes.
 - **Guidance:** When fixing bugs, ideally add a reproduction test case first. When adding features, include unit tests to cover the new logic.
 
