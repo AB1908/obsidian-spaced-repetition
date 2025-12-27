@@ -9,6 +9,7 @@ import { setIcon } from "obsidian";
 import { Icon } from "src/routes/root";
 import { paragraph } from "src/data/models/paragraphs";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
+import { pathGenerator } from "src/utils/path-generators";
 
 export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
     annotationId: string;
@@ -113,18 +114,4 @@ export function AnnotationWithOutlet() {
     );
 }
 
-function pathGenerator(path: string, params: any, annotationId: string) {
-    // all this validation may not be necessary but keeping it since I already wrote it
-    const updateFlashcardPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/:flashcardId";
-    const newRegularFlashcardPath= "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/new/regular";
-    const newFlashcardPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/new";
-    const viewFlashcardsPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards";
-    const inChildRoute = [updateFlashcardPath, newRegularFlashcardPath, newFlashcardPath, viewFlashcardsPath].some((routePath) => {
-        return matchPath(routePath, path);
-    })
-    if (inChildRoute) {
-        return generatePath(viewFlashcardsPath, {...params, annotationId});
-    } else {
-        throw new Error("could not match path in AnnotationOutlet");
-    }
-}
+
