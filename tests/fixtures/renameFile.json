@@ -1,0 +1,5 @@
+{
+  "method": "renameFile",
+  "input": ["Books/Fiction/Annotations.md", "Annotations_old.md"],
+  "output": null
+}

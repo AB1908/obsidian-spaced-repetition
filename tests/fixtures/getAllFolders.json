@@ -1,0 +1,5 @@
+{
+  "method": "getAllFolders",
+  "input": [],
+  "output": ["/", "Books", "Books/Fiction"]
+}

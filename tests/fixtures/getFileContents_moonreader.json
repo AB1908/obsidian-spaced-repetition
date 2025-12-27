@@ -1,0 +1,5 @@
+{
+  "method": "getFileContents",
+  "input": ["Attachments/Gatsby.mrexpt"],
+  "output": "#\n123\nTitle\nPath\nLPath\nChapter\n0\n0\n0\n0\n0\nHighlight Text\nNote Text"
+}
