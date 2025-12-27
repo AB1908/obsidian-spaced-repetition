@@ -2,6 +2,7 @@ import React, { useEffect, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ICON_LIST } from "src/constants";
 import { setIcon } from "obsidian";
+import { useModalTitle } from "src/ui/modals/ModalTitleContext";
 
 export type Icon = typeof ICON_LIST[number];
 
@@ -9,6 +10,7 @@ export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
     const backButton = useRef<HTMLDivElement>(null);
     const location = useLocation();
     const navigate = useNavigate();
+    const { modalTitle } = useModalTitle();
 
     useEffect(() => {
         const back: Icon = "arrow-left";
@@ -34,7 +36,7 @@ export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
                 onClick={() => handleCloseButton()}
             />
             <div className={"modal-title"}>
-            Card Coverage
+                {modalTitle}
             </div>
             <div className={"modal-content sr-modal-content"}>
                 <Outlet />
