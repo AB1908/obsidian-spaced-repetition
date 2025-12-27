@@ -1,9 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useLoaderData } from "react-router";
 import { DefaultCardForm } from "src/ui/components/card-creation";
 import { getFlashcardById } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { useModalTitle } from "src/ui/modals/ModalTitleContext";
+import { truncate } from "src/utils/text-helpers";
 
 export interface CardLoaderParams {
     bookId: string;
@@ -28,21 +30,21 @@ export function cardLoader({params}: {params: CardLoaderParams}) {
 // Is there a better way of doing this?
 export function UpsertCard() {
     const flashcard = useLoaderData() as Flashcard;
+    const { setModalTitle } = useModalTitle();
     const defaultQuestionValue = flashcard?.questionText || "";
     const defaultAnswerValue = flashcard?.answerText || "";
+
+    useEffect(() => {
+        if (flashcard) {
+            setModalTitle(`Editing: ${truncate(flashcard.questionText, 50)}`);
+        } else {
+            setModalTitle("Creating New Flashcard");
+        }
+    }, [flashcard, setModalTitle]);
+
     return (
         <>
             <DefaultCardForm defaultQuestionValue={defaultQuestionValue} defaultAnswerValue={defaultAnswerValue}/>
         </>
     );
-}
-
-// todo: fix any
-export async function creationAction({params, request}: {params: any, request: any}): Promise<null> {
-    return null;
-}
-
-// todo: fix any
-export async function updateAction({params, request}: {params: any, request: any}): Promise<null> {
-    return null;
 }

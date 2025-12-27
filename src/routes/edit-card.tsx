@@ -1,16 +1,23 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { Form, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { getAnnotationById, updateFlashcardContentsById } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { TextInputWithLabel } from "src/ui/components/card-creation";
 import { CancelButton } from "src/ui/components/buttons";
 import type { FrontendFlashcard } from "src/routes/review";
+import { useModalTitle } from "src/ui/modals/ModalTitleContext";
+import { truncate } from "src/utils/text-helpers";
 
 export function EditCard() {
     const currentCard = useLoaderData() as FrontendFlashcard;
     const params = useParams();
     const annotation = getAnnotationById(currentCard.parentId, params.bookId)
     const navigate = useNavigate();
+    const { setModalTitle } = useModalTitle();
+
+    useEffect(() => {
+        setModalTitle(`Editing: ${truncate(currentCard.questionText, 50)}`);
+    }, [currentCard.questionText, setModalTitle]);
 
     async function submitButtonHandler(e: React.FormEvent<HTMLFormElement>) {
         e.preventDefault();
