@@ -91,4 +91,30 @@ Highlight 1`;
         expect(result).toHaveLength(1);
         expect(result[0].note).toBe("");
     });
+
+    test("should handle empty lines between timestamp and highlight", () => {
+        const sample = `#
+5688
+Memory: A Very Short Introduction
+/sdcard/Books/MoonReader/Memory A Very Short Introduction by Jonathan K. Foster.epub
+/sdcard/books/moonreader/memory a very short introduction by jonathan k. foster.epub
+2
+0
+10434
+209
+-11184811
+1644740833153
+
+
+Thinking along these lines has led many contemporary researchers to regard the mechanisms underlying memory as being best characterized as a dynamic activity or process rather than as a static entity or thing.
+0
+0
+0`;
+
+        const result = parseMoonReaderExport(sample);
+
+        expect(result).toHaveLength(1);
+        expect(result[0].highlight).toEqual("Thinking along these lines has led many contemporary researchers to regard the mechanisms underlying memory as being best characterized as a dynamic activity or process rather than as a static entity or thing.");
+        expect(result[0].timestamp).toBe("1644740833153");
+    });
 });
