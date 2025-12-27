@@ -1,0 +1,5 @@
+{
+  "method": "createFile",
+  "input": ["Books/Fiction/Annotations.md", "content"],
+  "output": null
+}

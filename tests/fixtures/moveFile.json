@@ -1,0 +1,5 @@
+{
+  "method": "moveFile",
+  "input": ["Attachments/Gatsby.mrexpt", "Books/Fiction/Gatsby.mrexpt"],
+  "output": null
+}
