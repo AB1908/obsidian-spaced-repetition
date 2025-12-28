@@ -46,7 +46,7 @@ This document serves as the primary context for Gemini's interaction with this r
     - **`<footer>(s)` (Optional):**
         - `BREAKING CHANGE:`: Indicates a breaking API change. Include a description of the change and migration instructions. (e.g., `BREAKING CHANGE: <description>`)
         - References: Link to issues (e.g., `Closes #123`, `Refs #456`).
-- **Examples:**
+    - **Minimalist Approach for Clear Atomic Changes:** For very clear, atomic changes where the type, scope, and concise description already convey the full intent (e.g., introducing a simple abstraction or fixing a singular, well-understood bug), a body might be omitted to maintain conciseness and avoid redundancy. The change should be self-evident from its commit line and diff.
     - `feat(ui): add highlight/note toggle to annotation view`
     - `fix(review): prevent infinite loop in card navigation`
     - `refactor(NoteAndHighlight)!: require displayMode prop` (Note the `!` for breaking changes in description)
@@ -66,6 +66,27 @@ This document serves as the primary context for Gemini's interaction with this r
 - **Rigorous Architectural Pattern Enforcement:** When introducing new features or refactoring, always ensure changes align with established architectural patterns (e.g., using facades for external APIs, encapsulating file system operations within designated modules like `disk.ts`). This prevents "technical debt" and improves testability and maintainability.
 - **Client API Facades:** Encapsulate direct dependencies on client-specific APIs (e.g., Obsidian's `Notice`, `app.fileManager.processFrontMatter`) behind facades. This isolates the core logic from the client environment, making the code more portable and testable.
 - **Interactive Staging:** When dealing with complex diffs or refactorings, use interactive staging (`git add -p`) to precisely select changes for atomic commits, especially when guided by user feedback.
+- **Flatter, Minimalist UI Architecture:** Prefer simple, "dumb" UI components and flat API structures (e.g., returning a flat list of headings instead of a tree) to reduce complexity and improve maintainability. Complex tree-based UIs should be avoided unless strictly necessary for the user experience.
+- **Prefer Nested Routes for Hierarchy:** Avoid defining flat routes for hierarchical resources (e.g., `:bookId`, `:annotationId`). Use nested `children` in `routes.tsx` to ensure relative navigation (`..`) remains predictable and intuitive.
+- **Intentional Coupling vs. Isolation:** Note that some components (e.g., `AnnotationList`) currently use path-based logic (`location.pathname.startsWith("/import")`) to decide navigation behavior. While this simplifies the current "dumb" UI, it couples the component to the routing structure and should be addressed if these flows need to be isolated into separate plugins or packages.
+- **Mind the Semantic Gap:** Be aware that technical terms (e.g., `Heading`) often differ from domain terms (e.g., `Chapter`). Proactively clarify if a technical filter matches the intended business logic.
+
+### 5. Verify-then-Commit Workflow
+- **Rule:** Never commit code without running the full test suite and verifying the diff.
+- **Process:**
+    1.  **Verify:** Run `npm test` and other relevant checks (linting, type-checking) before staging.
+    2.  **Stage:** Use targeted staging (`git add <file>`) for logically related changes.
+    3.  **Confirm:** Provide a concise summary of staged changes for human validation.
+    4.  **Commit:** Use an atomic Conventional Commit message.
+
+### 6. Diagnostic Snapshot Rule
+- **Rule:** Before using a new or unfamiliar API to drive a UI component, generate a temporary or permanent test case in `tests/api.test.ts` to capture a snapshot of the data.
+- **Purpose:** This prevents "hallucinations of intent" where the AI assumes an API's technical output matches the UI's semantic needs (e.g., assuming `isHeading` only returns level 1 chapters).
+- **Process:**
+    1.  Implement/Identify the API method.
+    2.  Write a test case that calls the method with fixture data.
+    3.  Share the resulting snapshot with the user for semantic verification.
+    4.  Proceed to UI implementation only after the data structure is confirmed.
 
 ---
 
@@ -73,7 +94,17 @@ This document serves as the primary context for Gemini's interaction with this r
 
 This section outlines the active strategy to improve the codebase's test coverage and reliability.
 
-### Completed Work (Current Session: December 26, 2025)
+### Completed Work
+
+**Current Session: December 27, 2025**
+*   **refactor(api):** Centralized `ReviewBook` and `FlashCount` interfaces in `src/api.ts` to improve reusability across routes.
+*   **feat(api):** Implemented `getBookChapters` to provide a flat list of book headings, supporting a simpler, non-hierarchical UI.
+*   **feat(ui):** Simplified the `ImportDashboard` to a minimalistic, clickable list of book names.
+*   **feat(ui):** Overhauled `BookDetailsPage` to display a flat, clickable list of chapters with placeholder links.
+*   **test:** Updated `AnnotationWithOutlet` and `api_orchestrator` tests to reflect UI changes and fix regressions.
+*   **Workflow:** Formalized the "Verify-then-Commit" workflow to protect commit history quality.
+
+**Session: December 26, 2025**
 
 **Core Feature: Dynamic Modal Title & Breadcrumbs**
 *   **feat(title):** Implemented a dynamic breadcrumb title in the flashcard modal that updates during navigation to show book/chapter context and specific editing/creation states.
