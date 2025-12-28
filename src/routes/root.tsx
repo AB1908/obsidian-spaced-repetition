@@ -1,7 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { ICON_LIST } from "src/constants";
-import { setIcon } from "obsidian";
+import { setIcon } from "src/obsidian-facade";
 import { useModalTitle } from "src/ui/modals/ModalTitleContext";
 
 export type Icon = typeof ICON_LIST[number];

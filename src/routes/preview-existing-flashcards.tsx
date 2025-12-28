@@ -4,7 +4,7 @@ import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
 import { Icon } from "src/routes/root";
-import { setIcon } from "obsidian";
+import { setIcon } from "src/obsidian-facade";
 import { AnnotationLoaderParams } from "src/routes/annotation-with-outlet";
 
 interface HighlightParams {

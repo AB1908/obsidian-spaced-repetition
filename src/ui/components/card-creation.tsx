@@ -4,7 +4,7 @@ import { CancelButton, SubmitButton } from "src/ui/components/buttons";
 import { createFlashcardForAnnotation, updateFlashcardContentsById } from "src/api";
 import { FrontendFlashcard } from "src/routes/review";
 import { Icon } from "src/routes/root";
-import { setIcon } from "obsidian";
+import { setIcon } from "src/obsidian-facade";
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
     const labelText = props.htmlFor[0].toUpperCase() + props.htmlFor.slice(1);
