@@ -222,7 +222,7 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
             ...transform(t),
             flashcardCount: flashcardCountForAnnotation[t.id] || 0
         };
-    });
+    }).filter(t => !t.deleted);
 
     return {
         id: sectionId,
