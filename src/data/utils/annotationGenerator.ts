@@ -7,7 +7,6 @@ import { annotation } from "../models/annotations";
  * This is the canonical way annotations are stored on disk.
  */
 export function renderAnnotation(ann: annotation): string {
-    console.log(ann);
     const metadataText = serializeMetadata({
         original_color: ann.originalColor,
         location: ann.location,
@@ -17,8 +16,6 @@ export function renderAnnotation(ann: annotation): string {
         personal_note: ann.personalNote,
         origin: ann.origin,
     });
-    console.log("renderAnnotation")
-    console.log(metadataText);
     const noteContent = ann.note ? `\n> ${ann.note}` : "";
 
     return `> [!quote] ${ann.id}
