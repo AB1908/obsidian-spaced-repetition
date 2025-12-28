@@ -1,11 +1,13 @@
 import { MoonReaderAnnotation } from "src/data/import/moonreader";
+import { serializeMetadata } from "./metadataSerializer";
 
 export function generateAnnotationMarkdown(annotation: MoonReaderAnnotation): string {
-    const hiddenMetadata = [
-        `original_color: ${annotation.color}`,
-        `location: ${annotation.location}`,
-        `timestamp: ${annotation.timestamp}`
-    ].join("\n");
+    const metadataText = serializeMetadata({
+        original_color: annotation.color,
+        location: annotation.location,
+        timestamp: annotation.timestamp,
+        origin: "moonreader"
+    });
 
     // Ensure note is not null/undefined
     const noteContent = annotation.note ? `\n> ${annotation.note}` : "";
@@ -17,7 +19,7 @@ export function generateAnnotationMarkdown(annotation: MoonReaderAnnotation): st
 > ${annotation.highlight.replace(/\n/g, "\n> ")}
 > ***${noteContent}
 > %%
-> ${hiddenMetadata.replace(/\n/g, "\n> ")}
+> ${metadataText.replace(/\n/g, "\n> ")}
 > %%
 `;
 }
