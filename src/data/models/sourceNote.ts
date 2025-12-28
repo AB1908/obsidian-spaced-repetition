@@ -39,6 +39,10 @@ export function isHeading(section: BookMetadataSection): section is Heading {
     return (section as Heading).level !== undefined;
 }
 
+export function isChapter(section: BookMetadataSection): section is Heading {
+    return isHeading(section) && section.level === 1;
+}
+
 export function isAnnotation(section: BookMetadataSection): section is annotation {
     return (section as annotation).highlight !== undefined;
 }
