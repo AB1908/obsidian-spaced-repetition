@@ -19,6 +19,7 @@ import { ChooseCardType } from "src/routes/choose-card-type";
 import React from "react";
 import { BookDetailsPage, bookDetailsLoader } from "src/routes/book-details-page";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
+import { personalNoteLoader, PersonalNotePage } from "./personal-note";
 
 export const children: RouteObject[] = [
     {
@@ -64,12 +65,37 @@ export const children: RouteObject[] = [
         ]
     },
     {
-        path: "/books/:bookId/details",
-        element: <BookDetailsPage />,
-        loader: bookDetailsLoader,
-    },
+                        path: "import/books/:bookId",
+                        children: [
+                            {
+                                path: "details",
+                                element: <BookDetailsPage />,
+                                loader: bookDetailsLoader,
+                            },
+                            {
+                                path: "chapters/:sectionId/annotations",
+                                children: [
+                                    {
+                                        path: "",
+                                        element: <AnnotationList />,
+                                        loader: annotationsLoader,
+                                    },
+                                    {
+                                        path: ":annotationId",
+                                        children: [
+                                            {
+                                                path: "personal-note",
+                                                element: <PersonalNotePage />,
+                                                loader: personalNoteLoader,
+                                            }
+                                        ]
+                                    }
+                                ]
+                            }
+                        ]
+                    }
 
-    {
+    ,{
         path: "/books/:bookId/review",
         element: <ReviewDeck />,
         loader: reviewLoader
