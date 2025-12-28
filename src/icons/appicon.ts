@@ -1,4 +1,4 @@
-import { addIcon } from "obsidian";
+import { addIcon } from "src/obsidian-facade";
 
 export function appIcon() {
     addIcon(
