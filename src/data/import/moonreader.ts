@@ -25,7 +25,7 @@ export interface MoonReaderAnnotation {
  *    such an annotation is treated as the chapter name for all subsequent
  *    annotations, and the marker itself is discarded from the final output.
  */
-export function parseMoonReaderExport(content: string): MoonReaderAnnotation[] {
+export function parseMoonReaderExport(content: string, sinceId: string | null = null): MoonReaderAnnotation[] {
     // This regex is based on the 16-field structure revealed by the reference parser.
     // It correctly captures all parts of a standard MoonReader record.
     // We explicitly capture field 11 (bookmarkText), 12 (noteText), and 13 (highlightText)
@@ -105,6 +105,16 @@ export function parseMoonReaderExport(content: string): MoonReaderAnnotation[] {
                 timestamp: record.timestamp,
                 highlight: record.highlightTextRaw.replace(/<BR>/g, "\n"), // Highlight from highlightTextRaw (Field 13)
                 note: record.noteTextRaw.replace(/<BR>/g, "\n"),      // Note from noteTextRaw (Field 12)
+            });
+        }
+    }
+
+    if (sinceId !== null) {
+        const sinceIdNum = parseInt(sinceId, 10);
+        if (!isNaN(sinceIdNum)) {
+            return finalAnnotations.filter(ann => {
+                const annId = parseInt(ann.id, 10);
+                return !isNaN(annId) && annId > sinceIdNum;
             });
         }
     }
