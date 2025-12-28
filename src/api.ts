@@ -25,6 +25,7 @@ import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
 import { parseMoonReaderExport } from "./data/import/moonreader";
 import { generateAnnotationMarkdown, generateMarkdownWithHeaders } from "./data/utils/annotationGenerator";
+import { ObsidianNotice } from "src/obsidian-facade";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -373,94 +374,90 @@ export async function getImportedBooks(): Promise<BookFrontmatter[]> {
     return books;
 }
 
-    export function getImportableExports() {
+export function getImportableExports() {
+    return findFilesByExtension("mrexpt");
+}
 
-        return findFilesByExtension("mrexpt");
-
-    }
-
-    
-
-    export function getDestinationFolders() {
-
-        return getAllFolders();
-
-    }
+export function getDestinationFolders() {
+    return getAllFolders();
+}
 
     
+export async function updateBookAnnotationsAndFrontmatter(
+    annotationsPath: string,
+    mrexptPath: string,
+    sinceId: string
+) {
+    const mrexptContent = await getFileContents(mrexptPath);
+    const newAnnotations = parseMoonReaderExport(mrexptContent, sinceId);
 
-    export async function importMoonReaderExport(mrexptPath: string, targetFolderPath: string) {
-
-        const content = await getFileContents(mrexptPath);
-
-        const annotations = parseMoonReaderExport(content);
-
-        
-
-        // Normalize folder path: ensure no trailing slash, but handle root "/"
-
-        const folderPath = targetFolderPath === "/" ? "" : targetFolderPath;
-
-        const annotationsPath = folderPath ? `${folderPath}/Annotations.md` : "Annotations.md";
-
-        
-
-        // Check if Annotations.md already exists
-
-        const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
-
-        if (existingFile) {
-
-            await renameFile(annotationsPath, "Annotations_old.md");
-
-        }
-
-        
-
-        // Move mrexpt file to target folder
-
-        const fileName = mrexptPath.split("/").pop();
-
-        const newMrexptPath = folderPath ? `${folderPath}/${fileName}` : fileName;
-
-        if (newMrexptPath && mrexptPath !== newMrexptPath) {
-
-            await moveFile(mrexptPath, newMrexptPath);
-
-        }
-
-        
-
-                        // Generate markdown
-
-        
-
-                        const markdown = generateMarkdownWithHeaders(annotations);
-
-        
-
-                
-
-        
-
-                        // Robustly get the book title from the first actual annotation
-
-        
-
-                        const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
-
-        
-
-                        const title = `# Annotations for ${bookTitle}\n\n`;
-
-        
-
-        await createFile(annotationsPath, title + markdown);
-
-        
-
-        return annotationsPath;
-
+    if (newAnnotations.length === 0) {
+        new ObsidianNotice("No new annotations found.");
+        return;
     }
 
+    // Append new annotations markdown to the file
+    const newAnnotationsMarkdown = generateMarkdownWithHeaders(newAnnotations);
+    const tfile = getTFileForPath(annotationsPath);
+    await app.vault.append(tfile, '\n' + newAnnotationsMarkdown); // Add a newline before appending
+
+    // Find the new highest ID among all annotations
+    const allAnnotations = parseMoonReaderExport(mrexptContent);
+    const newLastExportedID = Math.max(...allAnnotations.map(ann => parseInt(ann.id, 10)));
+
+    // Update frontmatter values using the new disk utility
+    await updateFrontmatter(annotationsPath, {
+        lastExportedTimestamp: Date.now(),
+        lastExportedID: newLastExportedID,
+    });
+
+    new ObsidianNotice(`Updated ${newAnnotations.length} new annotations.`);
+}
+
+
+
+export async function getUnimportedMrExptFiles(): Promise<string[]> {
+    const allMrExptFiles = findFilesByExtension("mrexpt");
+    const importedBooks = await getImportedBooks();
+    const importedPaths = new Set(importedBooks.map(b => b.path));
+    return allMrExptFiles.filter(f => !importedPaths.has(f));
+}
+
+export async function importMoonReaderExport(mrexptPath: string) {
+    const content = await getFileContents(mrexptPath);
+    const annotations = parseMoonReaderExport(content);
+
+    if (annotations.length === 0) {
+        throw new Error("No annotations found in the export file.");
+    }
+
+    const lastExportedID = Math.max(...annotations.map(ann => parseInt(ann.id, 10)));
+
+    const { path: folderPath } = getParentFolderPathAndName(mrexptPath);
+    const annotationsPath = folderPath === "/" ? "Annotations.md" : `${folderPath}/Annotations.md`;
     
+    const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
+    if (existingFile) {
+        throw new Error(`Annotations file already exists at: ${annotationsPath}. Please sync it instead.`);
+    }
+
+    const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
+
+    const frontmatter = `---
+path: "${mrexptPath}"
+title: "${bookTitle}"
+author: ""
+lastExportedTimestamp: ${Date.now()}
+lastExportedID: ${lastExportedID}
+tags:
+  - "review/book"
+---
+
+`;
+
+    const markdown = generateMarkdownWithHeaders(annotations);
+    
+    await createFile(annotationsPath, frontmatter + markdown);
+
+    return annotationsPath;
+}
