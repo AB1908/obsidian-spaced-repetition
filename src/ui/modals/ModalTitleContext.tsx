@@ -15,16 +15,13 @@ export const ModalTitleProvider = ({ children }: { children: ReactNode }) => {
 
     // Initial title setup based on URL params
     React.useEffect(() => {
-            console.log("inside function")
             if (bookId) {
-                console.log(bookId);
                 try {
                     const { bookName, sectionName } = getBreadcrumbData(bookId, sectionId);
                     let title = bookName;
                     if (sectionName) {
                         title += ` / ${sectionName}`;
                     }
-                    console.log(title);
                     setModalTitle(title);
                 } catch (e) {
                     console.error("Error setting initial modal title:", e);
@@ -44,7 +41,6 @@ export const ModalTitleProvider = ({ children }: { children: ReactNode }) => {
 
 export const useModalTitle = () => {
     const context = useContext(ModalTitleContext);
-    console.log("here", context);
     if (context === undefined) {
         throw new Error("useModalTitle must be used within a ModalTitleProvider");
     }
