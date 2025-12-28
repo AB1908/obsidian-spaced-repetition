@@ -284,7 +284,33 @@ describe("getAnnotationsForSection", () => {
         await newFunction();
     });
     test("should get annotations for section", () => {
-        expect(getAnnotationsForSection("tWxSv_No", "t0000010")).toMatchInlineSnapshot(`null`);
+        expect(getAnnotationsForSection("t0000011", "t0000010")).toMatchInlineSnapshot(`
+            {
+              "annotations": [
+                {
+                  "flashcardCount": 4,
+                  "hasFlashcards": true,
+                  "highlight": "What is episodic memory?
+            NO one knows ",
+                  "id": "tekXLAu8",
+                  "note": "",
+                  "type": "",
+                },
+                {
+                  "flashcardCount": 1,
+                  "hasFlashcards": true,
+                  "highlight": "I have some other text here.
+            This has no block id.
+            Let's see what happens. ",
+                  "id": "tWxSv_No",
+                  "note": "",
+                  "type": "",
+                },
+              ],
+              "id": "t0000011",
+              "title": "Chapter 3: Pulling the rabbit out of the hat",
+            }
+        `);
     });
 });
 // getFlashcardsForAnnotation
