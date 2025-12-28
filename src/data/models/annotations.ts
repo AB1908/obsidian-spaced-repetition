@@ -1,14 +1,21 @@
+import { AnnotationMetadata, deserializeMetadata } from "../utils/metadataSerializer";
+
 export interface annotation {
     id:             string;
     type:           string;
     highlight:      string;
     note:           string;
-    // TODO: do something about this optional thingy
     hasFlashcards?: boolean;
+    // Metadata fields
+    category?:      number;
+    deleted?:       boolean;
+    personalNote?:  string;
+    origin?:        string;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
-const ANNOTATION_REGEX = /> \[!(?<type>.*)] (?<id>\d+)\n(?<highlight>(> .*\n)+)> \*\*\*(?<note>(\n> .*)+)/g;
+// Metadata block is now optional (%% ... %%)
+const ANNOTATION_REGEX = /> \[!(?<type>.*)] (?<id>\d+)\n(?<highlight>(> .*\n)+)> \*\*\*(?<note>(\n> .*)*)(?:\n> %%\n(?<metadata>(?:> .*\n)+)> %%)?/g;
 
 // TODO: also use line for match since we need to correlate with markdown headers later
 // todo: think of header representation
@@ -17,17 +24,24 @@ export function parseAnnotations(text: string): annotation {
     const annotationMatches = text.matchAll(ANNOTATION_REGEX);
     for (const match of annotationMatches) {
         if (match.groups == null) throw new Error(`parseAnnotations: no annotations found for text ${text}`);
+        
+        const metadataText = match.groups.metadata ? match.groups.metadata.replace(/> /g, "").trim() : "";
+        const metadata = deserializeMetadata(metadataText);
+
         parsedAnnotations.push({
-            // TODO: potentially switch to string that also contains a short UUID?
             id: match.groups.id,
             type: match.groups.type,
             highlight: match.groups.highlight.trim().replace(/> /g, ""),
-            note: match.groups.note.replace(/> /g, "").trim(),
-            // todo: fix
+            note: match.groups.note ? match.groups.note.replace(/> /g, "").trim() : "",
+            category: metadata.category,
+            deleted: metadata.deleted,
+            personalNote: metadata.personal_note,
+            origin: metadata.origin,
         });
     }
     if (parsedAnnotations.length == 0) {
-        new Error("parsedAnnotations: could not find annotation");
+        // We throw the error here to match the caller's expectation
+        throw new Error(`parsedAnnotations: could not find annotation in text: ${text}`);
     }
     return parsedAnnotations[0];
 }
