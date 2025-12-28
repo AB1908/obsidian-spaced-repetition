@@ -54,3 +54,16 @@ export function cyrb53(str: string, seed = 0): string {
     h2 = Math.imul(h2 ^ (h2 >>> 16), 2246822507) ^ Math.imul(h1 ^ (h1 >>> 13), 3266489909);
     return (4294967296 * (2097151 & h2) + (h1 >>> 0)).toString(16);
 }
+
+export function integerToRGBA(colorStr: string): string {
+  let number = parseInt(colorStr, 10);
+  if (isNaN(number)) {
+    return "";
+  }
+  if (number < 0) {
+    number = 0xFFFFFFFF + number + 1;
+  }
+  const ARGB = number.toString(16).toUpperCase().padStart(8, '0');
+
+  return `#${ARGB.slice(2,)}${ARGB.slice(0, 2)}`;
+}
