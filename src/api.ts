@@ -312,6 +312,18 @@ export function getSectionTreeForBook(bookId: string) {
     };
 }
 
+export function getBookChapters(bookId: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    return book.bookSections
+        .filter((section): section is Heading => isHeading(section))
+        .map(heading => ({
+            id: heading.id,
+            name: heading.name,
+            level: heading.level,
+            counts: heading.counts
+        }));
+}
+
 export interface NotesWithoutBooks {
     name: string;
     id: string;
