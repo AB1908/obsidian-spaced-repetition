@@ -4,23 +4,9 @@ import { setIcon } from "obsidian";
 import { Link } from "react-router-dom";
 import { CardCount } from "src/ui/components/card-counts";
 import { Icon } from "src/routes/root";
-import { getSourcesForReview } from "src/api";
+import { getSourcesForReview, ReviewBook, FlashCount } from "src/api";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { maturityCounts } from "src/data/models/flashcard";
-
-export interface ReviewBook {
-    id:                 string;
-    name:               string;
-    pendingFlashcards:  number;
-    annotationCoverage: number;
-    flashcardProgress:  ReturnType<typeof maturityCounts>;
-}
-
-export interface FlashCount {
-    mature: number;
-    new:    number;
-    learning:  number;
-}
 
 // TODO: Fix types
 // TODO: use more realistic data??

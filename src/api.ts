@@ -1,3 +1,19 @@
+import { maturityCounts } from "src/data/models/flashcard";
+
+export interface ReviewBook {
+    id: string;
+    name: string;
+    pendingFlashcards: number;
+    annotationCoverage: number;
+    flashcardProgress: ReturnType<typeof maturityCounts>;
+}
+
+export interface FlashCount {
+    mature: number;
+    new: number;
+    learning: number;
+}
+
 export interface BookFrontmatter {
     path: string; // Path to the .mrexpt file
     annotationsPath: string; // Path to the Annotations.md file
