@@ -218,7 +218,14 @@ export async function createFile(path: string, content: string) {
     return await app.vault.create(path, content);
 }
 
-export async function createFolder(path: string) {
-    return await app.vault.createFolder(path);
+export async function updateFrontmatter(filePath: string, data: Record<string, any>) {
+    const tfile = getTFileForPath(filePath);
+    await app.fileManager.processFrontMatter(tfile, (frontmatter) => {
+        for (const key in data) {
+            if (Object.prototype.hasOwnProperty.call(data, key)) {
+                frontmatter[key] = data[key];
+            }
+        }
+    });
 }
 
