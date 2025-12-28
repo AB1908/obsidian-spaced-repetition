@@ -31,7 +31,7 @@ import {
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/models/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter } from "src/data/models/sourceNote";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/data/disk";
 import type SRPlugin from "src/main";
