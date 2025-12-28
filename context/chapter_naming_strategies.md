@@ -8,8 +8,8 @@ This strategy is implemented in `src/data/import/moonreader.ts`.
 
 *   **Mechanism:**
     *   The MoonReader parser (`parseMoonReaderExport`) identifies a "chapter marker" by looking for a specific pattern in the exported annotations.
-    *   A record is considered a chapter marker if its `note` field (Field 12 in the 16-field record structure) is exactly `#`.
-    *   When such a marker is found, its `highlight` field (Field 13 in the 16-field record structure) is interpreted as the chapter name.
+    *   A record is considered a chapter marker if its `noteText` (Field 12 in the 16-field record structure) is exactly `#`.
+    *   When such a marker is found, its `highlightText` (Field 13 in the 16-field record structure) is interpreted as the chapter name.
     *   Any `<BR>` within this chapter name is replaced with `: `.
     *   This chapter name is then applied to all subsequent annotations until a new chapter marker is encountered.
     *   Chapter marker annotations themselves are filtered out from the final list.
@@ -19,7 +19,7 @@ This strategy is implemented in `src/data/import/moonreader.ts`.
     *   No external files or interactive steps are required.
     *   Provides dynamic chapter assignment during parsing.
 *   **Cons:**
-    *   **Brittleness:** Highly dependent on a precise, non-standard pattern (`note` field as `#`, `highlight` field as chapter name). Any deviation in the MoonReader export format or user's tagging convention could break it.
+    *   **Brittleness:** Highly dependent on a precise, non-standard pattern. Any deviation in the MoonReader export format or user's tagging convention could break it.
     *   **User Burden:** Requires the user to manually insert these specific chapter marker annotations in MoonReader.
     *   **Limited Flexibility:** Does not support hierarchical chapter structures (e.g., Part 1, Chapter 1).
     *   **Hidden Logic:** The chapter naming logic is embedded within the parser, not easily discoverable or configurable by the user.
