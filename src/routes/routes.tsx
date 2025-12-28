@@ -2,7 +2,7 @@ import { RouteObject } from "react-router-dom";
 import { Tabs } from "src/routes/tabs";
 import { Tags } from "src/routes/tags";
 import { Notes, notesLoader } from "src/routes/notes-home-page";
-import { ImportDashboard, importLoader } from "src/routes/import-export";
+import { ImportDashboard } from "src/routes/import-export";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-preview";
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/routes/review";
@@ -35,8 +35,7 @@ export const children: RouteObject[] = [
             },
             {
                 path: "/import",
-                element: <ImportDashboard />,
-                loader: importLoader
+                element: <ImportDashboard />
             }
         ]
     },
