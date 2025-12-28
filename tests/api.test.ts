@@ -43,6 +43,7 @@ import {
     getSourcesForReview,
     resetBookReviewState,
     getSectionTreeForBook,
+    getBookChapters,
     getNotesWithoutReview,
     createFlashcardNoteForSourceNote,
 } from "src/api";
@@ -385,6 +386,27 @@ describe("getSectionTreeForBook", () => {
               "id": "t0000010",
               "name": "Untitled",
             }
+        `);
+    });
+});
+// getBookChapters
+describe("getBookChapters", () => {
+    beforeEach(async () => {
+        await newFunction();
+    });
+    test("should get flat list of chapters for book", () => {
+        expect(getBookChapters("t0000010")).toMatchInlineSnapshot(`
+            [
+              {
+                "counts": {
+                  "with": 2,
+                  "without": 0,
+                },
+                "id": "t0000011",
+                "level": 1,
+                "name": "Chapter 3: Pulling the rabbit out of the hat",
+              },
+            ]
         `);
     });
 });

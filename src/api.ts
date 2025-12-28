@@ -315,7 +315,7 @@ export function getSectionTreeForBook(bookId: string) {
 export function getBookChapters(bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
     return book.bookSections
-        .filter((section): section is Heading => isHeading(section))
+        .filter((section): section is Heading => isHeading(section) && section.level === 1)
         .map(heading => ({
             id: heading.id,
             name: heading.name,
