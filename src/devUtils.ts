@@ -1,7 +1,6 @@
 import { writeFileSync, readdirSync } from "fs";
 import {nanoid} from "nanoid";
-import {moment} from "src/obsidian-facade";
-import {TFile} from "obsidian";
+import {moment, TFile} from "src/obsidian-facade";
 
 export function consoleStart(obj: any, name?: string) {
     console.group(name || "input");
