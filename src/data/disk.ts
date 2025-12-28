@@ -1,4 +1,3 @@
-import { TagCache } from "obsidian";
 import { TagCache, TFile } from "obsidian";
 import { vault, fileManager, metadataCache } from "src/obsidian-facade";
 import { ANNOTATIONS_YAML_KEY } from "src/data/models/sourceNote";
@@ -60,16 +59,16 @@ function findFilesWithHashInSet(hashSet: Set<string>) {
 export function fileTags() {
     let fileMap = new Map<string,string>();
     let fileCache = structuredClone(metadataCache.fileCache);
-    let metadataCache = structuredClone(metadataCache.metadataCache);
+    let clonedMetadataCache = structuredClone(metadataCache.metadataCache);
     for (let key of Object.keys(fileCache)) {
         fileMap.set(fileCache[key].hash, key);
     }
     const tagMap = new Map<string, string[]>();
     const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag)};
     for (let [hash, path] of fileMap) {
-        const frontmatterTags = metadataCache[hash]?.frontmatter?.tags;
+        const frontmatterTags = clonedMetadataCache[hash]?.frontmatter?.tags;
         const tagsArray = frontmatterTags || [];
-        const fileTags = metadataCache[hash]?.tags;
+        const fileTags = clonedMetadataCache[hash]?.tags;
         if (fileTags) {
             let tags = transformTags(fileTags);
             // todo: need to check if there can be pound symbols within a tag's text
