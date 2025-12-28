@@ -5,7 +5,7 @@ import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationById } from "src/api";
 import type { AnnotationsLoaderParams, SectionAnnotations } from "src/routes/highlights";
 import { Link, useLocation, useParams } from "react-router-dom";
-import { setIcon } from "obsidian";
+import { setIcon } from "src/obsidian-facade";
 import { Icon } from "src/routes/root";
 import { paragraph } from "src/data/models/paragraphs";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
