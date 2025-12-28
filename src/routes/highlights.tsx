@@ -49,10 +49,10 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
     );
 }
 
-function AnnotationListItem(props: { annotation: annotation }) {
+function AnnotationListItem(props: { annotation: annotation, linkSuffix: string }) {
     return <div id={props.annotation.id}>
         <Link
-            to={`${props.annotation.id}/flashcards`}
+            to={`${props.annotation.id}/${props.linkSuffix}`}
             state={{scrollId: props.annotation.id}}
             onClick={() => sessionStorage.setItem('scrollToAnnotation', props.annotation.id)}
         >
@@ -74,6 +74,10 @@ function AnnotationListItem(props: { annotation: annotation }) {
 export function AnnotationList() {
     const chapterData = useLoaderData() as SectionAnnotations;
     const location = useLocation();
+    const isImportFlow = location.pathname.startsWith("/import");
+    console.log(location);
+    const linkSuffix = isImportFlow ? "personal-note" : "flashcards";
+    console.log(linkSuffix);
 
     //todo: don't use direct DOM manipulation one day
     React.useEffect(() => {
@@ -108,7 +112,7 @@ export function AnnotationList() {
             <p>Add flashcards from:</p>
             <ul className={"sr-highlight-tree"}>
                 {chapterData.annotations.map((annotation: annotation) => (
-                    <AnnotationListItem key={annotation.id} annotation={annotation}/>
+                    <AnnotationListItem key={annotation.id} annotation={annotation} linkSuffix={linkSuffix}/>
                 ))}
             </ul>
         </>
