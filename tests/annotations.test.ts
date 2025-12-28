@@ -16,9 +16,12 @@ describe("parseAnnotations should parse an annotation with", () => {
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
+              "location": undefined,
               "note": "",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -39,9 +42,12 @@ describe("parseAnnotations should parse an annotation with", () => {
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -58,9 +64,12 @@ describe("parseAnnotations should parse an annotation with", () => {
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -82,9 +91,12 @@ describe("parseAnnotations should parse an annotation with", () => {
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -104,9 +116,12 @@ describe("parseAnnotations should parse an annotation with", () => {
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -128,10 +143,13 @@ describe("parseAnnotations should parse an annotation with", () => {
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien
             This is another line.",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -149,10 +167,13 @@ describe("parseAnnotations should parse an annotation with", () => {
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien
             This is another line.",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -176,10 +197,13 @@ describe("parseAnnotations should parse an annotation with", () => {
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien
             This is another line.",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);
@@ -199,10 +223,13 @@ describe("parseAnnotations should parse an annotation with", () => {
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
+              "location": undefined,
               "note": "What a beautiful line by Tolkien
             This is another line.",
               "origin": undefined,
+              "originalColor": undefined,
               "personalNote": undefined,
+              "timestamp": undefined,
               "type": "notes",
             }
         `);

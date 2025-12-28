@@ -1,27 +1,48 @@
 import { MoonReaderAnnotation } from "src/data/import/moonreader";
 import { serializeMetadata } from "./metadataSerializer";
+import { annotation } from "../models/annotations";
 
-export function generateAnnotationMarkdown(annotation: MoonReaderAnnotation): string {
+/**
+ * Renders an internal annotation model to its Markdown representation.
+ * This is the canonical way annotations are stored on disk.
+ */
+export function renderAnnotation(ann: annotation): string {
     const metadataText = serializeMetadata({
-        original_color: annotation.color,
-        location: annotation.location,
-        timestamp: annotation.timestamp,
-        origin: "moonreader"
+        original_color: ann.originalColor,
+        location: ann.location,
+        timestamp: ann.timestamp,
+        category: ann.category,
+        deleted: ann.deleted,
+        personal_note: ann.personalNote,
+        origin: ann.origin,
     });
 
-    // Ensure note is not null/undefined
-    const noteContent = annotation.note ? `\n> ${annotation.note}` : "";
+    const noteContent = ann.note ? `\n> ${ann.note}` : "";
 
-    // We use the ID from MoonReader (which is usually a timestamp or simple ID)
-    // If it conflicts, we might need to prefix it, but for now we trust it.
-
-    return `> [!quote] ${annotation.id}
-> ${annotation.highlight.replace(/\n/g, "\n> ")}
+    return `> [!quote] ${ann.id}
+> ${ann.highlight.replace(/\n/g, "\n> ")}
 > ***${noteContent}
 > %%
 > ${metadataText.replace(/\n/g, "\n> ")}
 > %%
 `;
+}
+
+/**
+ * Legacy support for MoonReaderAnnotation during initial import.
+ * Internally uses renderAnnotation after mapping fields.
+ */
+export function generateAnnotationMarkdown(mra: MoonReaderAnnotation): string {
+    return renderAnnotation({
+        id: mra.id,
+        type: "quote", // Standard type
+        highlight: mra.highlight,
+        note: mra.note,
+        origin: "moonreader",
+        originalColor: mra.color,
+        location: mra.location,
+        timestamp: mra.timestamp
+    });
 }
 
 export function generateMarkdownWithHeaders(annotations: MoonReaderAnnotation[]): string {

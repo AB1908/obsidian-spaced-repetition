@@ -11,6 +11,9 @@ export interface annotation {
     deleted?:       boolean;
     personalNote?:  string;
     origin?:        string;
+    originalColor?: string;
+    location?:      string;
+    timestamp?:     string;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing
@@ -37,6 +40,9 @@ export function parseAnnotations(text: string): annotation {
             deleted: metadata.deleted,
             personalNote: metadata.personal_note,
             origin: metadata.origin,
+            originalColor: metadata.original_color,
+            location: metadata.location,
+            timestamp: metadata.timestamp,
         });
     }
     if (parsedAnnotations.length == 0) {
