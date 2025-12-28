@@ -6,6 +6,7 @@ export interface annotation {
     highlight:      string;
     note:           string;
     hasFlashcards?: boolean;
+    flashcardCount?: number;
     // Metadata fields
     category?:      number;
     deleted?:       boolean;
@@ -14,6 +15,12 @@ export interface annotation {
     originalColor?: string;
     location?:      string;
     timestamp?:     string;
+}
+
+export interface SectionAnnotations {
+    id:          string;
+    annotations: annotation[];
+    title:       string;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing

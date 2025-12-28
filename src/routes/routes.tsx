@@ -8,7 +8,8 @@ import { ChapterList, chapterLoader } from "src/routes/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/routes/review";
 import { cardLoader, UpsertCard } from "src/routes/upsert-card";
 import { EditCard, editCardAction } from "src/routes/edit-card";
-import { AnnotationList, annotationsLoader } from "src/routes/highlights";
+import { ImportHighlights, annotationsLoader as importAnnotationsLoader } from "src/routes/import-highlights";
+import { FlashcardHighlights, annotationsLoader as flashcardAnnotationsLoader } from "src/routes/flashcard-highlights";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
 import {
     deleteFlashcardAction,
@@ -77,8 +78,8 @@ export const children: RouteObject[] = [
                                 children: [
                                     {
                                         path: "",
-                                        element: <AnnotationList />,
-                                        loader: annotationsLoader,
+                                        element: <ImportHighlights />,
+                                        loader: importAnnotationsLoader,
                                     },
                                     {
                                         path: ":annotationId",
@@ -115,13 +116,13 @@ export const children: RouteObject[] = [
     {
         path: "/books/:bookId/chapters/:sectionId/annotations",
         //todo: conditional logic for intermediate page where we display existing flashcards
-        loader: annotationsLoader,
+        loader: flashcardAnnotationsLoader,
         id: "annotationsList",
         children: [
             {
                 path: "",
-                element: <AnnotationList />,
-                loader: annotationsLoader,
+                element: <FlashcardHighlights />,
+                loader: flashcardAnnotationsLoader,
             },
             {
                 path: ":annotationId",
