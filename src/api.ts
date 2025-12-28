@@ -1,3 +1,12 @@
+export interface BookFrontmatter {
+    path: string; // Path to the .mrexpt file
+    annotationsPath: string; // Path to the Annotations.md file
+    title: string;
+    author: string;
+    lastExportedTimestamp: number;
+    lastExportedID: number;
+    tags: string[];
+}
 import { type ReviewResponse } from "./scheduler/CardType";
 import { CardType } from "./scheduler/CardType";
 import {
@@ -8,7 +17,7 @@ import { calculateDelayBeforeReview } from "./data/models/calculateDelayBeforeRe
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { updateCardOnDisk, findFilesByExtension, getAllFolders, moveFile, renameFile, createFile, getFileContents } from "src/data/disk";
+import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getParentFolderPathAndName, getMetadataForFile, updateFrontmatter, getTFileForPath } from "src/data/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { ReviewBook } from "src/routes/notes-home-page";
@@ -320,16 +329,49 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
     }
 
         return {
-
             bookName: book.name,
-
             sectionName
-
         };
-
     }
 
-    
+export async function getImportedBooks(): Promise<BookFrontmatter[]> {
+    const markdownFiles = findFilesByExtension("md");
+    const annotationFiles = markdownFiles.filter(t => t.endsWith("Annotations.md"));
+    const books: BookFrontmatter[] = [];
+
+    for (const file of annotationFiles) {
+        try {
+            const metadata = getMetadataForFile(file);
+            const frontmatter = metadata?.frontmatter;
+
+            if (frontmatter) {
+                // Basic validation for required fields
+                if (
+                    frontmatter.path &&
+                    frontmatter.title &&
+                    frontmatter.lastExportedTimestamp !== undefined &&
+                    frontmatter.lastExportedID !== undefined
+                ) {
+                    books.push({
+                        path: frontmatter.path,
+                        annotationsPath: file,
+                        title: frontmatter.title,
+                        author: frontmatter.author || "",
+                        lastExportedTimestamp: frontmatter.lastExportedTimestamp,
+                        lastExportedID: frontmatter.lastExportedID,
+                        tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+                    });
+                } else {
+                    console.warn(`Skipping malformed frontmatter in ${file}`);
+                }
+            }
+        } catch (e) {
+            console.error(`Error processing file ${file}:`, e);
+        }
+    }
+
+    return books;
+}
 
     export function getImportableExports() {
 
