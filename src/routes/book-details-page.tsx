@@ -35,7 +35,7 @@ export function BookDetailsPage() {
                 <ul className="sr-chapter-list">
                     {chapters.map((chapter: any) => (
                         <li key={chapter.id} className="tree-item-self is-clickable">
-                            <Link to={`/books/${bookId}/chapters/${chapter.id}/annotations`} className="tree-item-inner">
+                            <Link to={`../chapters/${chapter.id}/annotations`} className="tree-item-inner">
                                 {chapter.name}
                             </Link>
                         </li>

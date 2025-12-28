@@ -17,7 +17,7 @@ export function ImportDashboard() {
         const navigate = useNavigate();
     
         const handleBookClick = (bookId: string) => {
-            navigate(`/books/${bookId}/details`);
+            navigate(`books/${bookId}/details`);
         };
         
         const handleImportNewBook = async (mrexptPath: string) => {
