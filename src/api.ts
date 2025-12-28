@@ -15,6 +15,7 @@ export interface FlashCount {
 }
 
 export interface BookFrontmatter {
+    id: string; // The ID of the SourceNote object (nanoid generated)
     path: string; // Path to the .mrexpt file
     annotationsPath: string; // Path to the Annotations.md file
     title: string;
@@ -27,16 +28,14 @@ import { type ReviewResponse } from "./scheduler/CardType";
 import { CardType } from "./scheduler/CardType";
 import {
     Flashcard,
-    maturityCounts
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/models/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getParentFolderPathAndName, getMetadataForFile, updateFrontmatter, getTFileForPath } from "src/data/disk";
+import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/data/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
-import type { ReviewBook } from "src/routes/notes-home-page";
 import type { FrontendFlashcard } from "src/routes/review";
 import { paragraph } from "src/data/models/paragraphs";
 import { parseMoonReaderExport } from "./data/import/moonreader";
@@ -352,17 +351,15 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
     }
 
 export async function getImportedBooks(): Promise<BookFrontmatter[]> {
-    const markdownFiles = findFilesByExtension("md");
-    const annotationFiles = markdownFiles.filter(t => t.endsWith("Annotations.md"));
+    const sourceNotes = plugin.sourceNoteIndex.getAllSourceNotes();
     const books: BookFrontmatter[] = [];
 
-    for (const file of annotationFiles) {
+    for (const sourceNote of sourceNotes) {
         try {
-            const metadata = getMetadataForFile(file);
+            const metadata = getMetadataForFile(sourceNote.path);
             const frontmatter = metadata?.frontmatter;
 
             if (frontmatter) {
-                // Basic validation for required fields
                 if (
                     frontmatter.path &&
                     frontmatter.title &&
@@ -370,8 +367,9 @@ export async function getImportedBooks(): Promise<BookFrontmatter[]> {
                     frontmatter.lastExportedID !== undefined
                 ) {
                     books.push({
-                        path: frontmatter.path,
-                        annotationsPath: file,
+                        id: sourceNote.id, // Assign SourceNote's ID
+                        path: frontmatter.path, // This is the mrexpt path
+                        annotationsPath: sourceNote.path, // This is the Annotations.md path
                         title: frontmatter.title,
                         author: frontmatter.author || "",
                         lastExportedTimestamp: frontmatter.lastExportedTimestamp,
@@ -379,11 +377,11 @@ export async function getImportedBooks(): Promise<BookFrontmatter[]> {
                         tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
                     });
                 } else {
-                    console.warn(`Skipping malformed frontmatter in ${file}`);
+                    console.warn(`Skipping malformed frontmatter in ${sourceNote.path}`);
                 }
             }
         } catch (e) {
-            console.error(`Error processing file ${file}:`, e);
+            console.error(`Error processing source note ${sourceNote.path}:`, e);
         }
     }
 
@@ -439,7 +437,7 @@ export async function getUnimportedMrExptFiles(): Promise<string[]> {
     return allMrExptFiles.filter(f => !importedPaths.has(f));
 }
 
-export async function importMoonReaderExport(mrexptPath: string) {
+export async function importMoonReaderExport(mrexptPath: string, destinationFolder: string) {
     const content = await getFileContents(mrexptPath);
     const annotations = parseMoonReaderExport(content);
 
@@ -449,18 +447,19 @@ export async function importMoonReaderExport(mrexptPath: string) {
 
     const lastExportedID = Math.max(...annotations.map(ann => parseInt(ann.id, 10)));
 
-    const { path: folderPath } = getParentFolderPathAndName(mrexptPath);
-    const annotationsPath = folderPath === "/" ? "Annotations.md" : `${folderPath}/Annotations.md`;
-    
+    const fileName = mrexptPath.split("/").pop();
+    const newMrexptPath = `${destinationFolder}/${fileName}`;
+    await moveFile(mrexptPath, newMrexptPath);
+    const annotationsPath = `${destinationFolder}/Annotations.md`;
     const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
     if (existingFile) {
-        throw new Error(`Annotations file already exists at: ${annotationsPath}. Please sync it instead.`);
+        await renameFile(annotationsPath, "Annotations_old.md");
     }
 
     const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
 
     const frontmatter = `---
-path: "${mrexptPath}"
+path: "${newMrexptPath}"
 title: "${bookTitle}"
 author: ""
 lastExportedTimestamp: ${Date.now()}
@@ -468,11 +467,9 @@ lastExportedID: ${lastExportedID}
 tags:
   - "review/book"
 ---
-
 `;
 
     const markdown = generateMarkdownWithHeaders(annotations);
-    
     await createFile(annotationsPath, frontmatter + markdown);
 
     return annotationsPath;
