@@ -234,4 +234,31 @@ describe("parseAnnotations should parse an annotation with", () => {
             }
         `);
     });
+
+    test("should correctly parse a specific annotation with metadata", () => {
+        const text = `> [!quote] 5734
+> Memory metaphors
+> ***
+> 29##
+> %%
+> original_color: -11184811
+> location: 25638
+> timestamp: 1645176780813
+> %%`;
+        expect(parseAnnotations(text)).toMatchInlineSnapshot(`
+            {
+              "category": undefined,
+              "deleted": undefined,
+              "highlight": "Memory metaphors",
+              "id": "5734",
+              "location": "25638",
+              "note": "29##",
+              "origin": undefined,
+              "originalColor": "-11184811",
+              "personalNote": undefined,
+              "timestamp": "1645176780813",
+              "type": "quote",
+            }
+        `);
+    });
 });
