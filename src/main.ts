@@ -7,6 +7,7 @@ import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNote";
 import { fileTags } from "src/data/disk";
 import { setPlugin } from "src/api";
+import { setApp } from "src/obsidian-facade";
 import { Index } from "src/data/models";
 import { SourceNoteDependencies } from "src/data/models/dependencies";
 
@@ -44,6 +45,7 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
         // eslint-disable-next-line @typescript-eslint/no-this-alias
         plugin = this;
         setPlugin(this);
+        setApp(this.app);
 
         // // First need to initialize tags as the source notes will use this
         // this.app.workspace.onLayoutReady(async () => {
