@@ -28,6 +28,7 @@ interface annotation {
     note:           string;
     // TODO: do something about this optional thingy
     flashcardCount: number;
+    category?:      number;
 }
 
 export function HeaderWithCounts(props: { withoutCount: number, withCount: number }) {
@@ -78,6 +79,15 @@ export function AnnotationList() {
     console.log(location);
     const linkSuffix = isImportFlow ? "personal-note" : "flashcards";
     console.log(linkSuffix);
+    const [filter, setFilter] = React.useState<'uncategorized' | 'all'>('uncategorized');
+
+    const displayedAnnotations = React.useMemo(() => {
+        if (filter === 'all') {
+            return chapterData.annotations;
+        }
+        // Filter for annotations where category is undefined or null
+        return chapterData.annotations.filter(ann => ann.category === undefined || ann.category === null);
+    }, [filter, chapterData.annotations]);
 
     //todo: don't use direct DOM manipulation one day
     React.useEffect(() => {
@@ -107,11 +117,24 @@ export function AnnotationList() {
             <h3>
                 {chapterData.title}
             </h3>
-            <HeaderWithCounts withCount={0} withoutCount={0}/>
 
-            <p>Add flashcards from:</p>
+            <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
+                <button
+                    className={`mod-cta ${filter === 'uncategorized' ? '' : 'mod-muted'}`}
+                    onClick={() => setFilter('uncategorized')}
+                >
+                    To Process
+                </button>
+                <button
+                    className={`mod-cta ${filter === 'all' ? '' : 'mod-muted'}`}
+                    onClick={() => setFilter('all')}
+                >
+                    All
+                </button>
+            </div>
+
             <ul className={"sr-highlight-tree"}>
-                {chapterData.annotations.map((annotation: annotation) => (
+                {displayedAnnotations.map((annotation: annotation) => (
                     <AnnotationListItem key={annotation.id} annotation={annotation} linkSuffix={linkSuffix}/>
                 ))}
             </ul>
