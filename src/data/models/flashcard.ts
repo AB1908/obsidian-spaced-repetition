@@ -3,7 +3,8 @@ import { ReviewResponse } from "src/scheduler/CardType";
 import { CardType } from "src/scheduler/CardType";
 import { nanoid } from "nanoid";
 import { FLAG, FlashcardMetadata, parseCardText, parseFileText, parseMetadata } from "src/data/parser";
-import { moment, Notice } from "obsidian";
+import { moment } from "obsidian";
+import { ObsidianNotice } from "src/obsidian-facade";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
@@ -187,7 +188,7 @@ export class FlashcardIndex {
                 // WARNING! this is dangerous, I am catching other errors and just assuming that these are this error
                 console.error(e);
                 console.error(`init: unable to initialize book ${t.path}`);
-                new Notice("Error: Unable to parse legacy SRS flashcards. Try removing the #flashcards tag from files with SRS flashcards.");
+                new ObsidianNotice("Error: Unable to parse legacy SRS flashcards. Try removing the #flashcards tag from files with SRS flashcards.");
             }
         }
         this.flashcardNotes = notesWithFlashcards;
