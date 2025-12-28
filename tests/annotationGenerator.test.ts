@@ -89,7 +89,7 @@ describe("generateMarkdownWithHeaders", () => {
         // Ensure generateAnnotationMarkdown mock is cleared before this test, if not globally mocked
         // For this specific test, we'll re-mock it or assume it's globally mocked with simple output
 
-                const expectedMarkdown = `## Chapter 1
+                const expectedMarkdown = `# Chapter 1
 
 > [!quote] 1
 > Highlight 1-1
@@ -114,7 +114,7 @@ describe("generateMarkdownWithHeaders", () => {
 > origin: moonreader
 > %%
 
-## Chapter 2
+# Chapter 2
 
 > [!quote] 3
 > Highlight 2-1
