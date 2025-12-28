@@ -25,11 +25,12 @@ export function PersonalNotePage() {
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
+        useRef<HTMLDivElement>(null),
     ];
 
     useEffect(() => {
         // Placeholder icons from Obsidian's library
-        const icons: Icon[] = ["info", "check-circle", "help-circle", "alert-circle", "star"];
+        const icons: Icon[] = ["lightbulb", "quote", "whole-word", "sticky-note", "star", "asterisk"];
         iconRefs.forEach((ref, i) => {
             if (ref.current) {
                 setIcon(ref.current, icons[i]);
