@@ -169,6 +169,19 @@ export async function updateFlashcardContentsById(flashcardId: string, question:
     return true;
 }
 
+export async function updateAnnotationMetadata(
+    bookId: string,
+    annotationId: string,
+    updates: Partial<annotation>
+) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    return await book.updateAnnotation(annotationId, updates);
+}
+
+export async function softDeleteAnnotation(bookId: string, annotationId: string) {
+    return await updateAnnotationMetadata(bookId, annotationId, { deleted: true });
+}
+
 export function isParagraph(section: BookMetadataSection): section is paragraph {
     return (section as paragraph).wasIdPresent !== undefined;
 }

@@ -44,7 +44,7 @@ export function isChapter(section: BookMetadataSection): section is Heading {
 }
 
 export function isAnnotation(section: BookMetadataSection): section is annotation {
-    return (section as annotation).highlight !== undefined;
+    return (section as annotation).highlight !== undefined || (section as annotation).note !== undefined;
 }
 
 // todo: should this be part of the Book class??
@@ -58,11 +58,15 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
     for (const cacheItem of metadata.sections) {
         // todo: consider parameterizing this
         if (cacheItem.type === "callout") {
-            const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
-            // todo: I think I've fucked up the ordering for assignment with spread
-            let item = { hasFlashcards: blocksWithFlashcards.has(annotation.id), ...annotation };
-            output.push(item);
-            plugin.index.addToAnnotationIndex(item);
+            try {
+                const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
+                // todo: I think I've fucked up the ordering for assignment with spread
+                let item = { ...annotation, hasFlashcards: blocksWithFlashcards.has(annotation.id) };
+                output.push(item);
+                plugin.index.addToAnnotationIndex(item);
+            } catch (e) {
+                console.warn(`bookSections: skipping non-annotation callout at line ${cacheItem.position.start.line}: ${e.message}`);
+            }
         } else if (cacheItem.type === "heading") {
             const headings = metadata?.headings;
             // todo: again, this is another case of an interesting type problem like in paragraphs.ts
@@ -81,7 +85,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
                 }
             let item = {
                 ...paragraph,
-                hasFlashcards: blocksWithFlashcards.has(paragraph.id), ...paragraph,
+                hasFlashcards: blocksWithFlashcards.has(paragraph.id),
             };
             plugin.index.addToAnnotationIndex(item);
             output.push(item)
@@ -217,6 +221,8 @@ export function generateHeaderCounts(sections: BookMetadataSections) {
     }
     return out;
 }
+
+import { renderAnnotation } from "../utils/annotationGenerator";
 
 // DONE rewrite to use ids instead of doing object equality
 // DONE: fix types, narrowing doesn't work here somehow
@@ -455,6 +461,25 @@ export class SourceNote implements frontbook {
         } else {
             //empty
         }
+    }
+
+    async updateAnnotation(annotationId: string, updates: Partial<annotation>) {
+        const annotationIndex = this.bookSections.findIndex(t => t.id === annotationId);
+        if (annotationIndex === -1) throw new Error(`updateAnnotation: annotation not found for id ${annotationId}`);
+        const originalAnnotation = this.bookSections[annotationIndex];
+        // if (!isAnnotation(originalAnnotation)) throw new Error(`updateAnnotation: section ${annotationId} is not an annotation`);
+
+        const originalMarkdown = renderAnnotation(originalAnnotation);
+        
+        // Apply updates
+        const updatedAnnotation = { ...originalAnnotation, ...updates };
+        const updatedMarkdown = renderAnnotation(updatedAnnotation);
+
+        const writeSuccessful = await updateCardOnDisk(this.path, originalMarkdown, updatedMarkdown);
+        if (writeSuccessful) {
+            this.bookSections[annotationIndex] = updatedAnnotation;
+        }
+        return writeSuccessful;
     }
 
     async createFlashcardNote() {
