@@ -1,89 +1,60 @@
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLoaderData } from "react-router-dom";
 import React, { useState, useEffect } from "react";
 import { getImportedBooks, getUnimportedMrExptFiles, importMoonReaderExport, updateBookAnnotationsAndFrontmatter, getSourcesForReview, ReviewBook, BookFrontmatter } from "src/api";
 import { ObsidianNotice } from "src/obsidian-facade";
 
+export async function importDashboardLoader() {
+    const reviewBooks = getSourcesForReview();
+    const importedBooks = await getImportedBooks();
+    const unimportedFiles = await getUnimportedMrExptFiles();
+    return { reviewBooks, importedBooks, unimportedFiles };
+}
+
 export function ImportDashboard() {
-    const [importedBooks, setImportedBooks] = useState<BookFrontmatter[]>([]);
-    const [unimportedFiles, setUnimportedFiles] = useState<string[]>([]);
-    const [view, setView] = useState<"list" | "add">("list");
-    const [isLoading, setIsLoading] = useState(true);
-    const [isImporting, setIsImporting] = useState(false);
-    const navigate = useNavigate();
-
-    useEffect(() => {
-        if (view === "list") {
-            loadImportedBooks();
-        } else {
-            loadUnimportedFiles();
-        }
-    }, [view]);
-
-    async function loadImportedBooks() {
-        setIsLoading(true);
-        try {
-            const books = await getImportedBooks();
-            setImportedBooks(books);
-        } catch (e) {
-            console.error(e);
-            new ObsidianNotice("Failed to load imported books.");
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    async function loadUnimportedFiles() {
-        setIsLoading(true);
-        try {
-            const files = await getUnimportedMrExptFiles();
-            setUnimportedFiles(files);
-        } catch (e) {
-            console.error(e);
-            new ObsidianNotice("Failed to load unimported files.");
-        } finally {
-            setIsLoading(false);
-        }
-    }
-
-    const handleImportNewBook = async (mrexptPath: string) => {
-        setIsImporting(true);
-        try {
-            const annotationsPath = await importMoonReaderExport(mrexptPath);
-            new ObsidianNotice(`Successfully imported annotations from ${mrexptPath}`);
-            setView("list"); // Switch back to the list view
-        } catch (e) {
-            console.error(e);
-            new ObsidianNotice(`Import failed: ${e.message}`);
-        } finally {
-            setIsImporting(false);
-        }
-    };
+        const { reviewBooks, importedBooks, unimportedFiles } = useLoaderData() as { reviewBooks: ReviewBook[], importedBooks: BookFrontmatter[], unimportedFiles: string[] };
+        const [view, setView] = useState<"list" | "add">("list");
+        const [isImporting, setIsImporting] = useState(false);
+        const navigate = useNavigate();
     
-    // Placeholder for the sync functionality
-    const handleSyncBook = async (book: BookFrontmatter) => {
-        setIsImporting(true); // Re-using isImporting for sync operation visual feedback
-        try {
-            await updateBookAnnotationsAndFrontmatter(
-                book.annotationsPath, // Assuming book.annotationsPath will be available
-                book.path,
-                book.lastExportedID.toString()
-            );
-            await loadImportedBooks(); // Reload the list to show updated status
-            new ObsidianNotice(`Successfully synced new annotations for ${book.title}.`);
-        } catch (e) {
-            console.error(e);
-            new ObsidianNotice("Sync failed. Check console for details.");
-        } finally {
-            setIsImporting(false);
-        }
-    };
-
-    if (isLoading) {
-        return <div>Loading...</div>;
-    }
-
-    if (view === "add") {
-        return (
+        const handleBookClick = (bookId: string) => {
+            navigate(`/books/${bookId}/details`);
+        };
+        
+        const handleImportNewBook = async (mrexptPath: string) => {
+            setIsImporting(true);
+            try {
+                // For now, use the same folder as the .mrexpt file as destination
+                const folderPath = mrexptPath.split('/').slice(0, -1).join('/') || "/";
+                const annotationsPath = await importMoonReaderExport(mrexptPath, folderPath);
+                new ObsidianNotice(`Successfully imported annotations to ${annotationsPath}`);
+                navigate(0); // Re-run loader to update book list
+            } catch (e) {
+                console.error(e);
+                new ObsidianNotice(`Import failed: ${e.message}`);
+            } finally {
+                setIsImporting(false);
+            }
+        };
+        
+        const handleSyncBook = async (book: BookFrontmatter) => {
+            setIsImporting(true); // Re-using isImporting for sync operation visual feedback
+            try {
+                await updateBookAnnotationsAndFrontmatter(
+                    book.annotationsPath,
+                    book.path,
+                    book.lastExportedID.toString()
+                );
+                navigate(0); // Re-run loader to update book list
+                new ObsidianNotice(`Successfully synced new annotations for ${book.title}.`);
+            } catch (e) {
+                console.error(e);
+                new ObsidianNotice("Sync failed. Check console for details.");
+            } finally {
+                setIsImporting(false);
+            }
+        };
+    
+        if (view === "add") {        return (
             <div className="sr-import-add-view">
                 <button onClick={() => setView("list")}>&larr; Back to Imported Books</button>
                 <h2>Add New Book</h2>
@@ -111,18 +82,15 @@ export function ImportDashboard() {
                 <button className="mod-cta" onClick={() => setView("add")}>Add new book</button>
             </div>
             
-            {importedBooks.length === 0 ? (
+            {reviewBooks.length === 0 ? (
                 <p>No books imported yet. Click "Add new book" to get started.</p>
             ) : (
                 <div className="sr-book-list">
-                    {importedBooks.map(book => (
-                        <div key={book.path} className="sr-book-list-item" style={{ display: "flex", justifyContent: "space-between", padding: "10px 0", borderBottom: "1px solid var(--background-modifier-border)"}}>
-                            <div>
-                                <div className="sr-book-title">{book.title}</div>
-                                <div className="sr-book-author" style={{ fontSize: "0.9em", color: "var(--text-muted)"}}>{book.author || "Unknown Author"}</div>
-                                <div className="sr-book-path" style={{ fontSize: "0.8em", color: "var(--text-faint)"}}>{book.path}</div>
+                    {reviewBooks.map(book => (
+                        <div key={book.id} className="sr-book-list-item" style={{ borderBottom: "1px solid var(--background-modifier-border)"}}>
+                            <div className="sr-book-summary" onClick={() => handleBookClick(book.id)} style={{ padding: "10px 0", cursor: "pointer" }}>
+                                <div className="sr-book-title">{book.name}</div>
                             </div>
-                            <button onClick={() => handleSyncBook(book)}>Sync</button>
                         </div>
                     ))}
                 </div>

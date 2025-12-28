@@ -2,7 +2,7 @@ import { RouteObject } from "react-router-dom";
 import { Tabs } from "src/routes/tabs";
 import { Tags } from "src/routes/tags";
 import { Notes, notesLoader } from "src/routes/notes-home-page";
-import { ImportDashboard } from "src/routes/import-export";
+import { ImportDashboard, importDashboardLoader } from "src/routes/import-export";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-preview";
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/routes/review";
@@ -17,6 +17,7 @@ import {
 } from "src/routes/preview-existing-flashcards";
 import { ChooseCardType } from "src/routes/choose-card-type";
 import React from "react";
+import { BookDetailsPage, bookDetailsLoader } from "src/routes/book-details-page";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
 
 export const children: RouteObject[] = [
@@ -35,7 +36,8 @@ export const children: RouteObject[] = [
             },
             {
                 path: "/import",
-                element: <ImportDashboard />
+                element: <ImportDashboard />,
+                loader: importDashboardLoader
             }
         ]
     },
@@ -61,6 +63,12 @@ export const children: RouteObject[] = [
             }
         ]
     },
+    {
+        path: "/books/:bookId/details",
+        element: <BookDetailsPage />,
+        loader: bookDetailsLoader,
+    },
+
     {
         path: "/books/:bookId/review",
         element: <ReviewDeck />,

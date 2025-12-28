@@ -517,5 +517,9 @@ export class SourceNoteIndex {
     getSourcesWithoutFlashcards(): SourceNote[] {
         return this.sourceNotes.filter(t => !t.flashcardNote);
     }
+
+    getAllSourceNotes(): SourceNote[] {
+        return this.sourceNotes;
+    }
 }
 
