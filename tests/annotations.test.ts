@@ -12,9 +12,13 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
               "note": "",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -31,9 +35,13 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -46,9 +54,13 @@ describe("parseAnnotations should parse an annotation with", () => {
 > What a beautiful line by Tolkien`)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -65,10 +77,14 @@ describe("parseAnnotations should parse an annotation with", () => {
 > What a beautiful line by Tolkien`)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -83,10 +99,14 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -104,10 +124,14 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien
             This is another line.",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -121,10 +145,14 @@ describe("parseAnnotations should parse an annotation with", () => {
 > This is another line.`)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien
             This is another line.",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -143,11 +171,15 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien
             This is another line.",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);
@@ -162,11 +194,15 @@ describe("parseAnnotations should parse an annotation with", () => {
 > This is another line.`)
         ).toMatchInlineSnapshot(`
             {
+              "category": undefined,
+              "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
             This is another line.",
               "id": "93813",
               "note": "What a beautiful line by Tolkien
             This is another line.",
+              "origin": undefined,
+              "personalNote": undefined,
               "type": "notes",
             }
         `);

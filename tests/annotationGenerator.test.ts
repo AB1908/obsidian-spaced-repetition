@@ -96,9 +96,7 @@ describe("generateMarkdownWithHeaders", () => {
 > ***
 > Note 1-1
 > %%
-> original_color: 
-> location: 
-> timestamp: 
+> origin: moonreader
 > %%
 
 > [!quote] 2
@@ -106,18 +104,14 @@ describe("generateMarkdownWithHeaders", () => {
 > ***
 > Note 1-2
 > %%
-> original_color: 
-> location: 
-> timestamp: 
+> origin: moonreader
 > %%
 
 > [!quote] 4
 > Highlight 1-3
 > ***
 > %%
-> original_color: 
-> location: 
-> timestamp: 
+> origin: moonreader
 > %%
 
 ## Chapter 2
@@ -126,9 +120,7 @@ describe("generateMarkdownWithHeaders", () => {
 > Highlight 2-1
 > ***
 > %%
-> original_color: 
-> location: 
-> timestamp: 
+> origin: moonreader
 > %%
 
 > [!quote] 5
@@ -136,9 +128,7 @@ describe("generateMarkdownWithHeaders", () => {
 > ***
 > Note 2-2
 > %%
-> original_color: 
-> location: 
-> timestamp: 
+> origin: moonreader
 > %%`;
 
         const generatedMarkdown = generateMarkdownWithHeaders(mockAnnotations);
