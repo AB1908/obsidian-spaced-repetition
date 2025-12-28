@@ -6,7 +6,8 @@ import {
     Platform as ObsidianPlatform,
     PluginSettingTab as ObsidianPluginSettingTab,
     Setting as ObsidianSetting,
-    App as ObsidianApp
+    App as ObsidianApp,
+    Modal as ObsidianModal
 } from "obsidian";
 
 export class ObsidianNotice {
@@ -28,3 +29,4 @@ export const Platform = ObsidianPlatform;
 export const PluginSettingTab = ObsidianPluginSettingTab;
 export const Setting = ObsidianSetting;
 export const App = ObsidianApp;
+export const Modal = ObsidianModal;

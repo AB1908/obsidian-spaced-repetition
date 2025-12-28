@@ -1,5 +1,5 @@
 import React from "react";
-import { Modal } from "obsidian";
+import { Modal } from "src/obsidian-facade";
 import type SRPlugin from "src/main";
 import { createRoot, Root as ReactDomRoot } from "react-dom/client";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
