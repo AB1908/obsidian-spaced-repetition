@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from "react";
 import { useLoaderData, useParams, useNavigate } from "react-router-dom";
-import { getAnnotationById } from "src/api";
+import { getAnnotationById, updateAnnotationMetadata, softDeleteAnnotation } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "obsidian";
 import { Icon } from "src/routes/root";
@@ -8,14 +8,15 @@ import { Icon } from "src/routes/root";
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
     const annotation = await getAnnotationById(annotationId, bookId);
-    return { annotation };
+    return { annotation, bookId };
 }
 
 export function PersonalNotePage() {
-    const { annotation } = useLoaderData() as { annotation: any };
-    const [personalNote, setPersonalNote] = useState("");
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
+    const { annotation, bookId } = useLoaderData() as { annotation: any, bookId: string };
+    const [personalNote, setPersonalNote] = useState(annotation.personalNote || "");
+    const [selectedCategory, setSelectedCategory] = useState<number | null>(annotation.category !== undefined ? annotation.category : null);
     const navigate = useNavigate();
+    const deleteButtonRef = useRef<HTMLDivElement>(null);
 
     // Refs for the 5 placeholder icons
     const iconRefs = [
@@ -34,24 +35,40 @@ export function PersonalNotePage() {
                 setIcon(ref.current, icons[i]);
             }
         });
+
+        if (deleteButtonRef.current) {
+            setIcon(deleteButtonRef.current, "trash");
+        }
     }, []);
 
     const handleCategoryClick = (index: number) => {
         setSelectedCategory(index);
     };
 
-    const handleSave = () => {
-        console.log("Saving Personal Note:", {
-            annotationId: annotation.id,
-            content: personalNote,
-            category: selectedCategory !== null ? selectedCategory + 1 : null
+    const handleSave = async () => {
+        await updateAnnotationMetadata(bookId, annotation.id, {
+            personalNote: personalNote,
+            category: selectedCategory !== null ? selectedCategory : undefined
         });
-        // Logic for backend persistence will be added next
         navigate(-1);
+    };
+
+    const handleDelete = async () => {
+        if (confirm("Are you sure you want to delete this annotation?")) {
+            await softDeleteAnnotation(bookId, annotation.id);
+            navigate(-1);
+        }
     };
 
     return (
         <div className="sr-personal-note-page">
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                <h2>Edit Personal Note</h2>
+                <button className="mod-warning" onClick={handleDelete} title="Delete Annotation">
+                    <div ref={deleteButtonRef} />
+                </button>
+            </div>
+
             <HighlightBlock text={annotation.highlight} />
             <NoteBlock text={annotation.note} />
 
