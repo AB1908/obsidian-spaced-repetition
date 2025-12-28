@@ -129,8 +129,14 @@ describe('AnnotationWithOutlet', () => {
 
         fireEvent.click(screen.getByRole('button', { name: /Note/i }));
 
-        expect(screen.queryByText(mockAnnotation.note)).not.toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Highlight/i })).toHaveAttribute('aria-pressed', 'false');
-        expect(screen.getByRole('button', { name: /Note/i })).toHaveAttribute('aria-pressed', 'true'); // Still pressed, but content is empty
-    });
-});
+                expect(screen.queryByText(mockAnnotation.note)).not.toBeInTheDocument();
+
+                expect(screen.getByRole('button', { name: /Highlight/i })).toHaveAttribute('aria-pressed', 'true');
+
+                expect(screen.getByRole('button', { name: /Note/i })).toBeDisabled();
+
+            });
+
+        });
+
+        

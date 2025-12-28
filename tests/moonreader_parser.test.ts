@@ -1,6 +1,6 @@
 import { parseMoonReaderExport } from "src/data/import/moonreader";
 
-describe("MoonReader Parser - Comprehensive Test", () => {
+describe("MoonReader Parser - Snapshot Test", () => {
     test("should correctly parse a real mrexpt file with bookmarks, chapter markers, and annotations", () => {
         const realFileContent = `851272
 indent:true
@@ -50,33 +50,73 @@ Memory: A Very Short Introduction
 32
 -11184811
 1644740371668
+
 What is episodic memory?
 this is termed episodic memory).
-
 0
 0
 0
 `;
 
         const result = parseMoonReaderExport(realFileContent);
+        expect(result).toMatchInlineSnapshot(`
+            [
+              {
+                "chapter": "Chapter 1: You are your memory",
+                "characters": "32",
+                "color": "-11184811",
+                "highlight": "this is termed episodic memory).",
+                "id": "5684",
+                "location": "5736",
+                "lpath": "/sdcard/books/moonreader/memory a very short introduction by jonathan k. foster.epub",
+                "note": "What is episodic memory?",
+                "p1": "0",
+                "path": "/sdcard/Books/MoonReader/Memory A Very Short Introduction by Jonathan K. Foster.epub",
+                "timestamp": "1644740371668",
+                "title": "Memory: A Very Short Introduction",
+              },
+            ]
+        `);
+    });
 
-        // We expect only 1 annotation in the output:
-        // - Record 1 (ID 3756) is a bookmark and should be skipped.
-        // - Record 2 (ID 5682) is a chapter marker and should be filtered out after setting the chapter name.
-        // - Only Record 3 (ID 5684) should remain, with its chapter name set.
-        expect(result).toHaveLength(1);
-
-        // Test the remaining annotation (ID 5684)
-        const finalAnnotation = result[0];
-        expect(finalAnnotation.id).toBe("5684");
-        expect(finalAnnotation.title).toBe("Memory: A Very Short Introduction");
-        expect(finalAnnotation.chapter).toBe("Chapter 1: You are your memory"); // From the chapter marker
-        expect(finalAnnotation.highlight).toBe("What is episodic memory?");
-        expect(finalAnnotation.note).toBe("this is termed episodic memory).");
-        expect(finalAnnotation.timestamp).toBe("1644740371668");
-        // Ensure other fields are correctly parsed as well
-        expect(finalAnnotation.location).toBe("5736");
-        expect(finalAnnotation.characters).toBe("32");
-        expect(finalAnnotation.color).toBe("-11184811");
+    test("should correctly parse multi-line highlights and notes with <BR> tags", () => {
+        const fileContentWithBR = `#
+1234
+Test Book
+path
+lpath
+1
+0
+0
+0
+0
+0
+This is the first line of the highlight.<BR>This is the second line.
+This is the first line of the note.<BR>This is the second line.
+(extra text field)
+0
+0
+0
+`;
+        const result = parseMoonReaderExport(fileContentWithBR);
+        expect(result).toMatchInlineSnapshot(`
+            [
+              {
+                "chapter": "1",
+                "characters": "0",
+                "color": "0",
+                "highlight": "(extra text field)",
+                "id": "1234",
+                "location": "0",
+                "lpath": "lpath",
+                "note": "This is the first line of the note.
+            This is the second line.",
+                "p1": "0",
+                "path": "path",
+                "timestamp": "0",
+                "title": "Test Book",
+              },
+            ]
+        `);
     });
 });
