@@ -1,4 +1,5 @@
-import { Notice, PluginSettingTab, Setting, App, Platform, TFolder } from "obsidian";
+import { PluginSettingTab, Setting, App, Platform, TFolder } from "obsidian";
+import { ObsidianNotice } from "src/obsidian-facade";
 import React from "react";
 
 import type SRPlugin from "src/main";
@@ -120,7 +121,7 @@ export class SRSettingTab extends PluginSettingTab {
                                 this.plugin.data.settings.bookNotesPath = value;
                                 await this.plugin.savePluginData();
                             } else {
-                                new Notice("Entered path is not a folder");
+                                new ObsidianNotice("Entered path is not a folder");
                             }
                         });
                     })
@@ -581,7 +582,7 @@ export class SRSettingTab extends PluginSettingTab {
                         const numValue: number = Number.parseInt(value);
                         if (!isNaN(numValue)) {
                             if (numValue < 130) {
-                                new Notice(t("BASE_EASE_MIN_WARNING"));
+                                new ObsidianNotice(t("BASE_EASE_MIN_WARNING"));
                                 text.setValue(this.plugin.data.settings.baseEase.toString());
                                 return;
                             }
@@ -589,7 +590,7 @@ export class SRSettingTab extends PluginSettingTab {
                             this.plugin.data.settings.baseEase = numValue;
                             await this.plugin.savePluginData();
                         } else {
-                            new Notice(t("VALID_NUMBER_WARNING"));
+                            new ObsidianNotice(t("VALID_NUMBER_WARNING"));
                         }
                     });
                 })
@@ -641,7 +642,7 @@ export class SRSettingTab extends PluginSettingTab {
                             const numValue: number = Number.parseInt(value) / 100;
                             if (!isNaN(numValue)) {
                                 if (numValue < 1.0) {
-                                    new Notice(t("EASY_BONUS_MIN_WARNING"));
+                                    new ObsidianNotice(t("EASY_BONUS_MIN_WARNING"));
                                     text.setValue(
                                         (this.plugin.data.settings.easyBonus * 100).toString()
                                     );
@@ -651,7 +652,7 @@ export class SRSettingTab extends PluginSettingTab {
                                 this.plugin.data.settings.easyBonus = numValue;
                                 await this.plugin.savePluginData();
                             } else {
-                                new Notice(t("VALID_NUMBER_WARNING"));
+                                new ObsidianNotice(t("VALID_NUMBER_WARNING"));
                             }
                         });
                     })
@@ -678,7 +679,7 @@ export class SRSettingTab extends PluginSettingTab {
                             const numValue: number = Number.parseInt(value);
                             if (!isNaN(numValue)) {
                                 if (numValue < 1) {
-                                    new Notice(t("MAX_INTERVAL_MIN_WARNING"));
+                                    new ObsidianNotice(t("MAX_INTERVAL_MIN_WARNING"));
                                     text.setValue(
                                         this.plugin.data.settings.maximumInterval.toString()
                                     );
@@ -688,7 +689,7 @@ export class SRSettingTab extends PluginSettingTab {
                                 this.plugin.data.settings.maximumInterval = numValue;
                                 await this.plugin.savePluginData();
                             } else {
-                                new Notice(t("VALID_NUMBER_WARNING"));
+                                new ObsidianNotice(t("VALID_NUMBER_WARNING"));
                             }
                         });
                     })
