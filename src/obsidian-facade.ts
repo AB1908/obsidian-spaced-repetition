@@ -1,4 +1,4 @@
-import { Notice as ObsidianOriginalNotice, addIcon as obsidianAddIcon, setIcon as obsidianSetIcon } from "obsidian";
+import { moment as obsidianMoment, Notice as ObsidianOriginalNotice, addIcon as obsidianAddIcon, setIcon as obsidianSetIcon } from "obsidian";
 
 export class ObsidianNotice {
     constructor(message: string | DocumentFragment, timeout?: number) {
@@ -13,3 +13,5 @@ export function addIcon(iconId: string, svgContent: string): void {
 export function setIcon(iconEl: HTMLElement, iconId: string): void {
     obsidianSetIcon(iconEl, iconId);
 }
+
+export const moment = obsidianMoment;
