@@ -2,6 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { annotation, SectionAnnotations } from "src/data/models/annotations";
 import { getFilteredAnnotations } from "src/utils/annotation-filters";
+import { integerToRGBA } from "src/utils";
 import { CategoryFilter } from "src/ui/components/category-filter";
 import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
 
@@ -11,6 +12,13 @@ interface AnnotationListItemProps {
 }
 
 function AnnotationListItem(props: AnnotationListItemProps) {
+    const highlightColor = useMemo(() => {
+        if (props.annotation.originalColor) {
+            return integerToRGBA(props.annotation.originalColor);
+        }
+        return null;
+    }, [props.annotation.originalColor]);
+
     return (
         <div id={props.annotation.id}>
             <Link
@@ -18,8 +26,20 @@ function AnnotationListItem(props: AnnotationListItemProps) {
                 state={{ scrollId: props.annotation.id }}
                 onClick={() => sessionStorage.setItem('scrollToAnnotation', props.annotation.id)}
             >
-                <li className={"sr-highlight tree-item-self is-clickable"}>
-                    <span className={"sr-annotation-text"}>
+                <li className={"sr-highlight tree-item-self is-clickable"} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
+                    {highlightColor && (
+                        <div
+                            style={{
+                                width: "12px",
+                                height: "12px",
+                                backgroundColor: highlightColor,
+                                border: "1px solid var(--background-modifier-border)",
+                                borderRadius: "2px",
+                                flexShrink: 0
+                            }}
+                        />
+                    )}
+                    <span className={"sr-annotation-text"} style={{ flexGrow: 1 }}>
                         {props.annotation.highlight}
                     </span>
                     <span>
