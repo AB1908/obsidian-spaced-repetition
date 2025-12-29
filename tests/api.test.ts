@@ -117,7 +117,7 @@ describe("getFlashcardById", () => {
               "answerText": "b",
               "cardType": 2,
               "context": null,
-              "delayBeforeReview": 35686800000,
+              "delayBeforeReview": 0,
               "dueDate": "2024-10-21",
               "ease": 210,
               "flag": "L",

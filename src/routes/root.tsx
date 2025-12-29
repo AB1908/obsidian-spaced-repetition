@@ -1,6 +1,7 @@
 import React, { useEffect, useRef } from "react";
 import { Outlet, useLocation, useNavigate } from "react-router-dom";
 import { Icon } from "src/types/obsidian-icons";
+import { setIcon } from "src/obsidian-facade";
 import { useModalTitle } from "src/ui/modals/ModalTitleContext";
 
 export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
