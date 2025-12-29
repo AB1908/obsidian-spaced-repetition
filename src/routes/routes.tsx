@@ -1,7 +1,7 @@
 import { RouteObject } from "react-router-dom";
 import { Tabs } from "src/routes/tabs";
 import { Tags } from "src/routes/tags";
-import { Notes, notesLoader } from "src/routes/notes-home-page";
+import { Notes, notesLoader } from "src/routes/books/notes-home-page";
 import { ImportDashboard, importDashboardLoader } from "src/routes/import-export";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/deck-preview";
 import { ChapterList, chapterLoader } from "src/routes/chapter-list";
