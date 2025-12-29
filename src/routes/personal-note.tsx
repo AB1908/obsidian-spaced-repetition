@@ -3,7 +3,7 @@ import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import { getAnnotationById, updateAnnotationMetadata, softDeleteAnnotation } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/obsidian-facade";
-import { Icon } from "src/routes/root";
+import { type Icon } from "src/types/obsidian-icons";
 import { integerToRGBA } from "src/utils";
 
 export async function personalNoteLoader({ params }: any) {
