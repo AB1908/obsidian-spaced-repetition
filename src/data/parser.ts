@@ -1,6 +1,6 @@
 import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
 import { CardType } from "src/scheduler/CardType";
-import {getFileContents} from "src/data/disk";
+import {getFileContents} from "src/infrastructure/disk";
 
 // TODO: parameterize separators??
 const CARDTEXT_REGEX = /(?<cardText>.*\n\?\n.*)\n(?<metadataText><!--SR:.*-->)/g;

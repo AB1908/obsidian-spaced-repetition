@@ -3,7 +3,7 @@ import { beforeEach } from "@jest/globals";
 import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
 import type { SectionCache } from "obsidian";
 import type { Flashcard } from "src/data/models/flashcard";
-import { getFileContents } from "src/data/disk";
+import { getFileContents } from "src/infrastructure/disk";
 import { extractParagraphs } from "src/data/models/paragraphs";
 
 
@@ -14,7 +14,7 @@ jest.mock("nanoid", () => ({
 }));
 
 // eslint-disable-next-line @typescript-eslint/no-empty-function
-jest.mock("../src/data/disk", () => {
+jest.mock("../src/infrastructure/disk", () => {
     return {
         getMetadataForFile: (path: string) => {
             return {

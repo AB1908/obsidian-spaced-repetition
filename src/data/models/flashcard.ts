@@ -7,8 +7,8 @@ import { moment, ObsidianNotice } from "src/obsidian-facade";
 import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
-import { getAnnotationFilePath } from "../disk";
-import { filePathsWithTag } from "src/data/disk";
+import { getAnnotationFilePath } from "../../infrastructure/disk";
+import { filePathsWithTag } from "src/infrastructure/disk";
 import { calculateDelayBeforeReview } from "./calculateDelayBeforeReview";
 
 export interface AbstractFlashcard {

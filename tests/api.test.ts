@@ -1,5 +1,5 @@
 import { createDiskMockFromFixtures } from "./helpers";
-jest.mock("src/data/disk", () => {
+jest.mock("src/infrastructure/disk", () => {
     const mock = createDiskMockFromFixtures([
         "createFlashcardsFileForBook.json",
         "generateFlashcardsFileNameAndPath_2025-12-16T20-02-00_s93m1.json",
@@ -14,6 +14,7 @@ jest.mock("src/data/disk", () => {
         "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
         "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
         "updateCardOnDisk_2025-12-25T10-00-02_ccccc.json",
+        "updateCardOnDisk_missing_case.json",
         "deleteCardOnDisk.json",
         "writeCardToDisk.json",
     ]);
@@ -51,7 +52,7 @@ import {
 } from "src/api";
 import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { fileTags } from "src/data/disk";
+import { fileTags } from "src/infrastructure/disk";
 import { ReviewResponse } from "src/scheduler/CardType";
 
 describe("getBookById", () => {

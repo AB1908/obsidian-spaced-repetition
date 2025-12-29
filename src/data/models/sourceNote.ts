@@ -4,7 +4,7 @@ import {
     createFlashcardsFileForBook, deleteCardOnDisk, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
     getParentOrFilename, updateCardOnDisk
-} from "src/data/disk";
+} from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";

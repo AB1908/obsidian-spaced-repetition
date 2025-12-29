@@ -2,9 +2,9 @@ import { parseFileText } from "src/data/parser";
 import { CardType } from "src/scheduler/CardType";
 import { generateTree } from "src/data/models/bookTree";
 import { Heading } from "src/data/models/sourceNote";
-import { getFileContents } from "../src/data/disk";
+import { getFileContents } from "../src/infrastructure/disk";
 
-jest.mock("../src/data/disk");
+jest.mock("../src/infrastructure/disk");
 const mockedGetFileContents = getFileContents as jest.Mock;
 
 jest.mock("nanoid", () => ({
