@@ -1,7 +1,9 @@
-import React from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
-import { getFilteredAnnotations } from "src/utils/annotation-filters";
 import { annotation, SectionAnnotations } from "src/data/models/annotations";
+import { getFilteredAnnotations } from "src/utils/annotation-filters";
+import { CategoryFilter } from "src/ui/components/category-filter";
+import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
 
 interface AnnotationListItemProps {
     annotation: annotation;
@@ -40,12 +42,14 @@ interface AnnotationDisplayListProps {
 
 export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
     const { chapterData, baseLinkPath, filter, setFilter } = props;
+    const [activeCategoryFilter, setActiveCategoryFilter] = useState<number | null>(null);
 
-    const displayedAnnotations = React.useMemo(() => {
-        return getFilteredAnnotations(chapterData.annotations, filter);
-    }, [filter, chapterData.annotations]);
+    const displayedAnnotations = useMemo(() => {
+        return getFilteredAnnotations(chapterData.annotations, filter, activeCategoryFilter);
+    }, [filter, activeCategoryFilter, chapterData.annotations]);
 
-    React.useEffect(() => {
+    //todo: don't use direct DOM manipulation one day
+    useEffect(() => {
         const scrollId = sessionStorage.getItem('scrollToAnnotation');
         if (scrollId) {
             const element = document.getElementById(scrollId);
@@ -60,6 +64,13 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
         }
     }, [chapterData]);
 
+    // Reset activeCategoryFilter when main filter changes from 'all'
+    useEffect(() => {
+        if (filter !== 'all' && activeCategoryFilter !== null) {
+            setActiveCategoryFilter(null);
+        }
+    }, [filter]);
+
     return (
         <>
             <h3>
@@ -69,7 +80,10 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
             <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
                 <button
                     className={`mod-cta ${filter === 'uncategorized' ? '' : 'mod-muted'}`}
-                    onClick={() => setFilter('uncategorized')}
+                    onClick={() => {
+                        setFilter('uncategorized');
+                        setActiveCategoryFilter(null); // Clear category filter when switching to 'To Process'
+                    }}
                 >
                     To Process
                 </button>
@@ -79,6 +93,12 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
                 >
                     All
                 </button>
+                {filter === 'all' && (
+                    <CategoryFilter
+                        selectedCategory={activeCategoryFilter}
+                        onCategorySelect={setActiveCategoryFilter}
+                    />
+                )}
             </div>
 
             <ul className={"sr-highlight-tree"}>
