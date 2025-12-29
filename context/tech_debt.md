@@ -41,3 +41,13 @@
 **Description:** The UI has low test coverage. Critical user interactions, such as editing a textarea or saving a form, are not covered by automated tests.
 **Impact:** User-facing regressions, like the non-editable textarea, can be easily introduced and go unnoticed until manual testing.
 **Future Solution:** Systematically add UI tests using React Testing Library. Prioritize tests for critical, interactive components and forms, such as `personal-note.tsx` and card creation/editing routes. Simulate user events like typing and clicking to verify the components behave as expected.
+
+## 7. Icon List Centralization
+
+**Issue:** The `ICON_LIST` constant, currently defined and managed manually within `src/types/obsidian-icons.ts` (previously `src/constants.ts`), appears to be an exhaustive list of icons available in Obsidian.
+
+**Problem:** Manually maintaining this list is brittle and prone to errors. If Obsidian's icon set changes, this list would need manual updates.
+
+**Proposed Solution:** Investigate if Obsidian exposes its internal icon list via an official API or a more stable programmatic method. If so, `ICON_LIST` should be dynamically imported or generated from that source. This would improve maintainability and ensure consistency with the host application.
+
+**Priority:** Low (for now), as the current implementation is functional, but marked for future investigation to reduce technical debt.
