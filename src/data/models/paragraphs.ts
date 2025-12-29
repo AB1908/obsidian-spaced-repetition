@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { getFileContents, getMetadataForFile } from "../disk";
+import { getFileContents, getMetadataForFile } from "../../infrastructure/disk";
 import { Flashcard } from "./flashcard";
 import { Heading } from "./sourceNote";
 

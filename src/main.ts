@@ -5,7 +5,7 @@ import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNote";
-import { fileTags } from "src/data/disk";
+import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
 import { setApp } from "src/obsidian-facade";
 import { Index } from "src/data/models";

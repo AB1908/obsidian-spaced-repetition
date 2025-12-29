@@ -1,8 +1,8 @@
 import * as api from "src/api";
-import * as disk from "src/data/disk";
+import * as disk from "src/infrastructure/disk";
 
 // Mock disk module manually to allow spying
-jest.mock("src/data/disk", () => ({
+jest.mock("src/infrastructure/disk", () => ({
     findFilesByExtension: jest.fn(),
     getAllFolders: jest.fn(),
     getFileContents: jest.fn(),
