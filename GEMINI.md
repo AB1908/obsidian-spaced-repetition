@@ -70,9 +70,11 @@ This document serves as the primary context for Gemini's interaction with this r
 - **Prefer Nested Routes for Hierarchy:** Avoid defining flat routes for hierarchical resources (e.g., `:bookId`, `:annotationId`). Use nested `children` in `routes.tsx` to ensure relative navigation (`..`) remains predictable and intuitive.
 - **Intentional Coupling vs. Isolation:** Note that some components (e.g., `AnnotationList`) currently use path-based logic (`location.pathname.startsWith("/import")`) to decide navigation behavior. While this simplifies the current "dumb" UI, it couples the component to the routing structure and should be addressed if these flows need to be isolated into separate plugins or packages.
 - **Mind the Semantic Gap:** Be aware that technical terms (e.g., `Heading`) often differ from domain terms (e.g., `Chapter`). Proactively clarify if a technical filter matches the intended business logic.
+- **Strict Adherence to the Verify-then-Commit Workflow:** The "Verify-then-Commit" workflow is not a suggestion; it is a critical process to prevent regressions and maintain codebase quality. After any refactoring or change, the full test suite (`npm test`) *must* be executed *before* staging files. Furthermore, staging must be done explicitly with `git add <file-path>` or interactively with `git add -p`, never with `git add .`, to avoid including unintended files. This prevents local artifacts and unrelated changes from polluting the commit history.
 
 ### 5. Verify-then-Commit Workflow
 - **Rule:** Never commit code without running the full test suite and verifying the diff.
+- **Comprehensive Planning:** Before execution, a detailed plan must be presented to the user. This plan must explain not only *what* will be done but also *how* it will be implemented.
 - **Process:**
     1.  **Verify:** Run `npm test` and other relevant checks (linting, type-checking) before staging.
     2.  **Stage:** Use targeted staging (`git add <file>`) for logically related changes.
@@ -87,6 +89,21 @@ This document serves as the primary context for Gemini's interaction with this r
     2.  Write a test case that calls the method with fixture data.
     3.  Share the resulting snapshot with the user for semantic verification.
     4.  Proceed to UI implementation only after the data structure is confirmed.
+
+### 7. Developer Persona & Collaboration
+
+- **Assume a Senior Role:** For all tasks, assume the persona of a senior software engineer with deep expertise in the project's technology stack (React, TypeScript, Obsidian API). This ensures that all plans and code changes adhere to best practices in architecture, testing, and maintainability.
+- **Delegate Simple File Operations:** To improve velocity on refactoring tasks, simple file and function moves will be delegated to the user. The agent will provide clear, explicit instructions, including: the source file, the exact code block to cut, the destination file, and the precise location to paste the code.
+- **Propose Opportunistic Refactoring:** During planning, if low-friction opportunities to improve the codebase's structure are identified (e.g., moving a utility function to a more logical module), these will be included in the plan with a clear justification.
+
+### 8. Architecture: Route-based Feature Modules
+
+To ensure the codebase remains scalable and easy to navigate, we follow a route-based feature module architecture.
+
+- **Principle:** Each top-level route in the application is considered a "feature" and gets its own directory inside `src/routes/`.
+- **Directory Structure:** A feature directory (e.g., `src/routes/edit-card/`) should contain all the code specific to that feature: `index.tsx` (entry point), `api.ts` (data fetching), `components/` (local components), and `state.ts` (local state).
+- **Shared Code:** Code is shared by explicitly lifting it to a higher-level directory: `src/components/` for shared UI, `src/lib/` for generic utils, and `src/data/` for core business models.
+- **Benefits:** This approach provides excellent discoverability (the code structure mirrors the URL structure) and prepares the codebase for future decomposition into smaller, independent plugins.
 
 ---
 
