@@ -18,7 +18,7 @@ import {
 } from "src/routes/preview-existing-flashcards";
 import { ChooseCardType } from "src/routes/choose-card-type";
 import React from "react";
-import { BookDetailsPage, bookDetailsLoader } from "src/routes/book-details-page";
+import { BookDetailsPage, bookDetailsLoader } from "src/routes/books/index";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
 import { personalNoteLoader, PersonalNotePage } from "./personal-note";
 
