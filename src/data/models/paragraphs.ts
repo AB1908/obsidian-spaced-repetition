@@ -51,3 +51,7 @@ export async function extractParagraphs(filePath: string, flashcards: Flashcard[
     // still need header info
     // create interface from these attribs
 }
+
+export function addBlockIdToParagraph(block: paragraph) {
+    return `${block.text} ^${block.id}`;
+}
