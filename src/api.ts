@@ -249,6 +249,7 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
     return book.flashcardNote.flashcards.filter(t => t.parentId === annotationId);
 }
 
+// todo: this needs to become flashcard decks for review based on flashcardindex
 export function getSourcesForReview(): ReviewBook[] {
     // todo: refactor
     const booksToReview = plugin.sourceNoteIndex.getSourcesForReview();
@@ -421,7 +422,8 @@ export function getDestinationFolders() {
     return getAllFolders();
 }
 
-    
+// todo: refactor and move disk related logic to appropriate layer
+// also move business logic to appropriate class
 export async function updateBookAnnotationsAndFrontmatter(
     annotationsPath: string,
     mrexptPath: string,
