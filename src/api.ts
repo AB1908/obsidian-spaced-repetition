@@ -31,13 +31,13 @@ import {
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/models/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading } from "src/data/models/sourceNote";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/routes/review";
-import { paragraph } from "src/data/models/paragraphs";
+import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { parseMoonReaderExport } from "./data/import/moonreader";
 import { generateAnnotationMarkdown, generateMarkdownWithHeaders } from "./data/utils/annotationGenerator";
 import { ObsidianNotice } from "src/obsidian-facade";
@@ -69,7 +69,7 @@ export function setPlugin(p: SRPlugin) {
 // hint: because you have paragraphs as well
 export function getAnnotationById(blockId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    return transform(book.annotations().filter((t: BookMetadataSection) => t.id === blockId)[0]);
+    return book.getAnnotation(blockId);
 }
 
 export function getNextCard(bookId: string) {
@@ -120,10 +120,7 @@ export async function updateFlashcardSchedulingMetadata(
     return true;
 }
 
-export function addBlockIdToParagraph(block: paragraph) {
-    return `${block.text} ^${block.id}`;
-}
-
+export { addBlockIdToParagraph, isParagraph, isAnnotationOrParagraph };
 
 // TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
@@ -182,60 +179,18 @@ export async function softDeleteAnnotation(bookId: string, annotationId: string)
     return await updateAnnotationMetadata(bookId, annotationId, { deleted: true });
 }
 
-export function isParagraph(section: BookMetadataSection): section is paragraph {
-    return (section as paragraph).wasIdPresent !== undefined;
-}
-
-export function isAnnotationOrParagraph(section: BookMetadataSection): section is (annotation|paragraph) {
-    return isAnnotation(section) || isParagraph(section);
-}
-
-function transform(p: paragraph|annotation): annotation {
-    if (isAnnotation(p)) {
-        return p;
-    } else {
-        return {
-            id: p.id,
-            type: "",
-            note: "",
-            highlight: p.text,
-            hasFlashcards: p.hasFlashcards
-        };
-    }
-}
-
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
     const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
+    
     // todo: shouldn't this throw an error since this is an impossible condition to reach?
     if ((!selectedSection) || (!isHeading(selectedSection))) {
         return null;
     }
-    let nextHeadingIndex = findNextHeader(selectedSection, book.bookSections);
-    // todo: write a test for this
-    if (nextHeadingIndex == -1) {
-        // if no next heading, we want to extract till end of file
-        nextHeadingIndex = book.bookSections.length;
-    }
-    // todo: refactor to unify isAnnotationOrParagraph usage
-    let annotations = book.bookSections
-        .slice(selectedSectionIndex, nextHeadingIndex)
-        .filter((t): t is (annotation|paragraph) => isAnnotationOrParagraph(t));
 
-    // WTF is this???
-    const flashcardCountForAnnotation: Record<string, number> = {};
-    for (const id of book.flashcardNote.flashcards.map(t => t.parentId)) {
-        flashcardCountForAnnotation[id] = flashcardCountForAnnotation[id] ? flashcardCountForAnnotation[id] + 1 : 1;
-    }
-
-    annotations = annotations.map(t => {
-        return {
-            ...transform(t),
-            flashcardCount: flashcardCountForAnnotation[t.id] || 0
-        };
-    }).filter(t => !t.deleted);
+    const annotations = book.getProcessedAnnotations(sectionId);
 
     return {
         id: sectionId,

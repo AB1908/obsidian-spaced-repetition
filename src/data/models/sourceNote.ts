@@ -10,8 +10,7 @@ import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/dat
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/scheduler/CardType";
-import { paragraph } from "src/data/models/paragraphs";
-import {addBlockIdToParagraph, isAnnotationOrParagraph, isParagraph} from "src/api";
+import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { CardType } from "src/scheduler/CardType";
 import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
@@ -45,6 +44,28 @@ export function isChapter(section: BookMetadataSection): section is Heading {
 
 export function isAnnotation(section: BookMetadataSection): section is annotation {
     return (section as annotation).highlight !== undefined || (section as annotation).note !== undefined;
+}
+
+export function isParagraph(section: BookMetadataSection): section is paragraph {
+    return (section as paragraph).wasIdPresent !== undefined;
+}
+
+export function isAnnotationOrParagraph(section: BookMetadataSection): section is (annotation|paragraph) {
+    return isAnnotation(section) || isParagraph(section);
+}
+
+function transform(p: paragraph|annotation): annotation {
+    if (isAnnotation(p)) {
+        return p;
+    } else {
+        return {
+            id: p.id,
+            type: "",
+            note: "",
+            highlight: p.text,
+            hasFlashcards: p.hasFlashcards
+        };
+    }
 }
 
 // todo: should this be part of the Book class??
@@ -326,6 +347,45 @@ export class SourceNote implements frontbook {
             }
         }
         return {annotationsWithFlashcards, annotationsWithoutFlashcards};
+    }
+
+    getProcessedAnnotations(sectionId?: string) {
+        let sectionIndex = 0;
+        let nextHeadingIndex = this.bookSections.length;
+
+        if (sectionId) {
+            sectionIndex = this.bookSections.findIndex(t => sectionId === t.id);
+            // handle not found?
+            if (sectionIndex === -1) return []; // or throw
+            const selectedSection = this.bookSections[sectionIndex];
+            // check if it's a heading?
+            if (!isHeading(selectedSection)) return []; // matches current api logic
+
+            const foundNext = findNextHeader(selectedSection, this.bookSections);
+            if (foundNext !== -1) nextHeadingIndex = foundNext;
+        }
+
+        const annotations = this.bookSections
+            .slice(sectionIndex, nextHeadingIndex)
+            .filter((t): t is (annotation | paragraph) => isAnnotationOrParagraph(t));
+
+        const flashcardCountForAnnotation: Record<string, number> = {};
+        for (const id of this.flashcardNote.flashcards.map(t => t.parentId)) {
+            flashcardCountForAnnotation[id] = (flashcardCountForAnnotation[id] || 0) + 1;
+        }
+
+        return annotations.map(t => {
+            return {
+                ...transform(t),
+                flashcardCount: flashcardCountForAnnotation[t.id] || 0
+            };
+        }).filter(t => !t.deleted);
+    }
+
+    getAnnotation(annotationId: string): annotation {
+        const match = this.annotations().find(t => t.id === annotationId);
+        if (!match) throw new Error(`Annotation not found: ${annotationId}`);
+        return transform(match);
     }
 
     startReviewing() {
