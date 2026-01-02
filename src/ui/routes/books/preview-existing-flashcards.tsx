@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from "react";
 import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
-import { Icon } from "src/ui/routes/root";
-import { setIcon } from "src/obsidian-facade";
+import { Icon } from "src/types/obsidian-icons";
+import { setIcon } from "src/infrastructure/obsidian-facade";
 import { AnnotationLoaderParams } from "src/ui/routes/books/annotation-with-outlet";
 
 interface HighlightParams {

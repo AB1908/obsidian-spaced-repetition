@@ -1,7 +1,7 @@
 import React from "react";
 import {textInterval} from "src/scheduler/scheduling";
 import { useNavigate } from "react-router-dom";
-import { Platform } from "src/obsidian-facade";
+import { Platform } from "src/infrastructure/obsidian-facade";
 import { plugin } from "src/main";
 
 export function ShowAnswerButton(props: {handleShowAnswerButton: () => void}) {

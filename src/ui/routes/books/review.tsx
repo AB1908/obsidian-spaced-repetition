@@ -8,8 +8,8 @@ import {
     updateFlashcardSchedulingMetadata
 } from "src/api";
 import { CardBack, CardFront} from "src/ui/components/flashcard";
-import { setIcon } from "src/obsidian-facade";
-import { Icon } from "src/ui/routes/root";
+import { setIcon } from "src/infrastructure/obsidian-facade";
+import { Icon } from "src/types/obsidian-icons";
 
 export const USE_ACTUAL_BACKEND = true;
 
