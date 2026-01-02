@@ -24,8 +24,8 @@ export interface BookFrontmatter {
     lastExportedID: number;
     tags: string[];
 }
-import { type ReviewResponse } from "./scheduler/CardType";
-import { CardType } from "./scheduler/CardType";
+import { type ReviewResponse } from "./types/CardType";
+import { CardType } from "./types/CardType";
 import {
     Flashcard,
 } from "src/data/models/flashcard";
