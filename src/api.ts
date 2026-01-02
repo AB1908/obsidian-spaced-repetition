@@ -40,7 +40,7 @@ import type { FrontendFlashcard } from "src/ui/routes/books/review";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { parseMoonReaderExport } from "./data/import/moonreader";
 import { generateAnnotationMarkdown, generateMarkdownWithHeaders } from "./data/utils/annotationGenerator";
-import { ObsidianNotice } from "src/obsidian-facade";
+import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
