@@ -8,8 +8,7 @@ import { ChapterList, chapterLoader } from "src/routes/books/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/routes/review";
 import { cardLoader, UpsertCard } from "src/routes/upsert-card";
 import { EditCard, editCardAction } from "src/routes/edit-card";
-import { ImportHighlights, annotationsLoader as importAnnotationsLoader } from "src/routes/import-highlights";
-import { FlashcardHighlights, annotationsLoader as flashcardAnnotationsLoader } from "src/routes/flashcard-highlights";
+import { AnnotationListPage, annotationsLoader as flashcardAnnotationsLoader } from "src/routes/books/AnnotationListPage";
 import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
 import {
     deleteFlashcardAction,
@@ -78,8 +77,8 @@ export const children: RouteObject[] = [
                                 children: [
                                     {
                                         path: "",
-                                        element: <ImportHighlights />,
-                                        loader: importAnnotationsLoader,
+                                        element: <AnnotationListPage />,
+                                        loader: flashcardAnnotationsLoader,
                                     },
                                     {
                                         path: ":annotationId",
@@ -121,7 +120,7 @@ export const children: RouteObject[] = [
         children: [
             {
                 path: "",
-                element: <FlashcardHighlights />,
+                element: <AnnotationListPage />,
                 loader: flashcardAnnotationsLoader,
             },
             {
