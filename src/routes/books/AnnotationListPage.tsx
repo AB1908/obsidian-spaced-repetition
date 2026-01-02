@@ -38,10 +38,13 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 
 export function AnnotationListPage() {
     const chapterData = useLoaderData() as SectionAnnotations;
-    const [filter, setFilter] = React.useState<'uncategorized' | 'all'>('uncategorized');
     const location = useLocation();
     
-    const baseLinkPath = location.pathname.includes("/import/") ? "personal-note" : "flashcards";
+    const isImportFlow = location.pathname.includes("/import/");
+    const [filter, setFilter] = React.useState<'unprocessed' | 'processed' | 'all'>(isImportFlow ? 'unprocessed' : 'processed');
+    const [activeColorFilter, setActiveColorFilter] = React.useState<string | null>(null);
+
+    const baseLinkPath = isImportFlow ? "personal-note" : "flashcards";
 
     return (
         <AnnotationDisplayList
@@ -49,6 +52,8 @@ export function AnnotationListPage() {
             baseLinkPath={baseLinkPath}
             filter={filter}
             setFilter={setFilter}
+            activeColorFilter={activeColorFilter}
+            setActiveColorFilter={setActiveColorFilter}
         />
     );
 }
