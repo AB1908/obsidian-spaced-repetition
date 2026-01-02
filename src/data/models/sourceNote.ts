@@ -14,7 +14,7 @@ import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { CardType } from "src/scheduler/CardType";
 import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
-import { SourceNoteDependencies } from "src/data/models/dependencies";
+import { SourceNoteDependencies } from "src/data/utils/dependencies";
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);

@@ -1,6 +1,6 @@
 // tests/__mocks__/plugin.ts
 
-import { SourceNoteDependencies } from "src/data/models/dependencies";
+import { SourceNoteDependencies } from "src/data/utils/dependencies";
 
 // This mock is designed to be very lightweight and synchronous for Jest's module mocking.
 

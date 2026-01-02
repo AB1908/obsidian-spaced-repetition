@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { annotation, SectionAnnotations } from "src/data/models/annotations";
 import { getFilteredAnnotations } from "src/utils/annotation-filters";
-import { integerToRGBA } from "src/utils";
+import { integerToRGBA } from "src/utils/utils";
 import { CategoryFilter } from "src/ui/components/category-filter";
 import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
 

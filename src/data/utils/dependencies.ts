@@ -1,8 +1,8 @@
 // src/data/models/dependencies.ts
 
-import { Index } from ".";
-import { FlashcardIndex } from "./flashcard";
-import { SourceNoteIndex } from "./sourceNote";
+import { Index } from "../models";
+import { FlashcardIndex } from "../models/flashcard";
+import { SourceNoteIndex } from "../models/sourceNote";
 
 export interface SourceNoteDependencies {
     flashcardIndex: FlashcardIndex;
