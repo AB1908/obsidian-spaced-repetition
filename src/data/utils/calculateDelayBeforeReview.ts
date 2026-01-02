@@ -1,4 +1,4 @@
-import {moment} from "src/obsidian-facade";
+import {moment} from "src/infrastructure/obsidian-facade";
 
 // todo: move into controller?
 

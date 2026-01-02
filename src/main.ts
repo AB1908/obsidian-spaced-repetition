@@ -7,7 +7,7 @@ import { FlashcardIndex } from "src/data/models/flashcard";
 import { SourceNoteIndex } from "src/data/models/sourceNote";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
-import { setApp } from "src/obsidian-facade";
+import { setApp } from "src/infrastructure/obsidian-facade";
 import { Index } from "src/data/models";
 import { SourceNoteDependencies } from "src/data/utils/dependencies";
 

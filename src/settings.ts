@@ -1,4 +1,4 @@
-import { ObsidianNotice, Platform, PluginSettingTab, Setting, App, TFolder } from "src/obsidian-facade";
+import { ObsidianNotice, Platform, PluginSettingTab, Setting, App, TFolder } from "src/infrastructure/obsidian-facade";
 import React from "react";
 
 import type SRPlugin from "src/main";

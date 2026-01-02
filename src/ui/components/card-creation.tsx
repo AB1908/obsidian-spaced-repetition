@@ -3,8 +3,8 @@ import { Form, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { CancelButton, SubmitButton } from "src/ui/components/buttons";
 import { createFlashcardForAnnotation, updateFlashcardContentsById } from "src/api";
 import { FrontendFlashcard } from "src/ui/routes/books/review";
-import { Icon } from "src/ui/routes/root";
-import { setIcon } from "src/obsidian-facade";
+import { Icon } from "src/types/obsidian-icons";
+import { setIcon } from "src/infrastructure/obsidian-facade";
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {
     const labelText = props.htmlFor[0].toUpperCase() + props.htmlFor.slice(1);

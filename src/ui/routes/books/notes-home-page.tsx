@@ -1,6 +1,6 @@
 import {useLoaderData} from "react-router";
 import React, {useEffect, useRef} from "react";
-import { setIcon } from "src/obsidian-facade";
+import { setIcon } from "src/infrastructure/obsidian-facade";
 import { Link } from "react-router-dom";
 import { CardCount } from "src/ui/components/card-counts";
 import { Icon } from "src/ui/routes/root";

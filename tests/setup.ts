@@ -58,7 +58,7 @@ jest.mock("obsidian", () => {
     };
 });
 
-jest.mock("src/obsidian-facade", () => {
+jest.mock("src/infrastructure/obsidian-facade", () => {
     const mockedObsidian = jest.requireMock("obsidian");
     return {
         setIcon: mockedObsidian.setIcon,

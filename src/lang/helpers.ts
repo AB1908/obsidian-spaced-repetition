@@ -1,6 +1,6 @@
 // https://github.com/mgmeyers/obsidian-kanban/blob/93014c2512507fde9eafd241e8d4368a8dfdf853/src/lang/helpers.ts
 
-import { moment } from "src/obsidian-facade";
+import { moment } from "src/infrastructure/obsidian-facade";
 import en from "./locale/en";
 
 export const localeMap: { [k: string]: Partial<typeof en> } = {

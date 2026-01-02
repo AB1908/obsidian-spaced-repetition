@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useLoaderData, useParams, useNavigate } from "react-router-dom";
 import { getAnnotationById, updateAnnotationMetadata, softDeleteAnnotation } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
-import { setIcon } from "src/obsidian-facade";
+import { setIcon } from "src/infrastructure/obsidian-facade";
 import { type Icon } from "src/types/obsidian-icons";
 import { integerToRGBA } from "src/utils/utils";
 

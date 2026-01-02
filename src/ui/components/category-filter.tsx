@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { setIcon } from "src/obsidian-facade";
+import { setIcon } from "src/infrastructure/obsidian-facade";
 import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
 import { Icon } from "src/types/obsidian-icons";
 
