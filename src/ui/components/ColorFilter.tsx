@@ -1,6 +1,6 @@
 import React, { useMemo } from 'react';
 import { annotation } from 'src/data/models/annotations';
-import { integerToRGBA } from 'src/utils';
+import { integerToRGBA } from 'src/utils/utils';
 
 interface ColorFilterProps {
     annotations: annotation[];

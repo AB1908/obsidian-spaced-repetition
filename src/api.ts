@@ -29,7 +29,7 @@ import { CardType } from "./scheduler/CardType";
 import {
     Flashcard,
 } from "src/data/models/flashcard";
-import { calculateDelayBeforeReview } from "./data/models/calculateDelayBeforeReview";
+import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";

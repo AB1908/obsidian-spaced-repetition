@@ -4,7 +4,7 @@ import { getAnnotationById, updateAnnotationMetadata, softDeleteAnnotation } fro
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/obsidian-facade";
 import { type Icon } from "src/types/obsidian-icons";
-import { integerToRGBA } from "src/utils";
+import { integerToRGBA } from "src/utils/utils";
 
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;

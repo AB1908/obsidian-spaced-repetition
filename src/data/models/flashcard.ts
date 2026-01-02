@@ -9,7 +9,7 @@ import { plugin } from "src/main";
 import { ParsedCard } from "src/data/models/parsedCard";
 import { getAnnotationFilePath } from "../../infrastructure/disk";
 import { filePathsWithTag } from "src/infrastructure/disk";
-import { calculateDelayBeforeReview } from "./calculateDelayBeforeReview";
+import { calculateDelayBeforeReview } from "../utils/calculateDelayBeforeReview";
 
 export interface AbstractFlashcard {
     id: string,

@@ -9,7 +9,7 @@ import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
 import { setApp } from "src/obsidian-facade";
 import { Index } from "src/data/models";
-import { SourceNoteDependencies } from "src/data/models/dependencies";
+import { SourceNoteDependencies } from "src/data/utils/dependencies";
 
 export interface PluginData {
     settings: SRSettings;
