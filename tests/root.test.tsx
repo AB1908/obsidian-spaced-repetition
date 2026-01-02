@@ -1,7 +1,7 @@
 import React from "react";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { Root } from "src/routes/root";
+import { Root } from "src/ui/routes/root";
 import { ModalTitleProvider } from "src/ui/modals/ModalTitleContext";
 
 // Mock react-router-dom hooks

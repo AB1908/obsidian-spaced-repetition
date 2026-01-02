@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet, useNavigate, useLoaderData } from "react-router-dom";
-import { DeckCounts } from "src/routes/books/notes-home-page";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { DeckCounts } from "src/ui/routes/books/notes-home-page";
+import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { frontEndBook, getBookById, resetBookReviewState } from "src/api";
 
 interface DeckLoaderParams {

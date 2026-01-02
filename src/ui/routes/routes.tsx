@@ -1,25 +1,25 @@
 import { RouteObject } from "react-router-dom";
-import { Tabs } from "src/routes/tabs";
-import { Tags } from "src/routes/tags";
-import { Notes, notesLoader } from "src/routes/books/notes-home-page";
-import { ImportDashboard, importDashboardLoader } from "src/routes/import-export";
-import { BookButtons, DeckLandingPage, deckLoader } from "src/routes/books/deck-preview";
-import { ChapterList, chapterLoader } from "src/routes/books/chapter-list";
-import { ReviewDeck, reviewLoader } from "src/routes/review";
-import { cardLoader, UpsertCard } from "src/routes/upsert-card";
-import { EditCard, editCardAction } from "src/routes/edit-card";
-import { AnnotationListPage, annotationsLoader as flashcardAnnotationsLoader } from "src/routes/books/AnnotationListPage";
-import { annotationLoader, AnnotationWithOutlet } from "src/routes/annotation-with-outlet";
+import { Tabs } from "src/ui/routes/tabs";
+import { Tags } from "src/ui/routes/tags";
+import { Notes, notesLoader } from "src/ui/routes/books/notes-home-page";
+import { ImportDashboard, importDashboardLoader } from "src/ui/routes/import/import-export";
+import { BookButtons, DeckLandingPage, deckLoader } from "src/ui/routes/books/deck-preview";
+import { ChapterList, chapterLoader } from "src/ui/routes/books/chapter-list";
+import { ReviewDeck, reviewLoader } from "src/ui/routes/books/review";
+import { cardLoader, UpsertCard } from "src/ui/routes/books/upsert-card";
+import { EditCard, editCardAction } from "src/ui/routes/books/edit-card";
+import { AnnotationListPage, annotationsLoader as flashcardAnnotationsLoader } from "src/ui/routes/books/AnnotationListPage";
+import { annotationLoader, AnnotationWithOutlet } from "src/ui/routes/books/annotation-with-outlet";
 import {
     deleteFlashcardAction,
     highlightLoader,
     PreviewExistingFlashcards
-} from "src/routes/preview-existing-flashcards";
-import { ChooseCardType } from "src/routes/choose-card-type";
+} from "src/ui/routes/books/preview-existing-flashcards";
+import { ChooseCardType } from "src/ui/routes/books/choose-card-type";
 import React from "react";
-import { BookDetailsPage, bookDetailsLoader } from "src/routes/books/index";
+import { BookDetailsPage, bookDetailsLoader } from "src/ui/routes/books/index";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
-import { personalNoteLoader, PersonalNotePage } from "./personal-note";
+import { personalNoteLoader, PersonalNotePage } from "./import/personal-note";
 
 export const children: RouteObject[] = [
     {

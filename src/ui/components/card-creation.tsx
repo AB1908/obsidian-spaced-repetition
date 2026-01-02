@@ -2,8 +2,8 @@ import React, { useEffect, useRef } from "react";
 import { Form, useLoaderData, useNavigate, useParams } from "react-router-dom";
 import { CancelButton, SubmitButton } from "src/ui/components/buttons";
 import { createFlashcardForAnnotation, updateFlashcardContentsById } from "src/api";
-import { FrontendFlashcard } from "src/routes/review";
-import { Icon } from "src/routes/root";
+import { FrontendFlashcard } from "src/ui/routes/books/review";
+import { Icon } from "src/ui/routes/root";
 import { setIcon } from "src/obsidian-facade";
 
 export function TextInputWithLabel(props: { className: string, htmlFor: string, defaultValue: string }) {

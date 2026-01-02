@@ -1,7 +1,7 @@
 import React from "react";
 import { render } from "@testing-library/react";
-import { FlashcardHighlights as AnnotationList, SectionAnnotations } from "../src/routes/flashcard-highlights";
-import { AnnotationWithOutlet } from "../src/routes/annotation-with-outlet";
+import { FlashcardHighlights as AnnotationList, SectionAnnotations } from "../src/ui/routes/flashcard-highlights";
+import { AnnotationWithOutlet } from "../src/ui/routes/books/annotation-with-outlet";
 import { annotation } from "../src/data/models/annotations";
 import { MemoryRouter, Route, Routes } from "react-router-dom";
 

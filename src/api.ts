@@ -36,7 +36,7 @@ import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/T
 import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
-import type { FrontendFlashcard } from "src/routes/review";
+import type { FrontendFlashcard } from "src/ui/routes/books/review";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { parseMoonReaderExport } from "./data/import/moonreader";
 import { generateAnnotationMarkdown, generateMarkdownWithHeaders } from "./data/utils/annotationGenerator";

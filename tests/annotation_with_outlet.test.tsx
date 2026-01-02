@@ -23,7 +23,7 @@ jest.mock('obsidian', () => ({
 import { pathGenerator } from 'src/utils/path-generators';
 
 // Import component under test
-import { AnnotationWithOutlet, AnnotationLoaderParams } from '../src/routes/annotation-with-outlet';
+import { AnnotationWithOutlet, AnnotationLoaderParams } from '../src/ui/routes/books/annotation-with-outlet';
 
 // Mock data
 const mockAnnotation: annotation = {

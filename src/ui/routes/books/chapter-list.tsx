@@ -1,7 +1,7 @@
 import React from "react";
 import { useLoaderData } from "react-router";
 import { Link } from "react-router-dom";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { getBookChapters } from "src/api";
 
 export interface ChapterLoaderParams {

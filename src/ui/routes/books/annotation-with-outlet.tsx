@@ -1,7 +1,7 @@
 import { generatePath, matchPath, Outlet, useLoaderData, useRouteLoaderData } from "react-router-dom";
 import React, { useEffect, useRef, useState } from "react";
 import type { annotation } from "src/data/models/annotations";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { getAnnotationById } from "src/api";
 import type { AnnotationsLoaderParams } from "src/routes/flashcard-highlights";
 import { SectionAnnotations } from "src/data/models/annotations";
