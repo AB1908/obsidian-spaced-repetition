@@ -1,4 +1,4 @@
-import { CardType } from "src/scheduler/CardType";
+import { CardType } from "src/types/CardType";
 
 import { generateFlashcardsArray } from "src/data/models/flashcard";
 

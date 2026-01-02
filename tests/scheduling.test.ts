@@ -1,5 +1,5 @@
 import {schedule, textInterval} from "src/scheduler/scheduling";
-import { ReviewResponse } from "src/scheduler/CardType";
+import { ReviewResponse } from "src/types/CardType";
 import {DEFAULT_SETTINGS} from "src/settings";
 
 jest.mock("../src/main", () => {

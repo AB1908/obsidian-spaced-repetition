@@ -1,5 +1,5 @@
 import {createParsedCardFromText, ParsedCard} from "src/data/models/parsedCard";
-import { CardType } from "src/scheduler/CardType";
+import { CardType } from "src/types/CardType";
 import {getFileContents} from "src/infrastructure/disk";
 
 // TODO: parameterize separators??

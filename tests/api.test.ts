@@ -53,7 +53,7 @@ import {
 import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { fileTags } from "src/infrastructure/disk";
-import { ReviewResponse } from "src/scheduler/CardType";
+import { ReviewResponse } from "src/types/CardType";
 
 describe("getBookById", () => {
     beforeEach(async () => {

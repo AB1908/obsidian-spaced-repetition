@@ -1,6 +1,6 @@
 import { schedule } from "src/scheduler/scheduling";
-import { ReviewResponse } from "src/scheduler/CardType";
-import { CardType } from "src/scheduler/CardType";
+import { ReviewResponse } from "src/types/CardType";
+import { CardType } from "src/types/CardType";
 import { nanoid } from "nanoid";
 import { FLAG, FlashcardMetadata, parseCardText, parseFileText, parseMetadata } from "src/data/parser";
 import { moment, ObsidianNotice } from "src/obsidian-facade";
