@@ -53,20 +53,24 @@ function AnnotationListItem(props: AnnotationListItemProps) {
     );
 }
 
+import { ColorFilter } from "src/ui/components/ColorFilter";
+
 interface AnnotationDisplayListProps {
     chapterData: SectionAnnotations;
     baseLinkPath: string;
-    filter: 'uncategorized' | 'all';
-    setFilter: (filter: 'uncategorized' | 'all') => void;
+    filter: 'unprocessed' | 'processed' | 'all';
+    setFilter: (filter: 'unprocessed' | 'processed' | 'all') => void;
+    activeColorFilter: string | null;
+    setActiveColorFilter: (color: string | null) => void;
 }
 
 export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
-    const { chapterData, baseLinkPath, filter, setFilter } = props;
+    const { chapterData, baseLinkPath, filter, setFilter, activeColorFilter, setActiveColorFilter } = props;
     const [activeCategoryFilter, setActiveCategoryFilter] = useState<number | null>(null);
 
     const displayedAnnotations = useMemo(() => {
-        return getFilteredAnnotations(chapterData.annotations, filter, activeCategoryFilter);
-    }, [filter, activeCategoryFilter, chapterData.annotations]);
+        return getFilteredAnnotations(chapterData.annotations, filter, activeCategoryFilter, activeColorFilter);
+    }, [filter, activeCategoryFilter, activeColorFilter, chapterData.annotations]);
 
     //todo: don't use direct DOM manipulation one day
     useEffect(() => {
@@ -84,11 +88,10 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
         }
     }, [chapterData]);
 
-    // Reset activeCategoryFilter when main filter changes from 'all'
+    // Reset sub-filters when main filter changes
     useEffect(() => {
-        if (filter !== 'all' && activeCategoryFilter !== null) {
-            setActiveCategoryFilter(null);
-        }
+        setActiveCategoryFilter(null);
+        setActiveColorFilter(null);
     }, [filter]);
 
     return (
@@ -99,13 +102,16 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
 
             <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
                 <button
-                    className={`mod-cta ${filter === 'uncategorized' ? '' : 'mod-muted'}`}
-                    onClick={() => {
-                        setFilter('uncategorized');
-                        setActiveCategoryFilter(null); // Clear category filter when switching to 'To Process'
-                    }}
+                    className={`mod-cta ${filter === 'unprocessed' ? '' : 'mod-muted'}`}
+                    onClick={() => setFilter('unprocessed')}
                 >
-                    To Process
+                    Unprocessed
+                </button>
+                <button
+                    className={`mod-cta ${filter === 'processed' ? '' : 'mod-muted'}`}
+                    onClick={() => setFilter('processed')}
+                >
+                    Processed
                 </button>
                 <button
                     className={`mod-cta ${filter === 'all' ? '' : 'mod-muted'}`}
@@ -113,10 +119,20 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
                 >
                     All
                 </button>
-                {filter === 'all' && (
+            </div>
+            
+            <div style={{ marginBottom: '1rem' }}>
+                {filter === 'processed' && (
                     <CategoryFilter
                         selectedCategory={activeCategoryFilter}
                         onCategorySelect={setActiveCategoryFilter}
+                    />
+                )}
+                {filter === 'unprocessed' && (
+                    <ColorFilter
+                        annotations={chapterData.annotations}
+                        selectedColor={activeColorFilter}
+                        onColorSelect={setActiveColorFilter}
                     />
                 )}
             </div>
