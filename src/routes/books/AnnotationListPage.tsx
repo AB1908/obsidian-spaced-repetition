@@ -1,9 +1,9 @@
 import React from "react";
-import { useLoaderData } from "react-router-dom";
-import { annotation, SectionAnnotations } from "src/data/models/annotations";
+import { useLoaderData, useLocation } from "react-router-dom";
+import { AnnotationDisplayList } from "../../ui/components/annotation-display-list";
+import { SectionAnnotations } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/routes/review";
 import { getAnnotationsForSection } from "src/api";
-import { AnnotationDisplayList } from "./annotation-display-list";
 
 export interface AnnotationsLoaderParams {
     bookId: string;
@@ -36,14 +36,17 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
     );
 }
 
-export function ImportHighlights() {
+export function AnnotationListPage() {
     const chapterData = useLoaderData() as SectionAnnotations;
     const [filter, setFilter] = React.useState<'uncategorized' | 'all'>('uncategorized');
+    const location = useLocation();
+    
+    const baseLinkPath = location.pathname.includes("/import/") ? "personal-note" : "flashcards";
 
     return (
         <AnnotationDisplayList
             chapterData={chapterData}
-            baseLinkPath="personal-note"
+            baseLinkPath={baseLinkPath}
             filter={filter}
             setFilter={setFilter}
         />
