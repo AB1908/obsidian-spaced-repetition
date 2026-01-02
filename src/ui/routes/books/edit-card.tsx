@@ -4,7 +4,7 @@ import { getAnnotationById, updateFlashcardContentsById } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { TextInputWithLabel } from "src/ui/components/card-creation";
 import { CancelButton } from "src/ui/components/buttons";
-import type { FrontendFlashcard } from "src/routes/review";
+import type { FrontendFlashcard } from "src/ui/routes/books/review";
 import { useModalTitle } from "src/ui/modals/ModalTitleContext";
 import { truncate } from "src/utils/text-helpers";
 

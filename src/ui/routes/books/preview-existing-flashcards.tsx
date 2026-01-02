@@ -1,11 +1,11 @@
 import { Form, Link, useParams, useLoaderData } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
-import { Icon } from "src/routes/root";
+import { Icon } from "src/ui/routes/root";
 import { setIcon } from "src/obsidian-facade";
-import { AnnotationLoaderParams } from "src/routes/annotation-with-outlet";
+import { AnnotationLoaderParams } from "src/ui/routes/books/annotation-with-outlet";
 
 interface HighlightParams {
     bookId: string;

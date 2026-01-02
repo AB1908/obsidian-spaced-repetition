@@ -1,8 +1,8 @@
 import React from "react";
 import { useLoaderData, useLocation } from "react-router-dom";
-import { AnnotationDisplayList } from "../../ui/components/annotation-display-list";
+import { AnnotationDisplayList } from "../../components/annotation-display-list";
 import { SectionAnnotations } from "src/data/models/annotations";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { getAnnotationsForSection } from "src/api";
 
 export interface AnnotationsLoaderParams {

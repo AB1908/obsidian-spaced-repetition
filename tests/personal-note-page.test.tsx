@@ -1,6 +1,6 @@
 import React from 'react';
 import { render, screen } from '@testing-library/react';
-import { PersonalNotePage } from 'src/routes/personal-note';
+import { PersonalNotePage } from 'src/ui/routes/import/personal-note';
 import { getAnnotationById, updateAnnotationMetadata, softDeleteAnnotation } from 'src/api';
 import { setIcon } from 'obsidian'; // Import the mocked setIcon function
 import '@testing-library/jest-dom';

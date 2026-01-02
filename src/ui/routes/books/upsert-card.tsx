@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router";
 import { DefaultCardForm } from "src/ui/components/card-creation";
 import { getFlashcardById } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
-import { USE_ACTUAL_BACKEND } from "src/routes/review";
+import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { useModalTitle } from "src/ui/modals/ModalTitleContext";
 import { truncate } from "src/utils/text-helpers";
 

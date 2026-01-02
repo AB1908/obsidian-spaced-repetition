@@ -1,5 +1,5 @@
 import { plugin } from "src/main";
-import {FrontendFlashcard} from "src/routes/review";
+import {FrontendFlashcard} from "src/ui/routes/books/review";
 import { ReviewResponse } from "./CardType";
 
 export function schedule(
