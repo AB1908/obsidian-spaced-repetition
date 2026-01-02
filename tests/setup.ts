@@ -1,3 +1,4 @@
+import 'whatwg-fetch';
 import '@testing-library/jest-dom';
 // Polyfill for structuredClone for Jest environment
 if (typeof global.structuredClone === 'undefined') {
