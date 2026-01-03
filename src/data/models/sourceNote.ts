@@ -6,7 +6,7 @@ import {
     getParentOrFilename, updateCardOnDisk
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
-import { Flashcard, FlashcardNote, schedulingMetadataForResponse } from "src/data/models/flashcard";
+import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/types/CardType";
@@ -493,6 +493,25 @@ export class SourceNote implements frontbook {
                 this.flashcardNote.flashcards[index].interval = updatedSchedulingMetadata.interval;
             }
         });
+    }
+
+    getReviewStats() {
+        this.resetReview();
+        const { annotationsWithFlashcards, annotationsWithoutFlashcards } = this.annotationCoverage();
+        const annotationsWithFlashcardsCount = annotationsWithFlashcards.size;
+        const annotationsWithoutFlashcardsCount = annotationsWithoutFlashcards.size;
+        const progress = maturityCounts(this.flashcardNote?.flashcards || []);
+        let annotationCoverage = annotationsWithFlashcardsCount / (annotationsWithFlashcardsCount + annotationsWithoutFlashcardsCount);
+        // Handle NaN if both counts are 0
+        if (isNaN(annotationCoverage)) annotationCoverage = 0;
+
+        return {
+            id: this.id,
+            name: this.name,
+            pendingFlashcards: this.reviewDeck.length,
+            annotationCoverage: annotationCoverage,
+            flashcardProgress: progress
+        };
     }
 
     // todo: feels like disk update should be put somewhere else, like parsedcard should have its
