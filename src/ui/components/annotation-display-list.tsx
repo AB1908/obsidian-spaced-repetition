@@ -68,6 +68,9 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
     const { chapterData, baseLinkPath, filter, setFilter, activeColorFilter, setActiveColorFilter } = props;
     const [activeCategoryFilter, setActiveCategoryFilter] = useState<number | null>(null);
 
+    // todo: why do we use useMemo here? Seems unnecessary especially when we have a direct API and things are all local.
+    // we don't need to cache anything, so consider removing
+    // check what tradeoffs this incurs in terms of development as well as for user experience at scale
     const displayedAnnotations = useMemo(() => {
         return getFilteredAnnotations(chapterData.annotations, filter, activeCategoryFilter, activeColorFilter);
     }, [filter, activeCategoryFilter, activeColorFilter, chapterData.annotations]);
