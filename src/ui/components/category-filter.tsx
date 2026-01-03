@@ -8,9 +8,9 @@ interface CategoryFilterProps {
     onCategorySelect: (category: number | null) => void;
 }
 
-export function CategoryFilter({ selectedCategory, onCategorySelect }: CategoryFilterProps) {
+export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: Props) {
     const iconRefs = ANNOTATION_CATEGORY_ICONS.map(() => useRef<HTMLDivElement>(null));
-    const clearFilterRef = useRef<HTMLDivElement>(null);
+    // const clearFilterRef = useRef<HTMLDivElement>(null); // No longer needed
 
     useEffect(() => {
         ANNOTATION_CATEGORY_ICONS.forEach((iconName, i) => {
@@ -18,10 +18,18 @@ export function CategoryFilter({ selectedCategory, onCategorySelect }: CategoryF
                 setIcon(iconRefs[i].current, iconName);
             }
         });
-        if (clearFilterRef.current) {
-            setIcon(clearFilterRef.current, "circle-slash"); // Icon for clearing the filter
-        }
+        // if (clearFilterRef.current) { // No longer needed
+        //     setIcon(clearFilterRef.current, "circle-slash"); // Icon for clearing the filter
+        // }
     }, []);
+
+    const handleCategoryClick = (categoryIndex: number) => {
+        if (selectedCategory === categoryIndex) {
+            onCategorySelect(null);
+        } else {
+            onCategorySelect(categoryIndex);
+        }
+    };
 
     return (
         <div className="sr-category-buttons" style={{ display: "flex", gap: "0.5rem" }}>
@@ -29,7 +37,7 @@ export function CategoryFilter({ selectedCategory, onCategorySelect }: CategoryF
                 <div
                     key={i}
                     className={`sr-category-button is-clickable ${selectedCategory === i ? "is-active" : ""}`}
-                    onClick={() => onCategorySelect(i)}
+                    onClick={() => handleCategoryClick(i)}
                     style={{
                         padding: "8px",
                         border: "1px solid",
@@ -41,20 +49,7 @@ export function CategoryFilter({ selectedCategory, onCategorySelect }: CategoryF
                     <div ref={iconRefs[i]} />
                 </div>
             ))}
-            <div
-                className={`sr-category-button is-clickable ${selectedCategory === null ? "is-active" : ""}`}
-                onClick={() => onCategorySelect(null)}
-                style={{
-                    padding: "8px",
-                    border: "1px solid",
-                    borderColor: selectedCategory === null ? "var(--interactive-accent)" : "var(--background-modifier-border)",
-                    borderRadius: "4px",
-                    backgroundColor: selectedCategory === null ? "var(--background-modifier-hover)" : "transparent"
-                }}
-                title="Clear category filter"
-            >
-                <div ref={clearFilterRef} />
-            </div>
+            {/* The clear category button is removed as per the new toggle behavior */}
         </div>
     );
 }
