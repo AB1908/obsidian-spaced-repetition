@@ -32,6 +32,8 @@ export function AnnotationWithOutlet() {
     const nextButtonRef = useRef<HTMLDivElement>(null);
     const params = useParams<keyof AnnotationLoaderParams>();
     const location = useLocation();
+    // todo: investigate TS error. This route is not reachable without book id so no idea why params.bookId can be null
+    // maybe it is implicit definition on params object
     const previousAnnotationId = getPreviousAnnotationIdForSection(params.bookId, params.sectionId, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(params.bookId, params.sectionId, annotation.id);
 
