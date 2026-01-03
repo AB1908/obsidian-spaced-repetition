@@ -14,16 +14,6 @@ export interface FlashCount {
     learning: number;
 }
 
-export interface BookFrontmatter {
-    id: string; // The ID of the SourceNote object (nanoid generated)
-    path: string; // Path to the .mrexpt file
-    annotationsPath: string; // Path to the Annotations.md file
-    title: string;
-    author: string;
-    lastExportedTimestamp: number;
-    lastExportedID: number;
-    tags: string[];
-}
 import { type ReviewResponse } from "./types/CardType";
 import { CardType } from "./types/CardType";
 import {
@@ -31,7 +21,7 @@ import {
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph } from "src/data/models/sourceNote";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
@@ -321,33 +311,9 @@ export async function getImportedBooks(): Promise<BookFrontmatter[]> {
     const books: BookFrontmatter[] = [];
 
     for (const sourceNote of sourceNotes) {
-        try {
-            const metadata = getMetadataForFile(sourceNote.path);
-            const frontmatter = metadata?.frontmatter;
-
-            if (frontmatter) {
-                if (
-                    frontmatter.path &&
-                    frontmatter.title &&
-                    frontmatter.lastExportedTimestamp !== undefined &&
-                    frontmatter.lastExportedID !== undefined
-                ) {
-                    books.push({
-                        id: sourceNote.id, // Assign SourceNote's ID
-                        path: frontmatter.path, // This is the mrexpt path
-                        annotationsPath: sourceNote.path, // This is the Annotations.md path
-                        title: frontmatter.title,
-                        author: frontmatter.author || "",
-                        lastExportedTimestamp: frontmatter.lastExportedTimestamp,
-                        lastExportedID: frontmatter.lastExportedID,
-                        tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
-                    });
-                } else {
-                    console.warn(`Skipping malformed frontmatter in ${sourceNote.path}`);
-                }
-            }
-        } catch (e) {
-            console.error(`Error processing source note ${sourceNote.path}:`, e);
+        const frontmatter = sourceNote.getBookFrontmatter();
+        if (frontmatter) {
+            books.push(frontmatter);
         }
     }
 
