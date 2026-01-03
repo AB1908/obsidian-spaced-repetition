@@ -206,23 +206,8 @@ export function getFlashcardsForAnnotation(annotationId: string, bookId: string)
 
 // todo: this needs to become flashcard decks for review based on flashcardindex
 export function getSourcesForReview(): ReviewBook[] {
-    // todo: refactor
     const booksToReview = plugin.sourceNoteIndex.getSourcesForReview();
-    return booksToReview.map(t => {
-        t.resetReview();
-        const {annotationsWithFlashcards, annotationsWithoutFlashcards} = t.annotationCoverage();
-        const annotationsWithFlashcardsCount = annotationsWithFlashcards.size;
-        const annotationsWithoutFlashcardsCount = annotationsWithoutFlashcards.size;
-        const progress = maturityCounts(t.flashcardNote.flashcards || []);
-        let annotationCoverage = annotationsWithFlashcardsCount/(annotationsWithFlashcardsCount+annotationsWithoutFlashcardsCount);
-        return {
-            id: t.id,
-            name: t.name,
-            pendingFlashcards: t.reviewDeck.length,
-            annotationCoverage: annotationCoverage,
-            flashcardProgress: progress
-        };
-    });
+    return booksToReview.map(t => t.getReviewStats());
 }
 
 export interface frontEndBook {
