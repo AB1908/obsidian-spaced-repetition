@@ -33,7 +33,7 @@ describe("Root Component", () => {
         expect(screen.queryByText("Edit Personal Note")).not.toBeInTheDocument();
         
         // Assert that setIcon was called
-        const { setIcon } = require("src/obsidian-facade");
+        const { setIcon } = require("src/infrastructure/obsidian-facade");
         expect(setIcon).toHaveBeenCalledWith(
             expect.any(HTMLDivElement),
             "arrow-left"
