@@ -5,7 +5,6 @@ module.exports = {
     setupFilesAfterEnv: ["jest-27-expect-message", "<rootDir>/tests/setup.ts"],
     moduleNameMapper: {
         '^src/(.*)$': '<rootDir>/src/$1'
-
     },
     collectCoverageFrom: ["src/**/*.ts*"],
     moduleFileExtensions: ["js", "jsx", "ts", "tsx", "json", "node", "d.ts"],
