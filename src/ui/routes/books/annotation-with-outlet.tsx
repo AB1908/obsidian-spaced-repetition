@@ -1,5 +1,5 @@
 import { generatePath, matchPath, Outlet, useLoaderData, useRouteLoaderData } from "react-router-dom";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { getAnnotationById } from "src/api";
@@ -36,7 +36,6 @@ export function AnnotationWithOutlet() {
     const location = useLocation();
     const previousAnnotationId = getPreviousAnnotationIdForSection(annotationsList.annotations, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(annotationsList.annotations, annotation.id);
-    const [displayMode, setDisplayMode] = useState<'highlight' | 'note'>('highlight');
 
 
     useEffect(() => {
@@ -63,23 +62,6 @@ export function AnnotationWithOutlet() {
 
     return (
         <>
-            <div className={"sr-toggle-group"} style={{ display: 'flex', justifyContent: 'center', marginBottom: '10px' }}>
-                <button
-                    className={`sr-toggle-button ${displayMode === 'highlight' ? 'active' : ''}`}
-                    onClick={() => setDisplayMode('highlight')}
-                    aria-pressed={displayMode === 'highlight'}
-                >
-                    Highlight
-                </button>
-                <button
-                    className={`sr-toggle-button ${displayMode === 'note' ? 'active' : ''}`}
-                    onClick={() => setDisplayMode('note')}
-                    aria-pressed={displayMode === 'note'}
-                    disabled={!annotation.note}
-                >
-                    Note
-                </button>
-            </div>
             <div className={"sr-annotation"}>
                 <div className={"annotation-nav is-clickable"}>
                     {previousAnnotationId != null &&
@@ -89,10 +71,10 @@ export function AnnotationWithOutlet() {
                         </Link>
                     }
                 </div>
-                {displayMode === 'highlight' ?
-                    <HighlightBlock text={annotation.highlight} /> :
-                    annotation.note && <NoteBlock text={annotation.note} />
-                }
+                <div style={{ width: '100%' }}>
+                    <HighlightBlock text={annotation.highlight} />
+                    {annotation.note && <NoteBlock text={annotation.note} />}
+                </div>
                 <div className={"annotation-nav is-clickable"} >
                     {nextAnnotationId != null &&
                         <Link to={`${pathGenerator(location.pathname, params, nextAnnotationId)}`} replace className={"annotation-nav is-clickable"}>
