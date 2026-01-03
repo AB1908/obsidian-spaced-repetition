@@ -8,7 +8,7 @@ import {
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
-import { SchedulingMetadata } from "src/data/utils/TextGenerator";
+import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/types/CardType";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { CardType } from "src/types/CardType";
