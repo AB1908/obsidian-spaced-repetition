@@ -3,13 +3,11 @@ import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom'; // Explicit import
 import { BrowserRouter } from 'react-router-dom';
 import type { annotation } from "src/data/models/annotations";
-import type { SectionAnnotations } from "src/data/models/annotations";
 
 // Mock react-router-dom hooks
 jest.mock('react-router-dom', () => ({
     ...jest.requireActual('react-router-dom'),
     useLoaderData: jest.fn(),
-    useRouteLoaderData: jest.fn(),
     useParams: jest.fn(),
     useLocation: jest.fn(),
 }));
@@ -42,18 +40,7 @@ const mockAnnotation: annotation = {
     flashcardCount: 0,
 };
 
-const mockAnnotationsList: SectionAnnotations = {
-    id: 'test-section-id',
-    title: 'Test Section',
-    annotations: [
-        { id: 'prev-annotation', type: 'text', highlight: 'prev', note: 'prev note', flashcardCount: 0 },
-        mockAnnotation,
-        { id: 'next-annotation', type: 'text', highlight: 'next', note: 'next note', flashcardCount: 0 },
-    ],
-};
-
 const mockUseLoaderData = require('react-router-dom').useLoaderData;
-const mockUseRouteLoaderData = require('react-router-dom').useRouteLoaderData;
 const mockUseParams = require('react-router-dom').useParams;
 const mockUseLocation = require('react-router-dom').useLocation;
 const mockGetPreviousAnnotationId = getPreviousAnnotationIdForSection as jest.Mock;
@@ -64,7 +51,6 @@ describe('AnnotationWithOutlet', () => {
 
     beforeEach(() => {
         mockUseLoaderData.mockReturnValue(mockAnnotation);
-        mockUseRouteLoaderData.mockReturnValue(mockAnnotationsList);
         mockUseParams.mockReturnValue({
             bookId: 'test-book-id',
             sectionId: 'test-section-id',

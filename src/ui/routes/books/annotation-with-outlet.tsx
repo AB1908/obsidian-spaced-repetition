@@ -1,10 +1,9 @@
-import { generatePath, matchPath, Outlet, useLoaderData, useRouteLoaderData } from "react-router-dom";
+import { generatePath, matchPath, Outlet, useLoaderData } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { getAnnotationById } from "src/api";
 import type { AnnotationsLoaderParams } from "src/ui/routes/books/AnnotationListPage";
-import { SectionAnnotations } from "src/data/models/annotations";
 import { Link, useLocation, useParams } from "react-router-dom";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { Icon } from "src/types/obsidian-icons";
@@ -29,13 +28,12 @@ export async function annotationLoader({ params }: {
 
 export function AnnotationWithOutlet() {
     const annotation = useLoaderData() as annotation;
-    const annotationsList = useRouteLoaderData("annotationsList") as SectionAnnotations;
     const backButtonRef = useRef<HTMLDivElement>(null);
     const nextButtonRef = useRef<HTMLDivElement>(null);
     const params = useParams<keyof AnnotationLoaderParams>();
     const location = useLocation();
-    const previousAnnotationId = getPreviousAnnotationIdForSection(annotationsList.annotations, annotation.id);
-    const nextAnnotationId = getNextAnnotationIdForSection(annotationsList.annotations, annotation.id);
+    const previousAnnotationId = getPreviousAnnotationIdForSection(params.bookId, params.sectionId, annotation.id);
+    const nextAnnotationId = getNextAnnotationIdForSection(params.bookId, params.sectionId, annotation.id);
 
 
     useEffect(() => {
