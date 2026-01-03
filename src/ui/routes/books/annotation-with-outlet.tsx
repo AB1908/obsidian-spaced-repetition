@@ -11,10 +11,11 @@ import { Icon } from "src/types/obsidian-icons";
 import { paragraph } from "src/data/models/paragraphs";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { pathGenerator } from "src/utils/path-generators";
-
-export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
-    annotationId: string;
-}
+import {
+    AnnotationLoaderParams,
+    getNextAnnotationIdForSection,
+    getPreviousAnnotationIdForSection
+} from "src/ui/routes/books/api";
 
 export async function annotationLoader({ params }: {
     params: AnnotationLoaderParams
@@ -24,16 +25,6 @@ export async function annotationLoader({ params }: {
         return getAnnotationById(params.annotationId, params.bookId);
     } else
         return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
-}
-
-function getPreviousAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
-    let find = annotations.findIndex(t => t.id === blockId);
-    return annotations[find-1]?.id || null;
-}
-
-function getNextAnnotationIdForSection(annotations: (annotation|paragraph)[], blockId: string) {
-    let find = annotations.findIndex(t => t.id === blockId);
-    return annotations[find+1]?.id || null;
 }
 
 export function AnnotationWithOutlet() {
