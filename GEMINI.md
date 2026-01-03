@@ -2,6 +2,13 @@
 
 This document serves as the primary context for Gemini's interaction with this repository. It outlines operational principles to ensure smooth workflows and tracks the current development strategy.
 
+**CRITICAL STARTUP PROTOCOL:**
+Upon starting a session, the Agent MUST:
+1.  **Read this file (`GEMINI.md`)** to understand the current architecture, workflows, and known issues.
+2.  **Adopt the "Senior Developer" Persona:** Act as an expert TypeScript/React engineer who values code quality, testability, and architectural purity over quick hacks.
+3.  **Adhere to "Verify-then-Commit":** NEVER commit code without running tests (`npm test`). If tests fail, fix them or revert.
+4.  **Enforce Atomic Commits:** Break work into the smallest possible logical units.
+
 ## Operational Principles
 
 ### 1. Atomic Commits
@@ -9,169 +16,54 @@ This document serves as the primary context for Gemini's interaction with this r
 - **Guidance:**
     - Do not mix unrelated changes (e.g., bug fix and new feature) in a single commit.
     - Do not mix configuration changes, documentation updates, and code fixes unless they are strictly co-dependent (e.g., a code change that *requires* a config update to function).
-- **Examples of an Atomic Change:**
-    - Implementing a single, small feature.
-    - Fixing one specific bug.
-    - Refactoring a single component or function.
-    - Adding tests for a specific component or feature.
-    - Updating a single dependency.
 - **Process:** Before committing, always check `git status` to ensure only relevant files are staged. Partial commits (`git add -p` or specific file paths) are preferred over `git add .`.
 
 ### 2. Commit Message Guidelines
 - **Rule:** All commit messages must adhere to the Conventional Commits specification.
-- **Format:**
-    ```
-    <type>(<scope>): <description>
-
-    [body]
-
-    [footer(s)]
-    ```
-- **Elements:**
-    - **`<type>` (Required):** Short, imperative, lowercase verb indicating the nature of the change.
-        - `feat`: A new feature (introduces new functionality).
-        - `fix`: A bug fix (corrects unexpected behavior).
-        - `refactor`: Code change that neither fixes a bug nor adds a feature (e.g., restructuring code for clarity).
-        - `test`: Adding or correcting tests.
-        - `docs`: Documentation only changes.
-        - `style`: Formatting, whitespace (no code meaning change).
-        - `perf`: Code change that improves performance.
-        - `build`: Changes affecting the build system or external dependencies.
-        - `ci`: Changes to CI configuration files and scripts.
-        - `chore`: Other changes that don't modify src or test files.
-        - `revert`: Reverts a previous commit.
-    - **`<scope>` (Optional):** A noun describing the part of the codebase affected. Examples: `(ui)`, `(api)`, `(routing)`, `(flashcard)`, `(tests)`.
-    - **`<description>` (Required):** Concise, imperative, present-tense summary of the change (max ~72 chars). Starts lowercase, no period.
-    - **`<body>` (Optional):** Longer explanation providing context, motivation, and detailed implementation notes. Explain *why* the change was made. Wrap lines at ~72 chars.
-    - **`<footer>(s)` (Optional):**
-        - `BREAKING CHANGE:`: Indicates a breaking API change. Include a description of the change and migration instructions. (e.g., `BREAKING CHANGE: <description>`)
-        - References: Link to issues (e.g., `Closes #123`, `Refs #456`).
-    - **Minimalist Approach for Clear Atomic Changes:** For very clear, atomic changes where the type, scope, and concise description already convey the full intent (e.g., introducing a simple abstraction or fixing a singular, well-understood bug), a body might be omitted to maintain conciseness and avoid redundancy. The change should be self-evident from its commit line and diff.
-    - `feat(ui): add highlight/note toggle to annotation view`
-    - `fix(review): prevent infinite loop in card navigation`
-    - `refactor(NoteAndHighlight)!: require displayMode prop` (Note the `!` for breaking changes in description)
-    - `test(annotation): add UI test for toggle functionality`
+- **Format:** `<type>(<scope>): <description>` (e.g., `feat(ui): add toggle button`, `refactor(api): decouple disk logic`).
 
 ### 3. Test-Driven Stability
 - **Rule:** Ensure tests pass before and after changes.
 - **Guidance:** When fixing bugs, ideally add a reproduction test case first. When adding features, include unit tests to cover the new logic.
-- **UI Testing Specifics:**
-    - **Global Setup:** `tests/setup.ts` should globally import `@testing-library/jest-dom` for extended DOM assertions. If not working consistently, explicitly import it in individual test files (`import '@testing-library/jest-dom';`).
-    - **React Router Hooks:** When testing components that use `react-router-dom` hooks (`useLoaderData`, `useParams`, `useLocation`, `useNavigate`, etc.), ensure these hooks are mocked using `jest.mock('react-router-dom', () => ({ ...jest.requireActual('react-router-dom'), ...mockedHooks }));`.
-    - **Internal Functions:** For functions defined and used within the same component file (e.g., `pathGenerator` in `annotation-with-outlet.tsx`), consider extracting them to a separate utility file (e.g., `src/utils/path-generators.ts`). This allows them to be mocked using `jest.mock` on the utility module or `jest.spyOn` on the imported function, improving test isolation.
+- **Strict Adherence to the Verify-then-Commit Workflow:** The "Verify-then-Commit" workflow is not a suggestion; it is a critical process to prevent regressions and maintain codebase quality. After any refactoring or change, the full test suite (`npm test`) *must* be executed *before* staging files.
 
-### 4. Lessons Learned: Atomic Commits & Architectural Adherence
-- **Early and Frequent Commits:** Avoid bundling multiple logically separate changes into a single commit, even if they contribute to a larger feature. Committing early and frequently, with granular atomic changes, is critical for maintainability, reviewability, and debugging.
-- **Strict Adherence to Atomic Commits:** Each commit should represent a single, isolated, and understandable change. This ensures that `git revert` and `git bisect` remain effective tools.
-- **Rigorous Architectural Pattern Enforcement:** When introducing new features or refactoring, always ensure changes align with established architectural patterns (e.g., using facades for external APIs, encapsulating file system operations within designated modules like `disk.ts`). This prevents "technical debt" and improves testability and maintainability.
-- **Client API Facades:** Encapsulate direct dependencies on client-specific APIs (e.g., Obsidian's `Notice`, `app.fileManager.processFrontMatter`) behind facades. This isolates the core logic from the client environment, making the code more portable and testable.
-- **Interactive Staging:** When dealing with complex diffs or refactorings, use interactive staging (`git add -p`) to precisely select changes for atomic commits, especially when guided by user feedback.
-- **Flatter, Minimalist UI Architecture:** Prefer simple, "dumb" UI components and flat API structures (e.g., returning a flat list of headings instead of a tree) to reduce complexity and improve maintainability. Complex tree-based UIs should be avoided unless strictly necessary for the user experience.
-- **Prefer Nested Routes for Hierarchy:** Avoid defining flat routes for hierarchical resources (e.g., `:bookId`, `:annotationId`). Use nested `children` in `routes.tsx` to ensure relative navigation (`..`) remains predictable and intuitive.
-- **Intentional Coupling vs. Isolation:** Note that some components (e.g., `AnnotationList`) currently use path-based logic (`location.pathname.startsWith("/import")`) to decide navigation behavior. While this simplifies the current "dumb" UI, it couples the component to the routing structure and should be addressed if these flows need to be isolated into separate plugins or packages.
-- **Mind the Semantic Gap:** Be aware that technical terms (e.g., `Heading`) often differ from domain terms (e.g., `Chapter`). Proactively clarify if a technical filter matches the intended business logic.
-- **Strict Adherence to the Verify-then-Commit Workflow:** The "Verify-then-Commit" workflow is not a suggestion; it is a critical process to prevent regressions and maintain codebase quality. After any refactoring or change, the full test suite (`npm test`) *must* be executed *before* staging files. Furthermore, staging must be done explicitly with `git add <file-path>` or interactively with `git add -p`, never with `git add .`, to avoid including unintended files. This prevents local artifacts and unrelated changes from polluting the commit history.
-
-### 5. Verify-then-Commit Workflow
-- **Rule:** Never commit code without running the full test suite and verifying the diff.
-- **Comprehensive Planning:** Before execution, a detailed plan must be presented to the user. This plan must explain not only *what* will be done but also *how* it will be implemented.
-- **Process:**
-    1.  **Verify:** Run `npm test` and other relevant checks (linting, type-checking) before staging.
-    2.  **Stage:** Use targeted staging (`git add <file>`) for logically related changes.
-    3.  **Confirm:** Provide a concise summary of staged changes for human validation.
-    4.  **Commit:** Use an atomic Conventional Commit message.
-
-### 6. Diagnostic Snapshot Rule
-- **Rule:** Before using a new or unfamiliar API to drive a UI component, generate a temporary or permanent test case in `tests/api.test.ts` to capture a snapshot of the data.
-- **Purpose:** This prevents "hallucinations of intent" where the AI assumes an API's technical output matches the UI's semantic needs (e.g., assuming `isHeading` only returns level 1 chapters).
-- **Process:**
-    1.  Implement/Identify the API method.
-    2.  Write a test case that calls the method with fixture data.
-    3.  Share the resulting snapshot with the user for semantic verification.
-    4.  Proceed to UI implementation only after the data structure is confirmed.
-
-### 7. Developer Persona & Collaboration
-
-- **Assume a Senior Role:** For all tasks, assume the persona of a senior software engineer with deep expertise in the project's technology stack (React, TypeScript, Obsidian API). This ensures that all plans and code changes adhere to best practices in architecture, testing, and maintainability.
-- **Delegate Simple File Operations:** To improve velocity on refactoring tasks, simple file and function moves will be delegated to the user. The agent will provide clear, explicit instructions, including: the source file, the exact code block to cut, the destination file, and the precise location to paste the code.
-- **Propose Opportunistic Refactoring:** During planning, if low-friction opportunities to improve the codebase's structure are identified (e.g., moving a utility function to a more logical module), these will be included in the plan with a clear justification.
-
-### 8. Architecture: Route-based Feature Modules
-
-To ensure the codebase remains scalable and easy to navigate, we follow a route-based feature module architecture.
-
+### 4. Architecture: Route-based Feature Modules
 - **Principle:** Each top-level route in the application is considered a "feature" and gets its own directory inside `src/routes/`.
-- **Directory Structure:** A feature directory (e.g., `src/routes/edit-card/`) should contain all the code specific to that feature: `index.tsx` (entry point), `api.ts` (data fetching), `components/` (local components), and `state.ts` (local state).
-- **Shared Code:** Code is shared by explicitly lifting it to a higher-level directory: `src/components/` for shared UI, `src/lib/` for generic utils, and `src/data/` for core business models.
-- **Benefits:** This approach provides excellent discoverability (the code structure mirrors the URL structure) and prepares the codebase for future decomposition into smaller, independent plugins.
+- **Directory Structure:** `src/routes/<feature>/` contains `index.tsx`, `api.ts` (local data fetching), and `components/`.
+
+### 5. Domain Model Decomposition (Refactoring in Progress)
+- **Goal:** Move business logic and disk I/O out of the global `api.ts` and into cohesive models.
+- **Key Models:**
+    - **`SourceNote` (`src/data/models/sourceNote.ts`):** Represents a book/document. Handles review stats, annotation coverage, and export syncing.
+    - **`FlashcardNote` (`src/data/models/flashcard.ts`):** Handles the physical storage and CRUD operations for flashcards in a markdown file.
+- **Rule:** `api.ts` should act as a thin facade/orchestrator. It should delegate complex operations to these models. It should *not* directly import `disk.ts` methods if a model can handle it.
 
 ---
 
-## Current Development Plan: Improving Development Velocity
-
-This section outlines the active strategy to improve the codebase's test coverage and reliability.
+## Current Development Plan
 
 ### Completed Work
 
-**Current Session: December 27, 2025**
-*   **refactor(api):** Centralized `ReviewBook` and `FlashCount` interfaces in `src/api.ts` to improve reusability across routes.
-*   **feat(api):** Implemented `getBookChapters` to provide a flat list of book headings, supporting a simpler, non-hierarchical UI.
-*   **feat(ui):** Simplified the `ImportDashboard` to a minimalistic, clickable list of book names.
-*   **feat(ui):** Overhauled `BookDetailsPage` to display a flat, clickable list of chapters with placeholder links.
-*   **test:** Updated `AnnotationWithOutlet` and `api_orchestrator` tests to reflect UI changes and fix regressions.
-*   **Workflow:** Formalized the "Verify-then-Commit" workflow to protect commit history quality.
-
-**Session: December 26, 2025**
-
-**Core Feature: Dynamic Modal Title & Breadcrumbs**
-*   **feat(title):** Implemented a dynamic breadcrumb title in the flashcard modal that updates during navigation to show book/chapter context and specific editing/creation states.
-*   **refactor(title):** Decoupled the title logic from the UI by creating a `getBreadcrumbData` API function, making the UI more modular.
-*   **chore(utils):** Added a `truncate` utility to abbreviate long titles, keeping the UI clean.
-
-**Major Refactoring & UI Improvements:**
-*   **feat(ui):** Created new single-responsibility display components (`HighlightBlock`, `NoteBlock`) to replace the monolithic `NoteAndHighlight` component.
-*   **refactor:** Migrated multiple components (`EditCard`, `AnnotationWithOutlet`, `ClozeCard`) to use these new, cleaner display components.
-*   **feat(ui):** Enhanced the annotation view by disabling the "Note" toggle button when no note is present, improving user experience.
-*   **refactor:** Moved the `EditCard` component into its own dedicated route file (`src/routes/edit-card.tsx`) and updated the routing table accordingly.
-
-**Testing & Stability:**
-*   **test:** Added a new UI test for the highlight/note toggle functionality in `AnnotationWithOutlet`.
-*   **test:** Added unit tests to verify that the navigation scroll position is correctly persisted when switching between annotations.
-*   **fix:** Corrected a bug where the scroll position was not restored correctly when navigating up from an annotation to the list view.
-
-**Workflow & Process Improvements:**
-*   **docs(context):** Made multiple updates to `GEMINI.md`, formalizing commit conventions, UI architecture guidelines, and testing specifics.
-*   **Workflow:** Diagnosed and solved the GPG `pinentry` issue that was blocking commits and established a much more efficient, robust, and collaborative commit workflow.
+**Session: January 3, 2026**
+*   **refactor(annotation):** Simplified the Annotation View to display highlight and note simultaneously, removing toggle buttons.
+*   **refactor(annotation):** Made navigation logic stateful (`bookId`, `sectionId`) and decoupled it from the UI loader, moving logic to `src/ui/routes/books/api.ts`.
+*   **refactor(api):** Massive cleanup of `src/api.ts`.
+    *   Moved `getSourcesForReview` logic to `SourceNote.getReviewStats()`.
+    *   Moved `getImportedBooks` logic to `SourceNote.getBookFrontmatter()`.
+    *   Moved `updateBookAnnotationsAndFrontmatter` to `SourceNote.syncMoonReaderExport()`.
+    *   Moved `importMoonReaderExport` to `SourceNote.createFromMoonReaderExport()`.
+*   **refactor(model):** Extracted flashcard CRUD logic (`create`, `delete`, `update`) from `SourceNote` into `FlashcardNote`, improving separation of concerns.
+*   **test:** Added `tests/routes_books_api.test.ts` to test the new stateful navigation logic.
 
 ### Phase 2: Introduce Comprehensive UI Testing
-
-The user interface, built with React, has zero test coverage. This is the highest-risk area for user-facing bugs.
-
-- **Next Step:** Finalize Jest's configuration for React Testing Library by creating a `tests/setup.ts` file to globally import `@testing-library/jest-dom` for better UI assertions.
-- **Next Step:** Write a "golden path" test for a simple component (e.g., `src/routes/tags.tsx`) to validate the testing setup.
-- **Next Step:** Systematically add tests for critical, interactive components like the review screen (`src/routes/review.tsx`) and card creation forms (`src/routes/upsert-card.tsx`).
+- **Next Step:** Finalize Jest's configuration for React Testing Library.
+- **Next Step:** Systematically add tests for critical, interactive components like the review screen (`src/routes/review.tsx`).
 
 ### Phase 3: Strengthen Core Logic & Data Layer Tests
-
-- **Next Step:** Refactor fragile tests like `api.test.ts` to focus on public inputs/outputs.
-- **Next Step:** Increase unit test coverage for critical data models (`sourceNote.ts`, `flashcard.ts`).
-
-### Phase 4: Establish a CI/CD Quality Gate
-
-
-
-- **Next Step:** Modify `.github/workflows/pr.yml` to execute `npm test` on every pull request.
-
-- **Next Step:** Add a coverage check step to the CI pipeline.
-
-
+- **Next Step:** Continue refactoring `SourceNote` to remove transient review state (introduce `ReviewSession`?).
 
 ---
 
-
-
 ## Technical Debt & Known Issues
-
-
 
 - **Annotation Navigation:** The "Previous" and "Next" navigation buttons in the annotation view (`AnnotationWithOutlet`) currently operate on the full list of annotations for a section. If the user has applied filters (e.g., category, color, processed/unprocessed) in the `AnnotationListPage`, the navigation will not respect these filters, potentially leading to a confusing user experience where "Next" takes them to an annotation that was hidden in the list view.
