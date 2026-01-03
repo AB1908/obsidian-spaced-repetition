@@ -1,18 +1,17 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
-    createFlashcardsFileForBook, deleteCardOnDisk, generateFlashcardsFileNameAndPath, getFileContents,
+    createFlashcardsFileForBook, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
     getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter, moveFile, renameFile, createFile
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
-import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata, cardTextGenerator } from "src/data/utils/TextGenerator";
+import { SchedulingMetadata } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/types/CardType";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { CardType } from "src/types/CardType";
-import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
 import { SourceNoteDependencies } from "src/data/utils/dependencies";
 import { parseMoonReaderExport } from "src/data/import/moonreader";
@@ -478,14 +477,15 @@ tags:
     // todo: debounce?
     // todo: think differently?
     async processCardReview(flashcardId: string, reviewResponse: ReviewResponse) {
-        const card = this.flashcardNote.flashcards.filter(t => t.id === flashcardId)[0];
+        const card = this.flashcardNote.flashcards.find(t => t.id === flashcardId);
+        if (!card) throw new Error(`processCardReview: card ${flashcardId} not found`);
+        
         const updatedSchedulingMetadata = schedulingMetadataForResponse(reviewResponse, {
             interval: card.interval,
             ease: card.ease,
             dueDate: card.dueDate
         });
-        await this.updateParsedCard(card, updatedSchedulingMetadata);
-        this.updateFlashcard(flashcardId, updatedSchedulingMetadata);
+        await this.flashcardNote.updateCardSchedule(flashcardId, updatedSchedulingMetadata);
     }
 
     // Sometimes, we may have finished reviewing a deck. We shouldn't allow reviewing it again.
@@ -517,36 +517,17 @@ tags:
             const text = addBlockIdToParagraph(block);
             await updateCardOnDisk(this.path, block.text, text);
         }
-        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.flashcardNote.path, annotationId);
-        this.flashcardNote.parsedCards.push(parsedCard);
-        const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
-        this.flashcardNote.flashcards.push(card);
+        await this.flashcardNote.createCard(annotationId, question, answer, cardType);
     }
 
     async deleteFlashcard(id: string) {
-        const flashcard = this.flashcardNote.flashcards.filter(t => t.id === id)[0];
-        const parsedCard = this.flashcardNote.parsedCards.filter(t => t.id === flashcard.parsedCardId)[0];
-        const text = generateCardAsStorageFormat(parsedCard);
-        // I feel like this should be abstracted away into the class for a source note with paragraph
-        await deleteCardOnDisk(this.flashcardNote.path, text);
-        this.flashcardNote.flashcards = this.flashcardNote.flashcards.filter(t=>t.id !== id);
-        this.flashcardNote.parsedCards = this.flashcardNote.parsedCards.filter(t => t.id !== flashcard.parsedCardId);
+        await this.flashcardNote.deleteCard(id);
         this.reviewDeck = this.reviewDeck.filter(t=>t.id !== id);
     }
 
     resetReview() {
         this.generateReviewDeck();
         this.reviewIndex = -1;
-    }
-
-    private updateFlashcard(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
-        this.flashcardNote.flashcards.forEach((card: Flashcard, index: number) => {
-            if (card.id == flashcardId) {
-                this.flashcardNote.flashcards[index].dueDate = updatedSchedulingMetadata.dueDate;
-                this.flashcardNote.flashcards[index].ease = updatedSchedulingMetadata.ease;
-                this.flashcardNote.flashcards[index].interval = updatedSchedulingMetadata.interval;
-            }
-        });
     }
 
     getReviewStats() {
@@ -630,35 +611,7 @@ tags:
 
     async updateFlashcardContents(flashcardId: string, question: string, answer: string, cardType: CardType = CardType.MultiLineBasic) {
         if (cardType == CardType.MultiLineBasic) {
-            // TODO: Fix hardcoded path, should come from deckNote obj
-            // TODO: error handling
-            // todo: refactor
-            let flashcardCopy: Flashcard | undefined;
-            this.flashcardNote.flashcards.forEach((t, i) => {
-                if (t.id === flashcardId) {
-                    flashcardCopy = t;
-                }
-            });
-            if (!flashcardCopy) throw new Error(`updateFlashcardContents: flashcard ${flashcardId} not found`);
-
-            const parsedCardCopy = this.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy!.parsedCardId)[0];
-            const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-            parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
-
-            const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-            await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
-            this.flashcardNote.parsedCards.forEach((value, index) => {
-                if (value.id === parsedCardCopy.id) {
-                    this.flashcardNote.parsedCards[index] = parsedCardCopy;
-                }
-            });
-            this.flashcardNote.flashcards.forEach((t, i) => {
-                if (t.id === flashcardId) {
-                    flashcardCopy!.questionText = question;
-                    flashcardCopy!.answerText = answer;
-                    this.flashcardNote.flashcards[i] = flashcardCopy!;
-                }
-            });
+            await this.flashcardNote.updateCardContents(flashcardId, question, answer, cardType);
         }
         return true;
     }
