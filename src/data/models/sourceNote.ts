@@ -3,12 +3,12 @@ import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook, deleteCardOnDisk, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
-    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter
+    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter, moveFile, renameFile, createFile
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
-import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
+import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata, cardTextGenerator } from "src/data/utils/TextGenerator";
 import type { ReviewResponse } from "src/types/CardType";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { CardType } from "src/types/CardType";
@@ -303,6 +303,45 @@ export class SourceNote implements frontbook {
         this.tags = [];
     }
 
+    static async createFromMoonReaderExport(mrexptPath: string, destinationFolder: string) {
+        const content = await getFileContents(mrexptPath);
+        const annotations = parseMoonReaderExport(content);
+
+        if (annotations.length === 0) {
+            throw new Error("No annotations found in the export file.");
+        }
+
+        const lastExportedID = Math.max(...annotations.map(ann => parseInt(ann.id, 10)));
+
+        const fileName = mrexptPath.split("/").pop();
+        const newMrexptPath = `${destinationFolder}/${fileName}`;
+        await moveFile(mrexptPath, newMrexptPath);
+        const annotationsPath = `${destinationFolder}/Annotations.md`;
+        // @ts-ignore
+        const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
+        if (existingFile) {
+            await renameFile(annotationsPath, "Annotations_old.md");
+        }
+
+        const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
+
+        const frontmatter = `---
+path: "${newMrexptPath}"
+title: "${bookTitle}"
+author: ""
+lastExportedTimestamp: ${Date.now()}
+lastExportedID: ${lastExportedID}
+tags:
+  - "review/book"
+---
+`;
+
+        const markdown = generateMarkdownWithHeaders(annotations);
+        await createFile(annotationsPath, frontmatter + markdown);
+
+        return annotationsPath;
+    }
+
     // first initialize all the basic attributes of the book/note
     // then initialize optional attributes like its flashcards
     // how do I find flashcards? err, well, using some kind of relationship?
@@ -587,6 +626,41 @@ export class SourceNote implements frontbook {
         } else {
             //empty
         }
+    }
+
+    async updateFlashcardContents(flashcardId: string, question: string, answer: string, cardType: CardType = CardType.MultiLineBasic) {
+        if (cardType == CardType.MultiLineBasic) {
+            // TODO: Fix hardcoded path, should come from deckNote obj
+            // TODO: error handling
+            // todo: refactor
+            let flashcardCopy: Flashcard | undefined;
+            this.flashcardNote.flashcards.forEach((t, i) => {
+                if (t.id === flashcardId) {
+                    flashcardCopy = t;
+                }
+            });
+            if (!flashcardCopy) throw new Error(`updateFlashcardContents: flashcard ${flashcardId} not found`);
+
+            const parsedCardCopy = this.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy!.parsedCardId)[0];
+            const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+            parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+
+            const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+            await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+            this.flashcardNote.parsedCards.forEach((value, index) => {
+                if (value.id === parsedCardCopy.id) {
+                    this.flashcardNote.parsedCards[index] = parsedCardCopy;
+                }
+            });
+            this.flashcardNote.flashcards.forEach((t, i) => {
+                if (t.id === flashcardId) {
+                    flashcardCopy!.questionText = question;
+                    flashcardCopy!.answerText = answer;
+                    this.flashcardNote.flashcards[i] = flashcardCopy!;
+                }
+            });
+        }
+        return true;
     }
 
     async updateAnnotation(annotationId: string, updates: Partial<annotation>) {

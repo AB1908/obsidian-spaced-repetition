@@ -22,15 +22,11 @@ import {
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, SourceNote } from "src/data/models/sourceNote";
-import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
-import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/infrastructure/disk";
+import { findFilesByExtension, getAllFolders } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
-import { parseMoonReaderExport } from "./data/import/moonreader";
-import { generateAnnotationMarkdown, generateMarkdownWithHeaders } from "./data/utils/annotationGenerator";
-import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -124,36 +120,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
 // TODO: create abstraction
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
-    if (cardType == CardType.MultiLineBasic) {
-        // TODO: Fix hardcoded path, should come from deckNote obj
-        // TODO: error handling
-        // todo: refactor
-        let flashcardCopy: Flashcard;
-        book.flashcardNote.flashcards.forEach((t,i) => {
-            if (t.id === flashcardId) {
-                flashcardCopy = t;
-            }
-        });
-        const parsedCardCopy = book.flashcardNote.parsedCards.filter(t => t.id === flashcardCopy.parsedCardId)[0];
-        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
-
-        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
-        book.flashcardNote.parsedCards.forEach((value, index) => {
-            if (value.id === parsedCardCopy.id) {
-                book.flashcardNote.parsedCards[index] = parsedCardCopy;
-            }
-        });
-        book.flashcardNote.flashcards.forEach((t, i) => {
-            if (t.id === flashcardId) {
-                flashcardCopy.questionText = question;
-                flashcardCopy.answerText = answer;
-                book.flashcardNote.flashcards[i] = flashcardCopy;
-            }
-        });
-    }
-    return true;
+    return await book.updateFlashcardContents(flashcardId, question, answer, cardType);
 }
 
 export async function updateAnnotationMetadata(
@@ -354,39 +321,5 @@ export async function getUnimportedMrExptFiles(): Promise<string[]> {
 }
 
 export async function importMoonReaderExport(mrexptPath: string, destinationFolder: string) {
-    const content = await getFileContents(mrexptPath);
-    const annotations = parseMoonReaderExport(content);
-
-    if (annotations.length === 0) {
-        throw new Error("No annotations found in the export file.");
-    }
-
-    const lastExportedID = Math.max(...annotations.map(ann => parseInt(ann.id, 10)));
-
-    const fileName = mrexptPath.split("/").pop();
-    const newMrexptPath = `${destinationFolder}/${fileName}`;
-    await moveFile(mrexptPath, newMrexptPath);
-    const annotationsPath = `${destinationFolder}/Annotations.md`;
-    const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
-    if (existingFile) {
-        await renameFile(annotationsPath, "Annotations_old.md");
-    }
-
-    const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
-
-    const frontmatter = `---
-path: "${newMrexptPath}"
-title: "${bookTitle}"
-author: ""
-lastExportedTimestamp: ${Date.now()}
-lastExportedID: ${lastExportedID}
-tags:
-  - "review/book"
----
-`;
-
-    const markdown = generateMarkdownWithHeaders(annotations);
-    await createFile(annotationsPath, frontmatter + markdown);
-
-    return annotationsPath;
+    return await SourceNote.createFromMoonReaderExport(mrexptPath, destinationFolder);
 }
