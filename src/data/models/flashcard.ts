@@ -4,10 +4,15 @@ import { CardType } from "src/types/CardType";
 import { nanoid } from "nanoid";
 import { FLAG, FlashcardMetadata, parseCardText, parseFileText, parseMetadata } from "src/data/parser";
 import { moment, ObsidianNotice } from "src/infrastructure/obsidian-facade";
-import { SchedulingMetadata } from "src/data/utils/TextGenerator";
+import {
+    cardTextGenerator,
+    generateCardAsStorageFormat,
+    metadataTextGenerator,
+    SchedulingMetadata
+} from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
-import { ParsedCard } from "src/data/models/parsedCard";
-import { getAnnotationFilePath } from "../../infrastructure/disk";
+import { createParsedCard, ParsedCard } from "src/data/models/parsedCard";
+import { getAnnotationFilePath, updateCardOnDisk, deleteCardOnDisk } from "../../infrastructure/disk";
 import { filePathsWithTag } from "src/infrastructure/disk";
 import { calculateDelayBeforeReview } from "../utils/calculateDelayBeforeReview";
 
@@ -167,6 +172,86 @@ export class FlashcardNote {
             throw new Error(e);
         }
         return this;
+    }
+
+    async createCard(annotationId: string, question: string, answer: string, cardType: CardType) {
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.path, annotationId);
+        this.parsedCards.push(parsedCard);
+        const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
+        this.flashcards.push(card);
+        return card;
+    }
+
+    async deleteCard(flashcardId: string) {
+        const flashcard = this.flashcards.find(t => t.id === flashcardId);
+        if (!flashcard) throw new Error(`Flashcard not found: ${flashcardId}`);
+        
+        const parsedCard = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
+        if (!parsedCard) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
+
+        const text = generateCardAsStorageFormat(parsedCard);
+        await deleteCardOnDisk(this.path, text);
+        
+        this.flashcards = this.flashcards.filter(t => t.id !== flashcardId);
+        this.parsedCards = this.parsedCards.filter(t => t.id !== flashcard.parsedCardId);
+    }
+
+    async updateCardContents(flashcardId: string, question: string, answer: string, cardType: CardType) {
+        const flashcard = this.flashcards.find(t => t.id === flashcardId);
+        if (!flashcard) throw new Error(`Flashcard not found: ${flashcardId}`);
+
+        const parsedCardCopy = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
+        if (!parsedCardCopy) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
+
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+
+        // Update in-memory state
+        // Object references might be tricky here, so we update explicitly
+        flashcard.questionText = question;
+        flashcard.answerText = answer;
+        
+        // Since we modified parsedCardCopy in place (it's a reference found in the array), 
+        // the array is effectively updated, but let's be explicit if needed.
+        // JS/TS finds return references to objects in the array.
+    }
+
+    async updateCardSchedule(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
+        const flashcard = this.flashcards.find(t => t.id === flashcardId);
+        if (!flashcard) throw new Error(`Flashcard not found: ${flashcardId}`);
+
+        const parsedCardCopy = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
+        if (!parsedCardCopy) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
+
+        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
+
+        const updatedParsedCard = {
+            ...parsedCardCopy,
+            metadataText: metadataTextGenerator(
+                flashcard.parentId,
+                updatedSchedulingMetadata,
+                flashcard.flag
+            )
+        };
+        const updatedCardAsStorageFormat = generateCardAsStorageFormat(updatedParsedCard);
+
+        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+
+        if (writeSuccessful) {
+            // Update parsed cards array
+            const parsedIndex = this.parsedCards.findIndex(t => t.id === parsedCardCopy.id);
+            if (parsedIndex !== -1) {
+                this.parsedCards[parsedIndex] = updatedParsedCard;
+            }
+
+            // Update flashcard state
+            flashcard.dueDate = updatedSchedulingMetadata.dueDate;
+            flashcard.ease = updatedSchedulingMetadata.ease;
+            flashcard.interval = updatedSchedulingMetadata.interval;
+        }
     }
 }
 

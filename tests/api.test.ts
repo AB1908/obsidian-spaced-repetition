@@ -179,7 +179,7 @@ describe("deleteFlashcard", () => {
         await expect(
             deleteFlashcard("t0000010", "nonexistent")
         ).rejects.toThrowErrorMatchingInlineSnapshot(
-            `"Cannot read properties of undefined (reading 'parsedCardId')"`
+            `"Flashcard not found: nonexistent"`
         );
     });
 });
