@@ -21,7 +21,7 @@ import {
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter } from "src/data/models/sourceNote";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, SourceNote } from "src/data/models/sourceNote";
 import { cardTextGenerator, generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk, findFilesByExtension, getAllFolders, createFile, getFileContents, getMetadataForFile, updateFrontmatter, getTFileForPath, moveFile, renameFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
@@ -335,30 +335,13 @@ export async function updateBookAnnotationsAndFrontmatter(
     mrexptPath: string,
     sinceId: string
 ) {
-    const mrexptContent = await getFileContents(mrexptPath);
-    const newAnnotations = parseMoonReaderExport(mrexptContent, sinceId);
-
-    if (newAnnotations.length === 0) {
-        new ObsidianNotice("No new annotations found.");
-        return;
+    let book = plugin.sourceNoteIndex.getAllSourceNotes().find(b => b.path === annotationsPath);
+    if (!book) {
+        // Instantiate a temporary SourceNote if not found in index (e.g. might be a new import or filtered out)
+        book = new SourceNote(annotationsPath, plugin);
     }
-
-    // Append new annotations markdown to the file
-    const newAnnotationsMarkdown = generateMarkdownWithHeaders(newAnnotations);
-    const tfile = getTFileForPath(annotationsPath);
-    await app.vault.append(tfile, '\n' + newAnnotationsMarkdown); // Add a newline before appending
-
-    // Find the new highest ID among all annotations
-    const allAnnotations = parseMoonReaderExport(mrexptContent);
-    const newLastExportedID = Math.max(...allAnnotations.map(ann => parseInt(ann.id, 10)));
-
-    // Update frontmatter values using the new disk utility
-    await updateFrontmatter(annotationsPath, {
-        lastExportedTimestamp: Date.now(),
-        lastExportedID: newLastExportedID,
-    });
-
-    new ObsidianNotice(`Updated ${newAnnotations.length} new annotations.`);
+    
+    await book.syncMoonReaderExport(mrexptPath, sinceId);
 }
 
 
