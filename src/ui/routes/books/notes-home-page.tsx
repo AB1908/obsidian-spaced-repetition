@@ -3,7 +3,7 @@ import React, {useEffect, useRef} from "react";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { Link } from "react-router-dom";
 import { CardCount } from "src/ui/components/card-counts";
-import { Icon } from "src/ui/routes/root";
+import { Icon } from "src/types/obsidian-icons";
 import { getSourcesForReview, ReviewBook, FlashCount } from "src/api";
 import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { maturityCounts } from "src/data/models/flashcard";

@@ -5,7 +5,7 @@ import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
 import { Icon } from "src/types/obsidian-icons";
 import { setIcon } from "src/infrastructure/obsidian-facade";
-import { AnnotationLoaderParams } from "src/ui/routes/books/annotation-with-outlet";
+import { type AnnotationsLoaderParams } from "src/ui/routes/books/AnnotationListPage";
 
 interface HighlightParams {
     bookId: string;
@@ -29,7 +29,7 @@ function FlashcardPreview(props: {
 }) {
     const deleteButtonRef = useRef<HTMLDivElement>(null);
     const deleteIcon: Icon = "trash";
-    const params = useParams<keyof AnnotationLoaderParams>();
+    const params = useParams<keyof AnnotationsLoaderParams>();
 
     useEffect(() => {
         // todo: figure out how to fix this

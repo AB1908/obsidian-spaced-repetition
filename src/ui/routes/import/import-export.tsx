@@ -1,7 +1,8 @@
 import { useNavigate, useLoaderData } from "react-router-dom";
 import React, { useState, useEffect } from "react";
-import { getImportedBooks, getUnimportedMrExptFiles, importMoonReaderExport, updateBookAnnotationsAndFrontmatter, getSourcesForReview, ReviewBook, BookFrontmatter } from "src/api";
+import { getImportedBooks, getUnimportedMrExptFiles, importMoonReaderExport, updateBookAnnotationsAndFrontmatter, getSourcesForReview, ReviewBook } from "src/api";
 import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
+import { BookFrontmatter } from "src/data/models/sourceNote";
 
 export async function importDashboardLoader() {
     const reviewBooks = getSourcesForReview();
