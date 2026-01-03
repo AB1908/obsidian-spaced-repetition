@@ -21,6 +21,17 @@ export type RawBookSection = (SectionCache | HeadingCache);
 export type BookMetadataSection = Heading | annotation | paragraph;
 export type BookMetadataSections = BookMetadataSection[];
 
+export interface BookFrontmatter {
+    id: string; // The ID of the SourceNote object (nanoid generated)
+    path: string; // Path to the .mrexpt file
+    annotationsPath: string; // Path to the Annotations.md file
+    title: string;
+    author: string;
+    lastExportedTimestamp: number;
+    lastExportedID: number;
+    tags: string[];
+}
+
 // TODO: this is not really a "book" per se
 export interface book {
     id: string;
@@ -512,6 +523,38 @@ export class SourceNote implements frontbook {
             annotationCoverage: annotationCoverage,
             flashcardProgress: progress
         };
+    }
+
+    getBookFrontmatter(): BookFrontmatter | null {
+        try {
+            const metadata = getMetadataForFile(this.path);
+            const frontmatter = metadata?.frontmatter;
+
+            if (frontmatter) {
+                if (
+                    frontmatter.path &&
+                    frontmatter.title &&
+                    frontmatter.lastExportedTimestamp !== undefined &&
+                    frontmatter.lastExportedID !== undefined
+                ) {
+                    return {
+                        id: this.id, // Assign SourceNote's ID
+                        path: frontmatter.path, // This is the mrexpt path
+                        annotationsPath: this.path, // This is the Annotations.md path
+                        title: frontmatter.title,
+                        author: frontmatter.author || "",
+                        lastExportedTimestamp: frontmatter.lastExportedTimestamp,
+                        lastExportedID: frontmatter.lastExportedID,
+                        tags: Array.isArray(frontmatter.tags) ? frontmatter.tags : [],
+                    };
+                } else {
+                    console.warn(`Skipping malformed frontmatter in ${this.path}`);
+                }
+            }
+        } catch (e) {
+            console.error(`Error processing source note ${this.path}:`, e);
+        }
+        return null;
     }
 
     // todo: feels like disk update should be put somewhere else, like parsedcard should have its
