@@ -1,9 +1,9 @@
 import React from 'react';
-import { render, screen, fireEvent } from '@testing-library/react';
+import { render, screen } from '@testing-library/react';
 import '@testing-library/jest-dom'; // Explicit import
 import { BrowserRouter } from 'react-router-dom';
 import type { annotation } from "src/data/models/annotations";
-import type { SectionAnnotations } from "src/routes/highlights";
+import type { SectionAnnotations } from "src/data/models/annotations";
 
 // Mock react-router-dom hooks
 jest.mock('react-router-dom', () => ({
@@ -19,11 +19,19 @@ jest.mock('obsidian', () => ({
     setIcon: jest.fn(),
 }));
 
+// Mock the new API module
+jest.mock('src/ui/routes/books/api', () => ({
+    getPreviousAnnotationIdForSection: jest.fn(),
+    getNextAnnotationIdForSection: jest.fn(),
+    // We need to keep the original interface for types to work, but Jest mocks the module content
+}));
+
 // Import pathGenerator from its new utility file
 import { pathGenerator } from 'src/utils/path-generators';
 
 // Import component under test
 import { AnnotationWithOutlet, AnnotationLoaderParams } from '../src/ui/routes/books/annotation-with-outlet';
+import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from 'src/ui/routes/books/api';
 
 // Mock data
 const mockAnnotation: annotation = {
@@ -48,6 +56,8 @@ const mockUseLoaderData = require('react-router-dom').useLoaderData;
 const mockUseRouteLoaderData = require('react-router-dom').useRouteLoaderData;
 const mockUseParams = require('react-router-dom').useParams;
 const mockUseLocation = require('react-router-dom').useLocation;
+const mockGetPreviousAnnotationId = getPreviousAnnotationIdForSection as jest.Mock;
+const mockGetNextAnnotationId = getNextAnnotationIdForSection as jest.Mock;
 
 describe('AnnotationWithOutlet', () => {
     let pathGeneratorSpy: jest.SpyInstance;
@@ -61,6 +71,10 @@ describe('AnnotationWithOutlet', () => {
             annotationId: 'test-annotation-id',
         } as AnnotationLoaderParams);
         mockUseLocation.mockReturnValue({ pathname: '/test-path' });
+        
+        mockGetPreviousAnnotationId.mockReturnValue('prev-annotation');
+        mockGetNextAnnotationId.mockReturnValue('next-annotation');
+
         jest.clearAllMocks(); // Clear mocks before each test
 
         // Spy on the imported pathGenerator function
@@ -72,7 +86,7 @@ describe('AnnotationWithOutlet', () => {
         pathGeneratorSpy.mockRestore();
     });
 
-    test('renders HighlightBlock by default', () => {
+    test('renders both HighlightBlock and NoteBlock simultaneously', () => {
         render(
             <BrowserRouter>
                 <AnnotationWithOutlet />
@@ -80,43 +94,11 @@ describe('AnnotationWithOutlet', () => {
         );
 
         expect(screen.getByText(mockAnnotation.highlight)).toBeInTheDocument();
-        expect(screen.queryByText(mockAnnotation.note)).not.toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Highlight/i })).toHaveAttribute('aria-pressed', 'true');
-        expect(screen.getByRole('button', { name: /Note/i })).toHaveAttribute('aria-pressed', 'false');
-    });
-
-    test('switches to NoteBlock when Note button is clicked', () => {
-        render(
-            <BrowserRouter>
-                <AnnotationWithOutlet />
-            </BrowserRouter>
-        );
-
-        // Click the 'Note' button
-        fireEvent.click(screen.getByRole('button', { name: /Note/i }));
-
         expect(screen.getByText(mockAnnotation.note)).toBeInTheDocument();
-        expect(screen.queryByText(mockAnnotation.highlight)).not.toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Highlight/i })).toHaveAttribute('aria-pressed', 'false');
-        expect(screen.getByRole('button', { name: /Note/i })).toHaveAttribute('aria-pressed', 'true');
-    });
-
-    test('switches back to HighlightBlock when Highlight button is clicked', () => {
-        render(
-            <BrowserRouter>
-                <AnnotationWithOutlet />
-            </BrowserRouter>
-        );
-
-        // Switch to Note first
-        fireEvent.click(screen.getByRole('button', { name: /Note/i }));
-        // Then switch back to Highlight
-        fireEvent.click(screen.getByRole('button', { name: /Highlight/i }));
-
-        expect(screen.getByText(mockAnnotation.highlight)).toBeInTheDocument();
-        expect(screen.queryByText(mockAnnotation.note)).not.toBeInTheDocument();
-        expect(screen.getByRole('button', { name: /Highlight/i })).toHaveAttribute('aria-pressed', 'true');
-        expect(screen.getByRole('button', { name: /Note/i })).toHaveAttribute('aria-pressed', 'false');
+        
+        // Ensure toggle buttons are NOT present
+        expect(screen.queryByRole('button', { name: /Highlight/i })).not.toBeInTheDocument();
+        expect(screen.queryByRole('button', { name: /Note/i })).not.toBeInTheDocument();
     });
 
     test('does not render NoteBlock if annotation has no note', () => {
@@ -127,16 +109,9 @@ describe('AnnotationWithOutlet', () => {
             </BrowserRouter>
         );
 
-        fireEvent.click(screen.getByRole('button', { name: /Note/i }));
-
-                expect(screen.queryByText(mockAnnotation.note)).not.toBeInTheDocument();
-
-                expect(screen.getByRole('button', { name: /Highlight/i })).toHaveAttribute('aria-pressed', 'true');
-
-                expect(screen.getByRole('button', { name: /Note/i })).toBeDisabled();
-
-            });
-
-        });
+        expect(screen.getByText(mockAnnotation.highlight)).toBeInTheDocument();
+        expect(screen.queryByText(mockAnnotation.note)).not.toBeInTheDocument();
+    });
+});
 
         
