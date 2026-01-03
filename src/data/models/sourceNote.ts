@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook, deleteCardOnDisk, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
-    getParentOrFilename, updateCardOnDisk
+    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
@@ -15,6 +15,10 @@ import { CardType } from "src/types/CardType";
 import {createParsedCard} from "src/data/models/parsedCard";
 import {parseMetadata} from "src/data/parser";
 import { SourceNoteDependencies } from "src/data/utils/dependencies";
+import { parseMoonReaderExport } from "src/data/import/moonreader";
+import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
+import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
+
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
 export type RawBookSection = (SectionCache | HeadingCache);
@@ -603,6 +607,34 @@ export class SourceNote implements frontbook {
             this.bookSections[annotationIndex] = updatedAnnotation;
         }
         return writeSuccessful;
+    }
+
+    async syncMoonReaderExport(mrexptPath: string, sinceId: string) {
+        const mrexptContent = await getFileContents(mrexptPath);
+        const newAnnotations = parseMoonReaderExport(mrexptContent, sinceId);
+
+        if (newAnnotations.length === 0) {
+            new ObsidianNotice("No new annotations found.");
+            return;
+        }
+
+        // Append new annotations markdown to the file
+        const newAnnotationsMarkdown = generateMarkdownWithHeaders(newAnnotations);
+        const tfile = getTFileForPath(this.path);
+        // @ts-ignore
+        await app.vault.append(tfile, '\n' + newAnnotationsMarkdown); // Add a newline before appending
+
+        // Find the new highest ID among all annotations
+        const allAnnotations = parseMoonReaderExport(mrexptContent);
+        const newLastExportedID = Math.max(...allAnnotations.map(ann => parseInt(ann.id, 10)));
+
+        // Update frontmatter values using the new disk utility
+        await updateFrontmatter(this.path, {
+            lastExportedTimestamp: Date.now(),
+            lastExportedID: newLastExportedID,
+        });
+
+        new ObsidianNotice(`Updated ${newAnnotations.length} new annotations.`);
     }
 
     async createFlashcardNote() {
