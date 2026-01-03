@@ -8,6 +8,8 @@ export interface AnnotationLoaderParams extends AnnotationsLoaderParams {
 }
 
 export function getPreviousAnnotationIdForSection(bookId: string, sectionId: string, blockId: string) {
+    // TODO: This currently fetches the full list of annotations. It does not respect filters 
+    // applied in the UI (AnnotationListPage), which can lead to inconsistent navigation.
     const section = getAnnotationsForSection(sectionId, bookId);
     if (!section || !section.annotations) return null;
     
@@ -18,6 +20,8 @@ export function getPreviousAnnotationIdForSection(bookId: string, sectionId: str
 }
 
 export function getNextAnnotationIdForSection(bookId: string, sectionId: string, blockId: string) {
+    // TODO: This currently fetches the full list of annotations. It does not respect filters 
+    // applied in the UI (AnnotationListPage), which can lead to inconsistent navigation.
     const section = getAnnotationsForSection(sectionId, bookId);
     if (!section || !section.annotations) return null;
 

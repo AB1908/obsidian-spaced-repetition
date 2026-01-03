@@ -158,5 +158,20 @@ The user interface, built with React, has zero test coverage. This is the highes
 
 ### Phase 4: Establish a CI/CD Quality Gate
 
+
+
 - **Next Step:** Modify `.github/workflows/pr.yml` to execute `npm test` on every pull request.
+
 - **Next Step:** Add a coverage check step to the CI pipeline.
+
+
+
+---
+
+
+
+## Technical Debt & Known Issues
+
+
+
+- **Annotation Navigation:** The "Previous" and "Next" navigation buttons in the annotation view (`AnnotationWithOutlet`) currently operate on the full list of annotations for a section. If the user has applied filters (e.g., category, color, processed/unprocessed) in the `AnnotationListPage`, the navigation will not respect these filters, potentially leading to a confusing user experience where "Next" takes them to an annotation that was hidden in the list view.
