@@ -1,4 +1,4 @@
-import type { AnnotationsLoaderParams } from "src/ui/routes/books/AnnotationListPage";
+import type { AnnotationsLoaderParams } from "src/ui/routes/books/book/annotation/AnnotationListPage";
 import type { annotation } from "src/data/models/annotations";
 import type { paragraph } from "src/data/models/paragraphs";
 import { getAnnotationsForSection } from "src/api";
