@@ -23,8 +23,8 @@ jest.mock("src/infrastructure/disk", () => {
 import { setupNanoidMock, resetNanoidMock } from "./nanoid-mock";
 setupNanoidMock();
 
-import { DeckLandingPage, BookButtons, deckLoader } from 'src/ui/routes/books/deck-preview';
-import { ChapterList, chapterLoader } from 'src/ui/routes/books/chapter-list';
+import { DeckLandingPage, BookButtons, deckLoader } from 'src/ui/routes/books/book';
+import { ChapterList, chapterLoader } from 'src/ui/routes/books/book/chapter-list';
 import { setPlugin } from "src/api";
 import { createMockPlugin } from "./__mocks__/plugin";
 import { Index } from 'src/data/models';

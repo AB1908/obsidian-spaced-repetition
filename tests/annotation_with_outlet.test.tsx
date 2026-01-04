@@ -28,7 +28,7 @@ jest.mock('src/ui/routes/books/api', () => ({
 import { pathGenerator } from 'src/utils/path-generators';
 
 // Import component under test
-import { AnnotationWithOutlet, AnnotationLoaderParams } from '../src/ui/routes/books/annotation-with-outlet';
+import { AnnotationWithOutlet, AnnotationLoaderParams } from '../src/ui/routes/books/book/annotation/annotation-with-outlet';
 import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from 'src/ui/routes/books/api';
 
 // Mock data
