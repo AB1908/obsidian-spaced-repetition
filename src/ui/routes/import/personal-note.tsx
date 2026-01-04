@@ -1,10 +1,9 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useLoaderData, useParams, useNavigate } from "react-router-dom";
-import { getAnnotationById, updateAnnotationMetadata, softDeleteAnnotation } from "src/api";
+import React, { useEffect, useRef } from "react";
+import { useLoaderData } from "react-router-dom";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { type Icon } from "src/types/obsidian-icons";
-import { integerToRGBA } from "src/utils/utils";
+import { useAnnotationEditor } from "src/ui/routes/import/useAnnotationEditor";
 
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
@@ -14,18 +13,18 @@ export async function personalNoteLoader({ params }: any) {
 
 export function PersonalNotePage() {
     const { annotation, bookId } = useLoaderData() as { annotation: any, bookId: string };
-    const [personalNote, setPersonalNote] = useState(annotation.personalNote || "");
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(annotation.category !== undefined ? annotation.category : null);
-    const navigate = useNavigate();
-    const deleteButtonRef = useRef<HTMLDivElement>(null);
-    const highlightColor = useMemo(() => {
-        if (annotation.originalColor) {
-            return integerToRGBA(annotation.originalColor);
-        }
-        return null;
-    }, [annotation.originalColor]);
+    const {
+        personalNote,
+        setPersonalNote,
+        selectedCategory,
+        handleCategoryClick,
+        highlightColor,
+        handleSave,
+        handleDelete,
+        navigateBack,
+    } = useAnnotationEditor(annotation, bookId);
 
-    // Refs for the 5 placeholder icons
+    const deleteButtonRef = useRef<HTMLDivElement>(null);
     const iconRefs = [
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
@@ -36,37 +35,16 @@ export function PersonalNotePage() {
     ];
 
     useEffect(() => {
-        // Placeholder icons from Obsidian's library
         const icons: Icon[] = ["lightbulb", "quote", "whole-word", "sticky-note", "star", "asterisk"];
         iconRefs.forEach((ref, i) => {
             if (ref.current) {
                 setIcon(ref.current, icons[i]);
             }
         });
-
         if (deleteButtonRef.current) {
             setIcon(deleteButtonRef.current, "trash");
         }
     }, []);
-
-    const handleCategoryClick = (index: number) => {
-        setSelectedCategory(index);
-    };
-
-    const handleSave = async () => {
-        await updateAnnotationMetadata(bookId, annotation.id, {
-            personalNote: personalNote,
-            category: selectedCategory !== null ? selectedCategory : undefined
-        });
-        navigate(-1);
-    };
-
-    const handleDelete = async () => {
-        if (confirm("Are you sure you want to delete this annotation?")) {
-            await softDeleteAnnotation(bookId, annotation.id);
-            navigate(-1);
-        }
-    };
 
     return (
         <div className="sr-personal-note-page">
@@ -124,7 +102,7 @@ export function PersonalNotePage() {
 
             <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
                 <button className="mod-cta" onClick={handleSave}>Save</button>
-                <button onClick={() => navigate(-1)}>Back</button>
+                <button onClick={navigateBack}>Back</button>
             </div>
         </div>
     );
