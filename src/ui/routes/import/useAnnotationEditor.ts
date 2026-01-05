@@ -30,11 +30,15 @@ export function useAnnotationEditor(initialAnnotation: Annotation, bookId: strin
         setSelectedCategory(selectedCategory === index ? null : index);
     };
 
-    const handleSave = async () => {
+    const save = async () => {
         await updateAnnotationMetadata(bookId, initialAnnotation.id, {
             personalNote: personalNote,
             category: selectedCategory !== null ? selectedCategory : undefined,
         });
+    }
+
+    const handleSave = async () => {
+        await save();
         navigate(-1);
     };
 
@@ -52,6 +56,7 @@ export function useAnnotationEditor(initialAnnotation: Annotation, bookId: strin
         handleCategoryClick,
         highlightColor,
         handleSave,
+        save,
         handleDelete,
         navigateBack: () => navigate(-1),
     };

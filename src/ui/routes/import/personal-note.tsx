@@ -27,6 +27,7 @@ export function PersonalNotePage() {
         handleCategoryClick,
         highlightColor,
         handleSave,
+        save,
         handleDelete,
         navigateBack,
     } = useAnnotationEditor(annotation, bookId);
@@ -43,14 +44,15 @@ export function PersonalNotePage() {
 
     const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, params.sectionId, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(bookId, params.sectionId, annotation.id);
-    console.log(previousAnnotationId, nextAnnotationId);
 
-    const handleNavigate = (targetAnnotationId: string | null) => {
+    const handleNavigate = async (targetAnnotationId: string | null) => {
         if (targetAnnotationId) {
+            await save();
             // Re-using the same path generation logic, assuming the URL structure is compatible
             navigate(pathGenerator(location.pathname, params, targetAnnotationId), { replace: true });
         }
     };
+
 
     useEffect(() => {
         const icons: Icon[] = ["lightbulb", "quote", "whole-word", "sticky-note", "star", "asterisk"];
@@ -66,7 +68,7 @@ export function PersonalNotePage() {
 
     return (
         <div className="sr-personal-note-page">
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "10px" }}>
                 <div style={{ display: "flex", alignItems: "center", gap: "10px" }}>
                     {highlightColor && (
                         <div
@@ -82,27 +84,31 @@ export function PersonalNotePage() {
                     )}
                     <h2>Edit Personal Note</h2>
                 </div>
-                <div style={{display: "flex", gap: "10px"}}>
-                    <NavigationControl
-                        onClick={() => handleNavigate(previousAnnotationId)}
-                        isDisabled={!previousAnnotationId}
-                        direction="previous"
-                        navigationKey={annotation.id}
-                    />
-                    <NavigationControl
-                        onClick={() => handleNavigate(nextAnnotationId)}
-                        isDisabled={!nextAnnotationId}
-                        direction="next"
-                        navigationKey={annotation.id}
-                    />
+                <div>
                     <button className="mod-warning" onClick={handleDelete} title="Delete Annotation">
                         <div ref={deleteButtonRef} />
                     </button>
                 </div>
             </div>
 
-            <HighlightBlock text={annotation.highlight} />
-            <NoteBlock text={annotation.note} />
+            <div className={"sr-annotation"}>
+                <NavigationControl
+                    onClick={() => handleNavigate(previousAnnotationId)}
+                    isDisabled={!previousAnnotationId}
+                    direction="previous"
+                    navigationKey={annotation.id}
+                />
+                <div style={{ width: '100%' }}>
+                    <HighlightBlock text={annotation.highlight} />
+                    {annotation.note && <NoteBlock text={annotation.note} />}
+                </div>
+                <NavigationControl
+                    onClick={() => handleNavigate(nextAnnotationId)}
+                    isDisabled={!nextAnnotationId}
+                    direction="next"
+                    navigationKey={annotation.id}
+                />
+            </div>
 
             <div className="sr-personal-note-input-container" style={{ marginTop: "20px" }}>
                 <textarea

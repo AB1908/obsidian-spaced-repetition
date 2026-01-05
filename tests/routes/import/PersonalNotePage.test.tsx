@@ -68,6 +68,13 @@ jest.mock("src/api", () => ({
     softDeleteAnnotation: jest.fn().mockResolvedValue(true), // Mock resolved value
 }));
 
+jest.mock("src/ui/routes/books/api", () => ({
+    getPreviousAnnotationIdForSection: jest.fn(),
+    getNextAnnotationIdForSection: jest.fn(),
+}));
+
+import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from "src/ui/routes/books/api";
+
 // Mock Obsidian setIcon
 jest.mock("src/infrastructure/obsidian-facade", () => ({
     ...jest.requireActual("src/infrastructure/obsidian-facade"),
@@ -79,6 +86,8 @@ const useParamsMock = jest.requireMock("react-router-dom").useParams;
 const useNavigateMock = jest.requireMock("react-router-dom").useNavigate;
 const useLocationMock = jest.requireMock("react-router-dom").useLocation;
 const setIconMock = jest.spyOn(obsidianFacade, "setIcon");
+const getPreviousAnnotationIdForSectionMock = getPreviousAnnotationIdForSection as jest.Mock;
+const getNextAnnotationIdForSectionMock = getNextAnnotationIdForSection as jest.Mock;
 
 describe("PersonalNotePage Component", () => {
     const mockNavigate = jest.fn();
@@ -98,12 +107,20 @@ describe("PersonalNotePage Component", () => {
         useLocationMock.mockClear();
         setIconMock.mockClear();
         mockNavigate.mockClear();
+        getPreviousAnnotationIdForSectionMock.mockReset();
+        getNextAnnotationIdForSectionMock.mockReset();
         jest.spyOn(api, "updateAnnotationMetadata").mockResolvedValue(true);
         jest.spyOn(api, "softDeleteAnnotation").mockResolvedValue(true);
 
-        useParamsMock.mockReturnValue({ bookId: mockBookId, annotationId: mockAnnotationId, sectionId: "mock-section-id" });
+        useParamsMock.mockReturnValue({
+            bookId: mockBookId,
+            annotationId: mockAnnotationId,
+            sectionId: "mock-section-id",
+        });
         useNavigateMock.mockReturnValue(mockNavigate);
-        useLocationMock.mockReturnValue({ pathname: "/mock-path" });
+        useLocationMock.mockReturnValue({
+            pathname: "/import/books/1/chapters/2/annotations/3/personal-note",
+        });
 
         // Mock window.confirm
         confirmSpy = jest.spyOn(window, "confirm").mockReturnValue(true);
@@ -111,6 +128,89 @@ describe("PersonalNotePage Component", () => {
 
     afterEach(() => {
         jest.restoreAllMocks();
+    });
+
+    it("should render navigation correctly for the FIRST annotation (only next enabled)", () => {
+        const mockAnnotation = { id: "1", highlight: "H", note: "N" };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const navControls = container.querySelectorAll(".annotation-nav");
+        expect(navControls[0]).not.toHaveClass("is-clickable"); // Previous disabled
+        expect(navControls[1]).toHaveClass("is-clickable"); // Next enabled
+    });
+
+    it("should render navigation correctly for a MIDDLE annotation (both enabled)", () => {
+        const mockAnnotation = { id: "2", highlight: "H", note: "N" };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue("1");
+        getNextAnnotationIdForSectionMock.mockReturnValue("3");
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const navControls = container.querySelectorAll(".annotation-nav");
+        expect(navControls[0]).toHaveClass("is-clickable");
+        expect(navControls[1]).toHaveClass("is-clickable");
+    });
+
+    it("should render navigation correctly for the LAST annotation (only previous enabled)", () => {
+        const mockAnnotation = { id: "3", highlight: "H", note: "N" };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue("2");
+        getNextAnnotationIdForSectionMock.mockReturnValue(null);
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const navControls = container.querySelectorAll(".annotation-nav");
+        expect(navControls[0]).toHaveClass("is-clickable");
+        expect(navControls[1]).not.toHaveClass("is-clickable"); // Next disabled
+    });
+
+    it("should save changes and navigate when next is clicked", async () => {
+        const mockAnnotation = { id: "1", highlight: "H", note: "N", personalNote: "Initial" };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+        const updateAnnotationMetadataMock = jest.spyOn(api, "updateAnnotationMetadata");
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        fireEvent.change(screen.getByPlaceholderText("Enter your own note here..."), {
+            target: { value: "Changed" },
+        });
+
+        const nextButton = container.querySelectorAll(".annotation-nav.is-clickable")[0];
+        fireEvent.click(nextButton);
+
+        await waitFor(() => {
+            expect(updateAnnotationMetadataMock).toHaveBeenCalledWith(
+                mockBookId,
+                "1",
+                expect.objectContaining({ personalNote: "Changed" })
+            );
+            expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining("2/personal-note"), {
+                replace: true,
+            });
+        });
     });
 
     it("should render correctly with a personal note, category, and highlight color and match snapshot", () => {
@@ -123,6 +223,8 @@ describe("PersonalNotePage Component", () => {
             originalColor: 16711680, // Red color
         };
         useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue("prev");
+        getNextAnnotationIdForSectionMock.mockReturnValue("next");
 
         const { container } = render(
             <MemoryRouter>
@@ -141,7 +243,7 @@ describe("PersonalNotePage Component", () => {
                 class="sr-personal-note-page"
               >
                 <div
-                  style="display: flex; justify-content: space-between; align-items: center;"
+                  style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"
                 >
                   <div
                     style="display: flex; align-items: center; gap: 10px;"
@@ -154,17 +256,7 @@ describe("PersonalNotePage Component", () => {
                       Edit Personal Note
                     </h2>
                   </div>
-                  <div
-                    style="display: flex; gap: 10px;"
-                  >
-                    <div
-                      class="annotation-nav"
-                    />
-                    <div
-                      class="annotation-nav is-clickable"
-                    >
-                      <div />
-                    </div>
+                  <div>
                     <button
                       class="mod-warning"
                       title="Delete Annotation"
@@ -173,20 +265,38 @@ describe("PersonalNotePage Component", () => {
                     </button>
                   </div>
                 </div>
-                <blockquote
-                  class="sr-blockquote-annotation"
+                <div
+                  class="sr-annotation"
                 >
-                  <p>
-                    This is a test highlight.
-                  </p>
-                </blockquote>
-                <blockquote
-                  class="sr-blockquote-note"
-                >
-                  <p>
-                    This is a test note.
-                  </p>
-                </blockquote>
+                  <div
+                    class="annotation-nav is-clickable"
+                  >
+                    <div />
+                  </div>
+                  <div
+                    style="width: 100%;"
+                  >
+                    <blockquote
+                      class="sr-blockquote-annotation"
+                    >
+                      <p>
+                        This is a test highlight.
+                      </p>
+                    </blockquote>
+                    <blockquote
+                      class="sr-blockquote-note"
+                    >
+                      <p>
+                        This is a test note.
+                      </p>
+                    </blockquote>
+                  </div>
+                  <div
+                    class="annotation-nav is-clickable"
+                  >
+                    <div />
+                  </div>
+                </div>
                 <div
                   class="sr-personal-note-input-container"
                   style="margin-top: 20px;"
@@ -266,6 +376,8 @@ describe("PersonalNotePage Component", () => {
             originalColor: undefined,
         };
         useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue("prev");
+        getNextAnnotationIdForSectionMock.mockReturnValue("next");
 
         const { container } = render(
             <MemoryRouter>
@@ -275,14 +387,14 @@ describe("PersonalNotePage Component", () => {
 
         expect(screen.getByText("Edit Personal Note")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Enter your own note here...")).toBeInTheDocument();
-        expect(setIconMock).toHaveBeenCalledTimes(8); // 6 category icons + 1 delete icon + 1 nav icon
+        expect(setIconMock).toHaveBeenCalledTimes(9); // 6 category icons + 1 delete icon + 2 nav icons
         expect(container).toMatchInlineSnapshot(`
             <div>
               <div
                 class="sr-personal-note-page"
               >
                 <div
-                  style="display: flex; justify-content: space-between; align-items: center;"
+                  style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;"
                 >
                   <div
                     style="display: flex; align-items: center; gap: 10px;"
@@ -291,17 +403,7 @@ describe("PersonalNotePage Component", () => {
                       Edit Personal Note
                     </h2>
                   </div>
-                  <div
-                    style="display: flex; gap: 10px;"
-                  >
-                    <div
-                      class="annotation-nav"
-                    />
-                    <div
-                      class="annotation-nav is-clickable"
-                    >
-                      <div />
-                    </div>
+                  <div>
                     <button
                       class="mod-warning"
                       title="Delete Annotation"
@@ -310,20 +412,38 @@ describe("PersonalNotePage Component", () => {
                     </button>
                   </div>
                 </div>
-                <blockquote
-                  class="sr-blockquote-annotation"
+                <div
+                  class="sr-annotation"
                 >
-                  <p>
-                    Another highlight.
-                  </p>
-                </blockquote>
-                <blockquote
-                  class="sr-blockquote-note"
-                >
-                  <p>
-                    Another note.
-                  </p>
-                </blockquote>
+                  <div
+                    class="annotation-nav is-clickable"
+                  >
+                    <div />
+                  </div>
+                  <div
+                    style="width: 100%;"
+                  >
+                    <blockquote
+                      class="sr-blockquote-annotation"
+                    >
+                      <p>
+                        Another highlight.
+                      </p>
+                    </blockquote>
+                    <blockquote
+                      class="sr-blockquote-note"
+                    >
+                      <p>
+                        Another note.
+                      </p>
+                    </blockquote>
+                  </div>
+                  <div
+                    class="annotation-nav is-clickable"
+                  >
+                    <div />
+                  </div>
+                </div>
                 <div
                   class="sr-personal-note-input-container"
                   style="margin-top: 20px;"
