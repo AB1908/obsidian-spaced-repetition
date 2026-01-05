@@ -27,6 +27,7 @@ import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
+import { ImportedBook } from "./ui/routes/import/import-export";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -209,6 +210,17 @@ export function getBookById(bookId: string): frontEndBook {
     };
 }
 
+export function getSourceNoteById(id: string) {
+    const book = plugin.sourceNoteIndex.getBook(id);
+    if (book == null) {
+        throw new Error("getBookById: book not found");
+    }
+    return {
+        id: book.id,
+        name: book.name,
+    };
+}
+
 export function getSectionTreeForBook(bookId: string) {
     const book = plugin.sourceNoteIndex.getBook(bookId);
     const children = generateSectionsTree(book.bookSections);
@@ -273,14 +285,17 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
         };
     }
 
-export async function getImportedBooks(): Promise<BookFrontmatter[]> {
+export async function getImportedBooks(): Promise<ImportedBook[]> {
     const sourceNotes = plugin.sourceNoteIndex.getAllSourceNotes();
-    const books: BookFrontmatter[] = [];
+    const books: ImportedBook[] = [];
 
     for (const sourceNote of sourceNotes) {
         const frontmatter = sourceNote.getBookFrontmatter();
         if (frontmatter) {
-            books.push(frontmatter);
+            books.push({
+                id: sourceNote.id,
+                name: sourceNote.name,
+                path: sourceNote.path});
         }
     }
 
