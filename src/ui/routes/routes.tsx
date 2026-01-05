@@ -65,37 +65,37 @@ export const children: RouteObject[] = [
         ]
     },
     {
-                        path: "import/books/:bookId",
+        path: "import/books/:bookId",
+        children: [
+            {
+                path: "details",
+                element: <BookDetailsPage />,
+                loader: bookDetailsLoader,
+            },
+            {
+                path: "chapters/:sectionId/annotations",
+                children: [
+                    {
+                        path: "",
+                        element: <AnnotationListPage />,
+                        loader: flashcardAnnotationsLoader,
+                    },
+                    {
+                        path: ":annotationId",
                         children: [
                             {
-                                path: "details",
-                                element: <BookDetailsPage />,
-                                loader: bookDetailsLoader,
-                            },
-                            {
-                                path: "chapters/:sectionId/annotations",
-                                children: [
-                                    {
-                                        path: "",
-                                        element: <AnnotationListPage />,
-                                        loader: flashcardAnnotationsLoader,
-                                    },
-                                    {
-                                        path: ":annotationId",
-                                        children: [
-                                            {
-                                                path: "personal-note",
-                                                element: <PersonalNotePage />,
-                                                loader: personalNoteLoader,
-                                            }
-                                        ]
-                                    }
-                                ]
+                                path: "personal-note",
+                                element: <PersonalNotePage />,
+                                loader: personalNoteLoader,
                             }
                         ]
                     }
+                ]
+            }
+        ]
+    }
 
-    ,{
+    , {
         path: "/books/:bookId/review",
         element: <ReviewDeck />,
         loader: reviewLoader

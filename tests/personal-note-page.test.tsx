@@ -18,7 +18,9 @@ jest.mock('src/api', () => ({
     getAnnotationById: jest.fn(),
     updateAnnotationMetadata: jest.fn(),
     softDeleteAnnotation: jest.fn(),
-    getAnnotationsForSection: jest.fn()
+    getAnnotationsForSection: jest.fn(),
+    getPreviousAnnotationId: jest.fn(),
+    getNextAnnotationId: jest.fn()
 }));
 
 jest.mock('obsidian', () => ({
