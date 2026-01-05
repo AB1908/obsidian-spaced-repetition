@@ -1,11 +1,33 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { createDiskMockFromFixtures } from "../../helpers";
+import { createDiskMockFromFixtures, resetFixtureTransformer } from "../../helpers";
 import { PersonalNotePage } from "src/ui/routes/import/personal-note";
 import * as obsidianFacade from "src/infrastructure/obsidian-facade";
-import { initializeTestPlugin } from "../../plugin-helper";
 import * as api from "src/api";
+import { setupNanoidMock, resetNanoidMock } from "../../nanoid-mock";
+import { createMockPlugin } from "../../__mocks__/plugin";
+import { Index } from "src/data/models";
+import { FlashcardIndex } from "src/data/models/flashcard";
+import { SourceNoteIndex } from "src/data/models/sourceNote";
+import { fileTags } from "src/infrastructure/disk";
+import { setPlugin } from "src/api";
+
+setupNanoidMock();
+
+async function initializePlugin() {
+    resetNanoidMock();
+    resetFixtureTransformer();
+    const mockPlugin = createMockPlugin();
+    mockPlugin.fileTagsMap = fileTags();
+    mockPlugin.index = new Index();
+    mockPlugin.flashcardIndex = new FlashcardIndex();
+    mockPlugin.sourceNoteIndex = new SourceNoteIndex();
+    mockPlugin.flashcardIndex = await mockPlugin.flashcardIndex.initialize();
+    mockPlugin.sourceNoteIndex = await mockPlugin.sourceNoteIndex.initialize(mockPlugin);
+    setPlugin(mockPlugin);
+    return mockPlugin;
+}
 
 jest.mock("src/infrastructure/disk", () => {
     const mock = createDiskMockFromFixtures([
@@ -63,7 +85,7 @@ describe("PersonalNotePage Component", () => {
     let confirmSpy: jest.SpyInstance;
 
     beforeEach(async () => {
-        const plugin = await initializeTestPlugin();
+        const plugin = await initializePlugin();
         const book = plugin.sourceNoteIndex.getAllSourceNotes()[0];
         mockBookId = book.id;
         mockAnnotationId = book.annotations()[0].id;
