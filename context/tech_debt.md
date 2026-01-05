@@ -51,3 +51,10 @@
 **Proposed Solution:** Investigate if Obsidian exposes its internal icon list via an official API or a more stable programmatic method. If so, `ICON_LIST` should be dynamically imported or generated from that source. This would improve maintainability and ensure consistency with the host application.
 
 **Priority:** Low (for now), as the current implementation is functional, but marked for future investigation to reduce technical debt.
+
+## 8. Brittle Path Generation (`pathGenerator`)
+**Identified:** 2026-01-04
+**Risk:** Medium
+**Description:** The `src/utils/path-generators.ts` utility relies on hardcoded route patterns and `matchPath` to update `annotationId` in the URL. This is brittle and requires manual updates whenever route structures change (as seen with the Import flow breakage).
+**Impact:** Navigation within the annotation view can easily break if routes are refactored. It adds complexity to adding new routes that reuse the annotation navigation logic.
+**Future Solution:** Leverage React Router's relative navigation (e.g., `navigate("../" + nextId, { relative: "path" })`) or a more dynamic path generation strategy that doesn't require hardcoding every possible parent route pattern.

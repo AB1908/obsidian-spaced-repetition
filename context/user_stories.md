@@ -61,6 +61,59 @@
 
 ---
 
+### As a user, I want consistent UI across different annotation views for a unified experience.
+
+**User Story:** Align `PersonalNotePage` rendering style with `AnnotationWithOutlet`.
+
+**Problem:** The `PersonalNotePage` (used in Import flow) renders the highlight, note, and navigation controls differently than `AnnotationWithOutlet` (used in main Flashcard flow). This leads to a fragmented user experience.
+
+**Tasks:**
+1.  **Refactor `PersonalNotePage` Layout:** Move navigation buttons to be side-by-side with the annotation content, matching the `sr-annotation` class structure used in `AnnotationWithOutlet`.
+2.  **Unify Styling:** Ensure consistent margins, padding, and block usage between the two views.
+
+**Priority:** Medium
+**Type:** Refactor / UX
+**Est. Effort:** Low
+**Tags:** #ui #consistency
+
+---
+
+### As a developer, I want to ensure navigation logic is robust and correctly handles boundary cases.
+
+**User Story:** Add comprehensive navigation tests for `PersonalNotePage`.
+
+**Problem:** Navigation between annotations needs to be verified for various states (first annotation, middle, last) to ensure buttons are correctly enabled/disabled and target IDs are correct.
+
+**Tasks:**
+1.  **Test 1st Annotation:** Verify only "Next" is enabled.
+2.  **Test Middle Annotation:** Verify both "Previous" and "Next" are enabled.
+3.  **Test Last Annotation:** Verify only "Previous" is enabled.
+4.  **Verify ID calculation:** Ensure the correct target IDs are derived from the mock model.
+
+**Priority:** High
+**Type:** Test
+**Est. Effort:** Low
+**Tags:** #testing #navigation
+
+---
+
+### As a developer, I want to remove brittle path generation logic to improve maintainability.
+
+**User Story:** Replace `pathGenerator` with React Router native features.
+
+**Problem:** `pathGenerator` is brittle and difficult to maintain due to hardcoded route strings.
+
+**Tasks:**
+1.  **Analyze Navigation:** Determine if relative navigation (`../:id`) can replace the current logic.
+2.  **Refactor:** Remove `pathGenerator` and update `AnnotationWithOutlet` and `PersonalNotePage` to use native navigation strategies.
+
+**Priority:** Low
+**Type:** Tech Debt
+**Est. Effort:** Medium
+**Tags:** #refactor #react-router
+
+---
+
 ### As a user, I want to configure annotation categories so that I can customize my review workflow.
 
 **User Story:** Implement configurable annotation categories (icons + names).
