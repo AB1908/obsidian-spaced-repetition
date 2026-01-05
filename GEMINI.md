@@ -40,6 +40,35 @@ Upon starting a session, the Agent MUST:
 
 ---
 
+## UI Development with Mock Server
+
+For rapid UI development and testing, this project uses `json-server` to provide a mock API backend.
+
+### Running the Mock Server
+
+1.  Start the mock server by running the following command in your terminal:
+    ```bash
+    npm run mock-server
+    ```
+    This will start a server on `http://localhost:3000` and watch the `db.json` file for changes.
+
+### Enabling the Mock API in the UI
+
+To make the UI use the mock API, you need to set the `USE_JSON_MOCK` flag to `true` in `src/ui/routes/books/review/index.tsx`.
+
+```typescript
+// src/ui/routes/books/review/index.tsx
+export const USE_JSON_MOCK = true;
+```
+
+When this flag is `true`, the data loaders for the UI routes will fetch data from the `json-server` instead of the actual backend.
+
+### Modifying Mock Data
+
+The mock data is stored in the `db.json` file in the root of the project. You can edit this file to change the data returned by the mock API. `json-server` will automatically pick up the changes.
+
+---
+
 ## Current Development Plan
 
 ### Completed Work
