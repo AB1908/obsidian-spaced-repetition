@@ -12,7 +12,7 @@ import { pathGenerator } from "src/utils/path-generators";
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
     const annotation = await getAnnotationById(annotationId, bookId);
-    return { annotation, bookId, sectionId: annotation.sectionId };
+    return { annotation, bookId };
 }
 
 export function PersonalNotePage() {
