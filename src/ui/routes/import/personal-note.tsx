@@ -9,11 +9,11 @@ import { getAnnotationById } from "src/api";
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
     const annotation = await getAnnotationById(annotationId, bookId);
-    return { annotation, bookId };
+    return { annotation, bookId, sectionId: annotation.sectionId };
 }
 
 export function PersonalNotePage() {
-    const { annotation, bookId } = useLoaderData() as { annotation: any, bookId: string };
+    const { annotation, bookId, sectionId } = useLoaderData() as { annotation: any, bookId: string, sectionId: string };
     const {
         personalNote,
         setPersonalNote,
