@@ -84,11 +84,13 @@ export function PersonalNotePage() {
                         onClick={() => handleNavigate(previousAnnotationId)}
                         isDisabled={!previousAnnotationId}
                         direction="previous"
+                        navigationKey={annotation.id}
                     />
                     <NavigationControl
                         onClick={() => handleNavigate(nextAnnotationId)}
                         isDisabled={!nextAnnotationId}
                         direction="next"
+                        navigationKey={annotation.id}
                     />
                     <button className="mod-warning" onClick={handleDelete} title="Delete Annotation">
                         <div ref={deleteButtonRef} />

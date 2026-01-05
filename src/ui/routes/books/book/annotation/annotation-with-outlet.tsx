@@ -52,6 +52,7 @@ export function AnnotationWithOutlet() {
                     onClick={() => handleNavigate(previousAnnotationId)}
                     isDisabled={!previousAnnotationId}
                     direction="previous"
+                    navigationKey={annotation.id}
                 />
                 <div style={{ width: '100%' }}>
                     <HighlightBlock text={annotation.highlight} />
@@ -61,6 +62,7 @@ export function AnnotationWithOutlet() {
                     onClick={() => handleNavigate(nextAnnotationId)}
                     isDisabled={!nextAnnotationId}
                     direction="next"
+                    navigationKey={annotation.id}
                 />
             </div>
             <Outlet />

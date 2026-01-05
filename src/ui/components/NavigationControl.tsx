@@ -7,6 +7,7 @@ interface NavigationControlProps {
     isDisabled: boolean;
     direction: 'previous' | 'next';
     className?: string;
+    navigationKey?: string | number;
 }
 
 const NavigationControl: React.FC<NavigationControlProps> = ({
@@ -14,6 +15,7 @@ const NavigationControl: React.FC<NavigationControlProps> = ({
     isDisabled,
     direction,
     className = "annotation-nav is-clickable",
+    navigationKey,
 }) => {
     const buttonRef = useRef<HTMLDivElement>(null);
     const icon: Icon = direction === 'previous' ? 'chevron-left' : 'chevron-right';
@@ -22,7 +24,7 @@ const NavigationControl: React.FC<NavigationControlProps> = ({
         if (buttonRef.current) {
             setIcon(buttonRef.current, icon);
         }
-    }, [icon]);
+    }, [icon, navigationKey]);
 
     if (isDisabled) {
         return <div className="annotation-nav"></div>; // Placeholder to maintain layout
