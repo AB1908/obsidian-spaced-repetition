@@ -5,17 +5,18 @@ import { Icon } from 'src/types/obsidian-icons';
 interface NavigationControlProps {
     onClick: () => void;
     isDisabled: boolean;
-    icon: Icon;
+    direction: 'previous' | 'next';
     className?: string;
 }
 
 const NavigationControl: React.FC<NavigationControlProps> = ({
     onClick,
     isDisabled,
-    icon,
+    direction,
     className = "annotation-nav is-clickable",
 }) => {
     const buttonRef = useRef<HTMLDivElement>(null);
+    const icon: Icon = direction === 'previous' ? 'chevron-left' : 'chevron-right';
 
     useEffect(() => {
         if (buttonRef.current) {

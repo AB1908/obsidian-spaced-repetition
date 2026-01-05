@@ -51,7 +51,7 @@ export function AnnotationWithOutlet() {
                 <NavigationControl
                     onClick={() => handleNavigate(previousAnnotationId)}
                     isDisabled={!previousAnnotationId}
-                    icon="chevron-left"
+                    direction="previous"
                 />
                 <div style={{ width: '100%' }}>
                     <HighlightBlock text={annotation.highlight} />
@@ -60,7 +60,7 @@ export function AnnotationWithOutlet() {
                 <NavigationControl
                     onClick={() => handleNavigate(nextAnnotationId)}
                     isDisabled={!nextAnnotationId}
-                    icon="chevron-right"
+                    direction="next"
                 />
             </div>
             <Outlet />
