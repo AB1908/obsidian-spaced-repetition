@@ -4,6 +4,7 @@ import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { type Icon } from "src/types/obsidian-icons";
 import { useAnnotationEditor } from "src/ui/routes/import/useAnnotationEditor";
+import { getAnnotationById } from "src/api";
 
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
