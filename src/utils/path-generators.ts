@@ -1,17 +1,22 @@
-import { generatePath, matchPath } from "react-router-dom";
+import { generatePath, matchPath, useLocation } from "react-router-dom";
 
 export function pathGenerator(path: string, params: any, annotationId: string) {
-    // all this validation may not be necessary but keeping it since I already wrote it
-    const updateFlashcardPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/:flashcardId";
-    const newRegularFlashcardPath= "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/new/regular";
-    const newFlashcardPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/new";
-    const viewFlashcardsPath = "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards";
-    const inChildRoute = [updateFlashcardPath, newRegularFlashcardPath, newFlashcardPath, viewFlashcardsPath].some((routePath) => {
-        return matchPath(routePath, path);
-    })
-    if (inChildRoute) {
-        return generatePath(viewFlashcardsPath, {...params, annotationId});
-    } else {
-        throw new Error("could not match path in AnnotationOutlet");
+    console.log(path, params, annotationId);
+    
+    const routes = [
+        "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/:flashcardId",
+        "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/new/regular",
+        "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards/new",
+        "/books/:bookId/chapters/:sectionId/annotations/:annotationId/flashcards",
+        "/books/:bookId/chapters/:sectionId/annotations/:annotationId",
+        "/import/books/:bookId/chapters/:sectionId/annotations/:annotationId/personal-note"
+    ];
+
+    for (const routePath of routes) {
+        if (matchPath(routePath, path)) {
+            return generatePath(routePath, { ...params, annotationId });
+        }
     }
+
+    throw new Error("could not match path in AnnotationOutlet");
 }

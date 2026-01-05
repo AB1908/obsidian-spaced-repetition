@@ -57,6 +57,7 @@ jest.mock("react-router-dom", () => ({
     useLoaderData: jest.fn(),
     useParams: jest.fn(),
     useNavigate: jest.fn(),
+    useLocation: jest.fn(),
 }));
 
 // Mock API functions
@@ -76,6 +77,7 @@ jest.mock("src/infrastructure/obsidian-facade", () => ({
 const useLoaderDataMock = jest.requireMock("react-router-dom").useLoaderData;
 const useParamsMock = jest.requireMock("react-router-dom").useParams;
 const useNavigateMock = jest.requireMock("react-router-dom").useNavigate;
+const useLocationMock = jest.requireMock("react-router-dom").useLocation;
 const setIconMock = jest.spyOn(obsidianFacade, "setIcon");
 
 describe("PersonalNotePage Component", () => {
@@ -93,13 +95,15 @@ describe("PersonalNotePage Component", () => {
         useLoaderDataMock.mockClear();
         useParamsMock.mockClear();
         useNavigateMock.mockClear();
+        useLocationMock.mockClear();
         setIconMock.mockClear();
         mockNavigate.mockClear();
         jest.spyOn(api, "updateAnnotationMetadata").mockResolvedValue(true);
         jest.spyOn(api, "softDeleteAnnotation").mockResolvedValue(true);
 
-        useParamsMock.mockReturnValue({ bookId: mockBookId, annotationId: mockAnnotationId });
+        useParamsMock.mockReturnValue({ bookId: mockBookId, annotationId: mockAnnotationId, sectionId: "mock-section-id" });
         useNavigateMock.mockReturnValue(mockNavigate);
+        useLocationMock.mockReturnValue({ pathname: "/mock-path" });
 
         // Mock window.confirm
         confirmSpy = jest.spyOn(window, "confirm").mockReturnValue(true);
@@ -157,8 +161,10 @@ describe("PersonalNotePage Component", () => {
                       class="annotation-nav"
                     />
                     <div
-                      class="annotation-nav"
-                    />
+                      class="annotation-nav is-clickable"
+                    >
+                      <div />
+                    </div>
                     <button
                       class="mod-warning"
                       title="Delete Annotation"
@@ -269,7 +275,7 @@ describe("PersonalNotePage Component", () => {
 
         expect(screen.getByText("Edit Personal Note")).toBeInTheDocument();
         expect(screen.getByPlaceholderText("Enter your own note here...")).toBeInTheDocument();
-        expect(setIconMock).toHaveBeenCalledTimes(7); // 6 category icons + 1 delete icon
+        expect(setIconMock).toHaveBeenCalledTimes(8); // 6 category icons + 1 delete icon + 1 nav icon
         expect(container).toMatchInlineSnapshot(`
             <div>
               <div
@@ -292,8 +298,10 @@ describe("PersonalNotePage Component", () => {
                       class="annotation-nav"
                     />
                     <div
-                      class="annotation-nav"
-                    />
+                      class="annotation-nav is-clickable"
+                    >
+                      <div />
+                    </div>
                     <button
                       class="mod-warning"
                       title="Delete Annotation"
