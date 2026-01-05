@@ -285,7 +285,7 @@ export class SourceNote implements frontbook {
     reviewDeck: Flashcard[];
     // i feel like i need a factory method that creates a SourceNoteWithFLashcards
     // and a SourceNote
-    flashcardNote: FlashcardNote;
+    flashcardNote: FlashcardNote | null;
     // todo: think of a way to not use plugin
     // the reason I need it is because to find the corresponding flashcard note
     plugin: SourceNoteDependencies;
@@ -423,8 +423,11 @@ tags:
             .filter((t): t is (annotation | paragraph) => isAnnotationOrParagraph(t));
 
         const flashcardCountForAnnotation: Record<string, number> = {};
-        for (const id of this.flashcardNote.flashcards.map(t => t.parentId)) {
-            flashcardCountForAnnotation[id] = (flashcardCountForAnnotation[id] || 0) + 1;
+        // todo: not every source note has a flashcard note
+        if (this.flashcardNote) {
+            for (const id of this.flashcardNote.flashcards.map(t => t.parentId)) {
+                flashcardCountForAnnotation[id] = (flashcardCountForAnnotation[id] || 0) + 1;
+            }
         }
 
         return annotations.map(t => {
