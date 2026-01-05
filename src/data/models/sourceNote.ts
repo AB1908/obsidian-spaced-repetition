@@ -581,34 +581,6 @@ tags:
         return null;
     }
 
-    // todo: feels like disk update should be put somewhere else, like parsedcard should have its
-    // own class
-    private async updateParsedCard(card: Flashcard, updatedSchedulingMetadata: SchedulingMetadata) {
-        const parsedCardCopy = this.flashcardNote.parsedCards.filter((parsedCard: ParsedCard) => parsedCard.id === card.parsedCardId)[0];
-        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-
-        const updatedParsedCard = {
-            ...parsedCardCopy, metadataText: metadataTextGenerator(
-                card.parentId,
-                updatedSchedulingMetadata,
-                card.flag
-            )
-        };
-        const updatedCardAsStorageFormat = generateCardAsStorageFormat(updatedParsedCard);
-
-        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
-
-        if (writeSuccessful) {
-            this.flashcardNote.parsedCards.forEach((value, index, array) => {
-                if (value.id === parsedCardCopy.id) {
-                    array[index] = updatedParsedCard;
-                }
-            });
-        } else {
-            //empty
-        }
-    }
-
     async updateFlashcardContents(flashcardId: string, question: string, answer: string, cardType: CardType = CardType.MultiLineBasic) {
         if (cardType == CardType.MultiLineBasic) {
             await this.flashcardNote.updateCardContents(flashcardId, question, answer, cardType);
