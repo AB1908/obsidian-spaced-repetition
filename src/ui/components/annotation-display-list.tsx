@@ -42,11 +42,13 @@ function AnnotationListItem(props: AnnotationListItemProps) {
                     <span className={"sr-annotation-text"} style={{ flexGrow: 1 }}>
                         {props.annotation.highlight}
                     </span>
-                    <span>
-                        <span className={"no-tests tree-item-flair sr-test-counts"}>
-                            {props.annotation.flashcardCount}
+                    {props.annotation.flashcardCount &&
+                        <span>
+                            <span className={"no-tests tree-item-flair sr-test-counts"}>
+                                {props.annotation.flashcardCount}
+                            </span>
                         </span>
-                    </span>
+                    }
                 </li>
             </Link>
         </div>
@@ -123,7 +125,7 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
                     All
                 </button>
             </div>
-            
+
             <div style={{ marginBottom: '1rem' }}>
                 {filter === 'processed' && (
                     <CategoryFilter
