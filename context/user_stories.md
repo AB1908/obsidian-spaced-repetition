@@ -136,6 +136,26 @@
 
 ---
 
+### As a user, I want a tree-based layout for annotation display so that I can visualize the document structure while reviewing.
+
+**User Story:** Implement a hierarchical tree view for the annotation list.
+
+**Problem:** The current flat list of annotations (even when grouped by section) can feel disconnected from the overall document structure. A tree-based layout would allow users to see annotations nested within their respective chapters and sub-sections, providing better context.
+
+**Current Status:** **Product Scoping Required.** We need to define how the tree handles deep nesting, whether sections can be collapsed/expanded, and how filtering (by color/category) affects the tree visibility (e.g., do we hide empty branches?).
+
+**Tasks (Initial):**
+1.  **UI Research:** Explore existing tree-view implementations in Obsidian (like the File Explorer) for design inspiration.
+2.  **Mock Layout:** Create low-fidelity wireframes for the tree navigation vs. content area.
+3.  **Data Mapping:** Determine how `SourceNote.bookSections` can be transformed into a tree structure without expensive re-computations.
+
+**Priority:** Medium
+**Type:** Feature / UX
+**Est. Effort:** Medium (Scoping) / High (Implementation)
+**Tags:** #feature #ui #ux #tree-view #scoping
+
+---
+
 ## Technical Debt / Long Term
 
 ### As a developer, I want to address technical debt related to React Router to ensure the application remains up-to-date and maintainable.
