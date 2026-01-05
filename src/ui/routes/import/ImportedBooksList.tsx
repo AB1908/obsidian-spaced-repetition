@@ -1,9 +1,8 @@
-import { useNavigate } from "react-router-dom";
 import React from "react";
-import { ReviewBook } from "src/api";
+import { ImportedBook } from "src/ui/routes/import/import-export";
 
 interface ImportedBooksListProps {
-    reviewBooks: ReviewBook[];
+    reviewBooks: ImportedBook[];
     onAddClick: () => void;
     onBookClick: (bookId: string) => void;
 }

@@ -1,13 +1,13 @@
 import { useLoaderData, Link } from "react-router-dom";
 import React from "react";
-import { getBookById, getBookChapters } from "src/api";
+import { getBookChapters, getSourceNoteById } from "src/api";
 
 export async function bookDetailsLoader({ params }: any) {
     const { bookId } = params;
     if (!bookId) {
         throw new Error("Book ID is required.");
     }
-    const bookDetails = await getBookById(bookId);
+    const bookDetails = await getSourceNoteById(bookId);
     const chapters = await getBookChapters(bookId);
 
     return { bookDetails, chapters, bookId };
