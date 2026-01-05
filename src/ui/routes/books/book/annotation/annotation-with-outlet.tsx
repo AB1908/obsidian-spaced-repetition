@@ -1,11 +1,8 @@
-import { Outlet, useLoaderData } from "react-router-dom";
-import React, { useEffect, useRef } from "react";
+import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "react-router-dom";
+import React, { useEffect } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
 import { getAnnotationById } from "src/api";
-import { Link, useLocation, useParams } from "react-router-dom";
-import { setIcon } from "src/infrastructure/obsidian-facade";
-import { Icon } from "src/types/obsidian-icons";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { pathGenerator } from "src/utils/path-generators";
 import {
@@ -13,6 +10,7 @@ import {
     getNextAnnotationIdForSection,
     getPreviousAnnotationIdForSection
 } from "src/ui/routes/books/api";
+import NavigationControl from "src/ui/components/NavigationControl";
 
 export async function annotationLoader({ params }: {
     params: AnnotationLoaderParams
@@ -26,15 +24,20 @@ export async function annotationLoader({ params }: {
 
 export function AnnotationWithOutlet() {
     const annotation = useLoaderData() as annotation;
-    const backButtonRef = useRef<HTMLDivElement>(null);
-    const nextButtonRef = useRef<HTMLDivElement>(null);
     const params = useParams<keyof AnnotationLoaderParams>();
     const location = useLocation();
+    const navigate = useNavigate();
+
     // todo: investigate TS error. This route is not reachable without book id so no idea why params.bookId can be null
     // maybe it is implicit definition on params object
     const previousAnnotationId = getPreviousAnnotationIdForSection(params.bookId, params.sectionId, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(params.bookId, params.sectionId, annotation.id);
 
+    const handleNavigate = (targetAnnotationId: string | null) => {
+        if (targetAnnotationId) {
+            navigate(pathGenerator(location.pathname, params, targetAnnotationId), { replace: true });
+        }
+    };
 
     useEffect(() => {
         if (annotation?.id) {
@@ -42,45 +45,23 @@ export function AnnotationWithOutlet() {
         }
     }, [annotation?.id]);
 
-    useEffect(() => {
-        const back: Icon = "chevron-left";
-        const front: Icon = "chevron-right";
-        // todo: figure out how to fix this
-        if (previousAnnotationId) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            setIcon(backButtonRef.current, back);
-        }
-        if (nextAnnotationId) {
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            setIcon(nextButtonRef.current, front);
-        }
-    }, [location]);
-
     return (
         <>
             <div className={"sr-annotation"}>
-                <div className={"annotation-nav is-clickable"}>
-                    {previousAnnotationId != null &&
-                        <Link to={`${pathGenerator(location.pathname, params, previousAnnotationId)}`} replace className={"annotation-nav is-clickable"}>
-                            <div ref={backButtonRef}>
-                            </div>
-                        </Link>
-                    }
-                </div>
+                <NavigationControl
+                    onClick={() => handleNavigate(previousAnnotationId)}
+                    isDisabled={!previousAnnotationId}
+                    icon="chevron-left"
+                />
                 <div style={{ width: '100%' }}>
                     <HighlightBlock text={annotation.highlight} />
                     {annotation.note && <NoteBlock text={annotation.note} />}
                 </div>
-                <div className={"annotation-nav is-clickable"} >
-                    {nextAnnotationId != null &&
-                        <Link to={`${pathGenerator(location.pathname, params, nextAnnotationId)}`} replace className={"annotation-nav is-clickable"}>
-                            <div ref={nextButtonRef}>
-                            </div>
-                        </Link>
-                    }
-                </div>
+                <NavigationControl
+                    onClick={() => handleNavigate(nextAnnotationId)}
+                    isDisabled={!nextAnnotationId}
+                    icon="chevron-right"
+                />
             </div>
             <Outlet />
         </>

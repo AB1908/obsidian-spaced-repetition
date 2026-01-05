@@ -1,10 +1,13 @@
 import React, { useEffect, useRef } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { type Icon } from "src/types/obsidian-icons";
 import { useAnnotationEditor } from "src/ui/routes/import/useAnnotationEditor";
 import { getAnnotationById } from "src/api";
+import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from "src/ui/routes/books/api";
+import NavigationControl from "src/ui/components/NavigationControl";
+import { pathGenerator } from "src/utils/path-generators";
 
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
@@ -14,6 +17,7 @@ export async function personalNoteLoader({ params }: any) {
 
 export function PersonalNotePage() {
     const { annotation, bookId, sectionId } = useLoaderData() as { annotation: any, bookId: string, sectionId: string };
+    const navigate = useNavigate();
     const {
         personalNote,
         setPersonalNote,
@@ -34,6 +38,16 @@ export function PersonalNotePage() {
         useRef<HTMLDivElement>(null),
         useRef<HTMLDivElement>(null),
     ];
+
+    const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, sectionId, annotation.id);
+    const nextAnnotationId = getNextAnnotationIdForSection(bookId, sectionId, annotation.id);
+
+    const handleNavigate = (targetAnnotationId: string | null) => {
+        if (targetAnnotationId) {
+            // Re-using the same path generation logic, assuming the URL structure is compatible
+            navigate(pathGenerator(window.location.pathname, { bookId, sectionId, annotationId: targetAnnotationId }, targetAnnotationId), { replace: true });
+        }
+    };
 
     useEffect(() => {
         const icons: Icon[] = ["lightbulb", "quote", "whole-word", "sticky-note", "star", "asterisk"];
@@ -65,9 +79,21 @@ export function PersonalNotePage() {
                     )}
                     <h2>Edit Personal Note</h2>
                 </div>
-                <button className="mod-warning" onClick={handleDelete} title="Delete Annotation">
-                    <div ref={deleteButtonRef} />
-                </button>
+                <div style={{display: "flex", gap: "10px"}}>
+                    <NavigationControl
+                        onClick={() => handleNavigate(previousAnnotationId)}
+                        isDisabled={!previousAnnotationId}
+                        icon="chevron-left"
+                    />
+                    <NavigationControl
+                        onClick={() => handleNavigate(nextAnnotationId)}
+                        isDisabled={!nextAnnotationId}
+                        icon="chevron-right"
+                    />
+                    <button className="mod-warning" onClick={handleDelete} title="Delete Annotation">
+                        <div ref={deleteButtonRef} />
+                    </button>
+                </div>
             </div>
 
             <HighlightBlock text={annotation.highlight} />
