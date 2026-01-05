@@ -1,9 +1,33 @@
 import React from "react";
 import { render, screen, fireEvent, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
+import { createDiskMockFromFixtures } from "../../helpers";
 import { PersonalNotePage } from "src/ui/routes/import/personal-note";
 import * as obsidianFacade from "src/infrastructure/obsidian-facade";
+import { initializeTestPlugin } from "../../plugin-helper";
 import * as api from "src/api";
+
+jest.mock("src/infrastructure/disk", () => {
+    const mock = createDiskMockFromFixtures([
+        "createFlashcardsFileForBook.json",
+        "generateFlashcardsFileNameAndPath_2025-12-16T20-02-00_s93m1.json",
+        "getAnnotationFilePath_2025-13-12T17-25-00_si3m1.json",
+        "getMetadataForFile_2025-12-07T19-37-22-036Z_kzjn5y.json",
+        "getFileContents_2025-12-07T19-37-21-944Z_bcx627.json",
+        "getFileContents_2025-12-07T19-37-22-044Z_radb6f.json",
+        "filePathsWithTag_2025-12-07T19-37-20-520Z_kx3kvy.json",
+        "fileTags_2025-12-07T19-37-20-516Z_u0wrbc.json",
+        "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
+        "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
+        "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
+        "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
+        "updateCardOnDisk_2025-12-25T10-00-02_ccccc.json",
+        "updateCardOnDisk_missing_case.json",
+        "deleteCardOnDisk.json",
+        "writeCardToDisk.json",
+    ]);
+    return mock;
+});
 
 // Mock react-router-dom hooks
 jest.mock("react-router-dom", () => ({
@@ -34,11 +58,16 @@ const setIconMock = jest.spyOn(obsidianFacade, "setIcon");
 
 describe("PersonalNotePage Component", () => {
     const mockNavigate = jest.fn();
-    const mockBookId = "book123";
-    const mockAnnotationId = "anno456";
+    let mockBookId: string;
+    let mockAnnotationId: string;
     let confirmSpy: jest.SpyInstance;
 
-    beforeEach(() => {
+    beforeEach(async () => {
+        const plugin = await initializeTestPlugin();
+        const book = plugin.sourceNoteIndex.getAllSourceNotes()[0];
+        mockBookId = book.id;
+        mockAnnotationId = book.annotations()[0].id;
+
         useLoaderDataMock.mockClear();
         useParamsMock.mockClear();
         useNavigateMock.mockClear();
@@ -99,12 +128,22 @@ describe("PersonalNotePage Component", () => {
                       Edit Personal Note
                     </h2>
                   </div>
-                  <button
-                    class="mod-warning"
-                    title="Delete Annotation"
+                  <div
+                    style="display: flex; gap: 10px;"
                   >
-                    <div />
-                  </button>
+                    <div
+                      class="annotation-nav"
+                    />
+                    <div
+                      class="annotation-nav"
+                    />
+                    <button
+                      class="mod-warning"
+                      title="Delete Annotation"
+                    >
+                      <div />
+                    </button>
+                  </div>
                 </div>
                 <blockquote
                   class="sr-blockquote-annotation"
@@ -224,12 +263,22 @@ describe("PersonalNotePage Component", () => {
                       Edit Personal Note
                     </h2>
                   </div>
-                  <button
-                    class="mod-warning"
-                    title="Delete Annotation"
+                  <div
+                    style="display: flex; gap: 10px;"
                   >
-                    <div />
-                  </button>
+                    <div
+                      class="annotation-nav"
+                    />
+                    <div
+                      class="annotation-nav"
+                    />
+                    <button
+                      class="mod-warning"
+                      title="Delete Annotation"
+                    >
+                      <div />
+                    </button>
+                  </div>
                 </div>
                 <blockquote
                   class="sr-blockquote-annotation"
