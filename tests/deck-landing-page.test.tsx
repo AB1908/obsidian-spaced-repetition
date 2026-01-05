@@ -24,7 +24,7 @@ import { setupNanoidMock, resetNanoidMock } from "./nanoid-mock";
 setupNanoidMock();
 
 import { DeckLandingPage, BookButtons, deckLoader } from 'src/ui/routes/books/book';
-import { ChapterList, chapterLoader } from 'src/ui/routes/books/book/chapter-list';
+import { ChapterList, chapterLoader } from 'src/ui/components/ChapterList';
 import { setPlugin } from "src/api";
 import { createMockPlugin } from "./__mocks__/plugin";
 import { Index } from 'src/data/models';
