@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { type Icon } from "src/types/obsidian-icons";
@@ -16,8 +16,10 @@ export async function personalNoteLoader({ params }: any) {
 }
 
 export function PersonalNotePage() {
-    const { annotation, bookId, sectionId } = useLoaderData() as { annotation: any, bookId: string, sectionId: string };
+    const { annotation, bookId } = useLoaderData() as { annotation: any, bookId: string };
     const navigate = useNavigate();
+    const location = useLocation();
+    const params = useParams();
     const {
         personalNote,
         setPersonalNote,
@@ -39,13 +41,14 @@ export function PersonalNotePage() {
         useRef<HTMLDivElement>(null),
     ];
 
-    const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, sectionId, annotation.id);
-    const nextAnnotationId = getNextAnnotationIdForSection(bookId, sectionId, annotation.id);
+    const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, params.sectionId, annotation.id);
+    const nextAnnotationId = getNextAnnotationIdForSection(bookId, params.sectionId, annotation.id);
+    console.log(previousAnnotationId, nextAnnotationId);
 
     const handleNavigate = (targetAnnotationId: string | null) => {
         if (targetAnnotationId) {
             // Re-using the same path generation logic, assuming the URL structure is compatible
-            navigate(pathGenerator(window.location.pathname, { bookId, sectionId, annotationId: targetAnnotationId }, targetAnnotationId), { replace: true });
+            navigate(pathGenerator(location.pathname, params, targetAnnotationId), { replace: true });
         }
     };
 
