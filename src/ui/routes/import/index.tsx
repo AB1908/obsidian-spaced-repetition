@@ -16,19 +16,19 @@ export async function bookDetailsLoader({ params }: any) {
 export function BookDetailsPage() {
     const { bookDetails, chapters, bookId } = useLoaderData() as { bookDetails: any, chapters: any[], bookId: string };
 
-    const calculateProgress = () => {
-        if (!bookDetails || !bookDetails.counts) return "N/A";
-        const { annotations } = bookDetails.counts;
-        const totalAnnotations = annotations.withFlashcards + annotations.withoutFlashcards;
-        if (totalAnnotations === 0) return "No annotations yet.";
-        const progress = (annotations.withFlashcards / totalAnnotations) * 100;
-        return `${progress.toFixed(0)}% of annotations processed (${annotations.withFlashcards}/${totalAnnotations})`;
-    };
+    // const calculateProgress = () => {
+    //     if (!bookDetails || !bookDetails.counts) return "N/A";
+    //     const { annotations } = bookDetails.counts;
+    //     const totalAnnotations = annotations.withFlashcards + annotations.withoutFlashcards;
+    //     if (totalAnnotations === 0) return "No annotations yet.";
+    //     const progress = (annotations.withFlashcards / totalAnnotations) * 100;
+    //     return `${progress.toFixed(0)}% of annotations processed (${annotations.withFlashcards}/${totalAnnotations})`;
+    // };
 
     return (
         <div className="sr-book-details-page">
             <h2>{bookDetails.name || "Unknown Book"} Details</h2>
-            <p><strong>Progress:</strong> {calculateProgress()}</p>
+            {/* <p><strong>Progress:</strong> {calculateProgress()}</p> */}
 
             <h3>Chapters</h3>
             {chapters && chapters.length > 0 ? (
