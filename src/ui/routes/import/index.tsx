@@ -27,7 +27,6 @@ export function BookDetailsPage() {
 
     return (
         <div className="sr-book-details-page">
-            <h2>{bookDetails.name || "Unknown Book"} Details</h2>
             {/* <p><strong>Progress:</strong> {calculateProgress()}</p> */}
 
             <h3>Chapters</h3>
