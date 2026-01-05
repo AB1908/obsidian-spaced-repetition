@@ -11,7 +11,7 @@ import { CardBack, CardFront} from "src/ui/components/flashcard";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { Icon } from "src/types/obsidian-icons";
 
-export const USE_ACTUAL_BACKEND = true;
+export const USE_JSON_MOCK = false;
 
 export interface FrontendFlashcard {
     delayBeforeReview: number;
@@ -35,7 +35,7 @@ interface ReviewLoaderParams {
 // And then redirect myself to that flashcard
 // So that I can subsequently call getFlashcardById() using the flashcardId from the params
 export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
-    if (USE_ACTUAL_BACKEND) {
+    if (!USE_JSON_MOCK) {
         let flashcardId = null;
         if (params.flashcardId == null) {
             // todo: handle no cards to be reviewed case
@@ -54,12 +54,16 @@ export async function reviewLoader({params}: {params: ReviewLoaderParams}) {
             const flashcardId = (await response.json()).first;
             return redirect(`${flashcardId}`);
         }
-        return (await (await fetch(`http://localhost:3000/review/${params.bookId}`)).json()).flashcards.filter((t: FrontendFlashcard) => t.id === params.flashcardId)[0];
+        const response = await fetch(`http://localhost:3000/flashcards/${params.flashcardId}`);
+        return await response.json();
     }
 }
 
 export function ReviewDeck() {
     const currentCard = useLoaderData() as FrontendFlashcard;
+    if (!currentCard) {
+        return <div>No cards to review!</div>
+    }
     const [isQuestion, setIsQuestion] = useState(true);
     const params = useParams<keyof ReviewLoaderParams>();
     const navigate = useNavigate();

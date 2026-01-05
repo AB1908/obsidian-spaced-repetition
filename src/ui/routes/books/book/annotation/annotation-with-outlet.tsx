@@ -1,7 +1,7 @@
 import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "react-router-dom";
 import React, { useEffect } from "react";
 import type { annotation } from "src/data/models/annotations";
-import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
+import { USE_JSON_MOCK } from "src/ui/routes/books/review";
 import { getAnnotationById } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { pathGenerator } from "src/utils/path-generators";
@@ -15,11 +15,10 @@ import NavigationControl from "src/ui/components/NavigationControl";
 export async function annotationLoader({ params }: {
     params: AnnotationLoaderParams
 }) {
-    // todo: use redirect
-    if (USE_ACTUAL_BACKEND) {
+    if (!USE_JSON_MOCK) {
         return getAnnotationById(params.annotationId, params.bookId);
     } else
-        return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
+        return fetch(`http://localhost:3000/annotations/${params.annotationId}`);
 }
 
 export function AnnotationWithOutlet() {

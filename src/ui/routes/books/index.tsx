@@ -5,16 +5,16 @@ import { Link } from "react-router-dom";
 import { CardCount } from "src/ui/components/card-counts";
 import { Icon } from "src/types/obsidian-icons";
 import { getSourcesForReview, ReviewBook, FlashCount } from "src/api";
-import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
+import { USE_JSON_MOCK } from "src/ui/routes/books/review";
 import { maturityCounts } from "src/data/models/flashcard";
 
 // TODO: Fix types
 // TODO: use more realistic data??
 export function notesLoader() {
-    if (USE_ACTUAL_BACKEND) {
+    if (!USE_JSON_MOCK) {
         return getSourcesForReview();
     } else {
-        return fetch("http://localhost:3000/bookReview");
+        return fetch("http://localhost:3000/books");
     }
 }
 

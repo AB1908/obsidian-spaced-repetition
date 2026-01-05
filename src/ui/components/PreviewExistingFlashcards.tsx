@@ -1,11 +1,11 @@
 import { Form, Link, useParams, useLoaderData } from "react-router-dom";
 import React, { useEffect, useRef } from "react";
-import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
+import { USE_JSON_MOCK } from "src/ui/routes/books/review";
 import { deleteFlashcard, getFlashcardsForAnnotation } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
 import { Icon } from "src/types/obsidian-icons";
 import { setIcon } from "src/infrastructure/obsidian-facade";
-import { type AnnotationsLoaderParams } from "src/ui/routes/books/AnnotationListPage";
+import { type AnnotationsLoaderParams } from "src/ui/routes/books/book/annotation/AnnotationListPage";
 
 interface HighlightParams {
     bookId: string;
@@ -14,12 +14,11 @@ interface HighlightParams {
 }
 
 export function highlightLoader({params}: {params: HighlightParams}) {
-    // todo: use redirect
-    if (USE_ACTUAL_BACKEND) {
+    if (!USE_JSON_MOCK) {
         return getFlashcardsForAnnotation(params.annotationId, params.bookId);
     }
     else {
-        return fetch(`http://localhost:3000/flashcardsForAnnotation/${params.annotationId}`);
+        return fetch(`http://localhost:3000/flashcards?parentId=${params.annotationId}`);
     }
 }
 

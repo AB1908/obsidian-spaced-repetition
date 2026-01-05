@@ -1,0 +1,46 @@
+{
+  "books": [
+    { "id": "book-1", "name": "Book 1" },
+    { "id": "book-2", "name": "Book 2" }
+  ],
+  "chapters": [
+    { "id": "chapter-1", "name": "Chapter 1", "bookId": "book-1" },
+    { "id": "chapter-2", "name": "Chapter 2", "bookId": "book-1" }
+  ],
+  "annotations": [
+    { "id": "annotation-1", "text": "Annotation 1", "chapterId": "chapter-1" },
+    { "id": "annotation-2", "text": "Annotation 2", "chapterId": "chapter-1" }
+  ],
+  "flashcards": [
+      {
+        "id": "card-1",
+        "questionText": "Question 1",
+        "answerText": "Answer 1",
+        "context": "Context 1",
+        "cardType": 1,
+        "parentId": "annotation-1",
+        "interval": 1,
+        "ease": 250,
+        "delayBeforeReview": 0,
+        "bookId": "book-1"
+      },
+      {
+        "id": "card-2",
+        "questionText": "Question 2",
+        "answerText": "Answer 2",
+        "context": "Context 2",
+        "cardType": 1,
+        "parentId": "annotation-2",
+        "interval": 1,
+        "ease": 250,
+        "delayBeforeReview": 0,
+        "bookId": "book-1"
+      }
+  ],
+  "review": {
+    "book-1": {
+        "first": "card-1",
+        "flashcards": [ "card-1", "card-2" ]
+    }
+  }
+}

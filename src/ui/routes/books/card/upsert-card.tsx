@@ -3,7 +3,7 @@ import { useLoaderData } from "react-router";
 import { DefaultCardForm } from "src/ui/components/card-creation";
 import { getFlashcardById } from "src/api";
 import { Flashcard } from "src/data/models/flashcard";
-import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
+import { USE_JSON_MOCK } from "src/ui/routes/books/review";
 import { useModalTitle } from "src/ui/modals/ModalTitleContext";
 import { truncate } from "src/utils/text-helpers";
 
@@ -18,7 +18,7 @@ export function cardLoader({params}: {params: CardLoaderParams}) {
     if (params.flashcardId === undefined) {
         return null;
     }
-    if (USE_ACTUAL_BACKEND) {
+    if (!USE_JSON_MOCK) {
         return getFlashcardById(params.flashcardId, params.bookId);
     } else {
         return fetch(`http://localhost:3000/flashcards/${params.flashcardId}`);

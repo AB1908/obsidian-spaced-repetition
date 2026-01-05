@@ -1,7 +1,7 @@
 import React from "react";
 import { useLoaderData } from "react-router";
 import { Link } from "react-router-dom";
-import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
+import { USE_JSON_MOCK } from "src/ui/routes/books/review";
 import { getBookChapters } from "src/api";
 
 export interface ChapterLoaderParams {
@@ -9,11 +9,11 @@ export interface ChapterLoaderParams {
 }
 
 export function chapterLoader({ params }: { params: ChapterLoaderParams }) {
-    if (USE_ACTUAL_BACKEND) {
+    if (!USE_JSON_MOCK) {
         return getBookChapters(params.bookId);
     } else {
         // This else block might need adjustment depending on the mock server setup
-        return fetch(`http://localhost:3000/books/${params.bookId}/chapters`);
+        return fetch(`http://localhost:3000/chapters?bookId=${params.bookId}`);
     }
 }
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { Link, Outlet, useNavigate, useLoaderData } from "react-router-dom";
 import { DeckCounts } from "src/ui/routes/books";
-import { USE_ACTUAL_BACKEND } from "src/ui/routes/books/review";
+import { USE_JSON_MOCK } from "src/ui/routes/books/review";
 import { frontEndBook, getBookById, resetBookReviewState } from "src/api";
 
 interface DeckLoaderParams {
@@ -9,10 +9,14 @@ interface DeckLoaderParams {
 }
 
 export function deckLoader({params}: {params: DeckLoaderParams}) {
-    console.log("side effect")
-    // warn: performing side effect!
-    resetBookReviewState(params.bookId);
-    return getBookById(params.bookId);
+    if (!USE_JSON_MOCK) {
+        // warn: performing side effect!
+        resetBookReviewState(params.bookId);
+        return getBookById(params.bookId);
+    } else {
+        // TODO: handle side effect
+        return fetch(`http://localhost:3000/books/${params.bookId}`);
+    }
 }
 
 export function BookButtons() {
