@@ -4,7 +4,6 @@ import { Tags } from "src/ui/routes/tags";
 import { Notes, notesLoader } from "src/ui/routes/books";
 import { ImportDashboard, importDashboardLoader } from "src/ui/routes/import/import-export";
 import { BookButtons, DeckLandingPage, deckLoader } from "src/ui/routes/books/book";
-import { ChapterList, chapterLoader } from "src/ui/routes/books/book/chapter-list";
 import { ReviewDeck, reviewLoader } from "src/ui/routes/books/review";
 import { cardLoader, UpsertCard } from "src/ui/routes/books/card/upsert-card";
 import { EditCard, editCardAction } from "src/ui/routes/books/card/edit-card";
@@ -14,12 +13,13 @@ import {
     deleteFlashcardAction,
     highlightLoader,
     PreviewExistingFlashcards
-} from "src/ui/routes/books/card/preview-existing-flashcards";
-import { ChooseCardType } from "src/ui/routes/books/card/choose-card-type";
+} from "src/ui/components/PreviewExistingFlashcards";
+import { ChooseCardType } from "src/ui/components/ChooseCardType";
 import React from "react";
 import { BookDetailsPage, bookDetailsLoader } from "src/ui/routes/import/index";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
 import { personalNoteLoader, PersonalNotePage } from "./import/personal-note";
+import { ChapterList, chapterLoader } from "src/ui/components/ChapterList";
 
 export const children: RouteObject[] = [
     {
