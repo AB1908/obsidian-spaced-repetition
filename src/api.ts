@@ -328,6 +328,46 @@ export async function updateBookAnnotationsAndFrontmatter(
 
 
 
+export function getPreviousAnnotationId(bookId: string, blockId: string, sectionId?: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const index = book.bookSections.findIndex(t => t.id === blockId);
+    if (index === -1) return null;
+
+    for (let i = index - 1; i >= 0; i--) {
+        const item = book.bookSections[i];
+        if (isHeading(item)) {
+            if (sectionId) return null;
+            continue;
+        }
+        if (isAnnotationOrParagraph(item)) {
+            const ann = item as (annotation | paragraph);
+            if (ann.deleted) continue;
+            return ann.id;
+        }
+    }
+    return null;
+}
+
+export function getNextAnnotationId(bookId: string, blockId: string, sectionId?: string) {
+    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const index = book.bookSections.findIndex(t => t.id === blockId);
+    if (index === -1) return null;
+
+    for (let i = index + 1; i < book.bookSections.length; i++) {
+        const item = book.bookSections[i];
+        if (isHeading(item)) {
+            if (sectionId) return null;
+            continue;
+        }
+        if (isAnnotationOrParagraph(item)) {
+            const ann = item as (annotation | paragraph);
+            if (ann.deleted) continue;
+            return ann.id;
+        }
+    }
+    return null;
+}
+
 export async function getUnimportedMrExptFiles(): Promise<string[]> {
     const allMrExptFiles = findFilesByExtension("mrexpt");
     const importedBooks = await getImportedBooks();
