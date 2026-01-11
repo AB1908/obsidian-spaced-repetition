@@ -14,6 +14,8 @@ window.HTMLElement.prototype.scrollIntoView = mockScrollIntoView;
 jest.mock("../src/api", () => ({
     getAnnotationById: jest.fn(),
     getAnnotationsForSection: jest.fn(),
+    getPreviousAnnotationId: jest.fn(),
+    getNextAnnotationId: jest.fn()
 }));
 
 // Mock useLoaderData since we are rendering components directly

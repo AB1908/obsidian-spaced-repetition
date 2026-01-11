@@ -84,25 +84,21 @@ describe("ImportDashboard Component", () => {
     });
 
     it("should render the list view with imported books and match snapshot", () => {
-        const mockReviewBooks: ReviewBook[] = [
+        const mockImportedBooks = [
             {
                 id: "book1",
                 name: "Test Book One",
-                pendingFlashcards: 5,
-                annotationCoverage: 0.5,
-                flashcardProgress: { new: 1, learning: 2, mature: 2 },
+                path: "path1.md",
             },
             {
                 id: "book2",
                 name: "Test Book Two",
-                pendingFlashcards: 0,
-                annotationCoverage: 1,
-                flashcardProgress: { new: 0, learning: 0, mature: 5 },
+                path: "path2.md",
             },
         ];
         useLoaderDataMock.mockReturnValue({
-            reviewBooks: mockReviewBooks,
-            importedBooks: [],
+            reviewBooks: [], // Kept for safety if other components use it, but actual component uses importedBooks
+            importedBooks: mockImportedBooks,
             unimportedFiles: [],
         });
 
