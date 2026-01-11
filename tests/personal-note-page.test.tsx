@@ -12,6 +12,7 @@ jest.mock('react-router-dom', () => ({
     useLoaderData: () => mockUseLoaderData(),
     useNavigate: () => mockUseNavigate,
     useParams: () => ({ bookId: 'book-1', annotationId: '123' }),
+    useLocation: () => ({ pathname: '/mock-path' }),
 }));
 
 jest.mock('src/api', () => ({
