@@ -64,3 +64,7 @@ export function parseAnnotations(text: string): annotation {
 
     return parsedAnnotations[0];
 }
+
+export function isAnnotationProcessed(ann: annotation): boolean {
+    return ann.category !== undefined && ann.category !== null;
+}
