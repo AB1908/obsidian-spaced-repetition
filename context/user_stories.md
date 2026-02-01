@@ -178,7 +178,45 @@
 
 ---
 
-## Completed
+## User Story: Decouple MoonReader Parsing from Sync Logic
+
+**Status:** Proposed
+**Priority:** Medium
+**Related File:** `src/data/import/moonreader.ts`
+
+**Problem Statement:**
+The `parseMoonReaderExport` function currently performs two distinct tasks:
+1.  **Parsing:** Transforming raw `.mrexpt` string data into structured `MoonReaderAnnotation` objects.
+2.  **Filtering/Syncing:** Using a `sinceId` parameter to filter results, returning only "new" annotations.
+
+This violates the Single Responsibility Principle, making the code harder to test, less predictable, and obscuring the intent of the "incremental sync" feature.
+
+**Proposed Refactor (Strategy 1: Explicit Filtering):**
+1.  **Simplify Parser:** Remove the `sinceId` parameter from `parseMoonReaderExport`. It should return all valid annotations found in the string.
+2.  **Extract Filtering:** Create a new utility function (e.g., `filterAnnotationsSinceId`) that takes an array of annotations and an ID, returning only those with a higher ID.
+3.  **Update Callers:** Update `src/data/models/sourceNote.ts` to call the parser first, then explicitly apply the filter.
+
+**Future Considerations:**
+*   **Stateful Sync:** As the sync logic grows (e.g., handling deleted annotations or modified notes), we should consider a dedicated `SyncEngine` or `MoonReaderSync` class to manage the state of what has already been imported.
+
+**Testing Plan (Currently Missing):**
+New tests must be added to `tests/moonreader_parser.test.ts` or a new test file:
+*   **Parser Purity:** Verify that `parseMoonReaderExport` always returns the full set of annotations regardless of outside state.
+*   **Filtering Logic Unit Tests:**
+    *   **Basic Filtering:** Given IDs `[10, 11, 12]`, filtering since `10` should return `[11, 12]`.
+    *   **Boundary - All:** Since `null` or `0` should return all.
+    *   **Boundary - None:** Since an ID higher than any present should return `[]`.
+    *   **Robustness:** Handle non-numeric ID strings gracefully (return all or throw explicit error).
+
+**Acceptance Criteria:**
+- [ ] `parseMoonReaderExport` signature only accepts `content: string`.
+- [ ] Filtering logic is moved to a separate, named function.
+- [ ] Unit tests cover the incremental sync filtering logic.
+- [ ] No regression in the existing `SourceNote` sync functionality.
+
+---
+
+## Technical Debt / Long Term
 
 ### As a developer, I want to fix a failing test so that I can ensure the quality of the codebase.
 
