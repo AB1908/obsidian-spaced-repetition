@@ -1,3 +1,5 @@
+Inspect tsc output and how clean it is and create roadmap task to slowly fix small bugs detected by tsc so it can be used as linter for future refactors
+
 # Gemini Workflow & Context
 
 This document serves as the primary context for Gemini's interaction with this repository. It outlines operational principles to ensure smooth workflows and tracks the current development strategy.
