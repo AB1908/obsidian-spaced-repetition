@@ -61,8 +61,8 @@ To resume this session after quitting, you would typically:
 
 1.  **Restart the Gemini CLI:** Start the CLI as you normally would.
 2.  **Navigate to the project directory:** Ensure your terminal is in `D:\GitHub\obsidian-spaced-repetition`.
-3.  **Provide Context:** You can mention that you were working on the modal breadcrumb feature and ask me to reference the `context/plan_modal_breadcrumb.md` file. I retain information about our previous conversations, but explicitly pointing to the plan file ensures I can quickly re-align.
+3.  **Provide Context:** You can mention that you were working on the modal breadcrumb feature and ask me to reference the `docs/context/plan_modal_breadcrumb.md` file. I retain information about our previous conversations, but explicitly pointing to the plan file ensures I can quickly re-align.
 4.  **Confirm `npm run dev` status:** Inform me if `npm run dev` is already running or if I need to start it.
 
 Example prompt to resume:
-"Hello. I'm resuming our session. We were working on the modal breadcrumb title. Please refer to `context/plan_modal_breadcrumb.md` for the plan. `npm run dev` is currently running."
+"Hello. I'm resuming our session. We were working on the modal breadcrumb title. Please refer to `docs/context/plan_modal_breadcrumb.md` for the plan. `npm run dev` is currently running."

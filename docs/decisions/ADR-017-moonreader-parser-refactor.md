@@ -29,4 +29,4 @@ We will refactor the MoonReader import logic to separate parsing from filtering.
 - **Options Object:** Considered keeping the filter inside the parser but using a named `options` object. Rejected in favor of full decoupling to simplify the parser's internal loop.
 
 ## References
-- User Story: "Decouple MoonReader Parsing from Sync Logic" in `context/user_stories.md`.
+- User Story: "Decouple MoonReader Parsing from Sync Logic" in `docs/features/user_stories.md`.
