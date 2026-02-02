@@ -1,0 +1,6 @@
+{
+    "method": "getFileContents",
+    "capturedAt": "2026-01-24T12:00:00.000Z",
+    "input": "test-book-with-annotations.md",
+    "output": "# Test Book\n\n> [!note] 123\n> Highlight 1\n> ***\n> Note 1\n\nSome paragraph text.\n\n> [!note] 456\n> Highlight 2\n> ***\n> Note 2\n"
+}

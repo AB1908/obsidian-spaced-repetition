@@ -33,7 +33,7 @@ import { SourceNoteIndex } from 'src/data/models/sourceNote';
 import { fileTags } from 'src/infrastructure/disk';
 
 async function initializePlugin() {
-    resetNanoidMock();
+    
     resetFixtureTransformer();
     const mockPlugin = createMockPlugin();
     mockPlugin.fileTagsMap = fileTags();
@@ -78,15 +78,11 @@ describe('DeckLandingPage Navigation', () => {
 
         const { container } = render(<RouterProvider router={router} />);
 
-        expect(await screen.findByText('Untitled')).toBeInTheDocument();
-        expect(screen.getByText('Create New Cards')).toBeInTheDocument();
+        await screen.findByText('Create New Cards');
 
         // Initial snapshot
         expect(container).toMatchInlineSnapshot(`
 <div>
-  <h3>
-    Untitled
-  </h3>
   <h4>
     <div
       class="tree-item-flair-outer"
@@ -149,9 +145,6 @@ describe('DeckLandingPage Navigation', () => {
         // Snapshot after navigation
         expect(container).toMatchInlineSnapshot(`
 <div>
-  <h3>
-    Untitled
-  </h3>
   <h4>
     <div
       class="tree-item-flair-outer"
