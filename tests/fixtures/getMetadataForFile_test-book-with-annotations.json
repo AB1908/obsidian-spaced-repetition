@@ -1,0 +1,16 @@
+{
+    "method": "getMetadataForFile",
+    "capturedAt": "2026-01-24T12:00:00.000Z",
+    "input": "test-book-with-annotations.md",
+    "output": {
+        "headings": [
+            { "heading": "Test Book", "level": 1 }
+        ],
+        "sections": [
+            { "type": "heading", "position": { "start": { "line": 0 }, "end": { "line": 0 } } },
+            { "type": "callout", "id": "123", "position": { "start": { "line": 2 }, "end": { "line": 5 } } },
+            { "type": "paragraph", "position": { "start": { "line": 7 }, "end": { "line": 7 } } },
+            { "type": "callout", "id": "456", "position": { "start": { "line": 9 }, "end": { "line": 12 } } }
+        ]
+    }
+}
