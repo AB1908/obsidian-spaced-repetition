@@ -40,6 +40,52 @@ Upon starting a session, the Agent MUST:
     - **`FlashcardNote` (`src/data/models/flashcard.ts`):** Handles the physical storage and CRUD operations for flashcards in a markdown file.
 - **Rule:** `api.ts` should act as a thin facade/orchestrator. It should delegate complex operations to these models. It should *not* directly import `disk.ts` methods if a model can handle it.
 
+## Documentation & Git Workflow
+
+### Philosophy
+**"Commits tell WHAT changed. Documentation tells WHY."**
+- **Git History:** Concise, atomic summaries of changes (Conventional Commits).
+- **Documentation:** Context, reasoning, decisions, and future plans. Markdown is searchable and evolves with the code.
+
+### Documentation Structure
+- `docs/context/`: Work-in-progress notes, goals, and checklists for active features.
+- `docs/decisions/`: Architecture Decision Records (ADRs) for significant technical choices.
+- `docs/features/`: User/Developer guides for completed features.
+- `docs/todo/`: Organized, prioritized TODO lists (not scattered in code comments).
+- `CHANGELOG.md`: User-facing record of additions, changes, and fixes.
+
+### Feature Lifecycle Workflow
+
+#### 1. Start
+- Create a feature branch: `git checkout -b feature/<name>`.
+- Create a context file `docs/context/<name>.md` stating the Goal, Plan, and Current Status.
+
+#### 2. Work
+- Commit freely with WIP messages (`wip: ...`, `fix: ...`).
+- **Critical:** If a major decision is made, write an ADR in `docs/decisions/ADR-XXX-<title>.md`.
+
+#### 3. Cleanup (Before Merging)
+**STOP:** Before merging to `main`, you MUST clean up.
+1.  **Review Commits:** `git log --oneline main..HEAD`.
+2.  **Squash Strategy:** Group WIP commits into meaningful logical units (e.g., "feat: ...", "docs: ...").
+3.  **Update Documentation:**
+    - Update `CHANGELOG.md` with "Added", "Changed", "Technical" sections.
+    - Convert `docs/context/<name>.md` to `docs/features/<name>.md` (or archive if not a user feature).
+    - Update `docs/todo/` if new tasks emerged.
+4.  **Execute Squash:** Use `git rebase -i main`.
+
+#### 4. Merge
+- Checkout main: `git checkout main`.
+- Merge with no-ff: `git merge feature/<name> --no-ff -m "feat: <description>..."`.
+- The merge commit message should reference the relevant documentation files.
+
+### End-of-Feature Checklist
+When asked to "wrap up" or "finish" a feature, specifically perform these actions:
+1.  **Analyze History:** Check `git log main..HEAD` to determine squash candidates.
+2.  **Propose Plan:** Show the user the intended squash structure and documentation updates.
+3.  **Draft Docs:** Create/Update the Markdown files (`CHANGELOG.md`, `docs/features/...`).
+4.  **Perform Git Ops:** Rebase/Squash, then Merge.
+
 ---
 
 ## UI Development with Mock Server
