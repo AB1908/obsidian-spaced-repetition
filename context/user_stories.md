@@ -2,6 +2,27 @@
 
 ## Active / Planned
 
+### (EPIC) As a developer, I want to refactor the data model to support multiple source types so that the application is scalable and maintainable.
+
+**Metadata:**
+- **Priority:** High
+- **Related Files:** `docs/decisions/ADR-018-source-model-architecture.md`, `src/data/models/`
+- **Tags:** #epic, #architecture, #refactor
+- **Effort/Scale:** Epic
+
+**Context:**
+- **Problem:** Our core data model is not scalable. The `SourceNote` class is doing too much, making it hard to add support for new source types like plain Markdown files.
+- **Solution:** Implement the new architecture defined in ADR-018, refactoring the codebase to use the `Source`, `ISourceStrategy`, and `AnnotationsNote` models.
+
+**Execution (Sub-Stories):**
+- `refactor: Rename SourceNote to AnnotationsNote`
+- `feat: Create generic Source class and ISourceStrategy interface`
+- `feat: Implement MoonReaderStrategy for sync logic`
+- `refactor: Update API layer to use the new Source/AnnotationsNote models`
+- `feat: Implement MarkdownStrategy for extraction logic`
+
+---
+
 ### As a developer, I want to associate annotations with their parent sections in the model to decouple UI logic from routing.
 
 **User Story:** Add `sectionId` to the `annotation` model and inject it during parsing.
