@@ -1,6 +1,54 @@
 #!/bin/sh
+
+# Check 1: Ensure .worktrees/ is in .gitignore
 if ! grep -q '^\.worktrees/$' .gitignore; then
   echo 'Error: Your .gitignore is missing the ".worktrees/" entry.' >&2
   echo 'Please add ".worktrees/" to your .gitignore file to prevent committing worktree data.' >&2
   exit 1
 fi
+
+# Check 2: Ensure commit has been approved
+APPROVAL_FILE=".commit-approval"
+
+if [ ! -f "$APPROVAL_FILE" ]; then
+  echo "" >&2
+  echo "❌ ERROR: No commit approval found" >&2
+  echo "" >&2
+  echo "This project requires explicit approval before committing." >&2
+  echo "" >&2
+  echo "Workflow:" >&2
+  echo "  1. Claude drafts commit message (1-2 lines)" >&2
+  echo "  2. Claude shows you message + files" >&2
+  echo "  3. You approve or request changes" >&2
+  echo "  4. Claude creates .commit-approval file" >&2
+  echo "  5. Claude commits (this hook validates)" >&2
+  echo "" >&2
+  echo "See CLAUDE.md for complete workflow documentation." >&2
+  echo "" >&2
+  echo "To bypass (emergencies only): git commit --no-verify" >&2
+  exit 1
+fi
+
+# Check if approval file is fresh (< 5 minutes old)
+if [ "$(uname)" = "Darwin" ]; then
+  # macOS
+  FILE_TIME=$(stat -f %m "$APPROVAL_FILE")
+else
+  # Linux
+  FILE_TIME=$(stat -c %Y "$APPROVAL_FILE")
+fi
+
+CURRENT_TIME=$(date +%s)
+AGE=$((CURRENT_TIME - FILE_TIME))
+
+if [ $AGE -gt 300 ]; then
+  echo "" >&2
+  echo "❌ ERROR: Approval file is stale" >&2
+  echo "" >&2
+  echo "The .commit-approval file is $AGE seconds old (limit: 300s)." >&2
+  echo "Please re-approve the commit with Claude." >&2
+  exit 1
+fi
+
+# Approval valid - will be auto-deleted after successful commit
+echo "✓ Commit approved (approval file will be auto-deleted)"

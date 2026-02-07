@@ -186,6 +186,80 @@ Refer to `docs/decisions/` for full ADRs. Recent important decisions:
 4. **Domain Model Decomposition:** Moving business logic from `api.ts` into cohesive models (`SourceNote`, `FlashcardNote`)
 5. **Separation of Concerns:** `api.ts` should orchestrate, not implement. Delegate to models.
 
+## Commit Approval Workflow (MANDATORY)
+
+**Problem:** Verbose commit messages violate "Commits tell WHAT, docs tell WHY" philosophy.
+
+**Solution:** Deterministic approval process enforced by git hooks.
+
+### Before EVERY `git commit`:
+
+1. **Draft Message** (1-2 lines max)
+   ```
+   <type>(<scope>): <what changed in 5-10 words>
+
+   Optional 2nd line: Where to find details
+   ```
+
+2. **Create Approval File**
+   ```bash
+   cat > .commit-approval << EOF
+   APPROVED: $(date -Iseconds)
+
+   MESSAGE:
+   docs,test: add navigation filter contract documentation
+
+   See ADR-019 and docs/bugs.md for details.
+
+   FILES:
+   - docs/decisions/ADR-019-navigation-filter-contract.md
+   - docs/bugs.md
+   - docs/testing_guide.md
+   EOF
+   ```
+
+3. **Show to User**
+   - Display proposed message
+   - Display files to commit
+   - Ask: "Approve this commit message?"
+
+4. **Wait for Approval**
+   - User responds "yes" or provides edits
+   - If edits, update `.commit-approval` file
+
+5. **Execute Commit**
+   - Only after approval
+   - Pre-commit hook validates `.commit-approval` exists
+   - Hook auto-deletes file after successful commit
+
+### Hooks Enforce This
+
+- **Pre-commit hook:** Blocks if no `.commit-approval` file (< 5 min old)
+- **Commit-msg hook:** Blocks if message > 5 lines or subject > 72 chars
+- **Bypass:** Use `--no-verify` only for emergencies
+
+### Example Interaction
+
+```
+Claude: Ready to commit. Proposed message:
+
+  docs,test: add navigation filter contract documentation
+
+  See ADR-019 and docs/bugs.md for details.
+
+Files:
+  - docs/decisions/ADR-019-navigation-filter-contract.md
+  - docs/bugs.md
+  - docs/testing_guide.md
+
+Approve this message?
+
+User: yes
+
+Claude: [creates .commit-approval file]
+Claude: [executes git commit]
+```
+
 ## Important Constraints
 
 - **Obsidian API:** All file operations must go through `app.vault` and `app.fileManager`
