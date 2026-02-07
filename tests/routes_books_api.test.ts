@@ -25,7 +25,7 @@ import { resetNanoidMock, setupNanoidMock } from "./nanoid-mock";
 import { resetFixtureTransformer } from "./helpers";
 setupNanoidMock();
 
-import { SourceNoteIndex } from "src/data/models/sourceNote";
+import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { createMockPlugin } from "./__mocks__/plugin";
 import { setPlugin } from "src/api";
 import { Index } from "src/data/models";
@@ -77,8 +77,8 @@ async function setupTestEnv() {
     mockPlugin.fileTagsMap = fileTags();
     mockPlugin.index = new Index();
     mockPlugin.flashcardIndex = new FlashcardIndex();
-    mockPlugin.sourceNoteIndex = new SourceNoteIndex();
+    mockPlugin.annotationsNoteIndex = new AnnotationsNoteIndex();
     mockPlugin.flashcardIndex = await mockPlugin.flashcardIndex.initialize();
-    mockPlugin.sourceNoteIndex = await mockPlugin.sourceNoteIndex.initialize(mockPlugin);
+    mockPlugin.annotationsNoteIndex = await mockPlugin.annotationsNoteIndex.initialize(mockPlugin);
     setPlugin(mockPlugin);
 }

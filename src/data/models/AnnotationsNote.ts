@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
-    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter, moveFile, renameFile, createFile
+    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
@@ -13,10 +13,8 @@ import type { ReviewResponse } from "src/types/CardType";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { CardType } from "src/types/CardType";
 import {parseMetadata} from "src/data/parser";
-import { SourceNoteDependencies } from "src/data/utils/dependencies";
-import { parseMoonReaderExport } from "src/data/import/moonreader";
+import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
-import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -25,7 +23,7 @@ export type BookMetadataSection = Heading | annotation | paragraph;
 export type BookMetadataSections = BookMetadataSection[];
 
 export interface BookFrontmatter {
-    id: string; // The ID of the SourceNote object (nanoid generated)
+    id: string; // The ID of the AnnotationsNote object (nanoid generated)
     path: string; // Path to the .mrexpt file
     annotationsPath: string; // Path to the Annotations.md file
     title: string;
@@ -83,7 +81,7 @@ function transform(p: paragraph|annotation): annotation {
 }
 
 // todo: should this be part of the Book class??
-export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[], plugin: SourceNoteDependencies) {
+export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[], plugin: AnnotationsNoteDependencies) {
     if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
     let output: BookMetadataSections = [];
     let headingIndex = 0;
@@ -269,7 +267,7 @@ export interface frontbook {
 }
 
 //todo: split review related logic into separate class??
-export class SourceNote implements frontbook {
+export class AnnotationsNote implements frontbook {
     path: string;
     bookSections: BookMetadataSections;
     id: string;
@@ -283,14 +281,14 @@ export class SourceNote implements frontbook {
     // however, there may be better approaches
     // todo: reviewDeck may need to be its own class as review states will be important for implementing navigation
     reviewDeck: Flashcard[];
-    // i feel like i need a factory method that creates a SourceNoteWithFLashcards
-    // and a SourceNote
+    // i feel like i need a factory method that creates a AnnotationsNoteWithFLashcards
+    // and a AnnotationsNote
     flashcardNote: FlashcardNote | null;
     // todo: think of a way to not use plugin
     // the reason I need it is because to find the corresponding flashcard note
-    plugin: SourceNoteDependencies;
+    plugin: AnnotationsNoteDependencies;
 
-    constructor(path: string, plugin: SourceNoteDependencies) {
+    constructor(path: string, plugin: AnnotationsNoteDependencies) {
         this.id = nanoid(8);
         this.name = "";
         this.path = path;
@@ -301,56 +299,6 @@ export class SourceNote implements frontbook {
         this.flashcardNote = null;
         this.tags = [];
     }
-
-    static async createFromMoonReaderExport(mrexptPath: string, destinationFolder: string) {
-        const content = await getFileContents(mrexptPath);
-        const annotations = parseMoonReaderExport(content);
-
-        if (annotations.length === 0) {
-            throw new Error("No annotations found in the export file.");
-        }
-
-        const lastExportedID = Math.max(...annotations.map(ann => parseInt(ann.id, 10)));
-
-        const fileName = mrexptPath.split("/").pop();
-        const newMrexptPath = `${destinationFolder}/${fileName}`;
-        await moveFile(mrexptPath, newMrexptPath);
-        const annotationsPath = `${destinationFolder}/Annotations.md`;
-        // @ts-ignore
-        const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
-        if (existingFile) {
-            await renameFile(annotationsPath, "Annotations_old.md");
-        }
-
-        const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
-
-        const frontmatter = `---
-path: "${newMrexptPath}"
-title: "${bookTitle}"
-author: ""
-lastExportedTimestamp: ${Date.now()}
-lastExportedID: ${lastExportedID}
-tags:
-  - "review/book"
----
-`;
-
-        const markdown = generateMarkdownWithHeaders(annotations);
-        await createFile(annotationsPath, frontmatter + markdown);
-
-        return annotationsPath;
-    }
-
-    // first initialize all the basic attributes of the book/note
-    // then initialize optional attributes like its flashcards
-    // how do I find flashcards? err, well, using some kind of relationship?
-    // basically need to do a join?
-    // i imagine I might need to have parsed flashcards earlier?
-    // if not, I need to find them while initializing the book and then get them up and running
-    // seems somewhat slow to me
-    // potentially investigate web workers in the future
-    // booksections: this must necessarily come later because of its reliance on flashcards
-    // think of decoupling that later down the line?
 
     async initialize() {
         // done: fix unnecessary annotation path extraction
@@ -565,7 +513,7 @@ tags:
                     frontmatter.lastExportedID !== undefined
                 ) {
                     return {
-                        id: this.id, // Assign SourceNote's ID
+                        id: this.id, // Assign AnnotationsNote's ID
                         path: frontmatter.path, // This is the mrexpt path
                         annotationsPath: this.path, // This is the Annotations.md path
                         title: frontmatter.title,
@@ -611,34 +559,6 @@ tags:
         return writeSuccessful;
     }
 
-    async syncMoonReaderExport(mrexptPath: string, sinceId: string) {
-        const mrexptContent = await getFileContents(mrexptPath);
-        const newAnnotations = parseMoonReaderExport(mrexptContent, sinceId);
-
-        if (newAnnotations.length === 0) {
-            new ObsidianNotice("No new annotations found.");
-            return;
-        }
-
-        // Append new annotations markdown to the file
-        const newAnnotationsMarkdown = generateMarkdownWithHeaders(newAnnotations);
-        const tfile = getTFileForPath(this.path);
-        // @ts-ignore
-        await app.vault.append(tfile, '\n' + newAnnotationsMarkdown); // Add a newline before appending
-
-        // Find the new highest ID among all annotations
-        const allAnnotations = parseMoonReaderExport(mrexptContent);
-        const newLastExportedID = Math.max(...allAnnotations.map(ann => parseInt(ann.id, 10)));
-
-        // Update frontmatter values using the new disk utility
-        await updateFrontmatter(this.path, {
-            lastExportedTimestamp: Date.now(),
-            lastExportedID: newLastExportedID,
-        });
-
-        new ObsidianNotice(`Updated ${newAnnotations.length} new annotations.`);
-    }
-
     async createFlashcardNote() {
         const {filename, path} = generateFlashcardsFileNameAndPath(this.path);
         await createFlashcardsFileForBook(this.path, path);
@@ -648,14 +568,14 @@ tags:
     }
 }
 
-export class SourceNoteIndex {
-    sourceNotes: SourceNote[]
+export class AnnotationsNoteIndex {
+    sourceNotes: AnnotationsNote[]
 
     constructor() {
         this.sourceNotes = [];
     }
 
-    async initialize(plugin: SourceNoteDependencies) {
+    async initialize(plugin: AnnotationsNoteDependencies) {
         // iterate over tags in plugin
         // create set from tags in note
         // check membership of tag
@@ -672,7 +592,7 @@ export class SourceNoteIndex {
         }
         //todo: parameterize
         // const filePaths = filePathsWithTag("review/note");
-        const notesWithAnnotations = Array.from(pathsWithAllowedTags.keys()).map((t: string) => new SourceNote(t, plugin));
+        const notesWithAnnotations = Array.from(pathsWithAllowedTags.keys()).map((t: string) => new AnnotationsNote(t, plugin));
         for (const t of notesWithAnnotations) {
             try {
                 await t.initialize();
@@ -700,11 +620,11 @@ export class SourceNoteIndex {
         return this.sourceNotes.filter(t=>t.flashcardNote);
     }
 
-    getSourcesWithoutFlashcards(): SourceNote[] {
+    getSourcesWithoutFlashcards(): AnnotationsNote[] {
         return this.sourceNotes.filter(t => !t.flashcardNote);
     }
 
-    getAllSourceNotes(): SourceNote[] {
+    getAllAnnotationsNotes(): AnnotationsNote[] {
         return this.sourceNotes;
     }
 }

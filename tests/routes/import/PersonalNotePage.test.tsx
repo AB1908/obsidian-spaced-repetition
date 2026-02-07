@@ -9,7 +9,7 @@ import { setupNanoidMock, resetNanoidMock } from "../../nanoid-mock";
 import { createMockPlugin } from "../../__mocks__/plugin";
 import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { SourceNoteIndex } from "src/data/models/sourceNote";
+import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
 
@@ -22,9 +22,9 @@ async function initializePlugin() {
     mockPlugin.fileTagsMap = fileTags();
     mockPlugin.index = new Index();
     mockPlugin.flashcardIndex = new FlashcardIndex();
-    mockPlugin.sourceNoteIndex = new SourceNoteIndex();
+    mockPlugin.annotationsNoteIndex = new AnnotationsNoteIndex();
     mockPlugin.flashcardIndex = await mockPlugin.flashcardIndex.initialize();
-    mockPlugin.sourceNoteIndex = await mockPlugin.sourceNoteIndex.initialize(mockPlugin);
+    mockPlugin.annotationsNoteIndex = await mockPlugin.annotationsNoteIndex.initialize(mockPlugin);
     setPlugin(mockPlugin);
     return mockPlugin;
 }
@@ -97,7 +97,7 @@ describe("PersonalNotePage Component", () => {
 
     beforeEach(async () => {
         const plugin = await initializePlugin();
-        const book = plugin.sourceNoteIndex.getAllSourceNotes()[0];
+        const book = plugin.annotationsNoteIndex.getAllAnnotationsNotes()[0];
         mockBookId = book.id;
         mockAnnotationId = book.annotations()[0].id;
 

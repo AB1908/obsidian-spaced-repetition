@@ -5,7 +5,7 @@ import {
     bookSections,
     findNextHeader,
     findPreviousHeaderForHeading
-} from "src/data/models/sourceNote";
+} from "src/data/models/AnnotationsNote";
 import { beforeEach } from "@jest/globals";
 import { sampleAnnotationMetadata, sampleAnnotationText } from "./disk.test";
 import type { SectionCache } from "obsidian";

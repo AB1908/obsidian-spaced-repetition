@@ -1,12 +1,11 @@
 // src/data/models/dependencies.ts
 
-import { Index } from "../models";
+import { Index, AnnotationsNoteIndex } from "../models";
 import { FlashcardIndex } from "../models/flashcard";
-import { SourceNoteIndex } from "../models/sourceNote";
 
-export interface SourceNoteDependencies {
+export interface AnnotationsNoteDependencies {
     flashcardIndex: FlashcardIndex;
-    sourceNoteIndex: SourceNoteIndex;
+    annotationsNoteIndex: AnnotationsNoteIndex;
     fileTagsMap: Map<string, string[]>;
     index: Index;
 }

@@ -13,7 +13,7 @@ const mockedPluginInstance = {
             "maximumInterval": 36525,
         },
     },
-    sourceNoteIndex: {
+    annotationsNoteIndex: {
         getBook: jest.fn(),
         initialize: jest.fn(() => Promise.resolve()),
         getSourcesForReview: jest.fn(),

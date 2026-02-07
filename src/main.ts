@@ -4,12 +4,12 @@ import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { SourceNoteIndex } from "src/data/models/sourceNote";
+import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
 import { setApp } from "src/infrastructure/obsidian-facade";
 import { Index } from "src/data/models";
-import { SourceNoteDependencies } from "src/data/utils/dependencies";
+import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 
 export interface PluginData {
     settings: SRSettings;
@@ -28,12 +28,12 @@ const DEFAULT_DATA: PluginData = {
 
 export let plugin: SRPlugin;
 
-export default class SRPlugin extends Plugin implements SourceNoteDependencies {
+export default class SRPlugin extends Plugin implements AnnotationsNoteDependencies {
     public data: PluginData;
     // todo: fix type
     public bookNotesPaths: string[];
     public flashcardIndex: FlashcardIndex; // should have path and array of flashcards?
-    public sourceNoteIndex: SourceNoteIndex;
+    public annotationsNoteIndex: AnnotationsNoteIndex;
     // todo: move this down into the index
     public fileTagsMap: Map<string, string[]>; // { "path": [array of tags] }
     public index: Index;
@@ -53,7 +53,7 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
 
         this.index = new Index();
         this.flashcardIndex = new FlashcardIndex();
-        this.sourceNoteIndex = new SourceNoteIndex();
+        this.annotationsNoteIndex = new AnnotationsNoteIndex();
         this.app.workspace.onLayoutReady(async () => {
             console.log("Layout ready, checking metadata...");
 
@@ -63,7 +63,7 @@ export default class SRPlugin extends Plugin implements SourceNoteDependencies {
             this.isInitialized = true;
             this.fileTagsMap = fileTags();
             this.flashcardIndex = await this.flashcardIndex.initialize();
-            this.sourceNoteIndex = await this.sourceNoteIndex.initialize(this);
+            this.annotationsNoteIndex = await this.annotationsNoteIndex.initialize(this);
         })
         // done: eventually remove this and add access method for sourcenoteindex
 

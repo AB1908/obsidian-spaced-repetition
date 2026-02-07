@@ -3,7 +3,7 @@ import { render, screen, fireEvent } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { ImportDashboard } from "src/ui/routes/import/import-export";
 import { ReviewBook } from "src/api"; // Assuming ReviewBook is exported from src/api
-import { BookFrontmatter } from "src/data/models/sourceNote";
+import { BookFrontmatter } from "src/data/models/AnnotationsNote";
 
 // Mock react-router-dom hooks
 jest.mock("react-router-dom", () => ({

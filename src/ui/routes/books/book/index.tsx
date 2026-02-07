@@ -44,6 +44,9 @@ export function DeckLandingPage() {
     const book = useLoaderData() as frontEndBook;
     return (
         <>
+            <h3>
+                {book.name}
+            </h3>
             <h4>
                 <DeckCounts counts={book.counts.flashcards}/>
             </h4>

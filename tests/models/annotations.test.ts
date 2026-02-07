@@ -1,6 +1,6 @@
 import { isAnnotationProcessed } from "src/data/models/annotations";
 import { createDiskMockFromFixtures } from "../helpers";
-import { SourceNoteIndex } from "src/data/models/sourceNote";
+import { AnnotationsNote, AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { createMockPlugin } from "../__mocks__/plugin";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { fileTags } from "src/infrastructure/disk";
@@ -10,6 +10,7 @@ jest.mock("src/infrastructure/disk", () => {
     const mock = createDiskMockFromFixtures([
         "getFileContents_test-book-with-annotations.json",
         "getMetadataForFile_test-book-with-annotations.json",
+        "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
     ]);
     return mock;
 });
@@ -31,9 +32,9 @@ describe("isAnnotationProcessed", () => {
     });
 });
 
-describe("SourceNote.getProcessedAnnotations", () => {
+describe("AnnotationsNote.getProcessedAnnotations", () => {
     let mockPlugin: any;
-    let sourceNote: any; // Using 'any' for simplicity in test setup
+    let sourceNote: AnnotationsNote;
 
     beforeEach(async () => {
         mockPlugin = createMockPlugin();
@@ -42,10 +43,15 @@ describe("SourceNote.getProcessedAnnotations", () => {
         ]);
         mockPlugin.index = new Index();
         mockPlugin.flashcardIndex = new FlashcardIndex();
-        mockPlugin.sourceNoteIndex = new SourceNoteIndex();
-        await mockPlugin.sourceNoteIndex.initialize(mockPlugin);
+        mockPlugin.annotationsNoteIndex = new AnnotationsNoteIndex();
 
-        sourceNote = mockPlugin.sourceNoteIndex.sourceNotes[0];
+        // Instantiate AnnotationsNote directly for testing
+        sourceNote = new AnnotationsNote("test-book-with-annotations.md", mockPlugin);
+        sourceNote.id = "test-book-id"; // Manually set ID if needed
+        sourceNote.name = "Test Book with Annotations";
+        sourceNote.flashcardNote = { flashcards: [] } as any; 
+        
+        await sourceNote.initialize(); 
     });
 
     test("should correctly set isProcessed flag based on annotation category", async () => {

@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
 import { getFileContents, getMetadataForFile } from "../../infrastructure/disk";
 import { Flashcard } from "./flashcard";
-import { Heading } from "./sourceNote";
+import { Heading } from "./AnnotationsNote";
 
 export interface paragraph {
     id: string,
