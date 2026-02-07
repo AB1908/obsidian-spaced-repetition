@@ -1,0 +1,11 @@
+{
+  "presets": {
+    "gemini": {
+      "command": "gemini",
+      "args": [],
+      "interrupt": "Ctrl+C"
+    }
+  },
+  "worktree_branch_prefix": "ccm-",
+  "default_preset": "gemini"
+}
