@@ -8,8 +8,8 @@ import { Index } from "src/data/models";
 
 jest.mock("src/infrastructure/disk", () => {
     const mock = createDiskMockFromFixtures([
-        "getFileContents_test-book-with-annotations.json",
-        "getMetadataForFile_test-book-with-annotations.json",
+        "getFileContents_2025-12-07T19-37-22-044Z_radb6f.json",
+        "getMetadataForFile_2025-12-07T19-37-22-036Z_kzjn5y.json",
         "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
     ]);
     return mock;
@@ -39,14 +39,14 @@ describe("AnnotationsNote.getProcessedAnnotations", () => {
     beforeEach(async () => {
         mockPlugin = createMockPlugin();
         mockPlugin.fileTagsMap = new Map([
-            ["test-book-with-annotations.md", ["review/book"]]
+            ["Untitled.md", ["review/book"]]
         ]);
         mockPlugin.index = new Index();
         mockPlugin.flashcardIndex = new FlashcardIndex();
         mockPlugin.annotationsNoteIndex = new AnnotationsNoteIndex();
 
         // Instantiate AnnotationsNote directly for testing
-        sourceNote = new AnnotationsNote("test-book-with-annotations.md", mockPlugin);
+        sourceNote = new AnnotationsNote("Untitled.md", mockPlugin);
         sourceNote.id = "test-book-id"; // Manually set ID if needed
         sourceNote.name = "Test Book with Annotations";
         sourceNote.flashcardNote = { flashcards: [] } as any; 
