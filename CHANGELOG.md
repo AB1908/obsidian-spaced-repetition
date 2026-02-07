@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [Unreleased]
+
+### Added
+- Dynamic breadcrumb title in flashcard modal showing "Book Name / Chapter Name"
+- Title automatically updates to "Creating New Flashcard" or "Editing: [question]" when editing flashcards
+
+### Technical
+- Implemented React Context (`ModalTitleProvider`) for centralized modal title management
+- Decoupled title logic from plugin instance for better separation of concerns
+- Added regression tests for `useModalTitle` hook and Root component
+
 ## [0.2.0](https://github.com/AB1908/obsidian-spaced-repetition/compare/0.1.0...0.2.0) (2023-09-09)
 
 
