@@ -23,6 +23,43 @@
 
 ---
 
+### (EPIC) As a developer, I want to decouple AnnotationsNote from FlashcardNote and ReviewSession for improved separation of concerns, scalability, and maintainability.
+
+**Status:** Proposed
+**Metadata:**
+- **Priority:** High
+- **Related Files:** `context/architecture_decoupling.md`, `src/data/models/AnnotationsNote.ts`, `src/data/models/flashcard.ts`, `src/api.ts`
+- **Tags:** #epic, #architecture, #refactor
+- **Effort/Scale:** Large
+
+**Context:**
+- **Problem:** `AnnotationsNote` is currently a "God Object," handling responsibilities for source content, flashcard management, and review session state. This leads to tight coupling, difficulty in testing, and problems with optional dependencies (e.g., `flashcardNote` being null).
+- **Solution:** Implement the new architecture defined in `context/architecture_decoupling.md` to separate `AnnotationsNote` (source data), `FlashcardNote` (flashcard persistence), and `ReviewSession` (transient study state).
+
+**Execution (Sub-Stories):**
+- **Phase 1: Service/Index decoupling**
+    - [ ] Expose `FlashcardIndex` capabilities to look up notes by their "Source ID" (parent book).
+    - [ ] Update `api.ts` to fetch `FlashcardNote` directly from `FlashcardIndex` instead of accessing `book.flashcardNote`.
+- **Phase 2: Extract CRUD Logic**
+    - [ ] Move `createFlashcard`, `deleteFlashcard`, etc. calls in `api.ts` to use the `FlashcardNote` directly.
+    - [ ] Remove proxy methods from `AnnotationsNote`.
+- **Phase 3: Extract Review State**
+    - [ ] Create `ReviewSession` class.
+    - [ ] Update `api.ts` to instantiate a session when `startReview` is called.
+    - [ ] Remove `reviewDeck`, `reviewIndex`, `getReviewStats` from `AnnotationsNote`.
+- **Phase 4: Cleanup**
+    - [ ] Remove `flashcardNote` property from `AnnotationsNote`.
+    - [ ] Fix all resulting TypeScript errors.
+
+**Acceptance Criteria:**
+- [ ] `AnnotationsNote` focuses solely on source content and structure.
+- [ ] `FlashcardNote` manages its own lifecycle and persistence.
+- [ ] `ReviewSession` manages the active study session state.
+- [ ] `api.ts` orchestrates interactions between these decoupled models.
+- [ ] No regression in existing functionality.
+
+---
+
 ### As a developer, I want to associate annotations with their parent sections in the model to decouple UI logic from routing.
 
 **User Story:** Add `sectionId` to the `annotation` model and inject it during parsing.
@@ -254,168 +291,3 @@
 
 **User Story:** Fix the failing `PersonalNotePage.test.tsx` test.
 **Outcome:** Resolved by mocking disk and initializing test plugin.
-
----
-
-## Active / In Progress
-
-### As a user, I want focused flashcard creation without distraction from unprocessed annotations.
-
-**User Story:** Separate flashcard creation into dedicated route with processed-only navigation.
-
-**Problem:**
-- Flashcard creation currently shows ALL annotations (processed + unprocessed)
-- Users creating flashcards get distracted by unprocessed annotations they need to categorize
-- Navigation in flashcard creation context should only move through processed annotations
-- No affordance to jump back to processing if annotation is missing
-
-**Current State:**
-- Annotation browsing and flashcard creation share same UI and navigation
-- Same navigation buttons try to serve multiple contexts with different needs
-- Cross-cutting concerns make navigation logic complex and hard to maintain
-
-**Proposed Solution: Route-Based Separation**
-
-Create dedicated flashcard creation route with context-specific behavior:
-
-```
-/books/:id/annotations          → Full annotation management (all filters)
-/books/:id/flashcards/create    → Flashcard creation (processed-only, NEW)
-/import/:id/process             → Import processing (unprocessed-only)
-```
-
-**Benefits:**
-- **Focus:** Users creating flashcards only see learning-ready (processed) content
-- **Independent UX:** Can evolve flashcard creation without affecting annotation management
-  - Bulk card creation
-  - AI-suggested cards
-  - Mobile-optimized gestures
-- **Clearer API contracts:** Different routes = different navigation scopes
-- **Better performance:** Pre-filter processed annotations once
-- **Testability:** Test flashcard creation flow independently
-
-**UX Affordances:**
-1. **Visual Distinction:** Header shows "Create Flashcards" + count of processed annotations
-2. **Escape Hatch:** "Can't find annotation? → Browse all" link
-3. **Workflow Integration:** After processing annotation, "Create flashcard" button jumps to creation view
-4. **Keyboard Shortcuts:** Context-specific (e.g., Space = quick-add card)
-
-**Tasks:**
-1. Create new route: `/books/:id/flashcards/create`
-2. Build `FlashcardCreationPage` component (processed annotations only)
-3. Build `ProcessedAnnotationNav` component (opinionated navigation)
-4. Add affordance links: "Browse all annotations" / "Process unprocessed"
-5. Add breadcrumbs showing current context
-6. Document context-specific keyboard shortcuts
-7. Update navigation to use filter parameter when available (depends on ADR-019)
-
-**Technical Notes:**
-- Prerequisite: Navigation filter system (ADR-019)
-- Shares primitive components (`<NavigationButton>`) with different orchestration
-- Separate state management per context
-- URL structure naturally separates contexts
-
-**Priority:** Medium
-**Type:** Feature / UX / Architecture
-**Scale:** Large
-**Effort:** Medium-High
-**Tags:** #feature #ux #navigation #context-separation #flashcards
-
-**Related:**
-- Bug #1: Navigation ignores UI filters (docs/bugs.md)
-- ADR-019: Navigation Filter Contract
-- Technical Debt #3: Bloated api.ts
-
----
-
-### As a developer, I want to remove unnecessary API indirection to reduce complexity and improve maintainability.
-
-**User Story:** Remove `src/ui/routes/books/api.ts` wrapper functions and consolidate into `src/api.ts`.
-
-**Problem:**
-- `src/ui/routes/books/api.ts` contains 15 lines of parameter-reordering wrappers with no business value
-- Creates confusion about which API to use where
-- Adds indirection that must be maintained and tested
-- Parameter order differences are a footgun (easy to pass wrong values)
-
-**Current State:**
-```typescript
-// src/ui/routes/books/api.ts - just reorders params
-export function getNextAnnotationIdForSection(bookId, sectionId, blockId) {
-    return getNextAnnotationId(bookId, blockId, sectionId);
-}
-```
-
-**Tasks:**
-1. Delete `src/ui/routes/books/api.ts`
-2. Update 2 component imports to use `src/api` directly:
-   - `src/ui/routes/books/book/annotation/annotation-with-outlet.tsx`
-   - `src/ui/routes/import/personal-note.tsx`
-3. Update parameter order at call sites (swap `sectionId` and `blockId` positions)
-4. Update `tests/routes_books_api.test.ts` to test `src/api` functions directly or consolidate into `tests/api.test.ts`
-
-**Benefits:**
-- Single source of truth for navigation API
-- Simpler testing (mock one module, not two)
-- Clearer when adding filter parameter (ADR-019)
-- Less cognitive load for developers
-
-**Priority:** High (unblocks ADR-019 filter work)
-**Type:** Tech Debt / Refactor
-**Est. Effort:** Low (30 min)
-**Tags:** #tech-debt #api #refactor
-
----
-
-### (ROADMAP) As a developer, I want a domain-organized API layer to improve code discoverability and maintainability at scale.
-
-**User Story:** Refactor monolithic `src/api.ts` into domain-specific API modules under `src/apis/`.
-
-**Context:**
-- **Problem:** `src/api.ts` is 600+ lines and growing, mixing disparate concerns (navigation, flashcards, review, import)
-- **Impact:** Hard to find relevant APIs, high merge conflict risk, difficult to test in isolation
-- **Architectural Goal:** Maintain clean API layer separation (UI never imports from `data/models`) while organizing by domain for scalability
-
-**Proposed Structure:**
-```
-src/
-├── apis/
-│   ├── sourcenote.ts     # Navigation, annotations, book structure (~150 lines)
-│   ├── flashcard.ts      # Flashcard CRUD, scheduling (~100 lines)
-│   ├── review.ts         # Review sessions, deck building (~80 lines)
-│   ├── import.ts         # MoonReader imports (~60 lines)
-│   └── index.ts          # Convenience re-exports
-├── api.ts                # DEPRECATED: Re-exports for backward compatibility
-```
-
-**Benefits:**
-- **Discoverability:** Navigation APIs in `apis/sourcenote.ts` vs Ctrl+F in 600-line file
-- **Testability:** Mock specific domains instead of entire API surface
-- **Maintainability:** Domain boundaries reduce merge conflicts
-- **Scalability:** Easier to evolve/version individual domains
-- **Future-proofing:** Backend substitution at domain level (e.g., swap `apis/sourcenote.ts` for REST client)
-- **Preserves Architecture:** UI still imports from `apis/*`, never from `data/models/*`
-
-**Migration Strategy:**
-1. **Phase 1:** Create `src/apis/sourcenote.ts`, move navigation functions
-2. **Phase 2:** Update `api.ts` to re-export for backward compatibility
-3. **Phase 3:** Gradually migrate component imports to new structure
-4. **Phase 4:** Create remaining domain modules (`flashcard.ts`, `review.ts`, etc.)
-5. **Phase 5:** Remove deprecated `api.ts` once all imports migrated
-
-**Use Cases Enabled:**
-- React Native mobile app: Swap API implementations without touching UI
-- Server-backed mode: `apis/sourcenote.ts` calls REST endpoints instead of local models
-- Independent UI evolution: Change React to Svelte without model coupling
-
-**Priority:** Medium (architectural improvement, not blocking)
-**Type:** Architecture / Refactor
-**Scale:** Epic
-**Effort:** High (gradual migration over multiple PRs)
-**Tags:** #epic #architecture #api-layer #domain-driven-design #scalability
-
-**Related:**
-- Short-term prerequisite: Remove `src/ui/routes/books/api.ts` indirection
-- Aligns with ADR-018 (Source Model Architecture) for future domain model decomposition
-
----
