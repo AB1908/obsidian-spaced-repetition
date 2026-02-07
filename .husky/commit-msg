@@ -1,0 +1,36 @@
+#!/bin/sh
+
+COMMIT_MSG_FILE="$1"
+
+# Count lines (excluding comments and empty lines)
+LINE_COUNT=$(grep -v '^#' "$COMMIT_MSG_FILE" | grep -v '^$' | wc -l)
+
+# Get subject line (first non-comment line)
+SUBJECT_LINE=$(grep -v '^#' "$COMMIT_MSG_FILE" | grep -v '^$' | head -n1)
+SUBJECT_LENGTH=${#SUBJECT_LINE}
+
+# Check: Maximum 5 lines total
+if [ "$LINE_COUNT" -gt 5 ]; then
+  echo "" >&2
+  echo "❌ ERROR: Commit message too long ($LINE_COUNT lines)" >&2
+  echo "" >&2
+  echo "Commits should be 1-2 lines. Details go in documentation." >&2
+  echo "Philosophy: 'Commits tell WHAT. Documentation tells WHY.'" >&2
+  echo "" >&2
+  echo "Your message:" >&2
+  grep -v '^#' "$COMMIT_MSG_FILE" | grep -v '^$' >&2
+  echo "" >&2
+  echo "See docs/git_workflow.md for guidelines." >&2
+  echo "To bypass: git commit --no-verify" >&2
+  exit 1
+fi
+
+# Check: Subject line length (soft limit, just warn)
+if [ "$SUBJECT_LENGTH" -gt 72 ]; then
+  echo "" >&2
+  echo "⚠️  WARNING: Subject line is $SUBJECT_LENGTH chars (recommended: <72)" >&2
+  echo "Consider shortening: $SUBJECT_LINE" >&2
+  echo "" >&2
+fi
+
+echo "✓ Commit message format validated"

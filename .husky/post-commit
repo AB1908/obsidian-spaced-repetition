@@ -1,0 +1,9 @@
+#!/bin/sh
+
+# Clean up approval file after successful commit
+APPROVAL_FILE=".commit-approval"
+
+if [ -f "$APPROVAL_FILE" ]; then
+  rm "$APPROVAL_FILE"
+  echo "✓ Cleaned up approval file"
+fi
