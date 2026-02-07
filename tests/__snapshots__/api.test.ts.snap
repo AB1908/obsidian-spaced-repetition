@@ -1,0 +1,55 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`getNextAnnotationId with filters snapshot: annotations available in test data 1`] = `
+{
+  "annotations": [
+    {
+      "category": undefined,
+      "deleted": undefined,
+      "hasCategory": false,
+      "highlightPreview": "What is episodic memory?
+NO one knows ",
+      "id": "tekXLAu8",
+      "type": "",
+    },
+    {
+      "category": undefined,
+      "deleted": undefined,
+      "hasCategory": false,
+      "highlightPreview": "I have some other text here.
+This has no block id.",
+      "id": "tWxSv_No",
+      "type": "",
+    },
+  ],
+  "totalCount": 2,
+}
+`;
+
+exports[`getNextAnnotationId with filters snapshot: navigation behavior without filtering 1`] = `
+{
+  "from": {
+    "category": undefined,
+    "id": "tekXLAu8",
+  },
+  "nextAnnotation": {
+    "category": undefined,
+    "id": "tWxSv_No",
+  },
+  "nextId": "tWxSv_No",
+}
+`;
+
+exports[`getPreviousAnnotationId with filters snapshot: backward navigation behavior without filtering 1`] = `
+{
+  "from": {
+    "category": undefined,
+    "id": "tWxSv_No",
+  },
+  "prevAnnotation": {
+    "category": undefined,
+    "id": "tekXLAu8",
+  },
+  "prevId": "tekXLAu8",
+}
+`;

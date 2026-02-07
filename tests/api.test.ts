@@ -49,6 +49,8 @@ import {
     getBookChapters,
     getNotesWithoutReview,
     createFlashcardNoteForSourceNote,
+    getNextAnnotationId,
+    getPreviousAnnotationId,
 } from "src/api";
 import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
@@ -178,9 +180,7 @@ describe("deleteFlashcard", () => {
     test("should throw when deleting non-existent flashcard", async () => {
         await expect(
             deleteFlashcard("t0000010", "nonexistent")
-        ).rejects.toThrowErrorMatchingInlineSnapshot(
-            `"Flashcard not found: nonexistent"`
-        );
+        ).rejects.toThrowErrorMatchingInlineSnapshot(`"Flashcard not found: nonexistent"`);
     });
 });
 // getCurrentCard
@@ -499,104 +499,139 @@ describe("createFlashcardNoteForSourceNote", () => {
     });
 });
 
-// Navigation with Filters - Integration Tests for Cross-Layer Contract
-describe("getNextAnnotationId with filters", () => {
+// Navigation Behavior - Inline snapshots to document current behavior
+// See: docs/bugs.md#1-navigation-ignores-ui-filters for context on filter bug
+describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
     beforeEach(async () => {
         await newFunction();
     });
 
-    test.skip("should return next annotation when no filter applied", () => {
+    test("observe annotations available in test fixture", () => {
         const bookId = "t0000010";
         const sectionId = "t0000011";
 
-        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
-        expect(allAnnotations.annotations.length).toBeGreaterThan(0);
+        const result = getAnnotationsForSection(sectionId, bookId);
 
-        const firstAnnotation = allAnnotations.annotations[0];
-        const nextId = getNextAnnotationId(bookId, firstAnnotation.id, sectionId);
+        // Capture what annotations exist and their filter-relevant properties
+        const summary = {
+            totalCount: result.annotations.length,
+            annotations: result.annotations.map((a) => ({
+                id: a.id,
+                category: a.category,
+                originalColor: a.originalColor,
+                deleted: a.deleted,
+            })),
+        };
 
-        // Should return next annotation regardless of category
-        if (allAnnotations.annotations.length > 1) {
-            expect(nextId).toBe(allAnnotations.annotations[1].id);
+        expect(summary).toMatchInlineSnapshot(`
+            {
+              "annotations": [
+                {
+                  "category": undefined,
+                  "deleted": undefined,
+                  "id": "tekXLAu8",
+                  "originalColor": undefined,
+                },
+                {
+                  "category": undefined,
+                  "deleted": undefined,
+                  "id": "tWxSv_No",
+                  "originalColor": undefined,
+                },
+              ],
+              "totalCount": 2,
+            }
+        `);
+    });
+
+    test("observe forward navigation from first to second annotation", () => {
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
+
+        if (allAnnotations.length < 2) {
+            expect("insufficient test data").toMatchInlineSnapshot();
+            return;
         }
+
+        const first = allAnnotations[0];
+        const nextId = getNextAnnotationId(bookId, first.id, sectionId);
+
+        expect({
+            from: { id: first.id, category: first.category },
+            nextId: nextId,
+            nextCategory: nextId ? getAnnotationById(nextId, bookId)?.category : null,
+        }).toMatchInlineSnapshot(`
+            {
+              "from": {
+                "category": undefined,
+                "id": "tekXLAu8",
+              },
+              "nextCategory": undefined,
+              "nextId": "tWxSv_No",
+            }
+        `);
     });
 
-    test.skip("should skip unprocessed annotations when filter applied", () => {
-        // TODO: Requires NavigationFilter parameter to be added to getNextAnnotationId
-        // This test documents expected behavior once ADR-019 is implemented
-
+    test("observe backward navigation from last to previous annotation", () => {
         const bookId = "t0000010";
         const sectionId = "t0000011";
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
 
-        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
-        const processedAnnotations = allAnnotations.annotations.filter(
-            ann => ann.category !== undefined && ann.category !== null
-        );
-
-        expect(allAnnotations.annotations.length).toBeGreaterThan(processedAnnotations.length);
-        expect(processedAnnotations.length).toBeGreaterThan(1);
-
-        const firstProcessed = processedAnnotations[0];
-
-        // Once filter parameter is added:
-        // const filter = { includeProcessed: true, includeUnprocessed: false };
-        // const nextId = getNextAnnotationId(bookId, firstProcessed.id, sectionId, filter);
-        //
-        // const nextAnnotation = getAnnotationById(nextId, bookId);
-        // expect(nextAnnotation.category).not.toBeUndefined();
-        // expect(nextAnnotation.category).not.toBeNull();
-    });
-
-    test.skip("should return null at end of filtered list", () => {
-        // TODO: Requires NavigationFilter parameter
-        // Documents boundary condition: last processed annotation in section
-
-        const bookId = "t0000010";
-        const sectionId = "t0000011";
-
-        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
-        const processedAnnotations = allAnnotations.annotations.filter(
-            ann => ann.category !== undefined && ann.category !== null
-        );
-
-        if (processedAnnotations.length > 0) {
-            const lastProcessed = processedAnnotations[processedAnnotations.length - 1];
-
-            // With filter:
-            // const filter = { includeProcessed: true, includeUnprocessed: false };
-            // const nextId = getNextAnnotationId(bookId, lastProcessed.id, sectionId, filter);
-            // expect(nextId).toBeNull();
+        if (allAnnotations.length < 2) {
+            expect("insufficient test data").toMatchInlineSnapshot();
+            return;
         }
+
+        const last = allAnnotations[allAnnotations.length - 1];
+        const prevId = getPreviousAnnotationId(bookId, last.id, sectionId);
+
+        expect({
+            from: { id: last.id, category: last.category },
+            prevId: prevId,
+            prevCategory: prevId ? getAnnotationById(prevId, bookId)?.category : null,
+        }).toMatchInlineSnapshot(`
+            {
+              "from": {
+                "category": undefined,
+                "id": "tWxSv_No",
+              },
+              "prevCategory": undefined,
+              "prevId": "tekXLAu8",
+            }
+        `);
     });
-});
 
-describe("getPreviousAnnotationId with filters", () => {
-    beforeEach(async () => {
-        await newFunction();
-    });
-
-    test.skip("should skip unprocessed annotations when navigating backward", () => {
-        // TODO: Requires NavigationFilter parameter
-        // Mirror of getNextAnnotationId test for backward navigation
-
+    test("observe section boundary behavior - no next after last annotation", () => {
         const bookId = "t0000010";
         const sectionId = "t0000011";
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
+        const last = allAnnotations[allAnnotations.length - 1];
 
-        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
-        const processedAnnotations = allAnnotations.annotations.filter(
-            ann => ann.category !== undefined && ann.category !== null
-        );
+        const nextId = getNextAnnotationId(bookId, last.id, sectionId);
 
-        if (processedAnnotations.length > 1) {
-            const lastProcessed = processedAnnotations[processedAnnotations.length - 1];
+        expect({ lastAnnotationId: last.id, nextId }).toMatchInlineSnapshot(`
+            {
+              "lastAnnotationId": "tWxSv_No",
+              "nextId": null,
+            }
+        `);
+    });
 
-            // With filter:
-            // const filter = { includeProcessed: true, includeUnprocessed: false };
-            // const prevId = getPreviousAnnotationId(bookId, lastProcessed.id, sectionId, filter);
-            //
-            // const prevAnnotation = getAnnotationById(prevId, bookId);
-            // expect(prevAnnotation.category).not.toBeUndefined();
-        }
+    test("observe section boundary behavior - no previous before first annotation", () => {
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
+        const first = allAnnotations[0];
+
+        const prevId = getPreviousAnnotationId(bookId, first.id, sectionId);
+
+        expect({ firstAnnotationId: first.id, prevId }).toMatchInlineSnapshot(`
+            {
+              "firstAnnotationId": "tekXLAu8",
+              "prevId": null,
+            }
+        `);
     });
 });
 
