@@ -499,6 +499,107 @@ describe("createFlashcardNoteForSourceNote", () => {
     });
 });
 
+// Navigation with Filters - Integration Tests for Cross-Layer Contract
+describe("getNextAnnotationId with filters", () => {
+    beforeEach(async () => {
+        await newFunction();
+    });
+
+    test.skip("should return next annotation when no filter applied", () => {
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
+        expect(allAnnotations.annotations.length).toBeGreaterThan(0);
+
+        const firstAnnotation = allAnnotations.annotations[0];
+        const nextId = getNextAnnotationId(bookId, firstAnnotation.id, sectionId);
+
+        // Should return next annotation regardless of category
+        if (allAnnotations.annotations.length > 1) {
+            expect(nextId).toBe(allAnnotations.annotations[1].id);
+        }
+    });
+
+    test.skip("should skip unprocessed annotations when filter applied", () => {
+        // TODO: Requires NavigationFilter parameter to be added to getNextAnnotationId
+        // This test documents expected behavior once ADR-019 is implemented
+
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
+        const processedAnnotations = allAnnotations.annotations.filter(
+            ann => ann.category !== undefined && ann.category !== null
+        );
+
+        expect(allAnnotations.annotations.length).toBeGreaterThan(processedAnnotations.length);
+        expect(processedAnnotations.length).toBeGreaterThan(1);
+
+        const firstProcessed = processedAnnotations[0];
+
+        // Once filter parameter is added:
+        // const filter = { includeProcessed: true, includeUnprocessed: false };
+        // const nextId = getNextAnnotationId(bookId, firstProcessed.id, sectionId, filter);
+        //
+        // const nextAnnotation = getAnnotationById(nextId, bookId);
+        // expect(nextAnnotation.category).not.toBeUndefined();
+        // expect(nextAnnotation.category).not.toBeNull();
+    });
+
+    test.skip("should return null at end of filtered list", () => {
+        // TODO: Requires NavigationFilter parameter
+        // Documents boundary condition: last processed annotation in section
+
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
+        const processedAnnotations = allAnnotations.annotations.filter(
+            ann => ann.category !== undefined && ann.category !== null
+        );
+
+        if (processedAnnotations.length > 0) {
+            const lastProcessed = processedAnnotations[processedAnnotations.length - 1];
+
+            // With filter:
+            // const filter = { includeProcessed: true, includeUnprocessed: false };
+            // const nextId = getNextAnnotationId(bookId, lastProcessed.id, sectionId, filter);
+            // expect(nextId).toBeNull();
+        }
+    });
+});
+
+describe("getPreviousAnnotationId with filters", () => {
+    beforeEach(async () => {
+        await newFunction();
+    });
+
+    test.skip("should skip unprocessed annotations when navigating backward", () => {
+        // TODO: Requires NavigationFilter parameter
+        // Mirror of getNextAnnotationId test for backward navigation
+
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+
+        const allAnnotations = getAnnotationsForSection(sectionId, bookId);
+        const processedAnnotations = allAnnotations.annotations.filter(
+            ann => ann.category !== undefined && ann.category !== null
+        );
+
+        if (processedAnnotations.length > 1) {
+            const lastProcessed = processedAnnotations[processedAnnotations.length - 1];
+
+            // With filter:
+            // const filter = { includeProcessed: true, includeUnprocessed: false };
+            // const prevId = getPreviousAnnotationId(bookId, lastProcessed.id, sectionId, filter);
+            //
+            // const prevAnnotation = getAnnotationById(prevId, bookId);
+            // expect(prevAnnotation.category).not.toBeUndefined();
+        }
+    });
+});
+
 async function newFunction() {
     resetNanoidMock();
     resetFixtureTransformer();
