@@ -136,8 +136,13 @@ The mock data is stored in the `db.json` file in the root of the project. You ca
 - **Next Step:** Finalize Jest's configuration for React Testing Library.
 - **Next Step:** Systematically add tests for critical, interactive components like the review screen (`src/routes/review.tsx`).
 
-### Phase 3: Strengthen Core Logic & Data Layer Tests
-- **Next Step:** Continue refactoring `SourceNote` to remove transient review state (introduce `ReviewSession`?).
+### Phase 3: Strengthen Core Logic & Data Layer Tests (Decoupling)
+*   **Analysis Completed:** Identified critical coupling points between `AnnotationsNote` and `FlashcardNote`. 
+    *   `AnnotationsNote` is acting as a facade for flashcard CRUD and review state.
+    *   `createFlashcard` has mixed responsibility (source modification + flashcard creation).
+    *   Review session state (`reviewDeck`, `reviewIndex`) is currently trapped in the model.
+*   **Next Step:** (Phase 1 of Decoupling) Expose `FlashcardIndex` capabilities to look up notes by their "Source ID" and update `api.ts` to fetch `FlashcardNote` directly.
+*   **Next Step:** Continue refactoring `SourceNote` (now `AnnotationsNote`) to remove transient review state by introducing `ReviewSession`.
 
 ---
 
