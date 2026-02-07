@@ -7,11 +7,23 @@ All notable changes to this project will be documented in this file. See [standa
 ### Added
 - Dynamic breadcrumb title in flashcard modal showing "Book Name / Chapter Name"
 - Title automatically updates to "Creating New Flashcard" or "Editing: [question]" when editing flashcards
+- Documentation for known navigation bugs (`docs/bugs.md`)
+- Architecture Decision Record for Navigation Filter Contract (ADR-019)
+
+### Changed
+- Enhanced testing guide with infrastructure mocking philosophy and cross-layer contract testing
 
 ### Technical
 - Implemented React Context (`ModalTitleProvider`) for centralized modal title management
 - Decoupled title logic from plugin instance for better separation of concerns
 - Added regression tests for `useModalTitle` hook and Root component
+- Added integration test stubs for navigation with filters (see ADR-019 for implementation plan)
+- Documented backend/frontend contract drift problem and prevention strategies
+- Added `.worktrees/` to .gitignore
+
+### Known Issues
+- Navigation ignores UI filters (processed/unprocessed) - See docs/bugs.md #1
+- Modal title may not update correctly when navigating between annotations - See docs/bugs.md #2
 
 ## [0.2.0](https://github.com/AB1908/obsidian-spaced-repetition/compare/0.1.0...0.2.0) (2023-09-09)
 
