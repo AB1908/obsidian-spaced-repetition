@@ -1,0 +1,6 @@
+#!/bin/sh
+if ! grep -q '^\.worktrees/$' .gitignore; then
+  echo 'Error: Your .gitignore is missing the ".worktrees/" entry.' >&2
+  echo 'Please add ".worktrees/" to your .gitignore file to prevent committing worktree data.' >&2
+  exit 1
+fi

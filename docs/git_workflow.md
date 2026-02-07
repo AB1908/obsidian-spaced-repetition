@@ -388,3 +388,55 @@ Common issues and solutions
 | Find tech debt | `docs/todo/category.md` | Include in feature commit |
 | User-facing change | `CHANGELOG.md` | Include before merge |
 | API change | Update `README.md` or `docs/` | `docs: update [component] docs` |
+
+---
+
+## Advanced Workflow: Parallel Development with `ccmanager`
+
+For complex projects, it's often necessary to work on multiple features in parallel. To prevent interference between these tasks, we use a "Dual-Level" workflow facilitated by `ccmanager`, which manages separate `git worktree` environments for each task.
+
+### The "Dual-Level" Concept
+
+1.  **Level 1: The "Project Director" Session**
+    *   **Location:** The project's root directory.
+    *   **Purpose:** High-level strategic planning. This is where you analyze requirements, review user stories, define task boundaries, and manage the lifecycle of implementation workspaces.
+    *   **Tools:** A `gemini` session for planning, and `ccm` commands for workspace management.
+
+2.  **Level 2: The "Feature Implementer" Session**
+    *   **Location:** Inside a dedicated, isolated worktree directory (e.g., `.worktrees/<feature-name>`).
+    *   **Purpose:** Deep, focused work on a single feature. This includes writing code, running tests, and committing changes to the feature branch.
+    *   **Tools:** A dedicated `gemini` session for implementation.
+
+### Example Step-by-Step Workflow
+
+1.  **Start at Level 1 (Project Root)**
+    *   Open your terminal in the project root.
+    *   Start a `gemini` session to plan your work.
+    *   **Prompt:** "Let's review our user stories and decide on the next feature to implement."
+    *   After deciding on a task (e.g., "Implement new export format"), exit the `gemini` session.
+
+2.  **Delegate to Level 2**
+    *   In the same terminal, use `ccmanager` to create a new workspace for the task:
+        ```bash
+        ccm start feature/new-export-format
+        ```
+    *   `ccmanager` will create a new branch and a corresponding worktree in `./.worktrees/`.
+
+3.  **Work at Level 2 (New Terminal)**
+    *   Open a **new terminal window or tab**.
+    *   Navigate into the newly created worktree:
+        ```bash
+        cd .worktrees/feature-new-export-format
+        ```
+    *   Start a new, dedicated `gemini` session for implementation.
+    *   **Prompt:** "We're implementing the new export format. Let's begin by..."
+    *   Proceed with coding, testing, and committing your work on the feature branch. This session's context is entirely isolated to this task.
+
+4.  **Return to Level 1 to Integrate**
+    *   Once the feature is complete and all changes are committed, close the Level 2 terminal.
+    *   Return to your **original Level 1 terminal**.
+    *   Use `ccmanager` to merge the completed work and clean up the workspace:
+        ```bash
+        ccm close feature/new-export-format --merge
+        ```
+    *   This merges the feature branch into `main` and removes the worktree and branch. You are now ready to plan the next task from your "Project Director" context.
