@@ -1,6 +1,6 @@
 // tests/__mocks__/plugin.ts
 
-import { SourceNoteDependencies } from "src/data/utils/dependencies";
+import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 
 // This mock is designed to be very lightweight and synchronous for Jest's module mocking.
 
@@ -9,12 +9,12 @@ import { SourceNoteDependencies } from "src/data/utils/dependencies";
  *
  * @param overrides - An object to override specific properties of the mock plugin.
  *                    This allows you to tailor the mock's behavior for each test.
- *                    For example, you can provide a mock implementation for `sourceNoteIndex.getBook`.
+ *                    For example, you can provide a mock implementation for `annotationsNoteIndex.getBook`.
  */
-export function createMockPlugin(overrides?: any): SourceNoteDependencies {
+export function createMockPlugin(overrides?: any): AnnotationsNoteDependencies {
     const defaultMock = {
         // Mock the properties that your API functions actually use
-        sourceNoteIndex: {
+        annotationsNoteIndex: {
             getBook: jest.fn().mockReturnValue(null), // Default to returning null
             getSourcesForReview: jest.fn().mockReturnValue([]),
             getSourcesWithoutFlashcards: jest.fn().mockReturnValue([]),

@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { importMoonReaderExport, updateBookAnnotationsAndFrontmatter } from "src/api";
 import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
-import { BookFrontmatter } from "src/data/models/sourceNote";
+import { BookFrontmatter } from "src/data/models/AnnotationsNote";
 
 export function useImportManager() {
     const [isImporting, setIsImporting] = useState(false);

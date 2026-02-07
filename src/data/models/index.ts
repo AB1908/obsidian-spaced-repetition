@@ -1,10 +1,20 @@
-import { SourceNote } from "src/data/models/sourceNote";
-import { FlashcardNote } from "src/data/models/flashcard";
-import { annotation } from "src/data/models/annotations";
-import { paragraph } from "src/data/models/paragraphs";
+import { AnnotationsNote } from "./AnnotationsNote";
+import { FlashcardNote } from "./flashcard";
+import { annotation } from "./annotations";
+import { paragraph } from "./paragraphs";
+
+export * from "./annotations";
+export * from "./bookTree";
+export * from "./flashcard";
+export * from "./paragraphs";
+export * from "./parsedCard";
+export * from "./AnnotationsNote";
+export * from "./Source";
+export * from "./ISourceStrategy";
+export * from "./strategies/MoonReaderStrategy";
 
 export class Index {
-    sourceNoteIndex: Map<string, SourceNote>;
+    annotationsNoteIndex: Map<string, AnnotationsNote>;
     flashcardNoteIndex: Map<string, FlashcardNote>;
     annotationIndex: Map<string, (paragraph|annotation)>
 

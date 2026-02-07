@@ -6,7 +6,7 @@ import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { Root } from "src/ui/routes/root";
 import { children } from "src/ui/routes/routes";
 import ErrorPage from "src/ui/routes/errorPage";
-import { SourceNoteIndex} from "src/data/models/sourceNote";
+import { AnnotationsNoteIndex} from "src/data/models/AnnotationsNote";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { ModalTitleProvider } from "src/ui/modals/ModalTitleContext";
 
@@ -56,7 +56,7 @@ export class FlashcardModal extends Modal {
         // todo: refactor to move business logic out of modal creation
         // todo: refactor tag into a plugin setting
         this.plugin.flashcardIndex = await new FlashcardIndex().initialize();
-        this.plugin.sourceNoteIndex = await new SourceNoteIndex().initialize(this.plugin);
+        this.plugin.annotationsNoteIndex = await new AnnotationsNoteIndex().initialize(this.plugin);
         // this.plugin.notesWithFlashcards = await init();
         this.modalElReactRoot = createRoot(this.modalEl);
         this.modalElReactRoot.render(

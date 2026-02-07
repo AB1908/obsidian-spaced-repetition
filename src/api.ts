@@ -21,13 +21,15 @@ import {
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, SourceNote } from "src/data/models/sourceNote";
-import { findFilesByExtension, getAllFolders } from "src/infrastructure/disk";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
+import { findFilesByExtension, getAllFolders, getFileContents, moveFile, renameFile, createFile, getTFileForPath, updateFrontmatter } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
 import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { ImportedBook } from "./ui/routes/import/import-export";
+import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
+import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -55,12 +57,12 @@ export function setPlugin(p: SRPlugin) {
 // TODO: refactor this, not immediately apparent why we need transform
 // hint: because you have paragraphs as well
 export function getAnnotationById(blockId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     return book.getAnnotation(blockId);
 }
 
 export function getNextCard(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -71,13 +73,13 @@ export function getNextCard(bookId: string) {
 }
 
 export async function deleteFlashcard(bookId: string, flashcardId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
 
     await book.deleteFlashcard(flashcardId);
 }
 
 export function getCurrentCard(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     if (!book.isInReview() && book.canBeReviewed()) {
         book.startReviewing();
         return book.getReviewCard();
@@ -87,7 +89,7 @@ export function getCurrentCard(bookId: string) {
 }
 
 export function getFlashcardById(flashcardId: string, bookId: string): FrontendFlashcard {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     // todo: what do i do about this? when this function is called, it is guaranteed to be from a source note that
     // already has flashcards
     const flashcard: FrontendFlashcard = book.flashcardNote.flashcards.filter((t: Flashcard) => t.id === flashcardId).map(t => {
@@ -102,7 +104,7 @@ export async function updateFlashcardSchedulingMetadata(
     bookId: string,
     reviewResponse: ReviewResponse
 ) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     await book.processCardReview(flashcardId, reviewResponse);
     return true;
 }
@@ -111,7 +113,7 @@ export { addBlockIdToParagraph, isParagraph, isAnnotationOrParagraph };
 
 // TODO: create abstraction
 export async function createFlashcardForAnnotation(question: string, answer: string, annotationId: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     if (cardType == CardType.MultiLineBasic) {
         await book.createFlashcard(annotationId, question, answer, cardType);
     }
@@ -120,7 +122,7 @@ export async function createFlashcardForAnnotation(question: string, answer: str
 
 // TODO: create abstraction
 export async function updateFlashcardContentsById(flashcardId: string, question: string, answer: string, bookId: string, cardType: CardType = CardType.MultiLineBasic) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     return await book.updateFlashcardContents(flashcardId, question, answer, cardType);
 }
 
@@ -129,7 +131,7 @@ export async function updateAnnotationMetadata(
     annotationId: string,
     updates: Partial<annotation>
 ) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     return await book.updateAnnotation(annotationId, updates);
 }
 
@@ -139,7 +141,7 @@ export async function softDeleteAnnotation(bookId: string, annotationId: string)
 
 // TODO: create abstraction
 export function getAnnotationsForSection(sectionId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     const selectedSectionIndex = book.bookSections.findIndex(t => sectionId === t.id);
     const selectedSection = book.bookSections[selectedSectionIndex];
     
@@ -158,13 +160,13 @@ export function getAnnotationsForSection(sectionId: string, bookId: string) {
 }
 
 export function getFlashcardsForAnnotation(annotationId: string, bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     return book.flashcardNote.flashcards.filter(t => t.parentId === annotationId);
 }
 
 // todo: this needs to become flashcard decks for review based on flashcardindex
 export function getSourcesForReview(): ReviewBook[] {
-    const booksToReview = plugin.sourceNoteIndex.getSourcesForReview();
+    const booksToReview = plugin.annotationsNoteIndex.getSourcesForReview();
     return booksToReview.map(t => t.getReviewStats());
 }
 
@@ -186,12 +188,12 @@ export interface frontEndBook {
 }
 
 export function resetBookReviewState(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     book.resetReview();
 }
 
 export function getBookById(bookId: string): frontEndBook {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     if (book == null) {
         throw new Error("getBookById: book not found");
     }
@@ -210,8 +212,8 @@ export function getBookById(bookId: string): frontEndBook {
     };
 }
 
-export function getSourceNoteById(id: string) {
-    const book = plugin.sourceNoteIndex.getBook(id);
+export function getAnnotationsNoteById(id: string) {
+    const book = plugin.annotationsNoteIndex.getBook(id);
     if (book == null) {
         throw new Error("getBookById: book not found");
     }
@@ -222,7 +224,7 @@ export function getSourceNoteById(id: string) {
 }
 
 export function getSectionTreeForBook(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     const children = generateSectionsTree(book.bookSections);
     return {
         id: book.id,
@@ -236,7 +238,7 @@ export function getSectionTreeForBook(bookId: string) {
 }
 
 export function getBookChapters(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     return book.bookSections
         .filter((section): section is Heading => isChapter(section))
         .map(heading => ({
@@ -255,11 +257,11 @@ export interface NotesWithoutBooks {
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
-    return plugin.sourceNoteIndex.getSourcesWithoutFlashcards();
+    return plugin.annotationsNoteIndex.getSourcesWithoutFlashcards();
 }
 
-export async function createFlashcardNoteForSourceNote(bookId: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+export async function createFlashcardNoteForAnnotationsNote(bookId: string) {
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     await book.createFlashcardNote();
     // todo: there is an edge case here where multiple clicks to add to multiple
     // index writes
@@ -267,7 +269,7 @@ export async function createFlashcardNoteForSourceNote(bookId: string) {
 }
 
 export function getBreadcrumbData(bookId: string, sectionId?: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     let sectionName: string | undefined;
 
     if (sectionId) {
@@ -286,7 +288,7 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
     }
 
 export async function getImportedBooks(): Promise<ImportedBook[]> {
-    const sourceNotes = plugin.sourceNoteIndex.getAllSourceNotes();
+    const sourceNotes = plugin.annotationsNoteIndex.getAllAnnotationsNotes();
     const books: ImportedBook[] = [];
 
     for (const sourceNote of sourceNotes) {
@@ -317,19 +319,43 @@ export async function updateBookAnnotationsAndFrontmatter(
     mrexptPath: string,
     sinceId: string
 ) {
-    let book = plugin.sourceNoteIndex.getAllSourceNotes().find(b => b.path === annotationsPath);
+    let book = plugin.annotationsNoteIndex.getAllAnnotationsNotes().find(b => b.path === annotationsPath);
     if (!book) {
-        // Instantiate a temporary SourceNote if not found in index (e.g. might be a new import or filtered out)
-        book = new SourceNote(annotationsPath, plugin);
+        // Instantiate a temporary AnnotationsNote if not found in index (e.g. might be a new import or filtered out)
+        book = new AnnotationsNote(annotationsPath, plugin);
     }
     
-    await book.syncMoonReaderExport(mrexptPath, sinceId);
+    const strategy = new MoonReaderStrategy(mrexptPath);
+    const newAnnotations = await strategy.sync(sinceId);
+
+    if (newAnnotations.length === 0) {
+        new ObsidianNotice("No new annotations found.");
+        return;
+    }
+
+    // Append new annotations markdown to the file
+    const newAnnotationsMarkdown = generateMarkdownWithHeaders(newAnnotations);
+    const tfile = getTFileForPath(annotationsPath);
+    // @ts-ignore
+    await app.vault.append(tfile, '\n' + newAnnotationsMarkdown); // Add a newline before appending
+
+    // Find the new highest ID among all annotations
+    const allAnnotations = await strategy.extract();
+    const newLastExportedID = Math.max(...allAnnotations.map(ann => parseInt(ann.id, 10)));
+
+    // Update frontmatter values using the new disk utility
+    await updateFrontmatter(annotationsPath, {
+        lastExportedTimestamp: Date.now(),
+        lastExportedID: newLastExportedID,
+    });
+
+    new ObsidianNotice(`Updated ${newAnnotations.length} new annotations.`);
 }
 
 
 
 export function getPreviousAnnotationId(bookId: string, blockId: string, sectionId?: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     const index = book.bookSections.findIndex(t => t.id === blockId);
     if (index === -1) return null;
 
@@ -349,7 +375,7 @@ export function getPreviousAnnotationId(bookId: string, blockId: string, section
 }
 
 export function getNextAnnotationId(bookId: string, blockId: string, sectionId?: string) {
-    const book = plugin.sourceNoteIndex.getBook(bookId);
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
     const index = book.bookSections.findIndex(t => t.id === blockId);
     if (index === -1) return null;
 
@@ -376,5 +402,40 @@ export async function getUnimportedMrExptFiles(): Promise<string[]> {
 }
 
 export async function importMoonReaderExport(mrexptPath: string, destinationFolder: string) {
-    return await SourceNote.createFromMoonReaderExport(mrexptPath, destinationFolder);
+    const strategy = new MoonReaderStrategy(mrexptPath);
+    const annotations = await strategy.extract();
+
+    if (annotations.length === 0) {
+        throw new Error("No annotations found in the export file.");
+    }
+
+    const lastExportedID = Math.max(...annotations.map(ann => parseInt(ann.id, 10)));
+
+    const fileName = mrexptPath.split("/").pop();
+    const newMrexptPath = `${destinationFolder}/${fileName}`;
+    await moveFile(mrexptPath, newMrexptPath);
+    const annotationsPath = `${destinationFolder}/Annotations.md`;
+    // @ts-ignore
+    const existingFile = app.vault.getAbstractFileByPath(annotationsPath);
+    if (existingFile) {
+        await renameFile(annotationsPath, "Annotations_old.md");
+    }
+
+    const bookTitle = annotations.find(ann => ann.title)?.title || "Unknown Book";
+
+    const frontmatter = `---
+path: "${newMrexptPath}"
+title: "${bookTitle}"
+author: ""
+lastExportedTimestamp: ${Date.now()}
+lastExportedID: ${lastExportedID}
+tags:
+  - "review/book"
+---
+`;
+
+    const markdown = generateMarkdownWithHeaders(annotations);
+    await createFile(annotationsPath, frontmatter + markdown);
+
+    return annotationsPath;
 }

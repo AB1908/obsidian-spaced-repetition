@@ -1,4 +1,21 @@
-import { parseAnnotations } from "src/data/models/annotations";
+import { parseAnnotations, isAnnotationProcessed } from "src/data/models/annotations";
+
+describe("isAnnotationProcessed", () => {
+    test("should return true if annotation has a category", () => {
+        const annotation = { id: "1", type: "note", highlight: "hi", note: "", category: 1 };
+        expect(isAnnotationProcessed(annotation)).toBe(true);
+    });
+
+    test("should return false if annotation has no category", () => {
+        const annotation = { id: "2", type: "note", highlight: "hi", note: "" };
+        expect(isAnnotationProcessed(annotation)).toBe(false);
+    });
+
+    test("should return false if category is null", () => {
+        const annotation = { id: "3", type: "note", highlight: "hi", note: "", category: null } as any;
+        expect(isAnnotationProcessed(annotation)).toBe(false);
+    });
+});
 
 describe("parseAnnotations should parse an annotation with", () => {
     test("a single line highlight", () => {

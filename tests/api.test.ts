@@ -25,7 +25,7 @@ import { resetNanoidMock, setupNanoidMock } from "./nanoid-mock";
 import { resetFixtureTransformer } from "./helpers";
 setupNanoidMock();
 
-import { SourceNoteIndex } from "src/data/models/sourceNote";
+import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { createMockPlugin } from "./__mocks__/plugin";
 import {
     deleteFlashcard,
@@ -48,7 +48,7 @@ import {
     getSectionTreeForBook,
     getBookChapters,
     getNotesWithoutReview,
-    createFlashcardNoteForSourceNote,
+    createFlashcardNoteForAnnotationsNote,
     getNextAnnotationId,
     getPreviousAnnotationId,
 } from "src/api";
@@ -62,7 +62,7 @@ describe("getBookById", () => {
         await newFunction();
     });
 
-    it("should call the sourceNoteIndex to find a book", () => {
+    it("should call the annotationsNoteIndex to find a book", () => {
         expect(getBookById("t0000010")).toEqual({
             id: "t0000010",
             name: "Untitled",
@@ -484,8 +484,8 @@ describe("getNotesWithoutReview", () => {
         expect(getNotesWithoutReview()).toMatchInlineSnapshot(`[]`);
     });
 });
-// createFlashcardNoteForSourceNote
-describe("createFlashcardNoteForSourceNote", () => {
+// createFlashcardNoteForAnnotationsNote
+describe("createFlashcardNoteForAnnotationsNote", () => {
     beforeEach(async () => {
         await newFunction();
     });
@@ -493,7 +493,7 @@ describe("createFlashcardNoteForSourceNote", () => {
     test("should throw an error if a flashcard note already exists", async () => {
         const bookId = "t0000010";
         // This should fail because the setup in newFunction() already creates this note
-        await expect(createFlashcardNoteForSourceNote(bookId)).rejects.toThrow(
+        await expect(createFlashcardNoteForAnnotationsNote(bookId)).rejects.toThrow(
             "addFlashcardNoteToIndex: Untitled - Flashcards.md is already in the index"
         );
     });
@@ -642,8 +642,8 @@ async function newFunction() {
     mockPlugin.fileTagsMap = fileTags();
     mockPlugin.index = new Index();
     mockPlugin.flashcardIndex = new FlashcardIndex();
-    mockPlugin.sourceNoteIndex = new SourceNoteIndex();
+    mockPlugin.annotationsNoteIndex = new AnnotationsNoteIndex();
     mockPlugin.flashcardIndex = await mockPlugin.flashcardIndex.initialize();
-    mockPlugin.sourceNoteIndex = await mockPlugin.sourceNoteIndex.initialize(mockPlugin);
+    mockPlugin.annotationsNoteIndex = await mockPlugin.annotationsNoteIndex.initialize(mockPlugin);
     setPlugin(mockPlugin);
 }

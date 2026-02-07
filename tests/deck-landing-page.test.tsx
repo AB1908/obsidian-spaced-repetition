@@ -1,7 +1,7 @@
-import React from 'react';
-import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import '@testing-library/jest-dom';
-import { createMemoryRouter, RouterProvider } from 'react-router-dom';
+import React from "react";
+import { render, screen, fireEvent, waitFor } from "@testing-library/react";
+import "@testing-library/jest-dom";
+import { createMemoryRouter, RouterProvider } from "react-router-dom";
 
 import { createDiskMockFromFixtures, resetFixtureTransformer } from "./helpers";
 jest.mock("src/infrastructure/disk", () => {
@@ -23,34 +23,33 @@ jest.mock("src/infrastructure/disk", () => {
 import { setupNanoidMock, resetNanoidMock } from "./nanoid-mock";
 setupNanoidMock();
 
-import { DeckLandingPage, BookButtons, deckLoader } from 'src/ui/routes/books/book';
-import { ChapterList, chapterLoader } from 'src/ui/components/ChapterList';
+import { DeckLandingPage, BookButtons, deckLoader } from "src/ui/routes/books/book";
+import { ChapterList, chapterLoader } from "src/ui/components/ChapterList";
 import { setPlugin } from "src/api";
 import { createMockPlugin } from "./__mocks__/plugin";
-import { Index } from 'src/data/models';
-import { FlashcardIndex } from 'src/data/models/flashcard';
-import { SourceNoteIndex } from 'src/data/models/sourceNote';
-import { fileTags } from 'src/infrastructure/disk';
+import { Index } from "src/data/models";
+import { FlashcardIndex } from "src/data/models/flashcard";
+import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
+import { fileTags } from "src/infrastructure/disk";
 
 async function initializePlugin() {
-    
     resetFixtureTransformer();
     const mockPlugin = createMockPlugin();
     mockPlugin.fileTagsMap = fileTags();
     mockPlugin.index = new Index();
     mockPlugin.flashcardIndex = new FlashcardIndex();
-    mockPlugin.sourceNoteIndex = new SourceNoteIndex();
+    mockPlugin.annotationsNoteIndex = new AnnotationsNoteIndex();
     mockPlugin.flashcardIndex = await mockPlugin.flashcardIndex.initialize();
-    mockPlugin.sourceNoteIndex = await mockPlugin.sourceNoteIndex.initialize(mockPlugin);
+    mockPlugin.annotationsNoteIndex = await mockPlugin.annotationsNoteIndex.initialize(mockPlugin);
     setPlugin(mockPlugin);
 }
 
-describe('DeckLandingPage Navigation', () => {
+describe("DeckLandingPage Navigation", () => {
     beforeEach(async () => {
         await initializePlugin();
     });
 
-    test('should render the deck preview and navigate to the chapter list', async () => {
+    test("should render the deck preview and navigate to the chapter list", async () => {
         const bookId = "t0000010";
         const routes = [
             {
@@ -78,133 +77,141 @@ describe('DeckLandingPage Navigation', () => {
 
         const { container } = render(<RouterProvider router={router} />);
 
-        await screen.findByText('Create New Cards');
+        await screen.findByText("Create New Cards");
 
         // Initial snapshot
         expect(container).toMatchInlineSnapshot(`
-<div>
-  <h4>
-    <div
-      class="tree-item-flair-outer"
-    >
-      <span>
-        <span
-          aria-label="MATURE"
-          class="tree-item-flair sr-deck-counts due-cards"
-        >
-          1
-        </span>
-        <span
-          aria-label="NEW"
-          class="tree-item-flair sr-deck-counts new-cards"
-        >
-          1
-        </span>
-        <span
-          aria-label="LEARNING"
-          class="tree-item-flair sr-deck-counts total-cards"
-        >
-          3
-        </span>
-      </span>
-    </div>
-  </h4>
-  <h4>
-    <span
-      class="tree-item-flair sr-deck-counts "
-    >
-      0
-    </span>
-    <span
-      class="tree-item-flair sr-deck-counts "
-    >
-      2
-    </span>
-  </h4>
-  <p>
-    <a
-      href="/books/t0000010/chapters"
-    >
-      <button>
-        Create New Cards
-      </button>
-    </a>
-    <button>
-      Review
-    </button>
-  </p>
-</div>
-`);
+            <div>
+              <h3>
+                Untitled
+              </h3>
+              <h4>
+                <div
+                  class="tree-item-flair-outer"
+                >
+                  <span>
+                    <span
+                      aria-label="MATURE"
+                      class="tree-item-flair sr-deck-counts due-cards"
+                    >
+                      1
+                    </span>
+                    <span
+                      aria-label="NEW"
+                      class="tree-item-flair sr-deck-counts new-cards"
+                    >
+                      1
+                    </span>
+                    <span
+                      aria-label="LEARNING"
+                      class="tree-item-flair sr-deck-counts total-cards"
+                    >
+                      3
+                    </span>
+                  </span>
+                </div>
+              </h4>
+              <h4>
+                <span
+                  class="tree-item-flair sr-deck-counts "
+                >
+                  0
+                </span>
+                <span
+                  class="tree-item-flair sr-deck-counts "
+                >
+                  2
+                </span>
+              </h4>
+              <p>
+                <a
+                  href="/books/t0000010/chapters"
+                >
+                  <button>
+                    Create New Cards
+                  </button>
+                </a>
+                <button>
+                  Review
+                </button>
+              </p>
+            </div>
+        `);
 
-        fireEvent.click(screen.getByText('Create New Cards'));
+        fireEvent.click(screen.getByText("Create New Cards"));
 
-        await waitFor(() => screen.getByText('Add flashcards from:'));
+        await waitFor(() => screen.getByText("Add flashcards from:"));
 
-        expect(screen.getByText('Chapter 3: Pulling the rabbit out of the hat')).toBeInTheDocument();
-        
+        expect(
+            screen.getByText("Chapter 3: Pulling the rabbit out of the hat")
+        ).toBeInTheDocument();
+
         // Snapshot after navigation
         expect(container).toMatchInlineSnapshot(`
-<div>
-  <h4>
-    <div
-      class="tree-item-flair-outer"
-    >
-      <span>
-        <span
-          aria-label="MATURE"
-          class="tree-item-flair sr-deck-counts due-cards"
-        >
-          1
-        </span>
-        <span
-          aria-label="NEW"
-          class="tree-item-flair sr-deck-counts new-cards"
-        >
-          1
-        </span>
-        <span
-          aria-label="LEARNING"
-          class="tree-item-flair sr-deck-counts total-cards"
-        >
-          3
-        </span>
-      </span>
-    </div>
-  </h4>
-  <h4>
-    <span
-      class="tree-item-flair sr-deck-counts "
-    >
-      0
-    </span>
-    <span
-      class="tree-item-flair sr-deck-counts "
-    >
-      2
-    </span>
-  </h4>
-  <p>
-    Add flashcards from:
-  </p>
-  <div
-    class="chapter-tree"
-  >
-    <ul
-      class="sr-chapter-list"
-    >
-      <li
-        class="tree-item-self is-clickable"
-      >
-        <a
-          class="tree-item-inner"
-          href="/books/t0000010/chapters/t0000011/annotations"
-        >
-          Chapter 3: Pulling the rabbit out of the hat
-        </a>
-      </li>
-    </ul>
-  </div>
-</div>
-`);
+            <div>
+              <h3>
+                Untitled
+              </h3>
+              <h4>
+                <div
+                  class="tree-item-flair-outer"
+                >
+                  <span>
+                    <span
+                      aria-label="MATURE"
+                      class="tree-item-flair sr-deck-counts due-cards"
+                    >
+                      1
+                    </span>
+                    <span
+                      aria-label="NEW"
+                      class="tree-item-flair sr-deck-counts new-cards"
+                    >
+                      1
+                    </span>
+                    <span
+                      aria-label="LEARNING"
+                      class="tree-item-flair sr-deck-counts total-cards"
+                    >
+                      3
+                    </span>
+                  </span>
+                </div>
+              </h4>
+              <h4>
+                <span
+                  class="tree-item-flair sr-deck-counts "
+                >
+                  0
+                </span>
+                <span
+                  class="tree-item-flair sr-deck-counts "
+                >
+                  2
+                </span>
+              </h4>
+              <p>
+                Add flashcards from:
+              </p>
+              <div
+                class="chapter-tree"
+              >
+                <ul
+                  class="sr-chapter-list"
+                >
+                  <li
+                    class="tree-item-self is-clickable"
+                  >
+                    <a
+                      class="tree-item-inner"
+                      href="/books/t0000010/chapters/t0000011/annotations"
+                    >
+                      Chapter 3: Pulling the rabbit out of the hat
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
+        `);
     });
 });
