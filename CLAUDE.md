@@ -129,7 +129,7 @@ docs/
    - Squash WIP commits into meaningful units
    - Update `CHANGELOG.md`, convert context to feature docs
    - Move `docs/context/` to archive or `docs/features/`
-5. **Merge:** Use `--no-ff` merge with reference to docs
+5. **Merge:** Fast-forward merge (no `--no-ff`) to preserve atomic commits in linear history
 
 **Commit Convention:** Use Conventional Commits (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`)
 

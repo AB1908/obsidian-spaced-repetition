@@ -196,6 +196,39 @@ git commit -m "docs: update for navigation system"
 ```
 
 ### 5. Merge to Main
+
+**Choose your merge strategy based on what you want in history:**
+
+#### Strategy A: Linear History with Atomic Commits (RECOMMENDED)
+
+Use this when you've rebased and want each atomic commit visible in main's history.
+
+```bash
+git checkout main
+git merge feature/navigation-system  # Fast-forward merge (no --no-ff!)
+
+# Tag if it's a release
+git tag -a v0.3.0 -m "v0.3.0: Navigation system"
+git push origin main --tags
+```
+
+**Result:** Linear history showing all your atomic commits:
+```
+* c0ce8f5 chore(test): remove obsolete api.test.ts snapshot
+* 79d1ce8 fix(test): AnnotationsNote tests use existing disk mocks
+* a299362 docs: update roadmap, analyze model coupling
+* 9870e40 refactor(model): rename SourceNote to AnnotationsNote
+```
+
+**When to use:**
+- You rebased/squashed commits to create a clean history
+- You want atomic commits visible for easier debugging/bisecting
+- You're working solo and history clarity matters more than branch tracking
+
+#### Strategy B: Merge Commit with Feature Branch (ALTERNATIVE)
+
+Use this when you want to preserve the branch boundary and group related commits.
+
 ```bash
 git checkout main
 git merge feature/navigation-system --no-ff -m "feat: add navigation system
@@ -205,6 +238,39 @@ See CHANGELOG.md and docs/features/navigation.md for details."
 
 # Tag if it's a release
 git tag -a v0.3.0 -m "v0.3.0: Navigation system"
+git push origin main --tags
+```
+
+**Result:** Non-linear history with merge commit:
+```
+*   b3c94d9 Merge branch 'feature/navigation-system'
+|\
+| * c0ce8f5 chore(test): remove obsolete snapshot
+| * 79d1ce8 fix(test): use existing disk mocks
+| * a299362 docs: update roadmap
+| * 9870e40 refactor(model): rename SourceNote
+|/
+* 5211820 docs: add navigation bug analysis
+```
+
+**When to use:**
+- Working with collaborators who need to see branch history
+- You want to group a feature's commits together
+- You don't mind non-linear history
+
+#### If You Accidentally Used --no-ff After Rebasing
+
+If you rebased to create atomic commits but accidentally used `--no-ff` and now have a merge commit bundling your work:
+
+```bash
+# 1. Reset to before the merge (assuming last commit is the merge)
+git reset --hard HEAD^1
+
+# 2. Fast-forward merge instead
+git merge feature/navigation-system
+
+# 3. Force-push if already pushed to remote
+git push --force-with-lease origin main
 ```
 
 ## Documentation Templates
