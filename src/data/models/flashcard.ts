@@ -29,6 +29,7 @@ export interface AbstractFlashcard {
     parentId: string,
     // this is to update the card so that I can avoid nesting additional objects inside this one
     parsedCardId: string,
+    fingerprint?: string,
 }
 
 export abstract class AbstractFlashcard implements AbstractFlashcard {
@@ -45,6 +46,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
     parentId: string;
     flag: FLAG;
     parsedCardId: string;
+    fingerprint?: string;
 
     // cardMetadata and highlight ID are mutually exclusive properties. Given that there is no constructor overloading
     // probably should change this to be a union type
@@ -57,6 +59,7 @@ export abstract class AbstractFlashcard implements AbstractFlashcard {
         this.interval = cardMetadata?.interval;
         this.parentId = cardMetadata?.annotationId || annotationId;
         this.flag = cardMetadata?.flag;
+        this.fingerprint = cardMetadata?.fingerprint;
         this.siblings = [];
         this.parsedCardId = parsedCardId;
     }
@@ -174,8 +177,8 @@ export class FlashcardNote {
         return this;
     }
 
-    async createCard(annotationId: string, question: string, answer: string, cardType: CardType) {
-        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.path, annotationId);
+    async createCard(annotationId: string, question: string, answer: string, cardType: CardType, fingerprint?: string) {
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.path, annotationId, undefined, fingerprint);
         this.parsedCards.push(parsedCard);
         const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
         this.flashcards.push(card);

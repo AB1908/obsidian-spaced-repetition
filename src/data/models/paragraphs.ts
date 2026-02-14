@@ -7,7 +7,9 @@ export interface paragraph {
     id: string,
     text: string,
     wasIdPresent: boolean,
-    hasFlashcards: boolean
+    hasFlashcards: boolean,
+    fingerprint?: string,
+    drifted?: boolean
 }
 
 // todo: edge case where there are no headings
