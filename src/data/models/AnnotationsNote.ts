@@ -15,7 +15,7 @@ import { CardType } from "src/types/CardType";
 import {parseMetadata} from "src/data/parser";
 import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
-import { generateFingerprint } from "src/data/utils/fingerprint";
+import { generateFingerprint, hasContentDrifted } from "src/data/utils/fingerprint";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -317,6 +317,8 @@ export class AnnotationsNote implements frontbook {
             this.plugin
         );
 
+        this.detectDrift();
+
         this.name = getParentOrFilename(this.path);
 
         if (this.plugin.fileTagsMap.has(this.path)) {
@@ -332,6 +334,20 @@ export class AnnotationsNote implements frontbook {
         // plugin does not exist here, what to do?
         this.generateReviewDeck();
         return this;
+    }
+
+    private detectDrift() {
+        if (!this.flashcardNote) return;
+        for (const section of this.bookSections) {
+            if (!isParagraph(section) || !section.hasFlashcards) continue;
+            const linkedCards = this.flashcardNote.flashcards.filter(f => f.parentId === section.id);
+            for (const card of linkedCards) {
+                if (card.fingerprint && hasContentDrifted(card.fingerprint, section.text)) {
+                    section.drifted = true;
+                    break;
+                }
+            }
+        }
     }
 
     canBeReviewed() {
