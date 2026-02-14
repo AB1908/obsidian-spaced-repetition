@@ -11,7 +11,7 @@ export function generateFingerprint(text: string): string {
     for (let i = 0; i < text.length; i++) {
         hash = ((hash << 5) + hash + text.charCodeAt(i)) >>> 0;
     }
-    return hash.toString(16);
+    return hash.toString(16).padStart(8, '0').slice(0, 6);
 }
 
 export function hasContentDrifted(storedFingerprint: string, currentText: string): boolean {
