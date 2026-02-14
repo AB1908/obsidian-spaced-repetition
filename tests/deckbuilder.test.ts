@@ -53,4 +53,35 @@ describe("metadata parser", () => {
             ease: 270,
         });
     });
+
+    test("metadata with fingerprint and no scheduling", () => {
+        const metadata = "<!--SR:tWxSv_No!fp:a1b2c3-->";
+        expect(parseMetadata(metadata)).toEqual({
+            annotationId: "tWxSv_No",
+            flag: null,
+            dueDate: null,
+            interval: null,
+            ease: null,
+            fingerprint: "a1b2c3",
+        });
+    });
+
+    test("metadata with fingerprint and scheduling", () => {
+        const metadata = "<!--SR:abc123!L,2024-10-21,1,210!fp:dead01-->";
+        expect(parseMetadata(metadata)).toEqual({
+            flag: FLAG.LEARNING,
+            annotationId: "abc123",
+            dueDate: "2024-10-21",
+            interval: 1,
+            ease: 210,
+            fingerprint: "dead01",
+        });
+    });
+
+    test("backward compat: metadata without fingerprint still parses", () => {
+        const metadata = "<!--SR:abc123!L,2024-10-21,1,210-->";
+        const result = parseMetadata(metadata);
+        expect(result.annotationId).toBe("abc123");
+        expect(result.fingerprint).toBeUndefined();
+    });
 });

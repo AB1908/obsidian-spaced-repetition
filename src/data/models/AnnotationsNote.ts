@@ -15,6 +15,7 @@ import { CardType } from "src/types/CardType";
 import {parseMetadata} from "src/data/parser";
 import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
+import { generateFingerprint } from "src/data/utils/fingerprint";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -111,10 +112,12 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             // todo: test coverage
                 const start = cacheItem.position.start.line;
                 const end = cacheItem.position.end.line + 1;
+                const text = fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, "");
                 const paragraph = {
                     id: cacheItem.id || nanoid(8),
-                    text: fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, ""),
+                    text,
                     wasIdPresent: cacheItem.id ? true : false,
+                    fingerprint: generateFingerprint(text),
                 }
             let item = {
                 ...paragraph,
@@ -468,7 +471,8 @@ export class AnnotationsNote implements frontbook {
             const text = addBlockIdToParagraph(block);
             await updateCardOnDisk(this.path, block.text, text);
         }
-        await this.flashcardNote.createCard(annotationId, question, answer, cardType);
+        const fingerprint = isParagraph(block) ? block.fingerprint : undefined;
+        await this.flashcardNote.createCard(annotationId, question, answer, cardType, fingerprint);
     }
 
     async deleteFlashcard(id: string) {

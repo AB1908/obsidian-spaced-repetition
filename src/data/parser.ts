@@ -34,6 +34,7 @@ const SCHEDULING_REGEX = /(!(?<flag>[BSL]),(?<dueDate>.{10}),(?<interval>\d+),(?
 // For now, annotation ids are only numerical
 // todo: fix this regex because paragraphs can have arbitrary length id
 const ANNOTATION_ID_REGEX = /SR:(?<annotationId>[A-Za-z0-9]{3,8})/g;
+const FINGERPRINT_REGEX = /!fp:(?<fingerprint>[0-9a-f]+)/;
 
 export interface FlashcardMetadata {
     ease: number|null;
@@ -41,6 +42,7 @@ export interface FlashcardMetadata {
     interval: number|null;
     annotationId: string;
     flag: FLAG|null;
+    fingerprint?: string;
 }
 
 // Couldn't find a concise way of doing this that was more readable
@@ -60,18 +62,21 @@ function stringToFlag(flag: string): FLAG {
 export function parseMetadata(text: string): FlashcardMetadata {
     const scheduling = text.matchAll(SCHEDULING_REGEX).next().value;
     const annotationId = text.matchAll(ANNOTATION_ID_REGEX).next().value?.groups?.annotationId;
+    const fingerprintMatch = text.match(FINGERPRINT_REGEX);
+    const fingerprint = fingerprintMatch?.groups?.fingerprint;
     if (annotationId == null) {
         throw new Error("how can this not have an annotation id");
     }
     if (scheduling === undefined) {
         // todo: refactor and ultimately write a better parser
-        const parentId = text.matchAll(/<!--SR:(?<parentId>.*)-->/g).next().value?.groups.parentId;
+        const parentId = text.matchAll(/<!--SR:(?<parentId>[A-Za-z0-9_]+)/g).next().value?.groups.parentId;
         return {
             flag: null,
             annotationId: parentId,
             dueDate: null,
             interval: null,
-            ease: null
+            ease: null,
+            fingerprint,
         };
     } else
         return {
@@ -80,6 +85,7 @@ export function parseMetadata(text: string): FlashcardMetadata {
             dueDate: scheduling.groups.dueDate,
             interval: Number(scheduling.groups.interval),
             ease: Number(scheduling.groups.ease),
+            fingerprint,
         };
 }
 
