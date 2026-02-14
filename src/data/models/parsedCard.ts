@@ -13,22 +13,26 @@ export interface ParsedCard {
     notePath: string,
 }
 
-// Note that this creates a learning card by default
-// todo: fix metadatatext
+export interface CreateParsedCardOptions {
+    flag?: FLAG;
+    fingerprint?: string;
+}
+
+// New cards default to LEARNING — the scheduler promotes them after first review
 export async function createParsedCard(
     questionText: string,
     answerText: string,
     cardType: CardType,
     path: string,
     annotationId: string,
-    flag: FLAG = FLAG.LEARNING,
-    fingerprint?: string
+    options?: CreateParsedCardOptions
 ): Promise<ParsedCard> {
+    const flag = options?.flag ?? FLAG.LEARNING;
     const parsedCard = {
         id: nanoid(8),
         notePath: path,
         cardText: cardTextGenerator(questionText, answerText, cardType),
-        metadataText: metadataTextGenerator(annotationId, null, flag, fingerprint),
+        metadataText: metadataTextGenerator(annotationId, null, flag, options?.fingerprint),
         // TODO: remove lineno
         lineNo: -1,
         cardType: cardType,
