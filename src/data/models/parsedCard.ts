@@ -21,13 +21,14 @@ export async function createParsedCard(
     cardType: CardType,
     path: string,
     annotationId: string,
-    flag: FLAG = FLAG.LEARNING
+    flag: FLAG = FLAG.LEARNING,
+    fingerprint?: string
 ): Promise<ParsedCard> {
     const parsedCard = {
         id: nanoid(8),
         notePath: path,
         cardText: cardTextGenerator(questionText, answerText, cardType),
-        metadataText: metadataTextGenerator(annotationId, null, flag),
+        metadataText: metadataTextGenerator(annotationId, null, flag, fingerprint),
         // TODO: remove lineno
         lineNo: -1,
         cardType: cardType,

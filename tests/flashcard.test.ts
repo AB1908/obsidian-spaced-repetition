@@ -29,6 +29,7 @@ describe("createFlashcards", () => {
                 "context": null,
                 "dueDate": null,
                 "ease": null,
+                "fingerprint": undefined,
                 "flag": null,
                 "id": "deterministic-id",
                 "interval": null,

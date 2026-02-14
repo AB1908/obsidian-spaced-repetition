@@ -21,16 +21,18 @@ export interface SchedulingMetadata {
 export function metadataTextGenerator(
     annotationId: string,
     schedulingMetadata: SchedulingMetadata | null,
-    flag = FLAG.LEARNING
+    flag = FLAG.LEARNING,
+    fingerprint?: string
 ) {
     // TODO: the default param doesn't get set for some weird reason
     if (flag === null) {
         flag = FLAG.LEARNING;
     }
+    const fpSuffix = fingerprint ? `!fp:${fingerprint}` : "";
     if (schedulingMetadata === null)
-        return `<!--SR:${annotationId}-->`;
+        return `<!--SR:${annotationId}${fpSuffix}-->`;
     else
-        return `<!--SR:${annotationId}!${flag},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.ease}-->`;
+        return `<!--SR:${annotationId}!${flag},${schedulingMetadata.dueDate},${schedulingMetadata.interval},${schedulingMetadata.ease}${fpSuffix}-->`;
 }
 
 // TODO: Allow templating?
