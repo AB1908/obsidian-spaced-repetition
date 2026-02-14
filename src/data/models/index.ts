@@ -12,6 +12,7 @@ export * from "./AnnotationsNote";
 export * from "./Source";
 export * from "./ISourceStrategy";
 export * from "./strategies/MoonReaderStrategy";
+export * from "./strategies/MarkdownSourceStrategy";
 
 export class Index {
     annotationsNoteIndex: Map<string, AnnotationsNote>;
