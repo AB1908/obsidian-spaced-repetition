@@ -178,7 +178,7 @@ export class FlashcardNote {
     }
 
     async createCard(annotationId: string, question: string, answer: string, cardType: CardType, fingerprint?: string) {
-        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.path, annotationId, undefined, fingerprint);
+        const parsedCard: ParsedCard = await createParsedCard(question, answer, cardType, this.path, annotationId, { fingerprint });
         this.parsedCards.push(parsedCard);
         const card = new Flashcard(parsedCard.id, question, answer, parseMetadata(parsedCard.metadataText), annotationId);
         this.flashcards.push(card);
