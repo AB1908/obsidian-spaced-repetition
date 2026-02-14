@@ -92,46 +92,44 @@ src/
 └── utils/              # Utility functions
 ```
 
-## Documentation Philosophy
+## Documentation & Work Organization
 
 **"Commits tell WHAT changed. Documentation tells WHY."**
 
-This project follows a structured documentation workflow:
+Three directories, lifecycle-driven:
 
 ```
 docs/
-├── decisions/       # Architecture Decision Records (ADRs)
-├── architecture/    # System design docs
-├── features/        # Feature documentation
-├── todo/            # Organized TODO lists
-└── context/         # Work-in-progress context
+├── decisions/     # Architecture Decision Records (immutable once accepted)
+├── stories/       # ALL work items: features, bugs, debt (one file per item)
+└── guides/        # Reference: testing, workflow, architecture, conventions
 ```
 
-### When to Document
+Plus `docs/archive/` for completed or stale context.
 
-| Event | Document Where | Commit Message |
-|-------|---------------|----------------|
-| Start feature | `docs/context/feature.md` | `docs: start [feature] work` |
-| Make architectural decision | `docs/decisions/ADR-XXX.md` | `docs: document [decision]` |
-| Complete feature | `docs/features/feature.md` | `docs: add [feature] documentation` |
-| Find tech debt | `docs/todo/category.md` | Include in feature commit |
-| User-facing change | `CHANGELOG.md` | Include before merge |
+### Session Start Workflow
 
-**Full workflow details:** See `docs/git_workflow.md`
+Claude scans at session start:
+1. **What's in progress?** — `grep -l "Status: In Progress" docs/stories/*`
+2. **Dependency check** — read `Depends on:` fields, flag blockers
+3. **Propose work order** — topological sort of ready items
 
-### Git Workflow Summary
+### Story File Prefixes
 
-1. **Start:** Create feature branch, add `docs/context/[feature].md`
-2. **Work:** Commit freely with WIP messages
-3. **Document decisions:** Create ADRs in `docs/decisions/` as you go
-4. **Before merging:**
-   - Review commits: `git log --oneline main..HEAD`
-   - Squash WIP commits into meaningful units
-   - Update `CHANGELOG.md`, convert context to feature docs
-   - Move `docs/context/` to archive or `docs/features/`
-5. **Merge:** Fast-forward merge (no `--no-ff`) to preserve atomic commits in linear history
+- `STORY` — feature work
+- `BUG` — confirmed defects
+- `DEBT` — technical debt
+- `SPIKE` — time-boxed research
 
-**Commit Convention:** Use Conventional Commits (`feat:`, `fix:`, `refactor:`, `docs:`, `test:`)
+### Commit Convention
+
+```
+<type>(<scope>): <what> [<STORY-ID>]
+
+<why — one line linking to user need>
+```
+
+**Full details:** See `docs/guides/work-organization.md` and `docs/guides/workflow.md`
 
 ## Testing
 
@@ -280,33 +278,31 @@ See `docs/todo/technical_debt.md` for current issues.
 
 ## Quick Reference
 
+**Find active work:**
+```bash
+grep -l "Status: In Progress" docs/stories/*
+grep -l "Status: Ready" docs/stories/*
+ls docs/stories/
+```
+
 **Find architectural context:**
 ```bash
-grep -r "keyword" docs/
-cat docs/architecture/system_overview.md
 cat docs/decisions/ADR-*.md
+cat docs/guides/architecture/system_overview.md
 ```
 
 **Find related code:**
 ```bash
 # Use path aliases
-import { X } from "src/data/models/sourceNote"
-```
-
-**Understand a feature:**
-```bash
-cat docs/features/[feature-name].md
-```
-
-**Check TODO items:**
-```bash
-cat docs/todo/technical_debt.md
+import { X } from "src/data/models/AnnotationsNote"
 ```
 
 ## Additional Resources
 
 - **Main README:** `README.md` - User-facing overview and installation
 - **Changelog:** `CHANGELOG.md` - Version history and changes
-- **System Overview:** `docs/architecture/system_overview.md`
-- **Testing Guide:** `docs/testing_guide.md`
-- **Git Workflow:** `docs/git_workflow.md` (complete workflow with templates)
+- **System Overview:** `docs/guides/architecture/system_overview.md`
+- **Testing Guide:** `docs/guides/testing.md`
+- **Git Workflow:** `docs/guides/workflow.md`
+- **Work Organization:** `docs/guides/work-organization.md`
+- **Stories/Backlog:** `docs/stories/`
