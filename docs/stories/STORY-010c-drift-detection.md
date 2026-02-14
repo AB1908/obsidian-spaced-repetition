@@ -1,7 +1,7 @@
 # STORY-010c: Content Drift Detection
 
 ## Status
-Backlog
+Done
 
 ## Epic
 [STORY-010](STORY-010-markdown-engagement.md)
@@ -21,9 +21,9 @@ As a reader, I want to see which paragraphs have changed since I made flashcards
 - [ ] Paragraphs without stored fingerprints are not flagged (backward compat)
 
 ## Tasks
-- [ ] After `bookSections()` and flashcard linking, compare fingerprints
-- [ ] Set `drifted: true` on mismatched paragraphs
-- [ ] Integration tests in `api.test.ts`
+- [x] After `bookSections()` and flashcard linking, compare fingerprints
+- [x] Set `drifted: true` on mismatched paragraphs
+- [ ] Integration tests in `api.test.ts` (deferred to STORY-010 wrap-up)
 
 ## Related
 - ADR: [ADR-020](../decisions/ADR-020-markdown-source-strategy.md)
