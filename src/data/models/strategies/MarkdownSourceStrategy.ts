@@ -1,8 +1,7 @@
 import { type annotation } from "../annotations";
 import { ISourceStrategy } from "../ISourceStrategy";
 import { getFileContents, getMetadataForFile } from "src/infrastructure/disk";
-import { nanoid } from "nanoid";
-import { generateFingerprint } from "src/data/utils/fingerprint";
+import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
 
 export class MarkdownSourceStrategy implements ISourceStrategy {
     constructor(private filePath: string) {}
@@ -17,13 +16,11 @@ export class MarkdownSourceStrategy implements ISourceStrategy {
         return metadata.sections
             .filter(s => s.type === "paragraph")
             .map(s => {
-                const text = lines.slice(s.position.start.line, s.position.end.line + 1)
-                    .join("\n")
-                    .replace(/\^.*$/g, "");
+                const extracted = extractParagraphFromSection(s, lines);
                 return {
-                    id: s.id || nanoid(8),
+                    id: extracted.id,
                     type: "paragraph",
-                    highlight: text,
+                    highlight: extracted.text,
                     note: "",
                     hasFlashcards: false,
                 };

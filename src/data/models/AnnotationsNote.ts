@@ -16,6 +16,7 @@ import {parseMetadata} from "src/data/parser";
 import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
 import { generateFingerprint, hasContentDrifted } from "src/data/utils/fingerprint";
+import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -109,15 +110,10 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
             output.push(new Heading(headings[headingIndex]));
             headingIndex++;
         } else if (cacheItem.type == "paragraph") {
-            // todo: test coverage
-                const start = cacheItem.position.start.line;
-                const end = cacheItem.position.end.line + 1;
-                const text = fileTextArray.slice(start,end).join("\n").replace(/\^.*$/g, "");
+                const extracted = extractParagraphFromSection(cacheItem, fileTextArray);
                 const paragraph = {
-                    id: cacheItem.id || nanoid(8),
-                    text,
-                    wasIdPresent: cacheItem.id ? true : false,
-                    fingerprint: generateFingerprint(text),
+                    ...extracted,
+                    fingerprint: generateFingerprint(extracted.text),
                 }
             let item = {
                 ...paragraph,
