@@ -12,15 +12,14 @@ describe("generateFingerprint", () => {
         expect(a).not.toBe(b);
     });
 
-    test("returns a hex string", () => {
+    test("returns a 6-char hex string", () => {
         const fp = generateFingerprint("test content");
-        expect(fp).toMatch(/^[0-9a-f]+$/);
+        expect(fp).toMatch(/^[0-9a-f]{6}$/);
     });
 
     test("handles empty string", () => {
         const fp = generateFingerprint("");
-        expect(typeof fp).toBe("string");
-        expect(fp.length).toBeGreaterThan(0);
+        expect(fp).toMatch(/^[0-9a-f]{6}$/);
     });
 
     test("is sensitive to whitespace", () => {
@@ -32,7 +31,7 @@ describe("generateFingerprint", () => {
     test("handles multiline text", () => {
         const text = "Line one\nLine two\nLine three";
         const fp = generateFingerprint(text);
-        expect(fp).toMatch(/^[0-9a-f]+$/);
+        expect(fp).toMatch(/^[0-9a-f]{6}$/);
     });
 });
 
