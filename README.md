@@ -64,6 +64,64 @@ If not, well, I tried.
 
 ## Contributions
 
+
+
 Please open an issue if you have a request or have encountered a bug.
+
 Please understand that I have primarily created this for personal use and may choose not to work on certain issues or features if I do not find them useful or relevant.
+
 That said, I am very happy to guide people who want to contribute.
+
+
+
+## Development
+
+
+
+This project uses a "Dual-Level" workflow for parallel development using `git worktree` and `ccmanager`.
+
+
+
+### Prerequisites
+
+
+
+- [ccmanager](https://github.com/AB1908/ccmanager) - A tool for managing worktrees and dedicated AI sessions.
+
+
+
+### Workflow
+
+
+
+1. **Level 1 (Project Root):** Used for high-level planning and strategic overview.
+
+2. **Level 2 (Worktree):** Dedicated isolation for feature implementation.
+
+
+
+To start a new feature:
+
+```bash
+
+ccm start feature/your-feature-name
+
+```
+
+This creates a new branch and worktree in `.worktrees/`. Navigate to that directory to begin work.
+
+
+
+To integrate changes:
+
+```bash
+
+ccm close feature/your-feature-name --merge
+
+```
+
+This merges the feature into `main` and cleans up the worktree.
+
+
+
+For more details on coding standards and documentation requirements, see `docs/git_workflow.md`.
