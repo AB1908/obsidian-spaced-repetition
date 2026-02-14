@@ -1,7 +1,7 @@
 # STORY-010a: Content Fingerprinting for Paragraphs
 
 ## Status
-In Progress
+Done
 
 ## Epic
 [STORY-010](STORY-010-markdown-engagement.md)

@@ -1,7 +1,7 @@
 # ADR-020: Direct Markdown Engagement Strategy
 
 ## Status
-Proposed
+Accepted
 
 ## Context
 The user wants to move beyond "sidecar" annotations for web articles converted to Markdown. The core goal is **direct engagement**: reading a note, identifying key paragraphs, and converting them into memory anchors (flashcards) without leaving the context of the source.
