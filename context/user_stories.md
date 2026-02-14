@@ -289,5 +289,35 @@
 
 ### As a developer, I want to fix a failing test so that I can ensure the quality of the codebase.
 
-**User Story:** Fix the failing `PersonalNotePage.test.tsx` test.
-**Outcome:** Resolved by mocking disk and initializing test plugin.
+---
+
+### [STORY-010] Direct Engagement with Markdown Notes
+
+**As a** learner,
+**I want to** create flashcards directly from paragraphs in a Markdown note using a mobile-optimized selection UI,
+**so that** I can engage with web articles and track my "Memory Coverage" without sidecar files.
+
+#### Metadata
+- **Priority:** High
+- **Tags:** #feature #markdown #engagement #mobile
+- **Effort/Scale:** Medium
+
+#### Context
+- **Problem:** Sidecar files (`Annotations.md`) add friction for simple web articles. Direct engagement is hindered by mobile selection difficulties and the lack of structural markers (headers) in many clippers.
+- **Solution:** Treat paragraphs as virtual annotations, inject block IDs on demand, and provide a high-density "Candidate List" for mobile.
+
+#### Execution
+- [ ] **Data Model:** Paragraph extraction with volatile-to-stable ID mapping [**Label:** `feat(model): implement Markdown paragraph scanner`]
+- [ ] **ID Injection:** Logic to append `^id` to source `.md` files upon card creation [**Label:** `feat(api): add block ID injection for markdown sources`]
+- [ ] **UI:** Scrollable list of abbreviated paragraphs for mobile selection [**Label:** `feat(ui): implement high-density paragraph selection menu`]
+- [ ] **Engagement:** "Coverage Counter" implementation (Processed Paragraphs vs. Total) [**Label:** `feat(logic): implement article coverage metrics`]
+
+#### Roadmap Hooks (Track frequency of need in docs/feedback_and_ideas.md)
+- [ ] **LLM Header Injection:** For articles with no structure.
+- [ ] **Article Tree UI:** Mimicking the book hierarchy for long-form notes.
+
+#### Verification
+- **Testing Plan:**
+    - Verify that adding a flashcard appends a `^id` to the source note.
+    - Verify that the "Coverage Counter" correctly increments when a card is added.
+    - Verify that abbreviated text in the menu doesn't lose the link to the full paragraph.
