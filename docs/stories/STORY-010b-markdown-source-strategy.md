@@ -1,7 +1,7 @@
 # STORY-010b: MarkdownSourceStrategy
 
 ## Status
-Ready
+Done
 
 ## Epic
 [STORY-010](STORY-010-markdown-engagement.md)
