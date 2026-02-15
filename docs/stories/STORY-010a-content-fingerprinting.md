@@ -14,21 +14,21 @@ As a reader who edits source notes, I want the system to detect when a paragraph
 
 ## Acceptance Criteria
 - [x] Fingerprint utility: deterministic hash from paragraph text
-- [ ] Paragraphs get `fingerprint` field at parse time
-- [ ] Fingerprint stored in flashcard metadata `<!--SR:id!flag,date,interval,ease!fp:hash-->`
-- [ ] Parser handles metadata with and without `!fp:` (backward compat)
-- [ ] Existing tests still pass
+- [x] Paragraphs get `fingerprint` field at parse time
+- [x] Fingerprint stored in flashcard metadata `<!--SR:id!flag,date,interval,ease!fp:hash-->`
+- [x] Parser handles metadata with and without `!fp:` (backward compat)
+- [x] Existing tests still pass
 
 ## Tasks
 - [x] Create `src/data/utils/fingerprint.ts` with `generateFingerprint()`, `hasContentDrifted()`
 - [x] Create `tests/data/utils/fingerprint.test.ts`
-- [ ] Add `fingerprint?`, `drifted?` to `paragraph` interface
-- [ ] Generate fingerprint in `bookSections()` paragraph branch
-- [ ] Extend `FlashcardMetadata` with `fingerprint?`
-- [ ] Update `SCHEDULING_REGEX` and `parseMetadata()` for `!fp:` segment
-- [ ] Update `metadataTextGenerator()` to serialize fingerprint
-- [ ] Pass fingerprint through card creation chain
-- [ ] Parser backward compatibility tests
+- [x] Add `fingerprint?`, `drifted?` to `paragraph` interface
+- [x] Generate fingerprint in `bookSections()` paragraph branch
+- [x] Extend `FlashcardMetadata` with `fingerprint?`
+- [x] Update `SCHEDULING_REGEX` and `parseMetadata()` for `!fp:` segment
+- [x] Update `metadataTextGenerator()` to serialize fingerprint
+- [x] Pass fingerprint through card creation chain
+- [x] Parser backward compatibility tests
 
 ## Related
 - ADR: [ADR-020](../decisions/ADR-020-markdown-source-strategy.md)

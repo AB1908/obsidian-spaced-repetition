@@ -16,14 +16,14 @@ feat/markdown-source-strategy
 As a developer, I want a formal MarkdownSourceStrategy implementing ISourceStrategy, so that markdown-based sources follow the same strategy pattern as MoonReader.
 
 ## Acceptance Criteria
-- [ ] `MarkdownSourceStrategy` class implements `ISourceStrategy`
-- [ ] `extract()` delegates to Obsidian metadata cache (not hand-parsing)
-- [ ] Exported from `src/data/models/index.ts`
+- [x] `MarkdownSourceStrategy` class implements `ISourceStrategy`
+- [x] `extract()` delegates to Obsidian metadata cache (not hand-parsing)
+- [x] Exported from `src/data/models/index.ts`
 
 ## Tasks
-- [ ] Create `src/data/models/strategies/MarkdownSourceStrategy.ts`
-- [ ] `extract()` uses `getMetadataForFile()` + `getFileContents()` from disk abstraction
-- [ ] Add export to `src/data/models/index.ts`
+- [x] Create `src/data/models/strategies/MarkdownSourceStrategy.ts`
+- [x] `extract()` uses `getMetadataForFile()` + `getFileContents()` from disk abstraction
+- [x] Add export to `src/data/models/index.ts`
 
 ## Related
 - ADR: [ADR-020](../decisions/ADR-020-markdown-source-strategy.md)
