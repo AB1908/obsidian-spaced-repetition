@@ -1,0 +1,5 @@
+{
+  "method": "getFileContents",
+  "input": "constitution.md",
+  "output": "---\ntitle: \"Claude's Constitution\"\ntags:\n  - \"clippings\"\n---\n\n## Overview\n\nClaude’s constitution is a detailed description of Anthropic’s intentions.\n\nTraining models is a difficult task, and behavior might not always reflect ideals."
+}
