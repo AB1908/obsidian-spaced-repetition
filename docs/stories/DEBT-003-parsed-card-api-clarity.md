@@ -13,8 +13,8 @@ The `flag` parameter defaults to `FLAG.LEARNING` with no documented rationale â€
 - Fragile: adding more optional params worsens the positional problem
 
 ## Acceptance Criteria
-- [ ] Replace trailing optional params with an options object
-- [ ] Document why default flag is LEARNING
+- [x] Replace trailing optional params with an options object
+- [x] Document why default flag is LEARNING
 
 ## Related
 - [DEBT-002](DEBT-002-flashcard-metadata-redundancy.md) â€” Flashcard creation chain

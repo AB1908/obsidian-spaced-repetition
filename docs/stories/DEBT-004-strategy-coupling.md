@@ -14,9 +14,9 @@ The same pattern exists in `bookSections()` (AnnotationsNote.ts:92-129) — both
 - Duplicate extraction logic between bookSections() and MarkdownSourceStrategy
 
 ## Acceptance Criteria
-- [ ] Extract section-walking logic into a shared helper (e.g., `extractSectionsFromCache()`)
-- [ ] Strategy delegates to helper rather than directly consuming CachedMetadata
-- [ ] bookSections() also uses the shared helper
+- [x] Extract section-walking logic into a shared helper (paragraph extraction helper used by both call sites)
+- [x] Strategy delegates to helper rather than directly consuming CachedMetadata
+- [x] `bookSections()` also uses the shared helper
 
 ## Related
 - [STORY-010b](STORY-010b-markdown-source-strategy.md)

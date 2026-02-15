@@ -32,10 +32,11 @@ Current `fileTags` fixture only has array-form tags. Need a fixture entry with s
 Also: test fixture uses path `constitution.md` but real vault path is `Clippings/Claude's Constitution.md`. Fixture isn't representative of production paths.
 
 ## Acceptance Criteria
-- [ ] `fileTags()` normalizes string tags to arrays
-- [ ] Test fixture includes a string-form tag entry
-- [ ] `getNotesWithoutReview` test snapshot reflects real vault structure
-- [ ] All sources load correctly when one file has string-form tags
+- [x] `fileTags()` normalizes string tags to arrays
+- [x] Source discovery no longer crashes when one file has string-form tags
+
+## Follow-up
+- Fixture representativeness work (including real vault-like paths and capture workflow) is tracked in [DEBT-010](DEBT-010-capture-fixture-cycle.md).
 
 ## Related
 - [DEBT-006](DEBT-006-disk-business-logic.md) — disk.ts business logic analysis

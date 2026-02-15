@@ -13,11 +13,11 @@ feat/markdown-source-strategy
 As a reader, I want to engage directly with markdown notes by selecting paragraphs and creating flashcards, so that I can track "memory coverage" of web articles without leaving the source context.
 
 ## Acceptance Criteria
-- [ ] MarkdownSourceStrategy exists implementing ISourceStrategy
-- [ ] Paragraphs get fingerprints at parse time
-- [ ] Fingerprints persisted in flashcard metadata
-- [ ] Drift detection flags changed paragraphs on reload
-- [ ] Backward compatibility with existing flashcard metadata
+- [x] MarkdownSourceStrategy exists implementing ISourceStrategy
+- [x] Paragraphs get fingerprints at parse time
+- [x] Fingerprints persisted in flashcard metadata
+- [x] Drift detection flags changed paragraphs on reload
+- [x] Backward compatibility with existing flashcard metadata
 
 ## Sub-Stories
 - [STORY-010a](STORY-010a-content-fingerprinting.md) — Content fingerprinting
@@ -39,3 +39,4 @@ As a reader, I want to engage directly with markdown notes by selecting paragrap
 ## Session Notes
 - 2026-02-14: Plan approved. Fingerprint utility created (tests pass). Paused to restructure docs before continuing.
 - 2026-02-15: Added clipping-aware discovery, source chooser updates, and clipping mutation confirmation flow.
+- 2026-02-15: Reconciled epic checklist with implementation state. Core STORY-010 acceptance criteria are implemented. Story remains In Progress due open end-to-end flow gaps tracked separately in DEBT-011 and BUG-001.
