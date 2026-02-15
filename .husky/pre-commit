@@ -73,3 +73,13 @@ else
     echo "✓ Commit approved (feature branch)"
   fi
 fi
+
+# Check 3: Run tests (all branches)
+echo "→ Running tests..." >&2
+if ! npm test --silent 2>&1; then
+  echo "" >&2
+  echo "❌ ERROR: Tests failed. Fix failing tests before committing." >&2
+  echo "To bypass (emergencies only): git commit --no-verify" >&2
+  exit 1
+fi
+echo "✓ All tests passed"
