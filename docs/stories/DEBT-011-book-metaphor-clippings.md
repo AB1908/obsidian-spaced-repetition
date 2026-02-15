@@ -23,10 +23,17 @@ After creating a deck from a clippings source (constitution.md), navigating to t
 - Component reuse is hampered (see DEBT-012)
 
 ## Acceptance Criteria
-- [ ] Investigate: write observation test in api.test.ts capturing post-deck-creation state for clippings
-- [ ] Determine whether AnnotationsNote needs re-initialization after file mutation
+- [x] Investigate: write observation test in api.test.ts capturing post-deck-creation state for clippings
+- [x] Determine whether AnnotationsNote needs re-initialization after file mutation
 - [ ] Design navigation model that works for both books and clippings
 - [ ] Consider whether clippings need their own route/component tree
+
+## Session Notes
+### 2026-02-15 (Agent A, CP-1 + CP-2)
+- Added a behavior test in `tests/api.test.ts` that locks post-deck-creation navigation availability for direct-markdown/clippings after `createFlashcardNoteForAnnotationsNote(..., { confirmedSourceMutation: true })`.
+- Root cause confirmed in API layer: `getBookChapters` only returned level-1 headings (`isChapter`). Clippings like `constitution.md` can have heading structure without any level-1 heading (for fixture: only `## Overview`), so chapter list was empty and downstream annotation navigation had no entrypoint.
+- Minimal fix shipped in `src/api.ts`: for direct-markdown clippings (tagged `clippings` without MoonReader frontmatter), when no level-1 chapters exist, `getBookChapters` now falls back to all headings so routes have navigable sections and annotations become available.
+- Code/test commit: `a071468`.
 
 ## Related
 - [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md)
