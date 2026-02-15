@@ -33,12 +33,27 @@ export async function deleteCardOnDisk(path: string, originalText: string) {
 }
 
 function setOfHashesWithTags(tag: string) {
-    const findTag = (tag: string) => (t: TagCache) => t.tag.includes(tag);
+    const normalizedSearchTag = tag.startsWith("#") ? tag.substring(1) : tag;
+    const findTag = (t: TagCache) => {
+        const cachedTag = t.tag.startsWith("#") ? t.tag.substring(1) : t.tag;
+        return cachedTag === normalizedSearchTag;
+    };
     const hashSet = new Set<string>();
     const fileHashes = Object.keys(metadataCache.metadataCache);
     for (const hash of fileHashes) {
         const cachedFileMetadata = metadataCache.metadataCache[hash];
-        if (cachedFileMetadata.tags?.find(findTag(tag)) || cachedFileMetadata.frontmatter?.tags?.includes(tag)) {
+        const frontmatterTags = cachedFileMetadata.frontmatter?.tags;
+        const frontmatterTagsArray = Array.isArray(frontmatterTags)
+            ? frontmatterTags
+            : (typeof frontmatterTags === "string" ? [frontmatterTags] : []);
+
+        const matchesFrontmatter = frontmatterTagsArray.some((t) => {
+            if (typeof t !== "string") return false;
+            const normalizedT = t.startsWith("#") ? t.substring(1) : t;
+            return normalizedT === normalizedSearchTag;
+        });
+
+        if (cachedFileMetadata.tags?.some(findTag) || matchesFrontmatter) {
             hashSet.add(hash);
         }
     }

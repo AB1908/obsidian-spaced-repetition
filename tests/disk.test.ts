@@ -1,6 +1,8 @@
-import {CachedMetadata} from "obsidian";
+import {CachedMetadata, TagCache} from "obsidian";
+import { filePathsWithTag } from "src/infrastructure/disk";
+import { metadataCache as facadeMetadataCache } from "src/infrastructure/obsidian-facade";
 
-export const metadataCache = {
+export const sampleMetadataCache = {
     "tags": [{
         "position": {
             "start": {
@@ -602,10 +604,163 @@ export const sampleAnnotationMetadata: CachedMetadata = {
     }
 };
 
-describe("findFilesWithHashInSet", () => {
-    test.todo("returns a set of file paths given a hash set");
-});
+describe("filePathsWithTag", () => {
+    beforeEach(() => {
+        // Reset the mocked metadata caches before each test
+        (facadeMetadataCache as any).metadataCache = {};
+        (facadeMetadataCache as any).fileCache = {};
+    });
 
-describe("setOfHashesWithTags", () => {
-    test.todo("returns a hash set given a tag");
+    test("should find files with exact tag match in frontmatter array", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                frontmatter: { tags: ["flashcards", "review"] }
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("flashcards")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("review")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("card")).toMatchInlineSnapshot(`[]`);
+    });
+
+    test("should find files with exact tag match in frontmatter string", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                frontmatter: { tags: "flashcards" }
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("flashcards")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("card")).toMatchInlineSnapshot(`[]`);
+    });
+
+    test("should find files with exact tag match in inline tags", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                tags: [{ tag: "#flashcards" }]
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("flashcards")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("card")).toMatchInlineSnapshot(`[]`);
+    });
+
+    test("should handle both inline and frontmatter tags", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                frontmatter: { tags: "recipe" },
+                tags: [{ tag: "#cooking" }]
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("recipe")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("cooking")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+    });
+
+    test("should not match substrings in frontmatter string", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                frontmatter: { tags: "flashcards" }
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("card")).toMatchInlineSnapshot(`[]`);
+    });
+
+    test("should not match substrings in inline tags", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                tags: [{ tag: "#flashcards" }]
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("card")).toMatchInlineSnapshot(`[]`);
+    });
+
+    test("should match tags even if search tag has # prefix", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                frontmatter: { tags: ["flashcards"] },
+                tags: [{ tag: "#review" }]
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("#flashcards")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("#review")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+    });
+
+    test("should match tags when frontmatter tags have # prefix", () => {
+        (facadeMetadataCache as any).metadataCache = {
+            "hash1": {
+                frontmatter: { tags: ["#flashcards"] }
+            }
+        };
+        (facadeMetadataCache as any).fileCache = {
+            "path1.md": { hash: "hash1" }
+        };
+
+        expect(filePathsWithTag("flashcards")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+        expect(filePathsWithTag("#flashcards")).toMatchInlineSnapshot(`
+            [
+              "path1.md",
+            ]
+        `);
+    });
 });
