@@ -10,7 +10,10 @@ jest.mock("src/infrastructure/disk", () => {
         "filePathsWithTag_2025-12-07T19-37-20-520Z_kx3kvy.json",
         "fileTags_2025-12-07T19-37-20-516Z_u0wrbc.json",
         "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
+        "getParentOrFilename_constitution.json",
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
+        "getMetadataForFile_constitution.json",
+        "getFileContents_constitution.json",
         "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
         "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
         "updateCardOnDisk_2025-12-25T10-00-02_ccccc.json",
@@ -309,7 +312,7 @@ describe("softDeleteAnnotation", () => {
     test.skip("should soft delete annotation and filter it from list", async () => {
         const bookId = "t0000010";
         const annotationId = "tWxSv_No";
-        const sectionId = "t0000011"; // Chapter 3
+        const sectionId = "t0000012"; // Chapter 3
 
         const before = getAnnotationsForSection(sectionId, bookId);
         expect(before.annotations.some((a) => a.id === annotationId)).toBe(true);
@@ -327,7 +330,7 @@ describe("getAnnotationsForSection", () => {
         await newFunction();
     });
     test.skip("should get annotations for section", () => {
-        expect(getAnnotationsForSection("t0000011", "t0000010")).toMatchInlineSnapshot(`
+        expect(getAnnotationsForSection("t0000012", "t0000010")).toMatchInlineSnapshot(`
             {
               "annotations": [
                 {
@@ -350,7 +353,7 @@ describe("getAnnotationsForSection", () => {
                   "type": "",
                 },
               ],
-              "id": "t0000011",
+              "id": "t0000012",
               "title": "Chapter 3: Pulling the rabbit out of the hat",
             }
         `);
@@ -432,7 +435,7 @@ describe("getSectionTreeForBook", () => {
                         "with": 2,
                         "without": 0,
                       },
-                      "id": "t0000012",
+                      "id": "t0000013",
                       "level": 2,
                       "name": "Relating study and test",
                     },
@@ -441,7 +444,7 @@ describe("getSectionTreeForBook", () => {
                     "with": 2,
                     "without": 0,
                   },
-                  "id": "t0000011",
+                  "id": "t0000012",
                   "level": 1,
                   "name": "Chapter 3: Pulling the rabbit out of the hat",
                 },
@@ -472,7 +475,7 @@ describe("getBookChapters", () => {
                   "with": 2,
                   "without": 0,
                 },
-                "id": "t0000011",
+                "id": "t0000012",
                 "level": 1,
                 "name": "Chapter 3: Pulling the rabbit out of the hat",
               },
@@ -486,7 +489,19 @@ describe("getNotesWithoutReview", () => {
         await newFunction();
     });
     test("should get notes without review", () => {
-        expect(getNotesWithoutReview()).toMatchInlineSnapshot(`[]`);
+        expect(getNotesWithoutReview()).toMatchInlineSnapshot(`
+            [
+              {
+                "id": "t0000011",
+                "name": "Claude's Constitution",
+                "requiresSourceMutationConfirmation": true,
+                "sourceType": "direct-markdown",
+                "tags": [
+                  "clippings",
+                ],
+              },
+            ]
+        `);
     });
 });
 // createFlashcardNoteForAnnotationsNote
@@ -513,7 +528,7 @@ describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
 
     test("observe annotations available in test fixture", () => {
         const bookId = "t0000010";
-        const sectionId = "t0000011";
+        const sectionId = "t0000012";
 
         const result = getAnnotationsForSection(sectionId, bookId);
 
@@ -551,7 +566,7 @@ describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
 
     test("observe forward navigation from first to second annotation", () => {
         const bookId = "t0000010";
-        const sectionId = "t0000011";
+        const sectionId = "t0000012";
         const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
 
         if (allAnnotations.length < 2) {
@@ -580,7 +595,7 @@ describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
 
     test("observe backward navigation from last to previous annotation", () => {
         const bookId = "t0000010";
-        const sectionId = "t0000011";
+        const sectionId = "t0000012";
         const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
 
         if (allAnnotations.length < 2) {
@@ -609,7 +624,7 @@ describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
 
     test("observe section boundary behavior - no next after last annotation", () => {
         const bookId = "t0000010";
-        const sectionId = "t0000011";
+        const sectionId = "t0000012";
         const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
         const last = allAnnotations[allAnnotations.length - 1];
 
@@ -625,7 +640,7 @@ describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
 
     test("observe section boundary behavior - no previous before first annotation", () => {
         const bookId = "t0000010";
-        const sectionId = "t0000011";
+        const sectionId = "t0000012";
         const allAnnotations = getAnnotationsForSection(sectionId, bookId).annotations;
         const first = allAnnotations[0];
 
@@ -653,32 +668,37 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
 
     test("KNOWN BUG: updateAnnotationMetadata throws on paragraph (category setup)", async () => {
         const bookId = "t0000010";
-        await expect(updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 }))
-            .rejects.toThrow();
+        await expect(
+            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
+        ).rejects.toThrow();
     });
 
     test("KNOWN BUG: getNextAnnotationId ignores processed filter", async () => {
         const bookId = "t0000010";
-        await expect(updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 }))
-            .rejects.toThrow();
+        await expect(
+            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
+        ).rejects.toThrow();
     });
 
     test("KNOWN BUG: getPreviousAnnotationId ignores unprocessed filter", async () => {
         const bookId = "t0000010";
-        await expect(updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 }))
-            .rejects.toThrow();
+        await expect(
+            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
+        ).rejects.toThrow();
     });
 
     test("KNOWN BUG: unprocessed filter should find nothing when all processed", async () => {
         const bookId = "t0000010";
-        await expect(updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 }))
-            .rejects.toThrow();
+        await expect(
+            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
+        ).rejects.toThrow();
     });
 
     test("KNOWN BUG: navigation ignores color filter", async () => {
         const bookId = "t0000010";
-        await expect(updateAnnotationMetadata(bookId, "tekXLAu8", { originalColor: "#ff0000" }))
-            .rejects.toThrow();
+        await expect(
+            updateAnnotationMetadata(bookId, "tekXLAu8", { originalColor: "#ff0000" })
+        ).rejects.toThrow();
     });
 
     describe("Expected behavior after fix (ADR-019)", () => {
@@ -715,7 +735,7 @@ describe("Fingerprint integration [STORY-010a]", () => {
     test("paragraphs have fingerprint after initialization", () => {
         const book = getSectionTreeForBook("t0000010");
         // Access the raw AnnotationsNote to inspect bookSections
-        const sections = getAnnotationsForSection("t0000011", "t0000010");
+        const sections = getAnnotationsForSection("t0000012", "t0000010");
         expect(sections.annotations.length).toBeGreaterThan(0);
     });
 

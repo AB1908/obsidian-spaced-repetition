@@ -15,6 +15,12 @@
         "review/book",
         "review/note"
       ]
+    ],
+    [
+      "constitution.md",
+      [
+        "clippings"
+      ]
     ]
   ]
 }
