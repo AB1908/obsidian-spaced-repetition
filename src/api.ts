@@ -243,8 +243,15 @@ export function getSectionTreeForBook(bookId: string) {
 
 export function getBookChapters(bookId: string) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
-    return book.bookSections
-        .filter((section): section is Heading => isChapter(section))
+    const chapterSections = book.bookSections.filter((section): section is Heading => isChapter(section));
+    const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
+    const isDirectClipping = hasTag(book.tags || [], "clippings") && !hasMoonReaderFrontmatter;
+
+    const sections = chapterSections.length === 0 && isDirectClipping
+        ? book.bookSections.filter((section): section is Heading => isHeading(section))
+        : chapterSections;
+
+    return sections
         .map(heading => ({
             id: heading.id,
             name: heading.name,
