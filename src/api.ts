@@ -23,7 +23,7 @@ import {
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
-import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getParentOrFilename, moveFile, renameFile, createFile, getTFileForPath, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
+import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getMetadataForFile, getParentOrFilename, moveFile, renameFile, createFile, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
@@ -277,8 +277,7 @@ export function getNotesWithoutReview(): NotesWithoutBooks[] {
 }
 
 async function addBlockIdsToParagraphs(path: string) {
-    const sourceFile = getTFileForPath(path);
-    const metadata = plugin.app.metadataCache.getFileCache(sourceFile);
+    const metadata = getMetadataForFile(path);
     const paragraphSections = metadata?.sections?.filter(section => section.type === "paragraph");
     if (!paragraphSections?.length) return;
 
@@ -298,12 +297,14 @@ async function addBlockIdsToParagraphs(path: string) {
 }
 
 async function ensureDirectMarkdownSourceInOwnFolder(sourcePath: string): Promise<string> {
-    const sourceFile = getTFileForPath(sourcePath);
-    const parentPath = sourceFile.parent.path;
-    const ownFolderPath = parentPath ? `${parentPath}/${sourceFile.basename}` : sourceFile.basename;
-    const targetPath = `${ownFolderPath}/${sourceFile.name}`;
+    const pathParts = sourcePath.split("/");
+    const fileName = pathParts[pathParts.length - 1];
+    const parentPath = pathParts.length > 1 ? pathParts.slice(0, -1).join("/") : "";
+    const baseName = fileName.replace(/\.md$/i, "");
+    const ownFolderPath = parentPath ? `${parentPath}/${baseName}` : baseName;
+    const targetPath = `${ownFolderPath}/${fileName}`;
 
-    if (sourceFile.path === targetPath) return sourceFile.path;
+    if (sourcePath === targetPath) return sourcePath;
 
     await ensureFolder(ownFolderPath);
     await moveFile(sourcePath, targetPath);
