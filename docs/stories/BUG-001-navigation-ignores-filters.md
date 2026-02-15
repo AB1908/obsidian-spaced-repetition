@@ -24,12 +24,15 @@ High
 4. Click "Next" — expected: disabled. Actual: attempts navigation
 
 ## Acceptance Criteria
-- [ ] `getNextAnnotationId` / `getPreviousAnnotationId` accept optional `NavigationFilter`
-- [ ] Navigation respects filter when provided
-- [ ] Backward compatible (no filter = current behavior)
-- [ ] Integration tests in `api.test.ts`
+- [x] `getNextAnnotationId` / `getPreviousAnnotationId` accept optional `NavigationFilter`
+- [x] Navigation respects filter when provided
+- [x] Backward compatible (no filter = current behavior)
+- [x] Integration tests in `api.test.ts`
 
 ## Related
 - ADR: [ADR-019](../decisions/ADR-019-navigation-filter-contract.md)
 - Context: `docs/archive/navigation-architecture-analysis.md`
 - Tests: Reproduction tests already in `tests/api.test.ts` (currently failing)
+
+## Session Notes
+- 2026-02-15 (Agent B, `fix/navigation-filter-contract`): implemented CP-3 filter-aware navigation contract in API and route wrappers, wired UI filter context via session storage, and replaced BUG placeholders with passing assertions for processed/unprocessed/category/color navigation behavior.
