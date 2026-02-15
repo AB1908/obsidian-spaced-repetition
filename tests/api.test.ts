@@ -14,6 +14,11 @@ jest.mock("src/infrastructure/disk", () => {
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
         "getMetadataForFile_constitution.json",
         "getFileContents_constitution.json",
+        "generateFlashcardsFileNameAndPath_constitution.json",
+        "createFlashcardsFileForBook_constitution.json",
+        "moveFile_constitution.json",
+        "ensureFolder_constitution.json",
+        "overwriteFile_constitution.json",
         "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
         "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
         "updateCardOnDisk_2025-12-25T10-00-02_ccccc.json",
@@ -516,6 +521,26 @@ describe("createFlashcardNoteForAnnotationsNote", () => {
         await expect(createFlashcardNoteForAnnotationsNote(bookId)).rejects.toThrow(
             "addFlashcardNoteToIndex: Untitled - Flashcards.md is already in the index"
         );
+    });
+});
+
+describe("createFlashcardNoteForAnnotationsNote navigation availability [DEBT-011]", () => {
+    beforeEach(async () => {
+        await newFunction();
+    });
+
+    test("post-creation direct clippings source exposes navigable sections with annotations", async () => {
+        const clipping = getNotesWithoutReview().find(source => source.sourceType === "direct-markdown");
+        expect(clipping).toBeDefined();
+
+        await createFlashcardNoteForAnnotationsNote(clipping.id, { confirmedSourceMutation: true });
+
+        const sections = getBookChapters(clipping.id);
+        expect(sections).toEqual(expect.arrayContaining([expect.objectContaining({ id: expect.any(String) })]));
+        const sectionId = sections[0]?.id;
+
+        const section = getAnnotationsForSection(sectionId, clipping.id);
+        expect(section?.annotations.length ?? 0).toBeGreaterThan(0);
     });
 });
 
