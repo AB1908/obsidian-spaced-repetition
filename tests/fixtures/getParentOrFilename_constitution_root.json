@@ -1,0 +1,5 @@
+{
+  "method": "getParentOrFilename",
+  "input": "constitution.md",
+  "output": "constitution"
+}

@@ -1,0 +1,5 @@
+{
+  "method": "createFlashcardsFileForBook",
+  "input": ["constitution/constitution.md", "constitution/Flashcards.md"],
+  "output": null
+}

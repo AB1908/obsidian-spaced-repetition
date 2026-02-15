@@ -1,0 +1,5 @@
+{
+  "method": "overwriteFile",
+  "input": ["constitution.md", ""],
+  "output": null
+}
