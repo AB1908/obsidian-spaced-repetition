@@ -23,6 +23,8 @@ As a reader, I want to engage directly with markdown notes by selecting paragrap
 - [STORY-010a](STORY-010a-content-fingerprinting.md) — Content fingerprinting
 - [STORY-010b](STORY-010b-markdown-source-strategy.md) — MarkdownSourceStrategy class
 - [STORY-010c](STORY-010c-drift-detection.md) — Drift detection on load
+- [STORY-011](STORY-011-web-clipping-filter.md) — clipping-aware source signal and discovery
+- [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md) — add new deck source chooser UX
 
 ## Context
 - **ADR:** [ADR-020](../decisions/ADR-020-markdown-source-strategy.md)
@@ -36,3 +38,4 @@ As a reader, I want to engage directly with markdown notes by selecting paragrap
 
 ## Session Notes
 - 2026-02-14: Plan approved. Fingerprint utility created (tests pass). Paused to restructure docs before continuing.
+- 2026-02-15: Added clipping-aware discovery, source chooser updates, and clipping mutation confirmation flow.
