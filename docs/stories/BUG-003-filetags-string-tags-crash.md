@@ -1,7 +1,7 @@
 # BUG-003: fileTags() Crashes When Obsidian Returns Single Tag as String
 
 ## Status
-Ready
+Done
 
 ## Description
 `fileTags()` in `src/infrastructure/disk.ts:69-70` assumes `frontmatter.tags` is always an array:
