@@ -50,7 +50,7 @@ export function Notes() {
                 )}
             </ul>
             <Link to={"create"}>
-                <button className={"create-deck"}>
+                <button className={"create-deck mod-cta sr-button"}>
                     <div ref={iconRef}></div>
                     Add new deck
                 </button>

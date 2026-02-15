@@ -1,4 +1,5 @@
 import { maturityCounts } from "src/data/models/flashcard";
+import { nanoid } from "nanoid";
 
 export interface ReviewBook {
     id: string;
@@ -22,7 +23,7 @@ import {
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
-import { findFilesByExtension, getAllFolders, getFileContents, moveFile, renameFile, createFile, getTFileForPath, updateFrontmatter } from "src/infrastructure/disk";
+import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getParentOrFilename, moveFile, renameFile, createFile, getTFileForPath, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
@@ -30,6 +31,7 @@ import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { ImportedBook } from "./ui/routes/import/import-export";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
 import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
+import { getSourceType, hasTag, type SourceType } from "src/data/source-discovery";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -252,16 +254,85 @@ export function getBookChapters(bookId: string) {
 export interface NotesWithoutBooks {
     name: string;
     id: string;
+    tags: string[];
+    sourceType: SourceType;
+    requiresSourceMutationConfirmation: boolean;
 }
 
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
 export function getNotesWithoutReview(): NotesWithoutBooks[] {
-    return plugin.annotationsNoteIndex.getSourcesWithoutFlashcards();
+    return plugin.annotationsNoteIndex.getSourcesWithoutFlashcards().map(sourceNote => {
+        const hasMoonReaderFrontmatter = !!sourceNote.getBookFrontmatter();
+        const tags = sourceNote.tags || [];
+        const requiresSourceMutationConfirmation = hasTag(tags, "clippings") && !hasMoonReaderFrontmatter;
+        return {
+            id: sourceNote.id,
+            name: sourceNote.name,
+            tags,
+            sourceType: getSourceType(tags, hasMoonReaderFrontmatter),
+            requiresSourceMutationConfirmation,
+        };
+    });
 }
 
-export async function createFlashcardNoteForAnnotationsNote(bookId: string) {
+async function addBlockIdsToParagraphs(path: string) {
+    const sourceFile = getTFileForPath(path);
+    const metadata = plugin.app.metadataCache.getFileCache(sourceFile);
+    const paragraphSections = metadata?.sections?.filter(section => section.type === "paragraph");
+    if (!paragraphSections?.length) return;
+
+    const lines = (await getFileContents(path)).split("\n");
+    let updated = false;
+
+    for (const section of paragraphSections) {
+        if (section.id) continue;
+        const endLine = section.position.end.line;
+        lines[endLine] = `${lines[endLine]} ^${nanoid(8)}`;
+        updated = true;
+    }
+
+    if (updated) {
+        await overwriteFile(path, lines.join("\n"));
+    }
+}
+
+async function ensureDirectMarkdownSourceInOwnFolder(sourcePath: string): Promise<string> {
+    const sourceFile = getTFileForPath(sourcePath);
+    const parentPath = sourceFile.parent.path;
+    const ownFolderPath = parentPath ? `${parentPath}/${sourceFile.basename}` : sourceFile.basename;
+    const targetPath = `${ownFolderPath}/${sourceFile.name}`;
+
+    if (sourceFile.path === targetPath) return sourceFile.path;
+
+    await ensureFolder(ownFolderPath);
+    await moveFile(sourcePath, targetPath);
+    return targetPath;
+}
+
+export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts?: { confirmedSourceMutation?: boolean }) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
+    const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
+    const isDirectClipping = hasTag(book.tags || [], "clippings") && !hasMoonReaderFrontmatter;
+
+    if (isDirectClipping) {
+        if (!opts?.confirmedSourceMutation) {
+            throw new Error("createFlashcardNoteForAnnotationsNote: source mutation confirmation required for clipping source");
+        }
+
+        const oldPath = book.path;
+        await addBlockIdsToParagraphs(oldPath);
+        const newPath = await ensureDirectMarkdownSourceInOwnFolder(oldPath);
+
+        if (newPath !== oldPath) {
+            const tags = plugin.fileTagsMap.get(oldPath) || book.tags || [];
+            plugin.fileTagsMap.delete(oldPath);
+            plugin.fileTagsMap.set(newPath, tags);
+            book.path = newPath;
+            book.name = getParentOrFilename(newPath);
+        }
+    }
+
     await book.createFlashcardNote();
     // todo: there is an edge case here where multiple clicks to add to multiple
     // index writes

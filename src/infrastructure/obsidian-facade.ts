@@ -39,6 +39,7 @@ export const vault = {
     read: (file: ObsidianTFile) => app.vault.read(file),
     modify: (file: ObsidianTFile, data: string) => app.vault.modify(file, data),
     create: (path: string, data: string) => app.vault.create(path, data),
+    createFolder: (path: string) => app.vault.createFolder(path),
     getRoot: () => app.vault.getRoot(),
     getFiles: () => app.vault.getFiles(),
 };
