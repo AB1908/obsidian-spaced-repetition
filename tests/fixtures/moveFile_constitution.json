@@ -1,0 +1,5 @@
+{
+  "method": "moveFile",
+  "input": ["constitution.md", "constitution/constitution.md"],
+  "output": null
+}

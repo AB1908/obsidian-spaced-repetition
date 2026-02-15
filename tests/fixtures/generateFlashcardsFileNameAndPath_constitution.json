@@ -1,0 +1,8 @@
+{
+  "method": "generateFlashcardsFileNameAndPath",
+  "input": "constitution/constitution.md",
+  "output": {
+    "filename": "Flashcards.md",
+    "path": "constitution/Flashcards.md"
+  }
+}
