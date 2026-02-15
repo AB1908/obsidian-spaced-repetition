@@ -1,5 +1,7 @@
 import { maturityCounts } from "src/data/models/flashcard";
-import { nanoid } from "nanoid";
+import { nanoid, customAlphabet } from "nanoid";
+
+const blockId = customAlphabet("0123456789abcdef", 6);
 
 export interface ReviewBook {
     id: string;
@@ -287,7 +289,7 @@ async function addBlockIdsToParagraphs(path: string) {
     for (const section of paragraphSections) {
         if (section.id) continue;
         const endLine = section.position.end.line;
-        lines[endLine] = `${lines[endLine]} ^${nanoid(8)}`;
+        lines[endLine] = `${lines[endLine]} ^${blockId()}`;
         updated = true;
     }
 
