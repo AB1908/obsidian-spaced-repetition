@@ -1,5 +1,5 @@
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { Link, useLocation } from "react-router-dom";
+import React, { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { annotation, SectionAnnotations } from "src/data/models/annotations";
 import { getFilteredAnnotations } from "src/utils/annotation-filters";
 import { integerToRGBA } from "src/utils/utils";
@@ -66,6 +66,8 @@ interface AnnotationDisplayListProps {
     setActiveColorFilter: (color: string | null) => void;
 }
 
+const NAVIGATION_FILTER_SESSION_KEY = "annotationNavigationFilter";
+
 export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
     const { chapterData, baseLinkPath, filter, setFilter, activeColorFilter, setActiveColorFilter } = props;
     const [activeCategoryFilter, setActiveCategoryFilter] = useState<number | null>(null);
@@ -98,6 +100,17 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
         setActiveCategoryFilter(null);
         setActiveColorFilter(null);
     }, [filter]);
+
+    useEffect(() => {
+        sessionStorage.setItem(
+            NAVIGATION_FILTER_SESSION_KEY,
+            JSON.stringify({
+                mainFilter: filter,
+                categoryFilter: activeCategoryFilter,
+                colorFilter: activeColorFilter
+            })
+        );
+    }, [filter, activeCategoryFilter, activeColorFilter]);
 
     return (
         <>

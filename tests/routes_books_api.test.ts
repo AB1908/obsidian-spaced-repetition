@@ -68,6 +68,15 @@ describe("Route API: Navigation Logic", () => {
         // Last item, no next
         expect(getNextAnnotationIdForSection(bookId, sectionId, "tWxSv_No")).toBeNull();
     });
+
+    test("should pass filter context through route API wrappers", () => {
+        const bookId = "t0000010";
+        const sectionId = "t0000011";
+        const filter = { mainFilter: "processed" as const };
+
+        expect(getNextAnnotationIdForSection(bookId, sectionId, "tekXLAu8", filter)).toBeNull();
+        expect(getPreviousAnnotationIdForSection(bookId, sectionId, "tWxSv_No", filter)).toBeNull();
+    });
 });
 
 async function setupTestEnv() {
