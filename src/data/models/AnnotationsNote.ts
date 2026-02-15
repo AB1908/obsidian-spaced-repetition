@@ -593,6 +593,7 @@ export class AnnotationsNoteIndex {
     }
 
     async initialize(plugin: AnnotationsNoteDependencies) {
+
         const candidatePaths = selectEligibleSourcePaths(plugin.fileTagsMap);
         const notesWithAnnotations = candidatePaths.map((t: string) => new AnnotationsNote(t, plugin));
         for (const t of notesWithAnnotations) {

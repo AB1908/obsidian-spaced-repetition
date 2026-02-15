@@ -67,7 +67,7 @@ export function fileTags() {
     const transformTags = (tagCache: TagCache[]) => {return tagCache.map(t=>t.tag)};
     for (let [hash, path] of fileMap) {
         const frontmatterTags = clonedMetadataCache[hash]?.frontmatter?.tags;
-        const tagsArray = frontmatterTags || [];
+        const tagsArray = Array.isArray(frontmatterTags) ? frontmatterTags : frontmatterTags ? [frontmatterTags] : [];
         const fileTags = clonedMetadataCache[hash]?.tags;
         if (fileTags) {
             let tags = transformTags(fileTags);
