@@ -8,7 +8,7 @@ Three directories, lifecycle-driven:
 docs/
 ├── decisions/     # Architecture Decision Records (immutable once accepted)
 ├── stories/       # ALL work items: features, bugs, debt, ideas
-└── guides/        # Reference material: testing, workflow, conventions
+└── guides/        # Reference material: testing, workflow, conventions, learnings
 ```
 
 Plus `docs/archive/` for completed or stale context.
@@ -32,6 +32,7 @@ Prefixes:
 - `BUG` — confirmed defects
 - `DEBT` — technical debt / refactoring
 - `SPIKE` — time-boxed research / exploration
+- `IDEA` — enhancement ideas, not yet actionable (lightweight, no acceptance criteria required)
 
 ### Template
 
@@ -78,6 +79,47 @@ As a <role>, I want <goal>, so that <benefit>.
 ### Required fields
 
 Only `Status` and the title are mandatory. Everything else is "fill in when relevant." A BUG might skip Epic/Branch. A SPIKE might only have Status + Context.
+
+## Recording Knowledge and Ideas
+
+Not everything is a work item. Some things are observations, platform quirks, or enhancement ideas that need recording but don't need a status lifecycle.
+
+### Where things go
+
+| Type | Location | Example |
+|------|----------|---------|
+| Platform/API knowledge | `docs/guides/<topic>-notes.md` | Obsidian API quirks, gotchas |
+| Workflow learnings | `docs/guides/<topic>-notes.md` | Testing strategies, capture cycle |
+| Enhancement ideas (not yet actionable) | `docs/stories/IDEA-<N>-<slug>.md` | "someday maybe" improvements |
+| Session-specific observations | Session Notes section in the relevant story file | "tried X, learned Y" |
+
+### Guide knowledge files
+
+Topic files in `docs/guides/` for durable reference knowledge. Append entries as they surface. Format: date + observation. These grow into useful reference docs over time.
+
+Example: `docs/guides/obsidian-api-notes.md`
+```markdown
+# Obsidian API Notes
+
+## 2026-02-15: frontmatter.tags can be a string
+Obsidian's `CachedMetadata.frontmatter.tags` returns a string (not array)
+when YAML has inline form `tags: review/book`. Always normalize.
+See BUG-003.
+```
+
+### IDEA prefix in stories/
+
+For enhancement ideas that aren't bugs or debt but worth tracking. Lightweight template — just description and related items, no acceptance criteria required.
+
+```markdown
+# IDEA-001: <Title>
+
+## Description
+<What and why it's interesting>
+
+## Related
+- links to relevant stories, guides, or ADRs
+```
 
 ## Session Start Workflow
 

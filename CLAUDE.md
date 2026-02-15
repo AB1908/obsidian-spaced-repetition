@@ -305,4 +305,6 @@ import { X } from "src/data/models/AnnotationsNote"
 - **Testing Guide:** `docs/guides/testing.md`
 - **Git Workflow:** `docs/guides/workflow.md`
 - **Work Organization:** `docs/guides/work-organization.md`
+- **Obsidian API Notes:** `docs/guides/obsidian-api-notes.md`
+- **Testing Notes:** `docs/guides/testing-notes.md`
 - **Stories/Backlog:** `docs/stories/`
