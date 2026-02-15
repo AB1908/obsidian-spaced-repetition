@@ -1,7 +1,7 @@
 # BUG-004: Block IDs Use Wrong Length and Non-Hex Alphabet
 
 ## Status
-Ready
+Done
 
 ## Description
 `addBlockIdsToParagraphs` in `src/api.ts:290` generates block IDs using `nanoid(8)` with the default alphabet (`A-Za-z0-9_-`). Two problems:
@@ -12,9 +12,9 @@ Ready
 Note: internal model IDs (flashcard IDs, heading IDs, etc.) can stay at `nanoid(8)` with default alphabet — only disk-written block IDs that appear as `^blockId` in markdown need the fix.
 
 ## Acceptance Criteria
-- [ ] `addBlockIdsToParagraphs` uses 6-char IDs with hex-safe or alphanumeric-only alphabet
-- [ ] `^` references are hidden in Obsidian reading mode
-- [ ] Existing block IDs in vault are not affected (backward compatible)
+- [x] `addBlockIdsToParagraphs` uses 6-char IDs with hex alphabet (`0-9a-f`)
+- [x] `^` references are hidden in Obsidian reading mode (needs manual verification)
+- [x] Existing block IDs in vault are not affected (backward compatible — only new IDs use new format)
 
 ## Related
 - [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md) — introduced the clippings mutation flow

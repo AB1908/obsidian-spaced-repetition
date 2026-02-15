@@ -107,6 +107,9 @@ export function createMockNanoid() {
 export function setupNanoidMock(): void {
     jest.mock('nanoid', () => ({
         nanoid: createMockNanoid(),
+        customAlphabet: (_alphabet: string, defaultSize: number) => {
+            return () => nanoidMock.generate(defaultSize);
+        },
     }));
 }
 

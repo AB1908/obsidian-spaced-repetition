@@ -32,4 +32,6 @@ See [IDEA-001](../stories/IDEA-001-block-reference-linking.md).
 
 ## 2026-02-15: Block ID format requirements for reading mode
 
-Obsidian reading mode only hides `^blockId` when the ID uses alphanumeric characters (`A-Za-z0-9`). IDs containing `_` or `-` (default nanoid alphabet) cause the `^` prefix to remain visible. See [BUG-004](../stories/BUG-004-block-id-format.md).
+Obsidian reading mode only hides `^blockId` when the ID uses alphanumeric characters (`A-Za-z0-9`). IDs containing `_` or `-` (default nanoid alphabet) cause the `^` prefix to remain visible.
+
+**Fixed:** `addBlockIdsToParagraphs()` now uses `customAlphabet` with hex charset (`0-9a-f`) and 6-char length. Internal model IDs (flashcard, heading, etc.) intentionally stay at `nanoid(8)` with default alphabet — they never appear as `^blockId` in markdown. See [BUG-004](../stories/BUG-004-block-id-format.md).
