@@ -683,72 +683,73 @@ describe("Navigation: getNextAnnotationId / getPreviousAnnotationId", () => {
 // Navigation Filter Bug Tests - See docs/bugs.md#1
 // These tests document the current broken behavior where navigation ignores UI filters
 describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId ignore category filters", () => {
-    beforeEach(async () => {
-        await newFunction();
-    });
+    const bookId = "book-filtered";
+    const sectionId = "section-1";
+    const sectionTwoId = "section-2";
 
-    // These tests expect failures — updateAnnotationMetadata on paragraphs throws
-    // because renderAnnotation expects a highlight field (see DEBT-001, BUG-001).
-    // When BUG-001 is fixed, these will start failing and should be rewritten as proper assertions.
-
-    test("KNOWN BUG: updateAnnotationMetadata throws on paragraph (category setup)", async () => {
-        const bookId = "t0000010";
-        await expect(
-            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
-        ).rejects.toThrow();
-    });
-
-    test("KNOWN BUG: getNextAnnotationId ignores processed filter", async () => {
-        const bookId = "t0000010";
-        await expect(
-            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
-        ).rejects.toThrow();
-    });
-
-    test("KNOWN BUG: getPreviousAnnotationId ignores unprocessed filter", async () => {
-        const bookId = "t0000010";
-        await expect(
-            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
-        ).rejects.toThrow();
-    });
-
-    test("KNOWN BUG: unprocessed filter should find nothing when all processed", async () => {
-        const bookId = "t0000010";
-        await expect(
-            updateAnnotationMetadata(bookId, "tekXLAu8", { category: 1 })
-        ).rejects.toThrow();
-    });
-
-    test("KNOWN BUG: navigation ignores color filter", async () => {
-        const bookId = "t0000010";
-        await expect(
-            updateAnnotationMetadata(bookId, "tekXLAu8", { originalColor: "#ff0000" })
-        ).rejects.toThrow();
-    });
-
-    describe("Expected behavior after fix (ADR-019)", () => {
-        test("TODO: Navigation should accept filter parameter and respect it", () => {
-            // After implementing ADR-019, this signature should work:
-            // getNextAnnotationId(bookId, blockId, sectionId, filter?: NavigationFilter)
-            //
-            // Where NavigationFilter is:
-            // interface NavigationFilter {
-            //   mainFilter: 'all' | 'processed' | 'unprocessed';
-            //   categoryFilter?: number | null;
-            //   colorFilter?: string | null;
-            // }
-
-            expect({
-                proposedAPI:
-                    "getNextAnnotationId(bookId, blockId, sectionId, { mainFilter: 'processed' })",
-                shouldReturn: "only next processed annotation, or null",
-            }).toMatchInlineSnapshot(`
-                {
-                  "proposedAPI": "getNextAnnotationId(bookId, blockId, sectionId, { mainFilter: 'processed' })",
-                  "shouldReturn": "only next processed annotation, or null",
+    function setupFilterNavigationFixture() {
+        setPlugin({
+            annotationsNoteIndex: {
+                getBook: (id: string) => {
+                    if (id !== bookId) {
+                        throw new Error(`No book found for id ${id}`);
+                    }
+                    return {
+                        bookSections: [
+                            { id: sectionId, level: 1, name: "Section 1", children: [], counts: { with: 0, without: 0 } },
+                            { id: "ann-1", highlight: "A1", note: "", category: null, originalColor: "1", deleted: false },
+                            { id: "ann-2", highlight: "A2", note: "", category: 1, originalColor: "2", deleted: false },
+                            { id: "ann-3", highlight: "A3", note: "", category: null, originalColor: "2", deleted: false },
+                            { id: "ann-4", highlight: "A4", note: "", category: 2, originalColor: "3", deleted: false },
+                            { id: sectionTwoId, level: 1, name: "Section 2", children: [], counts: { with: 0, without: 0 } },
+                            { id: "ann-5", highlight: "A5", note: "", category: 2, originalColor: "3", deleted: false },
+                        ],
+                    };
                 }
-            `);
+            }
+        } as any);
+    }
+
+    beforeEach(() => {
+        setupFilterNavigationFixture();
+    });
+
+    test("getNextAnnotationId respects processed filter", () => {
+        const nextId = getNextAnnotationId(bookId, "ann-1", sectionId, { mainFilter: "processed" });
+        expect(nextId).toBe("ann-2");
+    });
+
+    test("getPreviousAnnotationId respects unprocessed filter", () => {
+        const previousId = getPreviousAnnotationId(bookId, "ann-4", sectionId, { mainFilter: "unprocessed" });
+        expect(previousId).toBe("ann-3");
+    });
+
+    test("category filter narrows processed navigation and stops at section boundary", () => {
+        const nextCategory2 = getNextAnnotationId(bookId, "ann-2", sectionId, {
+            mainFilter: "processed",
+            categoryFilter: 2,
         });
+        expect(nextCategory2).toBe("ann-4");
+
+        const noNextInSection = getNextAnnotationId(bookId, "ann-4", sectionId, {
+            mainFilter: "processed",
+            categoryFilter: 2,
+        });
+        expect(noNextInSection).toBeNull();
+    });
+
+    test("color filter narrows unprocessed navigation", () => {
+        const nextColor2 = getNextAnnotationId(bookId, "ann-1", sectionId, {
+            mainFilter: "unprocessed",
+            colorFilter: "2",
+        });
+        expect(nextColor2).toBe("ann-3");
+
+        const noPreviousColor1 = getPreviousAnnotationId(bookId, "ann-3", sectionId, {
+            mainFilter: "unprocessed",
+            colorFilter: "1",
+        });
+        expect(noPreviousColor1).toBe("ann-1");
     });
 });
 

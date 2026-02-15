@@ -435,7 +435,44 @@ export async function updateBookAnnotationsAndFrontmatter(
 
 
 
-export function getPreviousAnnotationId(bookId: string, blockId: string, sectionId?: string) {
+export interface NavigationFilter {
+    mainFilter?: "all" | "processed" | "unprocessed";
+    categoryFilter?: number | null;
+    colorFilter?: string | null;
+}
+
+function matchesNavigationFilter(ann: annotation | paragraph, filter?: NavigationFilter) {
+    if (ann.deleted) return false;
+    if (!filter) return true;
+
+    const mainFilter = filter.mainFilter ?? "all";
+    const category = ann.category;
+    const isProcessed = category !== undefined && category !== null;
+
+    if (mainFilter === "processed") {
+        if (filter.categoryFilter !== undefined && filter.categoryFilter !== null) {
+            return category === filter.categoryFilter;
+        }
+        return isProcessed;
+    }
+
+    if (mainFilter === "unprocessed") {
+        if (isProcessed) return false;
+        if (filter.colorFilter) {
+            return ann.originalColor === filter.colorFilter;
+        }
+        return true;
+    }
+
+    return true;
+}
+
+export function getPreviousAnnotationId(
+    bookId: string,
+    blockId: string,
+    sectionId?: string,
+    filter?: NavigationFilter
+) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
     const index = book.bookSections.findIndex(t => t.id === blockId);
     if (index === -1) return null;
@@ -448,14 +485,19 @@ export function getPreviousAnnotationId(bookId: string, blockId: string, section
         }
         if (isAnnotationOrParagraph(item)) {
             const ann = item as (annotation | paragraph);
-            if (ann.deleted) continue;
+            if (!matchesNavigationFilter(ann, filter)) continue;
             return ann.id;
         }
     }
     return null;
 }
 
-export function getNextAnnotationId(bookId: string, blockId: string, sectionId?: string) {
+export function getNextAnnotationId(
+    bookId: string,
+    blockId: string,
+    sectionId?: string,
+    filter?: NavigationFilter
+) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
     const index = book.bookSections.findIndex(t => t.id === blockId);
     if (index === -1) return null;
@@ -468,7 +510,7 @@ export function getNextAnnotationId(bookId: string, blockId: string, sectionId?:
         }
         if (isAnnotationOrParagraph(item)) {
             const ann = item as (annotation | paragraph);
-            if (ann.deleted) continue;
+            if (!matchesNavigationFilter(ann, filter)) continue;
             return ann.id;
         }
     }
