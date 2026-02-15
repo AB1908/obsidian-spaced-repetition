@@ -204,7 +204,7 @@ describe("DeckLandingPage Navigation", () => {
                   >
                     <a
                       class="tree-item-inner"
-                      href="/books/t0000010/chapters/t0000011/annotations"
+                      href="/books/t0000010/chapters/t0000012/annotations"
                     >
                       Chapter 3: Pulling the rabbit out of the hat
                     </a>
