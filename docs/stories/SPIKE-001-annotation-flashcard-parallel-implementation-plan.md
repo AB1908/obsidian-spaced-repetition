@@ -73,9 +73,9 @@ Constraint:
 Goal: Navigation previous/next must respect active filters.
 
 Acceptance:
-- [ ] `getNextAnnotationId` / `getPreviousAnnotationId` accept optional filter contract.
-- [ ] UI passes current filter context to navigation calls.
-- [ ] Integration tests assert processed/unprocessed/category/color behavior at section boundaries.
+- [x] `getNextAnnotationId` / `getPreviousAnnotationId` accept optional filter contract.
+- [x] UI passes current filter context to navigation calls.
+- [x] Integration tests assert processed/unprocessed/category/color behavior at section boundaries.
 
 Likely code touchpoints:
 - `src/api.ts`
