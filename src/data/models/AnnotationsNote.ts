@@ -17,6 +17,7 @@ import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
 import { generateFingerprint, hasContentDrifted } from "src/data/utils/fingerprint";
 import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
+import { selectEligibleSourcePaths } from "src/data/source-discovery";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -592,23 +593,8 @@ export class AnnotationsNoteIndex {
     }
 
     async initialize(plugin: AnnotationsNoteDependencies) {
-        // iterate over tags in plugin
-        // create set from tags in note
-        // check membership of tag
-        const tagsInSettings = ["review/note", "review/book"];
-        const pathsWithAllowedTags  = new Set<string>();
-        for (let [path, tags] of plugin.fileTagsMap) {
-            const tagSet = new Set(tags);
-            for (let tag of tagsInSettings) {
-                if (tagSet.has(tag)) {
-                    pathsWithAllowedTags.add(path);
-                    break;
-                }
-            }
-        }
-        //todo: parameterize
-        // const filePaths = filePathsWithTag("review/note");
-        const notesWithAnnotations = Array.from(pathsWithAllowedTags.keys()).map((t: string) => new AnnotationsNote(t, plugin));
+        const candidatePaths = selectEligibleSourcePaths(plugin.fileTagsMap);
+        const notesWithAnnotations = candidatePaths.map((t: string) => new AnnotationsNote(t, plugin));
         for (const t of notesWithAnnotations) {
             try {
                 await t.initialize();
@@ -644,4 +630,3 @@ export class AnnotationsNoteIndex {
         return this.sourceNotes;
     }
 }
-

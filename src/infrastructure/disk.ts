@@ -219,6 +219,19 @@ export async function createFile(path: string, content: string) {
     return await vault.create(path, content);
 }
 
+export async function overwriteFile(path: string, content: string) {
+    const file = getTFileForPath(path);
+    await vault.modify(file, content);
+}
+
+export async function ensureFolder(path: string) {
+    if (!path || path === "/") return;
+    const existing = vault.getAbstractFileByPath(path);
+    if (!existing) {
+        await vault.createFolder(path);
+    }
+}
+
 export async function updateFrontmatter(filePath: string, data: Record<string, any>) {
     const tfile = getTFileForPath(filePath);
     await fileManager.processFrontMatter(tfile, (frontmatter) => {
@@ -229,4 +242,3 @@ export async function updateFrontmatter(filePath: string, data: Record<string, a
         }
     });
 }
-
