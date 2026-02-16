@@ -268,22 +268,28 @@ export interface NotesWithoutBooks {
     requiresSourceMutationConfirmation: boolean;
 }
 
+function requiresSourceMutationConfirmation(tags: string[] = [], hasMoonReaderFrontmatter: boolean): boolean {
+    return hasTag(tags, "clippings") && !hasMoonReaderFrontmatter;
+}
+
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
-export function getNotesWithoutReview(): NotesWithoutBooks[] {
+export function getSourcesAvailableForDeckCreation(): NotesWithoutBooks[] {
     return plugin.annotationsNoteIndex.getSourcesWithoutFlashcards().map(sourceNote => {
         const hasMoonReaderFrontmatter = !!sourceNote.getBookFrontmatter();
         const tags = sourceNote.tags || [];
-        const requiresSourceMutationConfirmation = hasTag(tags, "clippings") && !hasMoonReaderFrontmatter;
         return {
             id: sourceNote.id,
             name: sourceNote.name,
             tags,
             sourceType: getSourceType(tags, hasMoonReaderFrontmatter),
-            requiresSourceMutationConfirmation,
+            requiresSourceMutationConfirmation: requiresSourceMutationConfirmation(tags, hasMoonReaderFrontmatter),
         };
     });
 }
+
+/** @deprecated Use getSourcesAvailableForDeckCreation instead. */
+export const getNotesWithoutReview = getSourcesAvailableForDeckCreation;
 
 async function addBlockIdsToParagraphs(path: string) {
     const metadata = getMetadataForFile(path);
@@ -323,9 +329,9 @@ async function ensureDirectMarkdownSourceInOwnFolder(sourcePath: string): Promis
 export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts?: { confirmedSourceMutation?: boolean }) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
     const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
-    const isDirectClipping = hasTag(book.tags || [], "clippings") && !hasMoonReaderFrontmatter;
+    const sourceRequiresMutationConfirmation = requiresSourceMutationConfirmation(book.tags || [], hasMoonReaderFrontmatter);
 
-    if (isDirectClipping) {
+    if (sourceRequiresMutationConfirmation) {
         if (!opts?.confirmedSourceMutation) {
             throw new Error("createFlashcardNoteForAnnotationsNote: source mutation confirmation required for clipping source");
         }
