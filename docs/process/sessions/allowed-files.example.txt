@@ -1,0 +1,8 @@
+# One file path per line.
+# Lines beginning with # are ignored.
+src/api.ts
+src/ui/components/book-list.tsx
+tests/api.test.ts
+tests/api.clippings.test.ts
+docs/stories/DEBT-008-notes-without-review-naming.md
+docs/stories/DEBT-014-source-listing-dto-typing.md
