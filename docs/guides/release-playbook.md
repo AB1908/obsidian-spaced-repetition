@@ -30,14 +30,13 @@ Define one release process that any coding agent can execute (Codex, Claude Code
 ## Agent Procedure
 1. Confirm clean working tree for release files.
 2. Choose target version (`TARGET_VERSION`), e.g. `0.3.0` or `0.3.1-beta.1`.
-3. Update `manifest.json`:
-   - set `version` to `TARGET_VERSION`
-   - keep `minAppVersion` intentional
-4. If stable release, update `versions.json` with:
-   - key: `TARGET_VERSION`
-   - value: current `manifest.json.minAppVersion`
+3. Prefer deterministic prep script:
+   - `npm run release:prepare -- <TARGET_VERSION>`
+4. If doing manual prep instead:
+   - update `manifest.json` version to `TARGET_VERSION`
+   - if stable, add `TARGET_VERSION -> minAppVersion` in `versions.json`
 5. Run verification:
-   - `npm run build`
+   - `npm run build` (or rely on script-run build)
    - optional: `npm test`
 6. Commit version files:
    - `git add manifest.json versions.json` (or only `manifest.json` for beta)
@@ -55,6 +54,7 @@ Define one release process that any coding agent can execute (Codex, Claude Code
 - Never push a tag that differs from `manifest.json.version`.
 - Avoid `v` prefix tags because Obsidian expects exact version match.
 - If release fails, fix on a new commit and use a new version tag (do not retag published releases).
+- For local validation, run build with one-off override (`OBSIDIAN_PLUGIN_DIR=.`) to avoid writing outside the repo.
 
 ## Optional Next Step
 Changelog generation can be added later as a pre-tag step, but it is not required for release correctness.
