@@ -260,7 +260,6 @@ export function getBookChapters(bookId: string) {
         }));
 }
 
-// TODO(DEBT-008): follow up on naming/typing for this DTO (e.g. rename away from NotesWithoutBooks).
 export interface NotesWithoutBooks {
     name: string;
     id: string;
