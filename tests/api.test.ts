@@ -56,6 +56,7 @@ import {
     getSectionTreeForBook,
     getBookChapters,
     getNotesWithoutReview,
+    getSourcesAvailableForDeckCreation,
     createFlashcardNoteForAnnotationsNote,
     getNextAnnotationId,
     getPreviousAnnotationId,
@@ -488,13 +489,14 @@ describe("getBookChapters", () => {
         `);
     });
 });
-// getNotesWithoutReview
-describe("getNotesWithoutReview", () => {
+// getSourcesAvailableForDeckCreation
+describe("getSourcesAvailableForDeckCreation", () => {
     beforeEach(async () => {
         await newFunction();
     });
+
     test("should get notes without review", () => {
-        expect(getNotesWithoutReview()).toMatchInlineSnapshot(`
+        expect(getSourcesAvailableForDeckCreation()).toMatchInlineSnapshot(`
             [
               {
                 "id": "t0000011",
@@ -507,6 +509,10 @@ describe("getNotesWithoutReview", () => {
               },
             ]
         `);
+    });
+
+    test("deprecated alias getNotesWithoutReview returns the same results", () => {
+        expect(getNotesWithoutReview()).toEqual(getSourcesAvailableForDeckCreation());
     });
 });
 // createFlashcardNoteForAnnotationsNote
@@ -530,7 +536,7 @@ describe("createFlashcardNoteForAnnotationsNote navigation availability [DEBT-01
     });
 
     test("post-creation direct clippings source exposes navigable sections with annotations", async () => {
-        const clipping = getNotesWithoutReview().find(source => source.sourceType === "direct-markdown");
+        const clipping = getSourcesAvailableForDeckCreation().find(source => source.sourceType === "direct-markdown");
         expect(clipping).toBeDefined();
 
         await createFlashcardNoteForAnnotationsNote(clipping.id, { confirmedSourceMutation: true });
