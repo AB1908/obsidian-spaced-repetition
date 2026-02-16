@@ -17,7 +17,11 @@ Runtime TypeErrors not caught by TypeScript. Causes test failures in `api.test.t
 ## Notes
 The `isParagraph()` / `isAnnotation()` type guards use duck-typing (`wasIdPresent !== undefined`, `highlight !== undefined`) instead of a discriminator field. A proper discriminated union (`type: 'paragraph' | 'annotation' | 'heading'`) would eliminate all type guards and make the codebase more idiomatic TypeScript.
 
+## Plan
+[Source Model Seam Repair — PR 1](../plans/DEBT-011-source-model-seam-repair.md#pr-1-discriminated-union-for-sections-debt-001)
+
 ## Related
 - Tech debt item #4 from legacy `technical_debt.md`
 - [DEBT-004](DEBT-004-strategy-coupling.md) — section type handling duplication
 - [STORY-012](STORY-012-drift-detection-ux.md) — drift traversal depends on isParagraph
+- [DEBT-011](DEBT-011-book-metaphor-clippings.md) — parent plan for source model repair

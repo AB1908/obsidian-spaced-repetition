@@ -38,13 +38,17 @@ Should there be a `Source` abstraction with markdown and annotation-export varia
 No strong recommendation yet. Needs tradeoff analysis with concrete examples from both code paths.
 
 ## Acceptance Criteria
-- [ ] Analyse both source paths end-to-end (creation, parsing, navigation, flashcard generation)
-- [ ] Document where behavior diverges and where it converges
-- [ ] Propose model design with tradeoff analysis
+- [x] Analyse both source paths end-to-end (creation, parsing, navigation, flashcard generation) — see plan
+- [x] Document where behavior diverges and where it converges — see plan, behavior divergence inventory
+- [x] Propose model design with tradeoff analysis — composition/strategy (ADR-018 confirmed), 4-PR plan
 - [ ] Consider migration path for existing vault data
+
+## Plan
+[Source Model Seam Repair](../plans/DEBT-011-source-model-seam-repair.md) — PRs 2-4 address this story's concerns
 
 ## Related
 - [DEBT-011](DEBT-011-book-metaphor-clippings.md) — UI/route side of the book metaphor problem
+- [DEBT-001](DEBT-001-inconsistent-data-models.md) — discriminated union (PR 1 prerequisite)
 - [DEBT-006](DEBT-006-disk-business-logic.md) — disk.ts boundary (related extraction targets)
 - [BUG-004](BUG-004-block-id-format.md) — block ID generation, currently homeless in api.ts
 - [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md) — introduced the markdown source path
