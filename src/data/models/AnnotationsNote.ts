@@ -302,8 +302,7 @@ export class AnnotationsNote implements frontbook {
 
     updatePath(newPath: string) {
         this.path = newPath;
-        const tFile = getTFileForPath(newPath);
-        this.name = tFile.parent?.name || tFile.basename;
+        this.name = getTFileForPath(newPath).basename;
     }
 
     async initialize() {
@@ -322,8 +321,7 @@ export class AnnotationsNote implements frontbook {
 
         this.detectDrift();
 
-        const tFile = getTFileForPath(this.path);
-        this.name = tFile.parent?.name || tFile.basename;
+        this.name = getTFileForPath(this.path).basename;
 
         if (this.plugin.fileTagsMap.has(this.path)) {
             // @ts-ignore
