@@ -500,7 +500,7 @@ describe("getSourcesAvailableForDeckCreation", () => {
             [
               {
                 "id": "t0000011",
-                "name": "Claude's Constitution",
+                "name": "constitution",
                 "requiresSourceMutationConfirmation": true,
                 "sourceType": "direct-markdown",
                 "tags": [
