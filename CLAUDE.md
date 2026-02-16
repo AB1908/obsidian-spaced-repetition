@@ -37,6 +37,10 @@ npm run mock-server      # Start json-server on :3000 with db.json
 
 **Mock API Usage:** Set `USE_JSON_MOCK = true` in `src/ui/routes/books/review/index.tsx` and run `npm run mock-server` to develop UI against mock data.
 
+## Release Protocol
+
+For any release operation (version bumps, tags, release fixes), follow `docs/guides/release-playbook.md` as the single source of truth.
+
 ## Architecture Overview
 
 ### Three-Layer Architecture
