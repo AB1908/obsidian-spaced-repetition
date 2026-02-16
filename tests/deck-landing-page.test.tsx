@@ -14,7 +14,7 @@ jest.mock("src/infrastructure/disk", () => {
         "getFileContents_2025-12-07T19-37-22-044Z_radb6f.json",
         "filePathsWithTag_2025-12-07T19-37-20-520Z_kx3kvy.json",
         "fileTags_2025-12-07T19-37-20-516Z_u0wrbc.json",
-        "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
+        "getTFileForPath_Untitled.json",
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
     ]);
     return mock;

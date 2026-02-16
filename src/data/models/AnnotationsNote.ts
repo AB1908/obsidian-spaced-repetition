@@ -3,7 +3,7 @@ import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
-    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter
+    updateCardOnDisk, getTFileForPath, updateFrontmatter
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
@@ -300,6 +300,12 @@ export class AnnotationsNote implements frontbook {
         this.tags = [];
     }
 
+    updatePath(newPath: string) {
+        this.path = newPath;
+        const tFile = getTFileForPath(newPath);
+        this.name = tFile.parent?.name || tFile.basename;
+    }
+
     async initialize() {
         // done: fix unnecessary annotation path extraction
         // const annotationTFile = getTFileForPath(this.path);
@@ -316,7 +322,8 @@ export class AnnotationsNote implements frontbook {
 
         this.detectDrift();
 
-        this.name = getParentOrFilename(this.path);
+        const tFile = getTFileForPath(this.path);
+        this.name = tFile.parent?.name || tFile.basename;
 
         if (this.plugin.fileTagsMap.has(this.path)) {
             // @ts-ignore
