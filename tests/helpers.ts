@@ -11,6 +11,22 @@ interface FixtureFile {
     output: any;
 }
 
+function cloneFixtureValue<T>(value: T): T {
+    if (value instanceof Map) {
+        return new Map(Array.from(value.entries()).map(([key, mapValue]) => [key, cloneFixtureValue(mapValue)])) as T;
+    }
+
+    if (Array.isArray(value)) {
+        return value.map(item => cloneFixtureValue(item)) as T;
+    }
+
+    if (value && typeof value === "object") {
+        return JSON.parse(JSON.stringify(value));
+    }
+
+    return value;
+}
+
 export function createDiskMockFromFixtures(
     fixtureFiles: string[],
     options: {
@@ -108,7 +124,7 @@ export function createDiskMockFromFixtures(
                 if (debug) {
                     console.log('[HELPER DEBUG] ✓ Match found! Returning fixture output');
                 }
-                return match.output;
+                return cloneFixtureValue(match.output);
             }
 
             console.warn(`[HELPER DEBUG] ✗ No fixture found for ${method} with input:`, transformedInput);

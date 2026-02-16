@@ -1,7 +1,5 @@
 import { maturityCounts } from "src/data/models/flashcard";
-import { nanoid, customAlphabet } from "nanoid";
-
-const blockId = customAlphabet("0123456789abcdef", 6);
+import { nanoid } from "nanoid";
 
 export interface ReviewBook {
     id: string;
@@ -25,7 +23,7 @@ import {
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
-import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getMetadataForFile, getParentOrFilename, moveFile, renameFile, createFile, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
+import { findFilesByExtension, getAllFolders, moveFile, renameFile, createFile, updateFrontmatter } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
@@ -291,41 +289,6 @@ export function getSourcesAvailableForDeckCreation(): NotesWithoutBooks[] {
 /** @deprecated Use getSourcesAvailableForDeckCreation instead. */
 export const getNotesWithoutReview = getSourcesAvailableForDeckCreation;
 
-async function addBlockIdsToParagraphs(path: string) {
-    const metadata = getMetadataForFile(path);
-    const paragraphSections = metadata?.sections?.filter(section => section.type === "paragraph");
-    if (!paragraphSections?.length) return;
-
-    const lines = (await getFileContents(path)).split("\n");
-    let updated = false;
-
-    for (const section of paragraphSections) {
-        if (section.id) continue;
-        const endLine = section.position.end.line;
-        lines[endLine] = `${lines[endLine]} ^${blockId()}`;
-        updated = true;
-    }
-
-    if (updated) {
-        await overwriteFile(path, lines.join("\n"));
-    }
-}
-
-async function ensureDirectMarkdownSourceInOwnFolder(sourcePath: string): Promise<string> {
-    const pathParts = sourcePath.split("/");
-    const fileName = pathParts[pathParts.length - 1];
-    const parentPath = pathParts.length > 1 ? pathParts.slice(0, -1).join("/") : "";
-    const baseName = fileName.replace(/\.md$/i, "");
-    const ownFolderPath = parentPath ? `${parentPath}/${baseName}` : baseName;
-    const targetPath = `${ownFolderPath}/${fileName}`;
-
-    if (sourcePath === targetPath) return sourcePath;
-
-    await ensureFolder(ownFolderPath);
-    await moveFile(sourcePath, targetPath);
-    return targetPath;
-}
-
 export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts?: { confirmedSourceMutation?: boolean }) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
     const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
@@ -336,17 +299,7 @@ export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts
             throw new Error("createFlashcardNoteForAnnotationsNote: source mutation confirmation required for clipping source");
         }
 
-        const oldPath = book.path;
-        await addBlockIdsToParagraphs(oldPath);
-        const newPath = await ensureDirectMarkdownSourceInOwnFolder(oldPath);
-
-        if (newPath !== oldPath) {
-            const tags = plugin.fileTagsMap.get(oldPath) || book.tags || [];
-            plugin.fileTagsMap.delete(oldPath);
-            plugin.fileTagsMap.set(newPath, tags);
-            book.path = newPath;
-            book.name = getParentOrFilename(newPath);
-        }
+        await book.prepareDirectMarkdownSourceForDeckCreation();
     }
 
     await book.createFlashcardNote();
