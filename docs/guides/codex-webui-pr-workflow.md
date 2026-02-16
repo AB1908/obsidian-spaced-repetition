@@ -4,10 +4,15 @@
 Experimental
 
 ## Goal
-Enable fast PR-based review in Codex Web UI while preserving commit-quality signal and avoiding expensive multi-PR cleanup cycles.
+Enable fast implementation in Codex Web UI while preserving commit-quality signal and keeping Git/GitHub authority on a trusted local machine.
 
 ## Non-Goal
 This guide does not change Codex CLI behavior or the default local workflow in `docs/guides/workflow.md`.
+
+## Trust Boundary
+- Codex Web UI environment is execution/drafting only.
+- Local machine is source-of-truth for push, rebase/squash, and PR operations.
+- Do not require `gh`, tokens, or GitHub API access in Codex Web UI.
 
 ## Core Model
 Use two branches for each story:
@@ -20,16 +25,16 @@ Use two branches for each story:
 2. `pr/<story-id>-<topic>`
 - Clean reviewer-facing branch.
 - Contains 1-2 intentional commits max.
-- Used to open and maintain the GitHub PR.
+- Opened and maintained from local machine only.
 
 ## Why This Works
-- You can open a PR early for UI review without losing the signal of Codex commit grouping.
-- You can still rewrite the PR branch safely with `--force-with-lease`.
+- You preserve Codex behavior signal without forcing noisy history into reviewer-facing branches.
+- You can still rewrite PR branch history safely with `--force-with-lease` from local.
 - Reviewers only see a clean commit set.
 
 ## Step-by-Step
 
-### 1) Start analysis branch
+### 1) Start analysis branch (local)
 ```bash
 git fetch origin
 git checkout main
@@ -37,15 +42,21 @@ git pull --ff-only
 git checkout -b analysis/DEBT-008-source-listing
 ```
 
-### 2) Let Codex iterate
-Codex works normally and commits as needed on `analysis/...`.
+### 2) Let Codex Web iterate (draft/execution lane)
+Codex Web works on the task and generates:
+- code changes
+- test notes
+- session report (`docs/process/sessions/...`)
 
 Useful signal capture:
 ```bash
 git log --oneline --reverse origin/main..HEAD
 ```
 
-### 3) Build clean PR branch
+### 3) Import Web output to local branch
+Use whichever transfer method is available (patch file, copied diff, or synced files), then commit locally.
+
+### 4) Build clean PR branch (local)
 ```bash
 git checkout main
 git pull --ff-only
@@ -56,13 +67,14 @@ git cherry-pick <sha1>
 git cherry-pick <sha2>  # optional; keep total at 1-2 commits
 ```
 
-### 4) Open PR from `pr/...`
+### 5) Push and open PR from local machine
 ```bash
 git push -u origin pr/DEBT-008-source-listing
-gh pr create
 ```
 
-### 5) If PR exists and history needs cleanup
+Open/update PR in GitHub UI (or `gh` locally if preferred).
+
+### 6) If PR exists and history needs cleanup
 ```bash
 # On pr/... branch
 git log --oneline origin/main..HEAD
@@ -101,6 +113,11 @@ If branch policy forbids force-push:
 2. Add one final "history cleanup" commit that consolidates behavior without rebasing.
 3. Document the compromise in PR body under `History Notes`.
 4. For next story, use the two-branch model from the start.
+
+## No-Secrets Mode (Recommended)
+- Do not configure GitHub secrets/tokens in Codex Web UI.
+- Keep all PR and branch governance actions local.
+- Treat Web environment as reproducible draft tooling, not release authority.
 
 ## Merge Recommendation
 For clean commit history with preserved intent:

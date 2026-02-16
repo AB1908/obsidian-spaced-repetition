@@ -31,9 +31,11 @@ Output defaults to:
    - What Went Wrong
    - Proposed Guardrails
    - Tradeoffs
-3. Commit the session report to the rolling process/meta branch.
-4. Link it in the meta PR iteration log.
+3. Import changes to a trusted local branch if work was done in Codex Web UI.
+4. Commit the session report to the rolling process/meta branch from local.
+5. Link it in the meta PR iteration log.
 
 ## Notes
 - This is intentionally git-only automation (no `gh`, no tokens, no remote API).
 - False positives are expected; treat heuristics as signals, not verdicts.
+- Recommended trust boundary: Web UI drafts changes; local machine owns push/rebase/PR operations.
