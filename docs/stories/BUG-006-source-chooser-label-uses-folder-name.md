@@ -1,7 +1,7 @@
 # BUG-006: Source Chooser Shows Folder Name Instead of File Name
 
 ## Status
-In Progress
+Done
 
 ## Epic
 [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md)
@@ -11,9 +11,9 @@ As a user selecting a source, I want the list label to match the source note nam
 
 ## Acceptance Criteria
 - [x] Reproduce issue where chooser row displays folder name (for example `Clippings`) instead of expected source note filename.
-- [ ] Source chooser primary label uses source filename/title consistently for root and nested files.
-- [ ] Supporting subtitle/path can still show parent folder/path context.
-- [ ] Regression tests cover nested and root-path source cases.
+- [x] Source chooser primary label uses source filename/title consistently for root and nested files.
+- [x] Supporting subtitle/path can still show parent folder/path context.
+- [x] Regression tests cover nested and root-path source cases.
 
 ## Context
 Observed behavior: add-new-deck flow displays `Clippings` instead of the actual source filename.
