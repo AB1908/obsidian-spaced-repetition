@@ -1,16 +1,12 @@
-/*.is-phone .sr-modal-content {*/
-/*    overflow: auto;*/
-/*}*/
-
 .sr-flashcard-tree {
     padding-inline-start: 0;
 }
 
-.sr-flashcard>a {
+.sr-flashcard > a {
     width: 90%;
 }
 
-.sr-flashcard>button {
+.sr-flashcard > button {
     width: 2rem;
     height: 2rem;
 }
@@ -29,16 +25,13 @@ div.chapter-tree {
 
 div.tree-item-inner {
     width: 100%;
+    text-align: left;
 }
 
 div.tree-item-outer {
     width: 50%;
     justify-content: flex-end;
 }
-
-/*.mod-cancel {*/
-/*    width: 100%;*/
-/*}*/
 
 .sr-flashcard-preview {
     height: 60%;
@@ -80,7 +73,6 @@ div.sr-annotation {
     flex-direction: row;
     justify-content: space-between;
     align-items: center;
-    /* height: 40%; */
 }
 
 .tree-item-outer {
@@ -97,7 +89,7 @@ div.sr-annotation {
     background-color: var(--background-secondary-alt);
 }
 
-.progress>div {
+.progress > div {
     height: 8px;
     border-radius: 8px;
 }
@@ -126,7 +118,6 @@ body:not(.native-scrollbars) .modal-back-button {
 }
 
 .is-phone.sr-modal.modal-back-button {
-    top: var(--size-2-3);
     top: var(--size-4-3);
     cursor: var(--cursor);
     position: absolute;
@@ -172,42 +163,17 @@ form.sr-card-form {
     height: 60%;
 }
 
-div.sr-question-input>textarea {
+div.sr-question-input > textarea {
     width: 100%;
     height: 50%;
 }
 
-div.sr-answer-input>textarea {
+div.sr-answer-input > textarea {
     width: 100%;
     height: 50%;
 }
 
-/*div.sr-question-input > textarea {*/
-div.sr-question-input {
-    /* height: 30%; */
-}
-
-div.sr-answer-input {
-    /* height: 30%; */
-}
-
-.sr-blockquote-note {
-    color: var(--blockquote-color);
-    font-style: var(--blockquote-font-style);
-    background-color: #333;
-    border-left: var(--blockquote-border-thickness) solid var(--blockquote-border-color);
-    padding: 0 0 0 var(--size-4-6);
-    margin-inline-start: 0;
-    margin-inline-end: 0;
-    user-select: text;
-    height: 20%;
-    overflow-x: scroll;
-}
-
-.sr-blockquote-note>p {
-    height: 80%;
-}
-
+.sr-blockquote-note,
 .sr-blockquote-annotation {
     color: var(--blockquote-color);
     font-style: var(--blockquote-font-style);
@@ -217,8 +183,15 @@ div.sr-answer-input {
     margin-inline-start: 0;
     margin-inline-end: 0;
     user-select: text;
-    /* height: 60%; */
     overflow-x: scroll;
+}
+
+.sr-blockquote-note {
+    height: 20%;
+}
+
+.sr-blockquote-note > p {
+    height: 80%;
 }
 
 [class^="sr-blockquote"] {
@@ -228,7 +201,7 @@ div.sr-answer-input {
     padding-right: 1em;
 }
 
-[class^="sr-blockquote"]>p {
+[class^="sr-blockquote"] > p {
     height: 85%;
     margin-top: 1em;
     margin-bottom: 0;
@@ -256,28 +229,11 @@ h4>div.tree-item-flair-outer {
     text-align: left;
 }
 
-/*.sr-answer-input-text {*/
-/*    width: 80%;*/
-/*    height: 40%;*/
-/*}*/
-
-/*.sr-question-input-text {*/
-/*    width: 80%;*/
-/*    height: 20%;*/
-/*}*/
-
-.sr-question-input {
-    display: flex;
-    flex-direction: column;
-    align-items: baseline;
-    justify-content: center;
-}
-
+.sr-question-input,
 .sr-answer-input {
     display: flex;
     flex-direction: column;
     align-items: baseline;
-    /*height: 40%;*/
     justify-content: center;
 }
 
@@ -291,7 +247,6 @@ h4>div.tree-item-flair-outer {
 ul.sr-chapter-tree {
     padding-inline-start: 0;
 }
-
 
 button.create-deck {
     width: 90%;
@@ -316,7 +271,6 @@ div.sr-tab-nav {
     justify-content: center;
     align-content: center;
     align-items: center;
-    /* padding: 1rem; */
 }
 
 a.sr-nav-link {
@@ -324,10 +278,7 @@ a.sr-nav-link {
     border-radius: 1em;
 }
 
-a.sr-nav-link.is-clickable:hover {
-    background: var(--background-modifier-border-hover);
-}
-
+a.sr-nav-link.is-clickable:hover,
 a.sr-nav-link.is-clickable.active {
     background: var(--background-modifier-border-hover);
 }
@@ -336,7 +287,7 @@ a.sr-nav-link.is-clickable.active {
     color: initial;
 }
 
-.modal-title>.tree-item-flair-outer {
+.modal-title > .tree-item-flair-outer {
     justify-content: space-around;
 }
 
@@ -352,14 +303,6 @@ a.sr-nav-link.is-clickable.active {
 
 .sr-header {
     height: 15%;
-}
-
-div.tree-item-flair-outer {
-    /*margin-left: 0;*/
-}
-
-div.tree-item-inner {
-    text-align: left;
 }
 
 span.new-cards {
@@ -402,11 +345,11 @@ span.sr-deck-counts {
     height: 80%;
 }
 
-.sr-input-area>textarea.question {
+.sr-input-area > textarea.question {
     width: 100%;
 }
 
-.sr-input-area>textarea.answer {
+.sr-input-area > textarea.answer {
     height: 50%;
     width: 100%;
 }
@@ -490,17 +433,12 @@ span.sr-deck-counts {
 
 .sr-ignorestats-btn {
     /* Bitof a hack, but it works. */
-    margin: 0px !important;
+    margin: 0 !important;
     margin-right: 12px !important;
 }
 
 
 @media only screen and (max-width: 600px) {
-    div.modal-content.sr-modal-content {
-        /*display: block !important;*/
-        /* width: 90%; */
-    }
-
     .sr-modal-content::-webkit-scrollbar,
     #sr-flashcard-view::-webkit-scrollbar {
         display: none;
@@ -512,13 +450,13 @@ span.sr-deck-counts {
         width: 100px;
     }
 
-    .sr-input-area>textarea.question {
+    .sr-input-area > textarea.question {
         width: 100%;
         align-self: center;
         height: 15%;
     }
 
-    .sr-input-area>textarea.answer {
+    .sr-input-area > textarea.answer {
         width: 100%;
         align-self: center;
         height: 35%;
@@ -543,24 +481,11 @@ span.sr-deck-counts {
     position: absolute;
     top: -2pt;
     right: 0;
-    /* margin: 2rem; */
-    /* color: #888; */
-    /* font-size: 1.2rem; */
-    /* cursor: help; */
-    /* z-index: 9999 !important; */
-        /* Forces it to the front */
-    
-        /* Make it big enough to see clearly during debugging */
-        /* width: 30px; */
-        /* height: 30px; */
-        /* background-color: red !important; */
-        /* outline: 1px solid red !important; */
 }
 
 .sr-question-input-wrapper {
     position: relative;
     overflow: visible !important;
-    /* border: 2px solid yellow !important; */
 }
 
 .sr-help-popup {
