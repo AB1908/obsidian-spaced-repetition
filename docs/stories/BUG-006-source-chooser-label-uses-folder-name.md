@@ -10,7 +10,7 @@ In Progress
 As a user selecting a source, I want the list label to match the source note name, so I can confidently choose the correct file.
 
 ## Acceptance Criteria
-- [ ] Reproduce issue where chooser row displays folder name (for example `Clippings`) instead of expected source note filename.
+- [x] Reproduce issue where chooser row displays folder name (for example `Clippings`) instead of expected source note filename.
 - [ ] Source chooser primary label uses source filename/title consistently for root and nested files.
 - [ ] Supporting subtitle/path can still show parent folder/path context.
 - [ ] Regression tests cover nested and root-path source cases.
