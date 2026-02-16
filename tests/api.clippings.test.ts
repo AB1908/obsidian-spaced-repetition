@@ -22,7 +22,7 @@ setupNanoidMock();
 import * as disk from "src/infrastructure/disk";
 import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { createMockPlugin } from "./__mocks__/plugin";
-import { createFlashcardNoteForAnnotationsNote, getNotesWithoutReview, setPlugin } from "src/api";
+import { createFlashcardNoteForAnnotationsNote, getSourcesAvailableForDeckCreation, setPlugin } from "src/api";
 import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { fileTags } from "src/infrastructure/disk";
@@ -32,8 +32,8 @@ describe("clippings deck creation flow [STORY-013]", () => {
         await setupClippingsWorld();
     });
 
-    test("getNotesWithoutReview marks clipping source as requiring mutation confirmation", () => {
-        expect(getNotesWithoutReview()).toMatchInlineSnapshot(`
+    test("getSourcesAvailableForDeckCreation marks clipping source as requiring mutation confirmation", () => {
+        expect(getSourcesAvailableForDeckCreation()).toMatchInlineSnapshot(`
             [
               {
                 "id": "t0000000",
@@ -49,7 +49,7 @@ describe("clippings deck creation flow [STORY-013]", () => {
     });
 
     test("createFlashcardNoteForAnnotationsNote blocks clipping source when confirmation is missing", async () => {
-        const bookId = getNotesWithoutReview()[0].id;
+        const bookId = getSourcesAvailableForDeckCreation()[0].id;
         await expect(createFlashcardNoteForAnnotationsNote(bookId))
             .rejects
             .toThrowErrorMatchingInlineSnapshot(
@@ -58,10 +58,10 @@ describe("clippings deck creation flow [STORY-013]", () => {
     });
 
     test("createFlashcardNoteForAnnotationsNote mutates and folderizes selected clipping source when confirmed", async () => {
-        const bookId = getNotesWithoutReview()[0].id;
+        const bookId = getSourcesAvailableForDeckCreation()[0].id;
         await createFlashcardNoteForAnnotationsNote(bookId, { confirmedSourceMutation: true });
 
-        expect(getNotesWithoutReview()).toMatchInlineSnapshot(`[]`);
+        expect(getSourcesAvailableForDeckCreation()).toMatchInlineSnapshot(`[]`);
 
         const diskSummary = {
             ensureFolder: (disk.ensureFolder as jest.Mock).mock.calls,

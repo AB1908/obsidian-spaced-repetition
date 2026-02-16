@@ -1,10 +1,10 @@
 import React from "react";
-import { createFlashcardNoteForAnnotationsNote, getNotesWithoutReview, NotesWithoutBooks } from "src/api";
+import { createFlashcardNoteForAnnotationsNote, getSourcesAvailableForDeckCreation, NotesWithoutBooks } from "src/api";
 import { useNavigate } from "react-router-dom";
 import { useLoaderData } from "react-router";
 
 export function bookCreatorLoader() {
-    return getNotesWithoutReview();
+    return getSourcesAvailableForDeckCreation();
 }
 
 export function BookCreator() {
