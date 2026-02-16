@@ -208,7 +208,7 @@ git checkout main
 git merge feature/navigation-system  # Fast-forward merge (no --no-ff!)
 
 # Tag if it's a release
-git tag -a v0.3.0 -m "v0.3.0: Navigation system"
+git tag -a 0.3.0 -m "0.3.0: Navigation system"
 git push origin main --tags
 ```
 
@@ -237,7 +237,7 @@ Implements direction-aware navigation for annotations.
 See CHANGELOG.md and docs/features/navigation.md for details."
 
 # Tag if it's a release
-git tag -a v0.3.0 -m "v0.3.0: Navigation system"
+git tag -a 0.3.0 -m "0.3.0: Navigation system"
 git push origin main --tags
 ```
 

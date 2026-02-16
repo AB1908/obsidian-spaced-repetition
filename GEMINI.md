@@ -10,6 +10,7 @@ Upon starting a session, the Agent MUST:
 2.  **Adopt the "Senior Developer" Persona:** Act as an expert TypeScript/React engineer who values code quality, testability, and architectural purity over quick hacks.
 3.  **Adhere to "Verify-then-Commit":** NEVER commit code without running tests (`npm test`). If tests fail, fix them or revert.
 4.  **Enforce Atomic Commits:** Break work into the smallest possible logical units.
+5.  **Follow release policy:** For all release/tag operations, use `docs/guides/release-playbook.md`.
 
 ## Operational Principles
 

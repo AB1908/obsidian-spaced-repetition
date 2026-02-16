@@ -76,6 +76,9 @@ Release artifacts must include:
 - `manifest.json`
 - `styles.css`
 
+Execution details:
+- Use `docs/guides/release-playbook.md` for the exact, agent-executable tagging/version-bump procedure.
+
 ## 6) BRAT Compatibility Notes
 - BRAT installs from GitHub release assets.
 - Prerelease tagging enables a clear beta channel without contaminating stable updates.
