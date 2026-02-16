@@ -26,3 +26,25 @@
 - The fixture mock system matches on `(method, JSON.stringify(input))` pairs, so multiple fixtures per method with different inputs work fine
 - `getTFileForPath` has zero existing test fixtures — clean migration path
 - `getParentOrFilename_constitution.json` had output `"Claude's Constitution"` which was the parent folder name — the actual manifestation of the bug in test data
+
+### Workflow Improvement: Plan-Commit-Review Feedback Loop
+
+**Idea discussed during this session.** To be enforced as process going forward.
+
+**The problem:** Plans diverge from implementations with no structured way to learn from it.
+
+**Proposed workflow:**
+
+1. **Plan phase:** When creating stories, fully scope the plan (commits, touchpoints, approach) and commit it as an immutable record of intent.
+2. **Human review of plan:** Force review before implementation begins. Record feedback and any corrections.
+3. **Delegate to agent:** Agent implements from the committed plan.
+4. **Post-implementation divergence check:** Automatically compare what was planned vs what actually happened. Categorize divergences:
+   - **Scope miss** — didn't anticipate a needed change
+   - **Wrong decomposition** — commits got merged/split differently
+   - **Discovery** — hit something unexpected during implementation
+   - **Over-planning** — planned work that turned out unnecessary
+5. **Feed back into planning:** Use divergence patterns over time to improve future planning accuracy (e.g., "we consistently underestimate test fixture changes").
+
+**Status:** Captured here for deeper planning in a future session. Will formalize as a guide or ADR once the process is tested on a few stories.
+
+**Next step:** When back in Claude Code, use these session notes to draft a formal process doc and trial it on the next story.
