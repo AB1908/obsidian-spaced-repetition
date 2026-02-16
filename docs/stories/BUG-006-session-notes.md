@@ -19,7 +19,11 @@
 
 ### Errors / Deviations
 
-(To be updated during implementation)
+**Context loss on story completion:** At end of session, agent was asked to verify acceptance criteria were met. The code fix was already committed (commits `55198ed`, `bf7e07c`) with passing tests, but the agent didn't check git history or test results first — it re-verified the code, then produced a docs-only commit (`8b2d2bf`) to mark the story done and check the acceptance criteria boxes. This commit should have been squashed into the earlier work, not a separate trailing commit.
+
+**Root cause:** Likely context window management — earlier implementation actions had been compressed/summarized, so the agent treated "check if done" as a fresh task rather than recognizing it had already completed the work. The commit approval workflow also didn't catch that this was unnecessary churn.
+
+**Lesson:** Before producing new commits, check `git log` to see what's already been done in the current session. If the only remaining action is updating docs metadata, fold it into the last relevant commit rather than creating a new one.
 
 ### Observations
 
