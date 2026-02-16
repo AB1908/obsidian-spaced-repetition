@@ -1,7 +1,7 @@
 # DEBT-011: Book Metaphor Doesn't Fit Markdown/Clippings Sources
 
 ## Status
-Ready
+Done
 
 ## Description
 The entire route/API structure assumes the MoonReader book model: books contain chapters, chapters contain annotations. This was the original and only use case.
@@ -22,13 +22,19 @@ After creating a deck from a clippings source (constitution.md), navigating to t
 - Adding new source types will compound the problem
 - Component reuse is hampered (see DEBT-012)
 
+## Plan
+[Source Model Seam Repair](../plans/DEBT-011-source-model-seam-repair.md)
+
 ## Acceptance Criteria
 - [x] Investigate: write observation test in api.test.ts capturing post-deck-creation state for clippings
 - [x] Determine whether AnnotationsNote needs re-initialization after file mutation
-- [ ] Design navigation model that works for both books and clippings
-- [ ] Consider whether clippings need their own route/component tree
+- [x] Design navigation model that works for both books and clippings — see plan
+- [x] Consider whether clippings need their own route/component tree — **no**, components are already generic
 
 ## Session Notes
+### 2026-02-16
+See [session notes](../sessions/2026-02-16-DEBT-011.md) — full analysis of behavior divergence, strategy pattern gaps, design decisions.
+
 ### 2026-02-15 (Agent A, CP-1 + CP-2)
 - Added a behavior test in `tests/api.test.ts` that locks post-deck-creation navigation availability for direct-markdown/clippings after `createFlashcardNoteForAnnotationsNote(..., { confirmedSourceMutation: true })`.
 - Root cause confirmed in API layer: `getBookChapters` only returned level-1 headings (`isChapter`). Clippings like `constitution.md` can have heading structure without any level-1 heading (for fixture: only `## Overview`), so chapter list was empty and downstream annotation navigation had no entrypoint.
