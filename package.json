@@ -12,6 +12,7 @@
         "prepare": "husky install",
         "watch": "jest --watch",
         "release": "standard-version --tag-prefix \"\"",
+        "release:prepare": "scripts/prepare-release.sh",
         "mock-server": "json-server --watch db.json"
     },
     "standard-version": {
