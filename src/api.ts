@@ -260,6 +260,7 @@ export function getBookChapters(bookId: string) {
         }));
 }
 
+// TODO(DEBT-008): follow up on naming/typing for this DTO (e.g. rename away from NotesWithoutBooks).
 export interface NotesWithoutBooks {
     name: string;
     id: string;
@@ -268,9 +269,8 @@ export interface NotesWithoutBooks {
     requiresSourceMutationConfirmation: boolean;
 }
 
-function requiresSourceMutationConfirmation(sourceNote: Pick<AnnotationsNote, "tags" | "getBookFrontmatter">): boolean {
-    const hasMoonReaderFrontmatter = !!sourceNote.getBookFrontmatter();
-    return hasTag(sourceNote.tags || [], "clippings") && !hasMoonReaderFrontmatter;
+function requiresSourceMutationConfirmation(tags: string[] = [], hasMoonReaderFrontmatter: boolean): boolean {
+    return hasTag(tags, "clippings") && !hasMoonReaderFrontmatter;
 }
 
 // todo: expand to also include other notes and not just books
@@ -284,7 +284,7 @@ export function getSourcesAvailableForDeckCreation(): NotesWithoutBooks[] {
             name: sourceNote.name,
             tags,
             sourceType: getSourceType(tags, hasMoonReaderFrontmatter),
-            requiresSourceMutationConfirmation: requiresSourceMutationConfirmation(sourceNote),
+            requiresSourceMutationConfirmation: requiresSourceMutationConfirmation(tags, hasMoonReaderFrontmatter),
         };
     });
 }
@@ -329,7 +329,8 @@ async function ensureDirectMarkdownSourceInOwnFolder(sourcePath: string): Promis
 
 export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts?: { confirmedSourceMutation?: boolean }) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
-    const sourceRequiresMutationConfirmation = requiresSourceMutationConfirmation(book);
+    const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
+    const sourceRequiresMutationConfirmation = requiresSourceMutationConfirmation(book.tags || [], hasMoonReaderFrontmatter);
 
     if (sourceRequiresMutationConfirmation) {
         if (!opts?.confirmedSourceMutation) {
