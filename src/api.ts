@@ -25,7 +25,7 @@ import {
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
 import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
-import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getMetadataForFile, getParentOrFilename, moveFile, renameFile, createFile, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
+import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getMetadataForFile, moveFile, renameFile, createFile, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
 import type { FrontendFlashcard } from "src/ui/routes/books/review";
@@ -344,8 +344,7 @@ export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts
             const tags = plugin.fileTagsMap.get(oldPath) || book.tags || [];
             plugin.fileTagsMap.delete(oldPath);
             plugin.fileTagsMap.set(newPath, tags);
-            book.path = newPath;
-            book.name = getParentOrFilename(newPath);
+            book.updatePath(newPath);
         }
     }
 

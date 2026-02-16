@@ -9,7 +9,7 @@ jest.mock("src/infrastructure/disk", () => {
         "getFileContents_2025-12-07T19-37-22-044Z_radb6f.json",
         "filePathsWithTag_2025-12-07T19-37-20-520Z_kx3kvy.json",
         "fileTags_2025-12-07T19-37-20-516Z_u0wrbc.json",
-        "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
+        "getTFileForPath_Untitled.json",
         "getMetadataForFile_2025-12-07T19-37-20-679Z_gfsis2.json",
         "updateCardOnDisk_2025-12-25T10-00-00_aaaaa.json",
         "updateCardOnDisk_2025-12-25T10-00-01_bbbbb.json",
