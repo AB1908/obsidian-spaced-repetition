@@ -1,9 +1,9 @@
 import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
-import { nanoid } from "nanoid";
+import { nanoid, customAlphabet } from "nanoid";
 import {
     createFlashcardsFileForBook, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
-    getParentOrFilename, updateCardOnDisk, getTFileForPath, updateFrontmatter
+    updateCardOnDisk, updateFrontmatter, overwriteFile, ensureFolder, moveFile
 } from "src/infrastructure/disk";
 import { type annotation, parseAnnotations } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
@@ -48,6 +48,8 @@ export interface Count {
     with: number;
     without: number;
 }
+
+const blockId = customAlphabet("0123456789abcdef", 6);
 
 export function isHeading(section: BookMetadataSection): section is Heading {
     return (section as Heading).level !== undefined;
@@ -316,7 +318,7 @@ export class AnnotationsNote implements frontbook {
 
         this.detectDrift();
 
-        this.name = getParentOrFilename(this.path);
+        this.name = this.getSourceDisplayName();
 
         if (this.plugin.fileTagsMap.has(this.path)) {
             // @ts-ignore
@@ -331,6 +333,61 @@ export class AnnotationsNote implements frontbook {
         // plugin does not exist here, what to do?
         this.generateReviewDeck();
         return this;
+    }
+
+    private getSourceDisplayName() {
+        const pathParts = this.path.split("/").filter(Boolean);
+        const fileName = pathParts[pathParts.length - 1] || "";
+        return fileName.replace(/\.md$/i, "");
+    }
+
+    private async addMissingBlockIdsToParagraphs() {
+        const metadata = getMetadataForFile(this.path);
+        const paragraphSections = metadata?.sections?.filter(section => section.type === "paragraph");
+        if (!paragraphSections?.length) return;
+
+        const lines = (await getFileContents(this.path)).split("\n");
+        let updated = false;
+
+        for (const section of paragraphSections) {
+            if (section.id) continue;
+            const endLine = section.position.end.line;
+            lines[endLine] = `${lines[endLine]} ^${blockId()}`;
+            updated = true;
+        }
+
+        if (updated) {
+            await overwriteFile(this.path, lines.join("\n"));
+        }
+    }
+
+    private async ensureSourceInOwnFolder(): Promise<string> {
+        const pathParts = this.path.split("/");
+        const fileName = pathParts[pathParts.length - 1];
+        const parentPath = pathParts.length > 1 ? pathParts.slice(0, -1).join("/") : "";
+        const baseName = fileName.replace(/\.md$/i, "");
+        const ownFolderPath = parentPath ? `${parentPath}/${baseName}` : baseName;
+        const targetPath = `${ownFolderPath}/${fileName}`;
+
+        if (this.path === targetPath) return this.path;
+
+        await ensureFolder(ownFolderPath);
+        await moveFile(this.path, targetPath);
+        return targetPath;
+    }
+
+    async prepareDirectMarkdownSourceForDeckCreation() {
+        await this.addMissingBlockIdsToParagraphs();
+        const oldPath = this.path;
+        const newPath = await this.ensureSourceInOwnFolder();
+
+        if (newPath === oldPath) return;
+
+        const tags = this.plugin.fileTagsMap.get(oldPath) || this.tags || [];
+        this.plugin.fileTagsMap.delete(oldPath);
+        this.plugin.fileTagsMap.set(newPath, tags);
+        this.path = newPath;
+        this.name = this.getSourceDisplayName();
     }
 
     private detectDrift() {

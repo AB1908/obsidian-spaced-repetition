@@ -27,9 +27,12 @@ import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
 import { fileTags } from "src/infrastructure/disk";
 
+let plugin: ReturnType<typeof createMockPlugin>;
+
 describe("clippings deck creation flow [STORY-013]", () => {
     beforeEach(async () => {
-        await setupClippingsWorld();
+        jest.clearAllMocks();
+        plugin = await setupClippingsWorld();
     });
 
     test("getSourcesAvailableForDeckCreation marks clipping source as requiring mutation confirmation", () => {
@@ -46,6 +49,17 @@ describe("clippings deck creation flow [STORY-013]", () => {
               },
             ]
         `);
+    });
+
+    test("source name remains file basename before and after source folderization", async () => {
+        const source = getSourcesAvailableForDeckCreation()[0];
+        expect(source.name).toBe("constitution");
+
+        await createFlashcardNoteForAnnotationsNote(source.id, { confirmedSourceMutation: true });
+        const book = plugin.annotationsNoteIndex.getBook(source.id);
+
+        expect(book.path).toBe("constitution/constitution.md");
+        expect(book.name).toBe("constitution");
     });
 
     test("createFlashcardNoteForAnnotationsNote blocks clipping source when confirmation is missing", async () => {
@@ -111,4 +125,5 @@ async function setupClippingsWorld() {
     mockPlugin.flashcardIndex = await mockPlugin.flashcardIndex.initialize();
     mockPlugin.annotationsNoteIndex = await mockPlugin.annotationsNoteIndex.initialize(mockPlugin);
     setPlugin(mockPlugin as any);
+    return mockPlugin;
 }
