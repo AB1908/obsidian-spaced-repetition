@@ -1,0 +1,5 @@
+{
+  "method": "getTFileForPath",
+  "input": "constitution.md",
+  "output": { "basename": "constitution", "parent": { "name": "" } }
+}

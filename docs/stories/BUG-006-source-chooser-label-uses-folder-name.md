@@ -1,7 +1,7 @@
 # BUG-006: Source Chooser Shows Folder Name Instead of File Name
 
 ## Status
-Ready
+In Progress
 
 ## Epic
 [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md)

@@ -10,7 +10,7 @@ jest.mock("src/infrastructure/disk", () => {
     const mock = createDiskMockFromFixtures([
         "getFileContents_2025-12-07T19-37-22-044Z_radb6f.json",
         "getMetadataForFile_2025-12-07T19-37-22-036Z_kzjn5y.json",
-        "getParentOrFilename_2025-12-07T19-37-22-046Z_j780r6.json",
+        "getTFileForPath_Untitled.json",
     ]);
     return mock;
 });
