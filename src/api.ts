@@ -24,7 +24,7 @@ import {
 } from "src/data/models/flashcard";
 import { calculateDelayBeforeReview } from "./data/utils/calculateDelayBeforeReview";
 import { generateSectionsTree } from "src/data/models/bookTree";
-import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, isChapter, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
+import { BookMetadataSection, findNextHeader, isAnnotation, isHeading, Heading, isAnnotationOrParagraph, isParagraph, BookFrontmatter, AnnotationsNote, Source, MoonReaderStrategy } from "src/data/models";
 import { ensureFolder, findFilesByExtension, getAllFolders, getFileContents, getMetadataForFile, moveFile, renameFile, createFile, updateFrontmatter, overwriteFile } from "src/infrastructure/disk";
 import type SRPlugin from "src/main";
 import type { annotation } from "src/data/models/annotations";
@@ -243,13 +243,7 @@ export function getSectionTreeForBook(bookId: string) {
 
 export function getBookChapters(bookId: string) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
-    const chapterSections = book.bookSections.filter((section): section is Heading => isChapter(section));
-    const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
-    const isDirectClipping = hasTag(book.tags || [], "clippings") && !hasMoonReaderFrontmatter;
-
-    const sections = chapterSections.length === 0 && isDirectClipping
-        ? book.bookSections.filter((section): section is Heading => isHeading(section))
-        : chapterSections;
+    const sections = book.getNavigableSections();
 
     return sections
         .map(heading => ({

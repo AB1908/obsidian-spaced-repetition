@@ -17,7 +17,10 @@ import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
 import { generateFingerprint, hasContentDrifted } from "src/data/utils/fingerprint";
 import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
-import { selectEligibleSourcePaths } from "src/data/source-discovery";
+import { getSourceType, selectEligibleSourcePaths } from "src/data/source-discovery";
+import { ISourceStrategy } from "./ISourceStrategy";
+import { MarkdownSourceStrategy } from "./strategies/MarkdownSourceStrategy";
+import { MoonReaderStrategy } from "./strategies/MoonReaderStrategy";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -284,6 +287,7 @@ export class AnnotationsNote implements frontbook {
     // i feel like i need a factory method that creates a AnnotationsNoteWithFLashcards
     // and a AnnotationsNote
     flashcardNote: FlashcardNote | null;
+    strategy: ISourceStrategy;
     // todo: think of a way to not use plugin
     // the reason I need it is because to find the corresponding flashcard note
     plugin: AnnotationsNoteDependencies;
@@ -298,11 +302,13 @@ export class AnnotationsNote implements frontbook {
         this.plugin = plugin;
         this.flashcardNote = null;
         this.tags = [];
+        this.strategy = new MarkdownSourceStrategy(path);
     }
 
     updatePath(newPath: string) {
         this.path = newPath;
         this.name = getTFileForPath(newPath).basename;
+        this.strategy = this.resolveStrategy();
     }
 
     async initialize() {
@@ -330,12 +336,25 @@ export class AnnotationsNote implements frontbook {
             throw new Error(`sourceNoteInitialize: ${this.path} does not have tags`)
         }
 
+        this.strategy = this.resolveStrategy();
+
         // done: join on parsed flashcards
         // do i need a global flashcards array?
         // it does align with my roadmap of allowing tag based grouping as I would need a global index there as well
         // plugin does not exist here, what to do?
         this.generateReviewDeck();
         return this;
+    }
+
+    getNavigableSections(): Heading[] {
+        return this.strategy.getNavigableSections(this.bookSections);
+    }
+
+    private resolveStrategy(): ISourceStrategy {
+        const sourceType = getSourceType(this.tags, !!this.getBookFrontmatter());
+        return sourceType === "moonreader"
+            ? new MoonReaderStrategy(this.path)
+            : new MarkdownSourceStrategy(this.path);
     }
 
     private detectDrift() {

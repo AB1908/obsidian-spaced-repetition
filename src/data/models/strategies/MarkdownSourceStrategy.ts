@@ -2,6 +2,7 @@ import { type annotation } from "../annotations";
 import { ISourceStrategy } from "../ISourceStrategy";
 import { getFileContents, getMetadataForFile } from "src/infrastructure/disk";
 import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
+import { type BookMetadataSections, type Heading, isHeading } from "../AnnotationsNote";
 
 export class MarkdownSourceStrategy implements ISourceStrategy {
     constructor(private filePath: string) {}
@@ -25,5 +26,9 @@ export class MarkdownSourceStrategy implements ISourceStrategy {
                     hasFlashcards: false,
                 };
             });
+    }
+
+    getNavigableSections(sections: BookMetadataSections): Heading[] {
+        return sections.filter((section): section is Heading => isHeading(section));
     }
 }
