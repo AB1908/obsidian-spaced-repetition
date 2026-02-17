@@ -70,3 +70,5 @@ If discoverability/drift friction repeats at least two more times in active runs
 ## Related
 - [SPIKE-003](SPIKE-003-prototype-acceleration-parallel-execution-plan.md)
 - [SPIKE-004](SPIKE-004-worktree-agent-orchestration-tooling-evaluation.md)
+- [SPIKE-006](SPIKE-006-reusable-agent-skill-wrappers.md)
+- [SPIKE-007](SPIKE-007-cross-agent-prompt-harmonization.md)
