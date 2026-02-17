@@ -2,17 +2,37 @@ import { parseAnnotations, isAnnotationProcessed } from "src/data/models/annotat
 
 describe("isAnnotationProcessed", () => {
     test("should return true if annotation has a category", () => {
-        const annotation = { id: "1", type: "note", highlight: "hi", note: "", category: 1 };
+        const annotation = {
+            type: "annotation",
+            id: "1",
+            calloutType: "note",
+            highlight: "hi",
+            note: "",
+            category: 1,
+        };
         expect(isAnnotationProcessed(annotation)).toBe(true);
     });
 
     test("should return false if annotation has no category", () => {
-        const annotation = { id: "2", type: "note", highlight: "hi", note: "" };
+        const annotation = {
+            type: "annotation",
+            id: "2",
+            calloutType: "note",
+            highlight: "hi",
+            note: "",
+        };
         expect(isAnnotationProcessed(annotation)).toBe(false);
     });
 
     test("should return false if category is null", () => {
-        const annotation = { id: "3", type: "note", highlight: "hi", note: "", category: null } as any;
+        const annotation = {
+            type: "annotation",
+            id: "3",
+            calloutType: "note",
+            highlight: "hi",
+            note: "",
+            category: null,
+        } as any;
         expect(isAnnotationProcessed(annotation)).toBe(false);
     });
 });
@@ -29,6 +49,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
@@ -39,7 +60,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
     });
@@ -55,6 +76,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
@@ -65,7 +87,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
         expect(
@@ -77,6 +99,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 > What a beautiful line by Tolkien`)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
@@ -87,7 +110,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
     });
@@ -103,6 +126,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 > What a beautiful line by Tolkien`)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
@@ -114,7 +138,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
         expect(
@@ -128,6 +152,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
@@ -139,7 +164,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
     });
@@ -156,6 +181,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
@@ -167,7 +193,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
         expect(
@@ -180,6 +206,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 > This is another line.`)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.",
@@ -191,7 +218,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
     });
@@ -209,6 +236,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 `)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
@@ -221,7 +249,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
         expect(
@@ -235,6 +263,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 > This is another line.`)
         ).toMatchInlineSnapshot(`
             {
+              "calloutType": "notes",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Onen i estel Edain, u-chebin estel anim.
@@ -247,7 +276,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": undefined,
               "personalNote": undefined,
               "timestamp": undefined,
-              "type": "notes",
+              "type": "annotation",
             }
         `);
     });
@@ -264,6 +293,7 @@ describe("parseAnnotations should parse an annotation with", () => {
 > %%`;
         expect(parseAnnotations(text)).toMatchInlineSnapshot(`
             {
+              "calloutType": "quote",
               "category": undefined,
               "deleted": undefined,
               "highlight": "Memory metaphors",
@@ -274,7 +304,7 @@ describe("parseAnnotations should parse an annotation with", () => {
               "originalColor": "-11184811",
               "personalNote": undefined,
               "timestamp": "1645176780813",
-              "type": "quote",
+              "type": "annotation",
             }
         `);
     });

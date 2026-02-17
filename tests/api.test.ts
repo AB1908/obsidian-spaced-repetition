@@ -444,6 +444,7 @@ describe("getSectionTreeForBook", () => {
                       "id": "t0000013",
                       "level": 2,
                       "name": "Relating study and test",
+                      "type": "heading",
                     },
                   ],
                   "counts": {
@@ -453,6 +454,7 @@ describe("getSectionTreeForBook", () => {
                   "id": "t0000012",
                   "level": 1,
                   "name": "Chapter 3: Pulling the rabbit out of the hat",
+                  "type": "heading",
                 },
               ],
               "counts": {
@@ -536,13 +538,17 @@ describe("createFlashcardNoteForAnnotationsNote navigation availability [DEBT-01
     });
 
     test("post-creation direct clippings source exposes navigable sections with annotations", async () => {
-        const clipping = getSourcesAvailableForDeckCreation().find(source => source.sourceType === "direct-markdown");
+        const clipping = getSourcesAvailableForDeckCreation().find(
+            (source) => source.sourceType === "direct-markdown"
+        );
         expect(clipping).toBeDefined();
 
         await createFlashcardNoteForAnnotationsNote(clipping.id, { confirmedSourceMutation: true });
 
         const sections = getBookChapters(clipping.id);
-        expect(sections).toEqual(expect.arrayContaining([expect.objectContaining({ id: expect.any(String) })]));
+        expect(sections).toEqual(
+            expect.arrayContaining([expect.objectContaining({ id: expect.any(String) })])
+        );
         const sectionId = sections[0]?.id;
 
         const section = getAnnotationsForSection(sectionId, clipping.id);
@@ -702,17 +708,71 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
                     }
                     return {
                         bookSections: [
-                            { id: sectionId, level: 1, name: "Section 1", children: [], counts: { with: 0, without: 0 } },
-                            { id: "ann-1", highlight: "A1", note: "", category: null, originalColor: "1", deleted: false },
-                            { id: "ann-2", highlight: "A2", note: "", category: 1, originalColor: "2", deleted: false },
-                            { id: "ann-3", highlight: "A3", note: "", category: null, originalColor: "2", deleted: false },
-                            { id: "ann-4", highlight: "A4", note: "", category: 2, originalColor: "3", deleted: false },
-                            { id: sectionTwoId, level: 1, name: "Section 2", children: [], counts: { with: 0, without: 0 } },
-                            { id: "ann-5", highlight: "A5", note: "", category: 2, originalColor: "3", deleted: false },
+                            {
+                                type: "heading",
+                                id: sectionId,
+                                level: 1,
+                                name: "Section 1",
+                                children: [],
+                                counts: { with: 0, without: 0 },
+                            },
+                            {
+                                type: "annotation",
+                                id: "ann-1",
+                                highlight: "A1",
+                                note: "",
+                                category: null,
+                                originalColor: "1",
+                                deleted: false,
+                            },
+                            {
+                                type: "annotation",
+                                id: "ann-2",
+                                highlight: "A2",
+                                note: "",
+                                category: 1,
+                                originalColor: "2",
+                                deleted: false,
+                            },
+                            {
+                                type: "annotation",
+                                id: "ann-3",
+                                highlight: "A3",
+                                note: "",
+                                category: null,
+                                originalColor: "2",
+                                deleted: false,
+                            },
+                            {
+                                type: "annotation",
+                                id: "ann-4",
+                                highlight: "A4",
+                                note: "",
+                                category: 2,
+                                originalColor: "3",
+                                deleted: false,
+                            },
+                            {
+                                type: "heading",
+                                id: sectionTwoId,
+                                level: 1,
+                                name: "Section 2",
+                                children: [],
+                                counts: { with: 0, without: 0 },
+                            },
+                            {
+                                type: "annotation",
+                                id: "ann-5",
+                                highlight: "A5",
+                                note: "",
+                                category: 2,
+                                originalColor: "3",
+                                deleted: false,
+                            },
                         ],
                     };
-                }
-            }
+                },
+            },
         } as any);
     }
 
@@ -726,7 +786,9 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
     });
 
     test("getPreviousAnnotationId respects unprocessed filter", () => {
-        const previousId = getPreviousAnnotationId(bookId, "ann-4", sectionId, { mainFilter: "unprocessed" });
+        const previousId = getPreviousAnnotationId(bookId, "ann-4", sectionId, {
+            mainFilter: "unprocessed",
+        });
         expect(previousId).toBe("ann-3");
     });
 

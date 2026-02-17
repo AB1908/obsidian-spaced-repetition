@@ -11,6 +11,7 @@ exports[`getParagraphFromFile 1`] = `
     "id": "deterministic-id",
     "level": 1,
     "name": "Chapter 3: Pulling the rabbit out of the hat",
+    "type": "heading",
   },
   Heading {
     "children": [],
@@ -21,12 +22,14 @@ exports[`getParagraphFromFile 1`] = `
     "id": "deterministic-id",
     "level": 2,
     "name": "Relating study and test",
+    "type": "heading",
   },
   {
     "hasFlashcards": false,
     "id": "hjhjhlkap",
     "text": "What is episodic memory?
 NO one knows ^hjhjhlkap",
+    "type": "paragraph",
     "wasIdPresent": true,
   },
 ]
@@ -43,6 +46,7 @@ exports[`getParagraphFromFile 2`] = `
     "id": "deterministic-id",
     "level": 1,
     "name": "Chapter 3: Pulling the rabbit out of the hat",
+    "type": "heading",
   },
   Heading {
     "children": [],
@@ -53,12 +57,14 @@ exports[`getParagraphFromFile 2`] = `
     "id": "deterministic-id",
     "level": 2,
     "name": "Relating study and test",
+    "type": "heading",
   },
   {
     "hasFlashcards": false,
     "id": "hjhjhlkap",
     "text": "What is episodic memory?
 NO one knows ^hjhjhlkap",
+    "type": "paragraph",
     "wasIdPresent": true,
   },
 ]

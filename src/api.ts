@@ -354,9 +354,9 @@ export function getBreadcrumbData(bookId: string, sectionId?: string) {
 
     if (sectionId) {
         const chapter = book.bookSections.find(
-            (section) => "id" in section && section.id === sectionId
+            (section) => section.id === sectionId
         );
-        if (chapter && "name" in chapter && (chapter as any).level != undefined) {
+        if (chapter && chapter.type === 'heading') {
             sectionName = chapter.name;
         }
     }
