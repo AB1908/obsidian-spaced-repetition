@@ -26,61 +26,159 @@ STORY-010 (Direct Markdown Engagement) has core infrastructure done, but the nav
 - `Source` class and `MarkdownSourceStrategy` exist but are dead code — never integrated
 - ADR-018 chose composition — exploration confirms this is right
 
-## Plan: 4 Sequential PRs
+## Execution: 2-Wave Parallel Plan
+
+### Parallelism Analysis
+
+**File-region conflict matrix:**
+
+| File | PR 1 region | PR 2 region | PR 3 region | PR 4 region |
+|---|---|---|---|---|
+| `AnnotationsNote.ts` | types (25-26), guards (52-70), Heading (133-148) | class field + initialize (270-339) | — | transform (72-84), methods (374-414, 564-582) |
+| `ISourceStrategy.ts` | — | append method | append method | — |
+| `MoonReaderStrategy.ts` | — | append method | append method | — |
+| `MarkdownSourceStrategy.ts` | — | append method | append method + move logic | — |
+| `api.ts` | — | getBookChapters (244-261) | createFlashcardNote (271-355) | — |
+| `annotations.ts` | interface (3-18) | — | — | — |
+| `paragraphs.ts` | interface (6-13) | — | — | — |
+
+**Dependency graph:**
+```
+PR 1 (discriminated union)  ──→  PR 4 (fix updateAnnotation)
+PR 2 (wire strategy)        ──→  PR 3 (mutation into strategy)
+```
+
+PR 1 ∥ PR 2: zero overlapping regions.
+PR 3 ∥ PR 4: PR 3 touches strategy files + api.ts, PR 4 touches AnnotationsNote methods. No overlap.
+
+**Decision:** PR 4 uses simple `if (section.type === 'paragraph')` check, NOT `strategy.renderSection()`. This avoids dependency on PR 2 and enables full parallelism. Refactor to strategy method in a follow-up if the pattern proves useful.
+
+### Wave 1 (parallel)
+
+| Track | Branch | PR | Scope |
+|---|---|---|---|
+| A | `refactor/discriminated-union` | PR 1 | Add `type` discriminator to section types |
+| B | `refactor/strategy-navigation` | PR 2 | Wire strategy into AnnotationsNote, add `getNavigableSections` |
+
+**Gate:** Both branches merge to main. `npm test` green on main after each merge.
+
+### Wave 2 (parallel, after Wave 1 merges)
+
+| Track | Branch | PR | Scope |
+|---|---|---|---|
+| C | `refactor/strategy-mutation` | PR 3 | Move deck-creation mutation into strategy |
+| D | `fix/paragraph-rendering` | PR 4 | Fix `updateAnnotation` for paragraphs, remove `transform()` |
+
+**Gate:** Both branches merge to main. Full verification (see below).
+
+---
+
+## PR Details
 
 ### PR 1: Discriminated union for sections (DEBT-001)
 
-Add `type` discriminator to all section types for proper TypeScript narrowing.
+**Branch:** `refactor/discriminated-union`
 
 **Files:**
 - `src/data/models/paragraphs.ts` — add `type: 'paragraph'` to interface
 - `src/data/models/annotations.ts` — add `type: 'annotation'` to interface, set in `parseAnnotations()`
-- `src/data/models/AnnotationsNote.ts` — add `type: 'heading'` to `Heading` constructor, update type guards, update `bookSections()` function
-- Tests: existing should pass unchanged; add discriminator-based narrowing tests
+- `src/data/models/AnnotationsNote.ts` — add `type: 'heading'` to `Heading` constructor, update type guards to use discriminator (keep backward compat), update `bookSections()` function
 
-**Verify:** `npm test` — all pass, no behavior change.
+**Planned commits:**
+1. `refactor(models): add type discriminator to section types [DEBT-001]`
+2. `test(models): add discriminator-based narrowing tests [DEBT-001]`
+
+**Test criteria:**
+- `npm test` — all 31 suites pass, no behavior change
+- Type guards work with both discriminator AND legacy duck-typing
+- New test: `section.type === 'paragraph'` narrows correctly
+
+**Human review focus:** Are the discriminator values correct? Does the `annotation` interface's existing `type: string` field conflict with the discriminator?
 
 ### PR 2: Wire strategy into AnnotationsNote + `getNavigableSections`
 
+**Branch:** `refactor/strategy-navigation`
+
 **Files:**
 - `src/data/models/ISourceStrategy.ts` — add `getNavigableSections(sections: BookMetadataSections): Heading[]`
-- `src/data/models/strategies/MoonReaderStrategy.ts` — filter `type === 'heading' && level === 1`
-- `src/data/models/strategies/MarkdownSourceStrategy.ts` — return all headings
-- `src/data/models/AnnotationsNote.ts` — add `strategy: ISourceStrategy` field, assign in `initialize()`, add `getNavigableSections()` method
-- `src/api.ts` — replace `getBookChapters()` conditional (~lines 244-261) with `book.getNavigableSections()`
+- `src/data/models/strategies/MoonReaderStrategy.ts` — implement: filter level-1 headings
+- `src/data/models/strategies/MarkdownSourceStrategy.ts` — implement: return all headings
+- `src/data/models/AnnotationsNote.ts` — add `strategy: ISourceStrategy` field, assign in `initialize()`
+- `src/api.ts` — replace `getBookChapters()` conditional with `book.getNavigableSections()`
 - `src/data/source-discovery.ts` — reuse existing `getSourceType()`
 
-**Verify:** `npm test`, existing clippings navigation test still passes.
+**Planned commits:**
+1. `refactor(strategy): add getNavigableSections to ISourceStrategy [DEBT-013]`
+2. `refactor(model): wire strategy into AnnotationsNote.initialize [DEBT-013]`
+3. `refactor(api): delegate getBookChapters to strategy [DEBT-011]`
+
+**Test criteria:**
+- `npm test` — all pass
+- Existing clippings navigation test (api.test.ts ~line 538) still passes
+- `getBookChapters` no longer has `isDirectClipping` conditional
+- New test: MoonReader source returns only level-1, markdown returns all headings
+
+**Human review focus:** How is source type detected during `initialize()`? Is the strategy assignment correct for sources without flashcard notes yet?
 
 ### PR 3: Move deck-creation mutation into strategy
 
-**Files:**
-- `src/data/models/ISourceStrategy.ts` — add `requiresMutationConfirmation(): boolean` and `prepareForDeckCreation(path: string): Promise<string>`
-- `src/data/models/strategies/MoonReaderStrategy.ts` — no-ops (`false`, identity)
-- `src/data/models/strategies/MarkdownSourceStrategy.ts` — move `addBlockIdsToParagraphs()` and `ensureDirectMarkdownSourceInOwnFolder()` logic here
-- `src/api.ts` — replace inline mutation in `createFlashcardNoteForAnnotationsNote()`, delete free functions
+**Branch:** `refactor/strategy-mutation`
+**Depends on:** PR 2 merged (strategy field exists on AnnotationsNote)
 
-**Verify:** `npm test` + manual deck creation from clippings source.
+**Files:**
+- `src/data/models/ISourceStrategy.ts` — add `requiresMutationConfirmation(): boolean`, `prepareForDeckCreation(path: string): Promise<string>`
+- `src/data/models/strategies/MoonReaderStrategy.ts` — no-ops
+- `src/data/models/strategies/MarkdownSourceStrategy.ts` — move `addBlockIdsToParagraphs()` and `ensureDirectMarkdownSourceInOwnFolder()` here
+- `src/api.ts` — simplify `createFlashcardNoteForAnnotationsNote()`, delete free functions
+
+**Planned commits:**
+1. `refactor(strategy): add mutation methods to ISourceStrategy [DEBT-013]`
+2. `refactor(api): delegate deck-creation mutation to strategy [DEBT-013]`
+
+**Test criteria:**
+- `npm test` — all pass
+- `addBlockIdsToParagraphs` and `ensureDirectMarkdownSourceInOwnFolder` no longer exist in api.ts
+- `requiresSourceMutationConfirmation` free function deleted
+- Existing clippings deck creation test still passes
+
+**Human review focus:** Does `prepareForDeckCreation` handle the path update correctly (AnnotationsNote.updatePath after folder move)? Is the block ID generation logic preserved exactly?
 
 ### PR 4: Fix `updateAnnotation` for paragraphs
 
-**Files:**
-- `src/data/models/AnnotationsNote.ts` — `updateAnnotation()` checks `section.type`, renders paragraph as plain text (not callout)
-- Consider adding `renderSection()` to `ISourceStrategy`
-- Remove `transform()` function — paragraphs stop masquerading as annotations
-- `getProcessedAnnotations()` / `getAnnotation()` return `annotation | paragraph` union
+**Branch:** `fix/paragraph-rendering`
+**Depends on:** PR 1 merged (discriminator available)
 
-**Verify:** `npm test` + test paragraph metadata update writes correct markdown.
+**Files:**
+- `src/data/models/AnnotationsNote.ts`:
+  - `updateAnnotation()` — check `section.type`, render paragraph as plain text (not callout)
+  - Remove `transform()` function
+  - `getProcessedAnnotations()` — return `(annotation | paragraph)[]` union, stop calling `transform()`
+  - `getAnnotation()` — return `annotation | paragraph`, stop calling `transform()`
+
+**Planned commits:**
+1. `fix(model): handle paragraph rendering in updateAnnotation [DEBT-001]`
+2. `refactor(model): remove transform() paragraph-to-annotation masquerade [DEBT-001]`
+
+**Test criteria:**
+- `npm test` — all pass
+- New test: `updateAnnotation` on a paragraph writes plain text + block ID, NOT callout format
+- `transform()` function no longer exists
+- UI components still work (they consume `highlight` field which paragraphs provide via the union)
+
+**Human review focus:** What is the correct render format for a paragraph? Just `text ^blockId`? Do any UI components break when receiving `paragraph` instead of `annotation` from `getAnnotation()`?
+
+---
 
 ## Deferred
 
 - Renaming `AnnotationsNote` → `SourceNote`, `bookSections` → `sections` (large rename, separate PR)
 - Renaming routes `/books/chapters/` → `/sources/sections/` (cosmetic)
 - `Source` shell class from ADR-018 (not needed until 3rd source type)
+- `strategy.renderSection()` — revisit after PR 4 ships, if the type-check pattern proves insufficient
 
 ## Final Verification
 
-After all 4 PRs:
+After all 4 PRs merged:
 1. `npm test` — full suite green
 2. `grep -rn "hasMoonReaderFrontmatter\|isDirectClipping" src/api.ts` → 0 results
 3. Manual: MoonReader deck → level-1 chapters → navigate → flashcards
