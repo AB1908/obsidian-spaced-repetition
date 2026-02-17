@@ -1,7 +1,7 @@
 # GitHub Execution and Beta Release Workflow
 
 ## Status
-Proposed
+Active
 
 ## Goal
 Make `docs/stories` the approved intent contract, move execution/review to GitHub PRs, and use GitHub prereleases for BRAT-based beta testing.
@@ -59,6 +59,10 @@ Reject PR when:
 - Require CI to pass before merge.
 - Require branch to be up to date with `main` before merge when conflicts are likely.
 - Prefer squash merge for single-story changes unless preserving commit boundaries is important.
+- Release automation expectations:
+  - PR merge is the release gate for default path.
+  - Enable workflow write permissions to repo contents for release automation.
+  - Allow GitHub Actions bot to push release commit/tag to `main` if branch protection requires explicit allowances.
 
 ## 5) Beta Tagging and Releases (BRAT-Oriented)
 Historical tags in this repo include pre-rewrite formats and should be treated as legacy.
@@ -78,6 +82,15 @@ Release artifacts must include:
 
 Execution details:
 - Use `docs/guides/release-playbook.md` for the exact, agent-executable tagging/version-bump procedure.
+- PR labels select release type deterministically (`release:major|minor|patch|beta|skip`).
+- No release label means `patch`.
+- `release:beta` produces prerelease tags (`X.Y.Z-beta.N`) and GitHub prereleases.
+- Release prep runs are serialized to avoid overlapping version bumps after close-together merges.
+- Automation ignores bot-authored release PR metadata (`chore(release): ...`) to prevent recursion.
+- Stable releases enforce `versions.json[version] == manifest.minAppVersion`.
+- Beta releases enforce no `versions.json` entry for beta tags by default.
+- Release prep runs `npm test`; automation then checks out the release tag commit and publishes assets in the same PR-merge workflow run.
+- Emergency/manual tag pushes keep a tag-triggered publish fallback.
 
 ## 6) BRAT Compatibility Notes
 - BRAT installs from GitHub release assets.
@@ -94,11 +107,21 @@ Reference:
 ## 8) Rollout Plan
 Phase 1:
 - Adopt this workflow immediately for new stories.
-- Keep existing CI/release workflows unchanged.
+- Keep emergency manual release path documented and runnable.
 
 Phase 2:
-- Update release automation to classify `*-beta.*` tags as prerelease.
+- Keep release automation on PR merge gate and enforce `tag == manifest.json.version`.
 - Validate BRAT install/update from beta release assets.
 
 Phase 3:
 - Add PR template and issue template aligned with this contract.
+
+## 9) Mobile-Friendly Operations Path
+Use this when shipping from mobile-first or low-local-tooling environments:
+
+1. Author story and get approval in `docs/stories`.
+2. Agent implements in worktree/branch and opens PR.
+3. Human reviews and merges PR to `main`.
+4. GitHub Actions performs release prep, commit, tag, and release publishing.
+5. Tester installs from BRAT (prerelease for beta tags, stable release otherwise).
+6. If automation is unavailable, use emergency manual path in `docs/guides/release-playbook.md`.
