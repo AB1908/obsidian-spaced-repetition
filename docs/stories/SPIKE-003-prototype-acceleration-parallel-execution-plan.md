@@ -264,6 +264,17 @@ Execution contract:
 - Use deterministic checkpoint files for restart, but keep naming lane-specific and minimal.
 - Run explicit code review gate per lane before merge, then perform manual deep review in each worktree.
 
+### 2026-02-17 (Lane Outcome Snapshot + Review Gate)
+- Lane A status: implementation commits present; main remaining review question is lockfile scope/strategy fit for this repo.
+- Lane B status: implementation commits present and working tree clean (except local task note); needs release-workflow risk review before merge.
+- Lane C status: produced significant orchestration/hygiene tooling; still has local WIP files and needs safety hardening review.
+- Lane D status: complete for docs/wave-runner scope with committed changes; one script robustness review item remains.
+- Automated review findings (Codex review runs):
+  - Lane B: duplicate release publish path risk in `release.yml` (PR-triggered path and tag-triggered path can both publish for same release).
+  - Lane C: `eval`-based command execution risk, empty-tag-set failure path, and inventory pseudo-ref accuracy issue in hygiene scripts.
+  - Lane D: `wave-runner.sh` shell escaping risk for markdown scope text and overly broad wave heading matching.
+  - Lane A: no clear functional regression flagged, but lockfile strategy should be intentionally decided before merge.
+
 ## Related
 - [DEBT-015](DEBT-015-dependabot-vulnerability-remediation.md)
 - [STORY-014](STORY-014-pr-gated-release-automation.md)
