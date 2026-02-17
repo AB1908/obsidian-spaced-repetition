@@ -11,14 +11,10 @@
         "test": "jest",
         "prepare": "husky install",
         "watch": "jest --watch",
-        "release": "standard-version --tag-prefix \"\"",
+        "release": "echo \"Use PR-gated release automation or npm run release:prepare -- <version>.\" && exit 1",
+        "release:next-version": "scripts/compute-next-release-version.sh",
         "release:prepare": "scripts/prepare-release.sh",
         "mock-server": "json-server --watch db.json"
-    },
-    "standard-version": {
-        "skip": {
-            "commit": false
-        }
     },
     "author": "AB1908 and Stephen Mwangi",
     "license": "MIT",
