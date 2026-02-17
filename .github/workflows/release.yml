@@ -1,82 +1,352 @@
-name: Build Obsidian plugin
+name: Release Automation
 
 on:
-    push:
-        # Sequence of patterns matched against refs/tags
-        tags:
-            - "*" # Push events to matching any tag format, i.e. 1.0, 20.15.10
-
-env:
-    PLUGIN_NAME: obsidian-spaced-repetition
+  pull_request:
+    types: [closed]
+    branches: [main]
+  push:
+    tags:
+      - "*"
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
+  prepare_release:
+    if: >-
+      github.event_name == 'pull_request' &&
+      github.event.pull_request.merged == true &&
+      github.actor != 'github-actions[bot]' &&
+      github.event.pull_request.user.login != 'github-actions[bot]' &&
+      !startsWith(github.event.pull_request.title, 'chore(release):')
+    concurrency:
+      group: release-prepare-main
+      cancel-in-progress: false
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    outputs:
+      skip_release: ${{ steps.release_type.outputs.skip_release }}
+      next_version: ${{ steps.next_version.outputs.next_version }}
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
 
-        steps:
-            - uses: actions/checkout@v2
-            - name: Use Node.js
-              uses: actions/setup-node@v1
-              with:
-                  node-version: "16.x" # You might need to adjust this value to your own version
-            - name: Build
-              id: build
-              run: |
-                  npm install || npm install --legacy-peer-deps
-                  npm run build --if-present
-                  mkdir ${{ env.PLUGIN_NAME }}
-                  cp main.js manifest.json styles.css ${{ env.PLUGIN_NAME }}
-                  zip -r ${{ env.PLUGIN_NAME }}.zip ${{ env.PLUGIN_NAME }}
-                  ls
-                  echo "tag_name=${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
-            - name: Create Release
-              id: create_release
-              uses: actions/create-release@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                  VERSION: ${{ github.ref }}
-              with:
-                  tag_name: ${{ github.ref }}
-                  release_name: ${{ github.ref }}
-                  draft: false
-                  prerelease: false
-            - name: Upload zip file
-              id: upload-zip
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./${{ env.PLUGIN_NAME }}.zip
-                  asset_name: ${{ env.PLUGIN_NAME }}-${{ steps.build.outputs.tag_name }}.zip
-                  asset_content_type: application/zip
-            - name: Upload main.js
-              id: upload-main
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./main.js
-                  asset_name: main.js
-                  asset_content_type: text/javascript
-            - name: Upload manifest.json
-              id: upload-manifest
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./manifest.json
-                  asset_name: manifest.json
-                  asset_content_type: application/json
-            - name: Upload styles.css
-              id: upload-css
-              uses: actions/upload-release-asset@v1
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-              with:
-                  upload_url: ${{ steps.create_release.outputs.upload_url }}
-                  asset_path: ./styles.css
-                  asset_name: styles.css
-                  asset_content_type: text/css
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: npm
+
+      - name: Determine release type from PR labels
+        id: release_type
+        run: |
+          set -euo pipefail
+          release_labels="$(jq -r '[.pull_request.labels[].name | select(startswith("release:"))] | join(",")' "$GITHUB_EVENT_PATH")"
+          label_count="$(jq -r '[.pull_request.labels[].name | select(startswith("release:"))] | length' "$GITHUB_EVENT_PATH")"
+
+          if [[ "$label_count" -gt 1 ]]; then
+            echo "Found multiple release labels: $release_labels"
+            echo "Use only one of: release:major, release:minor, release:patch, release:beta, release:skip"
+            exit 1
+          fi
+
+          release_type="patch"
+          skip_release="false"
+
+          if [[ "$release_labels" == "release:major" ]]; then
+            release_type="major"
+          elif [[ "$release_labels" == "release:minor" ]]; then
+            release_type="minor"
+          elif [[ "$release_labels" == "release:patch" ]]; then
+            release_type="patch"
+          elif [[ "$release_labels" == "release:beta" ]]; then
+            release_type="beta"
+          elif [[ "$release_labels" == "release:skip" ]]; then
+            skip_release="true"
+          elif [[ -n "$release_labels" ]]; then
+            echo "Unsupported release label: $release_labels"
+            exit 1
+          fi
+
+          echo "release_type=$release_type" >> "$GITHUB_OUTPUT"
+          echo "skip_release=$skip_release" >> "$GITHUB_OUTPUT"
+
+      - name: Stop when release is intentionally skipped
+        if: steps.release_type.outputs.skip_release == 'true'
+        run: |
+          echo "Release skipped by PR label release:skip"
+
+      - name: Install dependencies
+        if: steps.release_type.outputs.skip_release != 'true'
+        run: npm ci || npm install --legacy-peer-deps
+
+      - name: Run tests before release prep
+        if: steps.release_type.outputs.skip_release != 'true'
+        run: npm test
+
+      - name: Compute next version
+        if: steps.release_type.outputs.skip_release != 'true'
+        id: next_version
+        run: |
+          set -euo pipefail
+          chmod +x scripts/compute-next-release-version.sh scripts/prepare-release.sh
+          current_version="$(jq -r '.version' manifest.json)"
+          next_version="$(scripts/compute-next-release-version.sh "$current_version" "${{ steps.release_type.outputs.release_type }}")"
+
+          if [[ ! "$next_version" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
+            echo "Generated invalid next version: $next_version"
+            exit 1
+          fi
+
+          if [[ "$next_version" =~ -beta\. ]]; then
+            echo "is_stable=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "is_stable=true" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "next_version=$next_version" >> "$GITHUB_OUTPUT"
+
+      - name: Prepare release files
+        if: steps.release_type.outputs.skip_release != 'true'
+        run: npm run release:prepare -- "${{ steps.next_version.outputs.next_version }}"
+
+      - name: Validate release invariants
+        if: steps.release_type.outputs.skip_release != 'true'
+        run: |
+          set -euo pipefail
+          next_version="${{ steps.next_version.outputs.next_version }}"
+          manifest_version="$(jq -r '.version' manifest.json)"
+          min_app_version="$(jq -r '.minAppVersion' manifest.json)"
+          versions_entry="$(jq -r --arg version "$next_version" '.[$version] // empty' versions.json)"
+
+          if [[ "$manifest_version" != "$next_version" ]]; then
+            echo "Invariant violation: manifest.json.version ($manifest_version) != next version ($next_version)"
+            exit 1
+          fi
+
+          if [[ "${{ steps.next_version.outputs.is_stable }}" == "true" ]]; then
+            if [[ "$versions_entry" == "" ]]; then
+              echo "Invariant violation: versions.json missing stable entry for $next_version"
+              exit 1
+            fi
+            if [[ "$versions_entry" != "$min_app_version" ]]; then
+              echo "Invariant violation: versions.json[$next_version] ($versions_entry) != manifest.minAppVersion ($min_app_version)"
+              exit 1
+            fi
+          else
+            if [[ "$versions_entry" != "" ]]; then
+              echo "Invariant violation: versions.json unexpectedly contains beta entry for $next_version"
+              exit 1
+            fi
+          fi
+
+      - name: Commit and tag release
+        if: steps.release_type.outputs.skip_release != 'true'
+        env:
+          NEXT_VERSION: ${{ steps.next_version.outputs.next_version }}
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+          manifest_version="$(jq -r '.version' manifest.json)"
+          if [[ "$manifest_version" != "$NEXT_VERSION" ]]; then
+            echo "Invariant violation before tagging: manifest.json.version ($manifest_version) != $NEXT_VERSION"
+            exit 1
+          fi
+
+          if git ls-remote --exit-code --tags origin "$NEXT_VERSION" >/dev/null 2>&1; then
+            echo "Tag $NEXT_VERSION already exists on origin"
+            exit 1
+          fi
+
+          git add manifest.json versions.json
+
+          if git diff --cached --quiet; then
+            echo "No release file changes detected; refusing to create a tag."
+            exit 1
+          fi
+
+          git commit -m "chore(release): $NEXT_VERSION [skip ci]"
+          git tag -a "$NEXT_VERSION" -m "$NEXT_VERSION"
+          git push --atomic origin HEAD:main "$NEXT_VERSION"
+
+  publish_prepared_release:
+    if: >-
+      github.event_name == 'pull_request' &&
+      needs.prepare_release.result == 'success' &&
+      needs.prepare_release.outputs.skip_release != 'true'
+    needs: prepare_release
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout release tag
+        uses: actions/checkout@v4
+        with:
+          ref: refs/tags/${{ needs.prepare_release.outputs.next_version }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install --legacy-peer-deps
+
+      - name: Validate tag and prerelease status
+        id: release_meta
+        run: |
+          set -euo pipefail
+          tag_name="${{ needs.prepare_release.outputs.next_version }}"
+          manifest_version="$(jq -r '.version' manifest.json)"
+          min_app_version="$(jq -r '.minAppVersion' manifest.json)"
+          versions_entry="$(jq -r --arg version "$tag_name" '.[$version] // empty' versions.json)"
+
+          if [[ ! "$tag_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
+            echo "Unsupported tag format: $tag_name"
+            echo "Expected: X.Y.Z or X.Y.Z-beta.N"
+            exit 1
+          fi
+
+          if [[ "$manifest_version" != "$tag_name" ]]; then
+            echo "Invariant violation: tag ($tag_name) != manifest.json.version ($manifest_version)"
+            exit 1
+          fi
+
+          if [[ "$tag_name" =~ -beta\. ]]; then
+            if [[ "$versions_entry" != "" ]]; then
+              echo "Invariant violation: versions.json unexpectedly contains beta entry for $tag_name"
+              exit 1
+            fi
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            if [[ "$versions_entry" == "" ]]; then
+              echo "Invariant violation: versions.json missing stable entry for $tag_name"
+              exit 1
+            fi
+            if [[ "$versions_entry" != "$min_app_version" ]]; then
+              echo "Invariant violation: versions.json[$tag_name] ($versions_entry) != manifest.minAppVersion ($min_app_version)"
+              exit 1
+            fi
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "tag_name=$tag_name" >> "$GITHUB_OUTPUT"
+
+      - name: Build artifacts
+        run: OBSIDIAN_PLUGIN_DIR=. npm run build
+
+      - name: Package zip artifact
+        id: package
+        run: |
+          set -euo pipefail
+          plugin_id="$(jq -r '.id' manifest.json)"
+          zip_name="${plugin_id}-${{ steps.release_meta.outputs.tag_name }}.zip"
+          mkdir -p "$plugin_id"
+          cp main.js manifest.json styles.css "$plugin_id"
+          zip -r "$zip_name" "$plugin_id"
+          echo "zip_name=$zip_name" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_meta.outputs.tag_name }}
+          name: ${{ steps.release_meta.outputs.tag_name }}
+          draft: false
+          prerelease: ${{ steps.release_meta.outputs.prerelease }}
+          files: |
+            ${{ steps.package.outputs.zip_name }}
+            main.js
+            manifest.json
+            styles.css
+
+  publish_tag_release:
+    if: github.event_name == 'push' && startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout tag
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: "18"
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci || npm install --legacy-peer-deps
+
+      - name: Validate tag and prerelease status
+        id: release_meta
+        run: |
+          set -euo pipefail
+          tag_name="${GITHUB_REF_NAME}"
+          manifest_version="$(jq -r '.version' manifest.json)"
+          min_app_version="$(jq -r '.minAppVersion' manifest.json)"
+          versions_entry="$(jq -r --arg version "$tag_name" '.[$version] // empty' versions.json)"
+
+          if [[ ! "$tag_name" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-beta\.[0-9]+)?$ ]]; then
+            echo "Unsupported tag format: $tag_name"
+            echo "Expected: X.Y.Z or X.Y.Z-beta.N"
+            exit 1
+          fi
+
+          if [[ "$manifest_version" != "$tag_name" ]]; then
+            echo "Invariant violation: tag ($tag_name) != manifest.json.version ($manifest_version)"
+            exit 1
+          fi
+
+          if [[ "$tag_name" =~ -beta\. ]]; then
+            if [[ "$versions_entry" != "" ]]; then
+              echo "Invariant violation: versions.json unexpectedly contains beta entry for $tag_name"
+              exit 1
+            fi
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            if [[ "$versions_entry" == "" ]]; then
+              echo "Invariant violation: versions.json missing stable entry for $tag_name"
+              exit 1
+            fi
+            if [[ "$versions_entry" != "$min_app_version" ]]; then
+              echo "Invariant violation: versions.json[$tag_name] ($versions_entry) != manifest.minAppVersion ($min_app_version)"
+              exit 1
+            fi
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          fi
+
+          echo "tag_name=$tag_name" >> "$GITHUB_OUTPUT"
+
+      - name: Build artifacts
+        run: OBSIDIAN_PLUGIN_DIR=. npm run build
+
+      - name: Package zip artifact
+        id: package
+        run: |
+          set -euo pipefail
+          plugin_id="$(jq -r '.id' manifest.json)"
+          zip_name="${plugin_id}-${{ steps.release_meta.outputs.tag_name }}.zip"
+          mkdir -p "$plugin_id"
+          cp main.js manifest.json styles.css "$plugin_id"
+          zip -r "$zip_name" "$plugin_id"
+          echo "zip_name=$zip_name" >> "$GITHUB_OUTPUT"
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.release_meta.outputs.tag_name }}
+          name: ${{ steps.release_meta.outputs.tag_name }}
+          draft: false
+          prerelease: ${{ steps.release_meta.outputs.prerelease }}
+          files: |
+            ${{ steps.package.outputs.zip_name }}
+            main.js
+            manifest.json
+            styles.css
