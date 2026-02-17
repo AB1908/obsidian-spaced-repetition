@@ -235,6 +235,35 @@ Execution contract:
 - Deferred tag deletion pending explicit policy approval and compatibility review.
 - Dependabot snapshot task is blocked on GitHub alert access and remains open under DEBT-015.
 
+### 2026-02-17 (Retrospective: What Went Wrong in Execution)
+- We over-optimized orchestration/tooling before finishing core lane deliverables. This introduced script/process churn and increased review surface area.
+- User intervention prompts were higher than expected. Key prompts the user had to provide repeatedly:
+  - enforce model split (`Codex` for complex, `Gemini` for smaller)
+  - ask to actually launch per-worktree agents (not just prepare worktrees)
+  - request full-privilege/autonomous execution to avoid approval stalls
+  - request direct progress checks and interactive monitoring commands
+  - request recovery/resume behavior when sessions died
+- Root causes for prompt burden:
+  - execution control was not encoded as a hard contract in initial lane prompts
+  - agents were launched with mixed interactive/non-interactive modes
+  - no deterministic checkpoint/resume mechanism at first
+  - no single canonical place for reasoning traces from all lanes
+- Why `SPIKE-003` appears in all worktree histories:
+  - all lane branches were created from `main` after `SPIKE-003` commits landed; shared ancestor history is expected.
+- Why plan-before/after discipline drifted:
+  - lane prompts prioritized “keep moving autonomously” but did not enforce “update plan checkpoint before and after each batch” as a required gate.
+  - monitor tooling reported state but did not block work when plan check-ins were missing.
+- Reasoning-trace placement issue:
+  - trace capture scripts were authored/executed in lane C and initially wrote outputs there; naming also defaulted to date-only files, which is ambiguous.
+  - fix direction: keep one canonical cross-lane trace index and enforce lane-prefixed filenames.
+
+### 2026-02-17 (Corrective Actions)
+- Re-center on incremental delivery: complete lane scope first, tooling second.
+- Require per-lane “before/after” note updates in story/session docs for each commit batch.
+- Keep one lockfile strategy per lane unless intentionally migrating package manager.
+- Use deterministic checkpoint files for restart, but keep naming lane-specific and minimal.
+- Run explicit code review gate per lane before merge, then perform manual deep review in each worktree.
+
 ## Related
 - [DEBT-015](DEBT-015-dependabot-vulnerability-remediation.md)
 - [STORY-014](STORY-014-pr-gated-release-automation.md)
