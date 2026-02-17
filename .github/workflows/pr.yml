@@ -4,20 +4,25 @@ on:
     pull_request:
         branches: [master]
 
+env:
+    CI_NODE_VERSION: 20
+
 jobs:
     build:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Setup Node
-              uses: actions/setup-node@v1
-              with:
-                  node-version: 16
+            - uses: actions/checkout@v6
 
-            - uses: actions/checkout@v2
+            - name: Setup Node
+              uses: actions/setup-node@v6
+              with:
+                  node-version: ${{ env.CI_NODE_VERSION }}
+                  cache: npm
+                  cache-dependency-path: package-lock.json
 
             - name: Install Dependencies
-              run: yarn install --no-progress --silent
+              run: npm ci
 
             - name: Lint
-              run: yarn lint
+              run: npm run lint
