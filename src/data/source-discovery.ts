@@ -34,6 +34,6 @@ export function hasTag(tags: string[], tag: string): boolean {
 }
 
 export function getSourceType(tags: string[], hasMoonReaderFrontmatter: boolean): SourceType {
-    if (hasMoonReaderFrontmatter) return "moonreader";
-    return "direct-markdown";
+    if (!hasMoonReaderFrontmatter && hasTag(tags, "clippings")) return "direct-markdown";
+    return "moonreader";
 }
