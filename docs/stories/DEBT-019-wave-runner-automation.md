@@ -23,7 +23,7 @@ A CLI tool or Claude Code skill (`/wave-run`) that reads a plan file and orchest
 
 1. **Parse plan** — extract PRs, branches, waves, dependencies, gate checks from plan file
 2. **Create worktrees** — `git worktree add .worktrees/<branch> -b <branch> main`
-3. **Launch agents** — spawn agent sessions (Claude Code, Codex) per track with PR-scoped prompts
+3. **Launch agents** — spawn agent sessions using `claude --print` (headless invocation) or tmux panes for parallel execution
 4. **Monitor** — poll for completion, stream status
 5. **Gate check** — run `npm test` on main after each wave merge
 6. **Rebase** — auto-rebase next wave branches onto updated main
@@ -41,10 +41,16 @@ A CLI tool or Claude Code skill (`/wave-run`) that reads a plan file and orchest
 - [ ] At minimum: shell script that creates worktrees from a plan file and prints per-track agent prompts
 - [ ] Gate checks run automatically after merge
 - [ ] Plan file format documented (what fields the tool expects)
+- [ ] Human approval gates before merges (reviewing diffs, handling surprises, approving wave transitions)
 
 ## Notes
 
-- Start with Level 2 (shell script) — validate the workflow before investing in a skill
+- Start with Level 2 (shell script) — validate the workflow before investing in a skill (~15 min investment)
 - Plan file format is already semi-structured (DEBT-011 plan has waves, branches, file lists)
 - Agent prompt generation: extract PR scope + files + test criteria from plan
+- Human-in-the-loop touchpoints:
+  - Reviewing diffs before merge approval
+  - Handling agent surprises or design mistakes mid-implementation
+  - Approving wave transitions after gate checks pass
 - Consider: should the tool also generate execution records after completion?
+- Example invocation: `claude --print "Implement PR 1 from docs/plans/DEBT-011-source-model-seam-repair.md. Run npm test when done."`
