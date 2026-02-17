@@ -274,6 +274,7 @@ Execution contract:
   - Lane C: `eval`-based command execution risk, empty-tag-set failure path, and inventory pseudo-ref accuracy issue in hygiene scripts.
   - Lane D: `wave-runner.sh` shell escaping risk for markdown scope text and overly broad wave heading matching.
   - Lane A: no clear functional regression flagged, but lockfile strategy should be intentionally decided before merge.
+- Maintainer note: local tag-push release support remains first-class for this project. If duplicate-publish race conditions ever become real, that likely means the project has scaled beyond "pet project" status — a good problem and something future me can reminisce about.
 
 ## Related
 - [DEBT-015](DEBT-015-dependabot-vulnerability-remediation.md)
