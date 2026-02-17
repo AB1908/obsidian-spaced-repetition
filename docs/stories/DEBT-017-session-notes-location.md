@@ -1,7 +1,10 @@
 # DEBT-017: Formalize Session Notes Location
 
 ## Status
-Ready
+Done
+
+## Branch
+chore/workflow-docs-and-wave-runner
 
 ## Description
 
@@ -42,12 +45,15 @@ What we set out to accomplish this session.
 ## Acceptance Criteria
 
 - [x] Create `docs/sessions/` directory
-- [ ] Define session note template in `docs/guides/work-organization.md`
-- [ ] Story template updated: Session Notes section links to session files instead of embedding
-- [ ] Migrate existing session notes from active (non-Done) stories
-- [ ] Done stories: leave existing session notes in place (not worth migrating)
+- [x] Define session note template in `docs/guides/work-organization.md`
+- [x] Story template updated: Session Notes section links to session files instead of embedding
+- [x] Migrate existing session notes from active (non-Done) stories
+- [x] Done stories: leave existing session notes in place (not worth migrating)
 
 ## Related
 
 - [DEBT-016](DEBT-016-stale-documentation.md) — stale docs cleanup
 - [DEBT-018](DEBT-018-plan-storage-linking.md) — plan storage (similar separation concern)
+
+## Session Notes
+- [2026-02-17](../sessions/2026-02-17-DEBT-017.md)

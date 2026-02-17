@@ -15,9 +15,9 @@ project-root/
 ├── docs/
 │   ├── decisions/          # Architecture Decision Records (ADRs)
 │   ├── architecture/       # System design docs
-│   ├── features/          # Feature documentation
-│   ├── todo/              # Organized TODO lists
-│   └── context/           # Work-in-progress context
+│   ├── stories/           # ALL work items: features, bugs, debt, ideas
+│   ├── guides/            # Reference material: testing, workflow, learnings
+│   └── archive/           # Completed or stale context
 ├── CHANGELOG.md           # User-facing changes
 ├── DEVELOPMENT.md         # Developer guide
 └── README.md             # Project overview
@@ -31,31 +31,33 @@ project-root/
 git checkout -b feature/navigation-system
 
 # Document what you're about to do
-cat > docs/context/navigation-system.md << 'EOF'
-# Navigation System Implementation
+cat > docs/stories/STORY-015-navigation-system.md << 'EOF'
+# STORY-015: Navigation System Implementation
 
-## Goal
-Implement direction-aware navigation controls for annotation browsing
+## Status
+In Progress
 
-## Started
-2024-01-15
+## Branch
+feature/navigation-system
 
-## Current Status
+## User Story
+As a user, I want direction-aware navigation controls for annotation browsing, so that I can easily move between highlights.
+
+## Acceptance Criteria
 - [ ] Basic navigation component
 - [ ] Direction awareness
 - [ ] Keyboard shortcuts
 - [ ] Tests
 
-## Key Decisions
+## Context
 See docs/decisions/ADR-XXX-navigation-routing.md
 
-## Notes
-- Consider mobile gestures later
-- May need to refactor ImportFlow
+## Session Notes
+- 2024-01-15: Initial setup and planning.
 EOF
 
-git add docs/context/
-git commit -m "docs: start navigation system work"
+git add docs/stories/
+git commit -m "docs: start navigation system work [STORY-015]"
 ```
 
 ### 2. Working on the Feature
@@ -144,55 +146,41 @@ cat >> CHANGELOG.md << 'EOF'
 ## [Unreleased]
 
 ### Added
-- Direction-aware navigation controls for annotations
+- Direction-aware navigation controls for annotations [STORY-015]
 - Keyboard shortcuts for navigation (← →)
 - Auto-save during navigation
 
 ### Technical
 - Custom navigation system (see docs/decisions/ADR-015-custom-navigation.md)
-- NavigationControl component extracted to reusable hook
 
 EOF
 
-# Update feature docs
-cat > docs/features/navigation.md << 'EOF'
-# Navigation System
+# Update the story file
+# - Mark Status as Done
+# - Add any final session notes
+# - Link to any durable guides created
 
-## Overview
-Allows users to navigate through annotations using arrow keys or buttons.
+# Create or update durable guides if this feature introduced 
+# long-term knowledge (e.g., API quirks, complex logic explanations)
+cat > docs/guides/navigation-notes.md << 'EOF'
+# Navigation System Notes
 
-## Usage
-```tsx
-import { useNavigation } from './hooks/useNavigation';
-
-const { goNext, goPrev, canGoNext, canGoPrev } = useNavigation();
-```
-
-## Architecture
-See docs/decisions/ADR-015-custom-navigation.md
-
-## Components
-- `NavigationControl` - UI component
-- `useNavigation` - Navigation logic hook
-
-## Testing
-Run `npm test navigation` for full test suite
+## 2024-01-16: Arrow key event bubbling
+Obsidian's core navigation sometimes swallows arrow keys. 
+Ensure `stopPropagation()` is called in the handler.
 EOF
 
-# Move context to archive
-mv docs/context/navigation-system.md docs/context/archive/
+# Update TODO if needed (using DEBT or IDEA prefixes)
+cat > docs/stories/IDEA-002-mobile-navigation.md << 'EOF'
+# IDEA-002: Mobile Swipe Gestures for Navigation
 
-# Update TODO if needed
-cat >> docs/todo/features.md << 'EOF'
-## Navigation Improvements
-- [ ] Add swipe gestures for mobile (priority: medium)
-- [ ] Prefetch next annotation for faster navigation (priority: low)
-- [ ] Add navigation history/breadcrumbs (priority: low)
+## Description
+Add swipe gestures to AnnotationView for better mobile experience.
 EOF
 
 # Commit documentation updates
 git add docs/ CHANGELOG.md
-git commit -m "docs: update for navigation system"
+git commit -m "docs: finalize navigation system [STORY-015]"
 ```
 
 ### 5. Merge to Main
@@ -231,10 +219,10 @@ Use this when you want to preserve the branch boundary and group related commits
 
 ```bash
 git checkout main
-git merge feature/navigation-system --no-ff -m "feat: add navigation system
+git merge feature/navigation-system --no-ff -m "feat: add navigation system [STORY-015]
 
 Implements direction-aware navigation for annotations.
-See CHANGELOG.md and docs/features/navigation.md for details."
+See CHANGELOG.md and docs/stories/STORY-015-navigation-system.md for details."
 
 # Tag if it's a release
 git tag -a 0.3.0 -m "0.3.0: Navigation system"
@@ -274,6 +262,8 @@ git push --force-with-lease origin main
 ```
 
 ## Documentation Templates
+
+See [Work Organization Guide](work-organization.md) for Story, Bug, Debt, and Idea templates.
 
 ### Architecture Decision Record (ADR)
 
@@ -319,141 +309,16 @@ Brief technical details if helpful
 [Optional: when to reconsider this decision]
 ```
 
-### Work Context
-
-**Template:** `docs/context/[feature-name].md`
-```markdown
-# [Feature Name]
-
-## Goal
-One sentence describing what we're building and why
-
-## Timeline
-- Started: YYYY-MM-DD
-- Target: YYYY-MM-DD
-- Status: [Planning | In Progress | Blocked | Complete]
-
-## Progress Checklist
-- [ ] Task 1
-- [ ] Task 2
-- [x] Completed task
-
-## Technical Approach
-Brief description or link to architecture doc
-
-## Open Questions
-- Question 1?
-- Question 2?
-
-## Blockers
-- Blocker 1 (waiting on...)
-- Blocker 2
-
-## Notes
-Random thoughts, links, discoveries during implementation
-
-## Related
-- Issues: #XX
-- ADRs: ADR-XXX
-- PRs: (if not solo)
-```
-
-### Feature Documentation
-
-**Template:** `docs/features/[feature-name].md`
-```markdown
-# [Feature Name]
-
-## Overview
-What does this feature do? Who is it for?
-
-## Usage
-
-### Basic Example
-```typescript
-// code example
-```
-
-### Advanced Usage
-```typescript
-// advanced example
-```
-
-## Architecture
-Brief overview or link to docs/architecture/
-
-Key design decisions: see docs/decisions/ADR-XXX
-
-## API Reference
-Brief API docs or link to generated docs
-
-## Configuration
-Any settings or environment variables
-
-## Testing
-How to test this feature
-
-## Troubleshooting
-Common issues and solutions
-
-## Future Improvements
-- Potential enhancement 1
-- Potential enhancement 2
-
-## Related
-- Dependencies: X, Y, Z
-- Related features: A, B
-```
-
-### TODO Organization
-
-**Template:** `docs/todo/[category].md`
-```markdown
-# [Category] TODO
-
-## High Priority
-- [ ] Critical bug in X (issue #42)
-- [ ] Must-have feature Y (requested by 5 users)
-
-## Medium Priority
-- [ ] Refactor Z for better performance
-  - Created during navigation work
-  - See commit abc1234
-  - Estimated: 2 days
-
-## Low Priority / Nice to Have
-- [ ] Add feature A
-- [ ] Improve UX for B
-
-## Technical Debt
-- [ ] NavigationControl needs more tests
-  - Created: 2024-01-15
-  - Risk: Medium (could break mobile)
-  - Location: src/components/Navigation/
-  
-- [ ] Import path matching is fragile
-  - Quick fix in commit def5678
-  - Needs proper refactor
-  - Estimated: 3 days
-
-## Research / Exploration
-- [ ] Investigate using X library
-- [ ] Prototype Y approach
-
-## Blocked
-- [ ] Feature Z (waiting on upstream dependency)
-```
-
 ## When to Document What
 
 | Event | Document Where | Commit Message |
 |-------|---------------|----------------|
-| Start feature | `docs/context/feature.md` | `docs: start [feature] work` |
-| Make decision | `docs/decisions/ADR-XXX.md` | `docs: document [decision]` |
-| Complete feature | `docs/features/feature.md` | `docs: add [feature] documentation` |
-| Find tech debt | `docs/todo/category.md` | Include in feature commit |
+| Start feature | `docs/stories/STORY-N.md` | `docs: start [feature] [STORY-N]` |
+| Make decision | `docs/decisions/ADR-XXX.md` | `docs: document [decision] [STORY-N]` |
+| Complete feature | Update `docs/stories/STORY-N.md` | `docs: finalize [feature] [STORY-N]` |
+| Find tech debt | `docs/stories/DEBT-N.md` | Include in feature commit |
 | User-facing change | `CHANGELOG.md` | Include before merge |
-| API change | Update `README.md` or `docs/` | `docs: update [component] docs` |
+| Durable knowledge | `docs/guides/topic.md` | `docs: update [topic] guide` |
 
 ---
 

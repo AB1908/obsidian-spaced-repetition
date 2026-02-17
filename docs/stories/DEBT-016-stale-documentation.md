@@ -1,7 +1,10 @@
 # DEBT-016: Update Stale Documentation
 
 ## Status
-Ready
+Done
+
+## Branch
+chore/workflow-docs-and-wave-runner
 
 ## Description
 
@@ -16,12 +19,15 @@ Ready
 
 ## Acceptance Criteria
 
-- [ ] `workflow.md` updated to reflect current `docs/stories/` structure
-- [ ] Remove or update templates that reference old directories
-- [ ] Reconcile with `work-organization.md` — single source of truth for where things go
-- [ ] Verify no other guides reference old directory structure
+- [x] `workflow.md` updated to reflect current `docs/stories/` structure
+- [x] Remove or update templates that reference old directories
+- [x] Reconcile with `work-organization.md` — single source of truth for where things go
+- [x] Verify no other guides reference old directory structure
 
 ## Related
 
 - [DEBT-017](DEBT-017-session-notes-location.md) — session notes formalization
 - [DEBT-018](DEBT-018-plan-storage-linking.md) — plan storage and linking
+
+## Session Notes
+- [2026-02-17](../sessions/2026-02-17-DEBT-016.md)

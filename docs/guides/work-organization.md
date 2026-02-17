@@ -69,7 +69,7 @@ As a <role>, I want <goal>, so that <benefit>.
 - [ ] Task 2
 
 ## Session Notes
-<Append notes here when pausing/resuming work>
+- [YYYY-MM-DD](../sessions/YYYY-MM-DD-<STORY-ID>.md)
 
 ## Related
 - ADR: docs/decisions/ADR-020-...
@@ -91,7 +91,7 @@ Not everything is a work item. Some things are observations, platform quirks, or
 | Platform/API knowledge | `docs/guides/<topic>-notes.md` | Obsidian API quirks, gotchas |
 | Workflow learnings | `docs/guides/<topic>-notes.md` | Testing strategies, capture cycle |
 | Enhancement ideas (not yet actionable) | `docs/stories/IDEA-<N>-<slug>.md` | "someday maybe" improvements |
-| Session-specific observations | Session Notes section in the relevant story file | "tried X, learned Y" |
+| Session-specific logs | `docs/sessions/YYYY-MM-DD-<STORY-ID>.md` | Investigation logs, agent output |
 
 ### Guide knowledge files
 
@@ -119,6 +119,32 @@ For enhancement ideas that aren't bugs or debt but worth tracking. Lightweight t
 
 ## Related
 - links to relevant stories, guides, or ADRs
+```
+
+### Session note template
+
+For temporal artifacts (investigation logs, agent output, intermediate findings) that bloat story files.
+
+Location: `docs/sessions/YYYY-MM-DD-<STORY-ID>.md`
+
+```markdown
+# Session: <STORY-ID> — <date>
+
+## Story
+[STORY-ID](../stories/<filename>.md)
+
+## Goal
+What we set out to accomplish this session.
+
+## Findings
+- Finding 1
+- Finding 2
+
+## Decisions
+- Decision 1 (rationale)
+
+## Next Steps
+- What remains
 ```
 
 ## Session Start Workflow

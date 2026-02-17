@@ -37,6 +37,5 @@ As a reader, I want to engage directly with markdown notes by selecting paragrap
 - Header Tree-UI for articles
 
 ## Session Notes
-- 2026-02-14: Plan approved. Fingerprint utility created (tests pass). Paused to restructure docs before continuing.
-- 2026-02-15: Added clipping-aware discovery, source chooser updates, and clipping mutation confirmation flow.
-- 2026-02-15: Reconciled epic checklist with implementation state. Core STORY-010 acceptance criteria are implemented. Story remains In Progress due open end-to-end flow gaps tracked separately in DEBT-011 and BUG-001.
+- [2026-02-14](../sessions/2026-02-14-STORY-010.md)
+- [2026-02-15](../sessions/2026-02-15-STORY-010.md)
