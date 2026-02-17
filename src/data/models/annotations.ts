@@ -1,8 +1,9 @@
 import { deserializeMetadata } from "../utils/metadataSerializer";
 
 export interface annotation {
+    type:           'annotation';
     id:             string;
-    type:           string;
+    calloutType:    string;
     highlight:      string;
     note:           string;
     hasFlashcards?: boolean;
@@ -43,8 +44,9 @@ export function parseAnnotations(text: string): annotation {
         const metadata = deserializeMetadata(metadataText);
 
         parsedAnnotations.push({
+            type: 'annotation',
             id: match.groups.id,
-            type: match.groups.type,
+            calloutType: match.groups.type,
             highlight: match.groups.highlight.trim().replace(/> /g, ""),
             note: match.groups.note ? match.groups.note.replace(/> /g, "").trim() : "",
             category: metadata.category,

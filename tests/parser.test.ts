@@ -31,6 +31,7 @@ describe("generateTree", () => {
     test("should nest a paragraph within previous name", () => {
         const input = [
             {
+                type: "heading",
                 name: "Heading 1",
                 level: 1,
                 children: [],
@@ -42,6 +43,7 @@ describe("generateTree", () => {
                 "children": [],
                 "level": 1,
                 "name": "Heading 1",
+                "type": "heading",
               },
             ]
         `);
@@ -50,11 +52,13 @@ describe("generateTree", () => {
     test("should nest each paragraph in each name", () => {
         const input = [
             {
+                type: "heading",
                 name: "Heading 1",
                 level: 1,
                 children: [],
             },
             {
+                type: "heading",
                 name: "Heading 2",
                 level: 1,
                 children: [],
@@ -66,11 +70,13 @@ describe("generateTree", () => {
                 "children": [],
                 "level": 1,
                 "name": "Heading 1",
+                "type": "heading",
               },
               {
                 "children": [],
                 "level": 1,
                 "name": "Heading 2",
+                "type": "heading",
               },
             ]
         `);
@@ -79,11 +85,13 @@ describe("generateTree", () => {
     test("should nest the subname in the name", () => {
         const input = [
             {
+                type: "heading",
                 name: "Heading 1",
                 level: 1,
                 children: [],
             },
             {
+                type: "heading",
                 name: "SubHeading 1",
                 level: 2,
                 children: [],
@@ -97,10 +105,12 @@ describe("generateTree", () => {
                     "children": [],
                     "level": 2,
                     "name": "SubHeading 1",
+                    "type": "heading",
                   },
                 ],
                 "level": 1,
                 "name": "Heading 1",
+                "type": "heading",
               },
             ]
         `);
@@ -109,16 +119,19 @@ describe("generateTree", () => {
     test("should nest both subnames under the same name", () => {
         const input = [
             {
+                type: "heading",
                 name: "Heading 1",
                 level: 1,
                 children: [],
             },
             {
+                type: "heading",
                 name: "SubHeading 1",
                 level: 2,
                 children: [],
             },
             {
+                type: "heading",
                 name: "SubHeading 2",
                 level: 2,
                 children: [],
@@ -132,15 +145,18 @@ describe("generateTree", () => {
                     "children": [],
                     "level": 2,
                     "name": "SubHeading 1",
+                    "type": "heading",
                   },
                   {
                     "children": [],
                     "level": 2,
                     "name": "SubHeading 2",
+                    "type": "heading",
                   },
                 ],
                 "level": 1,
                 "name": "Heading 1",
+                "type": "heading",
               },
             ]
         `);
@@ -149,21 +165,25 @@ describe("generateTree", () => {
     test("should nest subnames correctly and return only names", () => {
         const input = [
             {
+                type: "heading",
                 name: "Heading 1",
                 level: 1,
                 children: [],
             },
             {
+                type: "heading",
                 name: "SubHeading 1",
                 level: 2,
                 children: [],
             },
             {
+                type: "heading",
                 name: "SubHeading 2",
                 level: 2,
                 children: [],
             },
             {
+                type: "heading",
                 name: "Heading 2",
                 level: 1,
                 children: [],
@@ -177,20 +197,24 @@ describe("generateTree", () => {
                     "children": [],
                     "level": 2,
                     "name": "SubHeading 1",
+                    "type": "heading",
                   },
                   {
                     "children": [],
                     "level": 2,
                     "name": "SubHeading 2",
+                    "type": "heading",
                   },
                 ],
                 "level": 1,
                 "name": "Heading 1",
+                "type": "heading",
               },
               {
                 "children": [],
                 "level": 1,
                 "name": "Heading 2",
+                "type": "heading",
               },
             ]
         `);
@@ -198,11 +222,12 @@ describe("generateTree", () => {
 });
 
 //todo: seems like we're parsing the same thing twice
-// fix it to test different types of values and maybe 
-// parse a card at a time and then test combos like 
+// fix it to test different types of values and maybe
+// parse a card at a time and then test combos like
 // in the current version
 describe("parseFlashcard", () => {
-    const flashcardText = "This is a question\n?\nThis is an answer\n<!--SR:93813-->\n\nThis is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
+    const flashcardText =
+        "This is a question\n?\nThis is an answer\n<!--SR:93813-->\n\nThis is a question\n?\nThis is an answer\n<!--SR:93813!L,2021-04-05,99,270-->";
 
     test("parses a flashcard with only annotation id", async () => {
         mockedGetFileContents.mockResolvedValue(flashcardText);
@@ -215,7 +240,8 @@ describe("parseFlashcard", () => {
                 lineNo: -1,
                 cardType: CardType.MultiLineBasic,
             },
-            { // Added the second flashcard expectation
+            {
+                // Added the second flashcard expectation
                 id: "aaaaaaaa",
                 notePath: "sample path",
                 cardText: "This is a question\n?\nThis is an answer",

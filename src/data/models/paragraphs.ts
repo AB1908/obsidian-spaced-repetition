@@ -4,6 +4,7 @@ import { Flashcard } from "./flashcard";
 import { Heading } from "./AnnotationsNote";
 
 export interface paragraph {
+    type: 'paragraph',
     id: string,
     text: string,
     wasIdPresent: boolean,
@@ -31,6 +32,7 @@ export async function extractParagraphs(filePath: string, flashcards: Flashcard[
             const start = section.position.start.line;
             const end = section.position.end.line + 1;
             const paragraph = {
+                type: 'paragraph' as const,
                 id: section.id || nanoid(8),
                 text: fileContentsArray.slice(start,end).join("\n"),
                 wasIdPresent: section.id ? true : false,

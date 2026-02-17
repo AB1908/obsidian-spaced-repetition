@@ -53,23 +53,23 @@ export interface Count {
 }
 
 export function isHeading(section: BookMetadataSection): section is Heading {
-    return (section as Heading).level !== undefined;
+    return section.type === 'heading';
 }
 
 export function isChapter(section: BookMetadataSection): section is Heading {
-    return isHeading(section) && section.level === 1;
+    return section.type === 'heading' && section.level === 1;
 }
 
 export function isAnnotation(section: BookMetadataSection): section is annotation {
-    return (section as annotation).highlight !== undefined || (section as annotation).note !== undefined;
+    return section.type === 'annotation';
 }
 
 export function isParagraph(section: BookMetadataSection): section is paragraph {
-    return (section as paragraph).wasIdPresent !== undefined;
+    return section.type === 'paragraph';
 }
 
 export function isAnnotationOrParagraph(section: BookMetadataSection): section is (annotation|paragraph) {
-    return isAnnotation(section) || isParagraph(section);
+    return section.type === 'annotation' || section.type === 'paragraph';
 }
 
 function transform(p: paragraph|annotation): annotation {
@@ -77,8 +77,9 @@ function transform(p: paragraph|annotation): annotation {
         return p;
     } else {
         return {
+            type: 'annotation',
             id: p.id,
-            type: "",
+            calloutType: "",
             note: "",
             highlight: p.text,
             hasFlashcards: p.hasFlashcards
@@ -116,6 +117,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
         } else if (cacheItem.type == "paragraph") {
                 const extracted = extractParagraphFromSection(cacheItem, fileTextArray);
                 const paragraph = {
+                    type: 'paragraph' as const,
                     ...extracted,
                     fingerprint: generateFingerprint(extracted.text),
                 }
@@ -134,6 +136,7 @@ export function bookSections(metadata: CachedMetadata | null | undefined, fileTe
 }
 
 export class Heading {
+    readonly type = 'heading' as const;
     id: string;
     level: number;
     name: string;
@@ -160,11 +163,7 @@ export function findPreviousHeaderForSection(section: annotation|paragraph, sect
             index--;
             continue;
         }
-        // todo: convert to idiomatic type check?
-        // TODO: refactor to split into two different functions because unifying the section vs header parent finding
-        // implementation means coupling things unnecessarily.
-        // See commit introducing this comment
-        if (!("level" in section) && ("level" in currentSection))
+        if ("level" in currentSection)
             return index;
         index--;
     }
@@ -173,37 +172,25 @@ export function findPreviousHeaderForSection(section: annotation|paragraph, sect
 
 export function findPreviousHeaderForHeading(section: Heading, sections: (RawBookSection|BookMetadataSection)[]) {
     let index = sections.indexOf(section);
+    const sectionIsHeading = "level" in section;
     // top level headers don't have a parent
-    // done: consider changing this to -1 so we have a consistent return type
-    if ("level" in section) {
-        if (section.level == 1) return -1;
-    }
+    if (sectionIsHeading && section.level == 1) return -1;
     while (index >= 0) {
         const currentSection: (RawBookSection|BookMetadataSection) = sections[index];
         if (section == currentSection) {
-            // we are on the same item lol
-            // decrement and continue
             index--;
             continue;
         }
-        // todo: convert to idiomatic type check?
-        if ("level" in currentSection) { // we are on a heading
-            // if same level heading than 100% it is not the right header
-            // decrement and skip
-            if (("level" in section) && (currentSection.level == section.level)) {
+        if ("level" in currentSection) {
+            if (sectionIsHeading && currentSection.level == section.level) {
                 index--;
                 continue;
             }
+            if (sectionIsHeading && currentSection.level + 1 == section.level)
+                return index;
+            else if (!sectionIsHeading)
+                return index;
         }
-        // TODO: refactor to split into two different functions because unifying the section vs header parent finding
-        // implementation means coupling things unnecessarily.
-        // See commit introducing this comment
-        if (("level" in section) && ("level" in currentSection) && (currentSection.level+1 == section.level))
-            // we've finally reached a header
-            // return it
-            return index;
-        else if (!("level" in section) && ("level" in currentSection))
-            return index;
         index--;
     }
     return -1;

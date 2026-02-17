@@ -33,8 +33,9 @@ export function renderAnnotation(ann: annotation): string {
  */
 export function generateAnnotationMarkdown(mra: MoonReaderAnnotation): string {
     return renderAnnotation({
+        type: 'annotation',
         id: mra.id,
-        type: "quote", // Standard type
+        calloutType: "quote", // Standard type
         highlight: mra.highlight,
         note: mra.note,
         origin: "moonreader",

@@ -5,7 +5,8 @@ describe("renderAnnotation", () => {
     test("should correctly render annotation with deleted status", () => {
         const ann: annotation = {
             id: "5734",
-            type: "notes",
+            type: "annotation",
+            calloutType: "notes",
             highlight: "Memory metaphors",
             note: "29##",
             deleted: true,

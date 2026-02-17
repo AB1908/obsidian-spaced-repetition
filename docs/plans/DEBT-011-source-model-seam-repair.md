@@ -75,25 +75,23 @@ PR 3 ∥ PR 4: PR 3 touches strategy files + api.ts, PR 4 touches AnnotationsNot
 
 ## PR Details
 
-### PR 1: Discriminated union for sections (DEBT-001)
+### PR 1: Discriminated union for sections (DEBT-001) ✅
 
 **Branch:** `refactor/discriminated-union`
 
+**Resolved:** `annotation.type` (MoonReader callout type) renamed to `calloutType` to free `type` for the discriminator.
+
 **Files:**
 - `src/data/models/paragraphs.ts` — add `type: 'paragraph'` to interface
-- `src/data/models/annotations.ts` — add `type: 'annotation'` to interface, set in `parseAnnotations()`
-- `src/data/models/AnnotationsNote.ts` — add `type: 'heading'` to `Heading` constructor, update type guards to use discriminator (keep backward compat), update `bookSections()` function
+- `src/data/models/annotations.ts` — rename `type` → `calloutType`, add `type: 'annotation'` literal
+- `src/data/models/AnnotationsNote.ts` — add `type: 'heading'` to `Heading` class, rewrite type guards to use discriminator, clean up duck-typing in `findPreviousHeader*`
+- `src/data/utils/annotationGenerator.ts` — `calloutType` rename + `type: 'annotation'`
+- `src/api.ts` — replace `(chapter as any).level != undefined` with `chapter.type === 'heading'`
+- Tests: updated fixtures with discriminator, snapshots updated
 
-**Planned commits:**
-1. `refactor(models): add type discriminator to section types [DEBT-001]`
-2. `test(models): add discriminator-based narrowing tests [DEBT-001]`
+**Design note:** `type` is now first-class on `BookMetadataSection`. Consumers can narrow directly with `section.type === 'heading'` without importing guard functions — e.g., `sections.filter(s => s.type === 'heading')` gives `Heading[]` with full TS narrowing. Guard functions remain as convenience wrappers.
 
-**Test criteria:**
-- `npm test` — all 31 suites pass, no behavior change
-- Type guards work with both discriminator AND legacy duck-typing
-- New test: `section.type === 'paragraph'` narrows correctly
-
-**Human review focus:** Are the discriminator values correct? Does the `annotation` interface's existing `type: string` field conflict with the discriminator?
+**Verify:** `npm test` — all 31 suites pass, no behavior change.
 
 ### PR 2: Wire strategy into AnnotationsNote + `getNavigableSections`
 

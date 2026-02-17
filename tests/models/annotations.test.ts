@@ -17,17 +17,17 @@ jest.mock("src/infrastructure/disk", () => {
 
 describe("isAnnotationProcessed", () => {
     test("should return true if annotation has a category", () => {
-        const annotation = { id: "1", type: "note", highlight: "hi", note: "", category: 1 };
+        const annotation = { type: "annotation", id: "1", calloutType: "note", highlight: "hi", note: "", category: 1 };
         expect(isAnnotationProcessed(annotation)).toBe(true);
     });
 
     test("should return false if annotation has no category", () => {
-        const annotation = { id: "2", type: "note", highlight: "hi", note: "" };
+        const annotation = { type: "annotation", id: "2", calloutType: "note", highlight: "hi", note: "" };
         expect(isAnnotationProcessed(annotation)).toBe(false);
     });
 
     test("should return false if category is null", () => {
-        const annotation = { id: "3", type: "note", highlight: "hi", note: "", category: null };
+        const annotation = { type: "annotation", id: "3", calloutType: "note", highlight: "hi", note: "", category: null };
         expect(isAnnotationProcessed(annotation)).toBe(false);
     });
 });
