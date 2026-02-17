@@ -202,17 +202,24 @@ Rule:
 - `chore/branch-tag-hygiene-2026-02` (Lane C)
 - `chore/workflow-docs-and-wave-runner` (Lane D)
 
-## Staff/Principal-Level Concerns (Often Missed)
-- Explicit rollback playbook per lane (what to revert and how fast).
-- Risk register with named owner and expiry dates for temporary exceptions.
-- Leading indicators, not only lagging:
-  - mean PR cycle time
-  - CI flake rate
-  - release lead time
-  - open critical/high vulnerability count
-- Single runtime compatibility matrix (local dev, CI, release workflow, Obsidian target).
-- Dependency update cadence policy (weekly patch, monthly minor, explicit major windows).
-- Protected default branch + required checks + signed tags/release provenance (where feasible).
+## Active Worktree Delegation (2026-02-17)
+- Lane A (`chore/security-deps-remediation`): `.worktrees/lane-a-security`
+  - Scope: DEBT-015, CI action/runtime modernization, dependency remediation in small batches.
+- Lane B (`feat/pr-gated-release-automation`): `.worktrees/lane-b-release`
+  - Scope: STORY-014 release automation, prerelease/stable behavior, loop-prevention.
+- Lane C (`chore/branch-tag-hygiene-2026-02`): `.worktrees/lane-c-hygiene`
+  - Scope: branch/tag hygiene docs + scripts; destructive cleanup commands only after explicit approval.
+- Lane D (`chore/workflow-docs-and-wave-runner`): `.worktrees/lane-d-workflow`
+  - Scope: DEBT-016/017 alignment plus DEBT-019 Level 1/2 runner bootstrap.
+
+Execution contract:
+- Each lane works only inside its assigned worktree and branch.
+- Each lane commits independently; review is branch-by-branch diff.
+- Lane A and Lane B sequence overlapping workflow file edits before merge.
+
+## Deferred Deep-Scale Concerns
+- Larger governance/process controls are intentionally deferred for now.
+- Keep this plan focused on practical prototype velocity and release safety.
 
 ## Exit Criteria for This Plan
 - [ ] Critical/high vulnerabilities triaged and remediated or explicitly time-boxed.
