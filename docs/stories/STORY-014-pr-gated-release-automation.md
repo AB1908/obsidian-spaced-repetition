@@ -1,10 +1,13 @@
 # STORY-014: PR-Gated Automated Release Pipeline
 
 ## Status
-Backlog
+In Progress
 
 ## Epic
 None
+
+## Branch
+feat/pr-gated-release-automation
 
 ## Depends on
 - `release.yml` stable build/upload path fix (completed in `0.5.1`)
@@ -59,3 +62,8 @@ Implemented baseline (2026-02-16):
 ## Related
 - `docs/guides/release-playbook.md`
 - `docs/guides/github-execution-and-beta-release-workflow.md`
+
+## Session Notes
+### 2026-02-17
+- Lane B started in worktree `.worktrees/lane-b-release`.
+- Focus is release automation, deterministic version/tag flow, and prerelease behavior.
