@@ -169,6 +169,96 @@ PR 3 ∥ PR 4: PR 3 touches strategy files + api.ts, PR 4 touches AnnotationsNot
 
 ---
 
+## Execution Records
+
+### PR 1: Discriminated union — Execution
+
+**Agent:** Claude Code (Opus 4.6) — worktree `refactor-discriminated-union`
+**Status:** Complete, pending merge
+
+#### Files: Planned vs Actual
+
+| Planned | Actual | Delta |
+|---|---|---|
+| `paragraphs.ts` | `paragraphs.ts` | as planned |
+| `annotations.ts` | `annotations.ts` | + renamed `type` → `calloutType` (unplanned) |
+| `AnnotationsNote.ts` | `AnnotationsNote.ts` | + rewrote `findPreviousHeader*` duck-typing |
+| — | `annotationGenerator.ts` | not in plan — needed for `calloutType` rename |
+| — | `api.ts` | not in plan — replaced `(chapter as any).level` with `chapter.type === 'heading'` |
+| — | 6 test files + snapshots | fixture/snapshot updates for discriminator + rename |
+
+#### Commits: Planned vs Actual
+
+| Planned | Actual | Notes |
+|---|---|---|
+| 1. add discriminator to types | 1. single batch commit | should have been 3 incremental commits |
+| 2. add narrowing tests | (folded into #1) | no dedicated test commit |
+| — | 2. session notes commit | workflow observations |
+
+#### Deviations
+
+1. **`annotation.type` field conflict** — plan flagged this as human review focus ("Does the `annotation` interface's existing `type: string` field conflict with the discriminator?"). Agent resolved by renaming to `calloutType`. Good planning signal — the right question was asked, agent handled it autonomously.
+2. **Scope expansion** — `annotationGenerator.ts` and `api.ts` not in plan but needed for the rename cascade and opportunistic cleanup.
+3. **Single batch commit** — all changes committed at once instead of incremental green commits. Ideal sequence would have been: (1) rename `type` → `calloutType`, (2) add discriminator fields, (3) rewrite guards.
+
+#### Agent Behavior
+
+- Correctly identified and resolved the type field conflict without human intervention
+- Batched all changes into one commit (recurring pattern — agents default to "get it working, commit once")
+- Stayed within logical scope despite touching more files than planned
+- Generated useful workflow improvement observations in session notes
+
+---
+
+### PR 2: Wire strategy + getNavigableSections — Execution
+
+**Agent:** Codex
+**Status:** Merged to main (`6199a86`)
+
+#### Files: Planned vs Actual
+
+| Planned | Actual | Delta |
+|---|---|---|
+| `ISourceStrategy.ts` | `ISourceStrategy.ts` | as planned |
+| `MoonReaderStrategy.ts` | `MoonReaderStrategy.ts` | as planned |
+| `MarkdownSourceStrategy.ts` | `MarkdownSourceStrategy.ts` | as planned |
+| `AnnotationsNote.ts` | `AnnotationsNote.ts` | as planned |
+| `api.ts` | `api.ts` | as planned |
+| `source-discovery.ts` | `source-discovery.ts` | as planned |
+
+#### Commits: Planned vs Actual
+
+| Planned | Actual | Notes |
+|---|---|---|
+| 1. add getNavigableSections to strategy | 1. single commit covering all changes | 3 planned commits collapsed to 1 |
+| 2. wire strategy into AnnotationsNote | (folded into #1) | |
+| 3. delegate getBookChapters | (folded into #1) | |
+
+#### Deviations
+
+- Files matched plan exactly — no scope expansion needed
+- Single commit instead of 3 incremental commits (same pattern as PR 1)
+- No test additions (plan suggested new tests for source-type-specific navigation)
+
+#### Agent Behavior
+
+- Precise scope — touched exactly the planned files, nothing more
+- Single commit pattern (consistent with PR 1 — this appears to be a default agent behavior across tools)
+- Skipped new test creation despite plan specifying test criteria
+
+---
+
+### Wave 1 Retrospective
+
+**Parallelism result:** PR 1 and PR 2 ran in parallel successfully. Rebase of PR 1 onto PR 2 produced one conflict (plan docs file only), zero code conflicts. File-region analysis was accurate.
+
+**Recurring patterns:**
+1. **Agents batch commits** — both agents (Claude Code, Codex) produced single commits instead of incremental sequences. This is a workflow gap, not a plan gap. Consider adding explicit "commit after each step" instructions to agent prompts.
+2. **Plan-flagged risks get resolved** — the `annotation.type` conflict was predicted and handled. The parallelism prediction (no code conflicts) was correct.
+3. **Scope expansion is minor** — PR 1 touched 2 extra files (cascade from rename). PR 2 matched exactly. Plans should budget for ~1-2 cascade files in rename-heavy PRs.
+
+---
+
 ## Deferred
 
 - Renaming `AnnotationsNote` → `SourceNote`, `bookSections` → `sections` (large rename, separate PR)
