@@ -282,5 +282,6 @@ Execution contract:
 - [DEBT-016](DEBT-016-stale-documentation.md)
 - [DEBT-017](DEBT-017-session-notes-location.md)
 - [DEBT-019](DEBT-019-wave-runner-automation.md)
+- [SPIKE-005](SPIKE-005-intent-contract-and-drift-loop.md)
 - Guide: [release-playbook](../guides/release-playbook.md)
 - Guide: [github-execution-and-beta-release-workflow](../guides/github-execution-and-beta-release-workflow.md)
