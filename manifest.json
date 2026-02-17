@@ -1,10 +1,10 @@
 {
-    "id": "card-coverage",
-    "name": "Card Coverage",
-    "version": "0.5.1",
-    "minAppVersion": "0.15.4",
-    "description": "Test coverage for your memory using flashcards.",
-    "author": "AB1908 and Stephen Mwangi",
-    "authorUrl": "https://github.com/AB1908",
-    "isDesktopOnly": false
+  "id": "card-coverage",
+  "name": "Card Coverage",
+  "version": "0.5.2",
+  "minAppVersion": "0.15.4",
+  "description": "Test coverage for your memory using flashcards.",
+  "author": "AB1908 and Stephen Mwangi",
+  "authorUrl": "https://github.com/AB1908",
+  "isDesktopOnly": false
 }
