@@ -27,3 +27,5 @@ export class Heading {
 export type RawBookSection = SectionCache | HeadingCache;
 export type BookMetadataSection = Heading | annotation | paragraph;
 export type BookMetadataSections = BookMetadataSection[];
+// Internal alias for source-neutral naming in new modules.
+export type SectionNode = BookMetadataSection;

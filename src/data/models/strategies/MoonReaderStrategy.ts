@@ -1,10 +1,11 @@
 import { type annotation } from "../annotations";
-import { ISourceStrategy } from "../ISourceStrategy";
+import type { FlashcardSourceStrategy } from "../FlashcardSourceStrategy";
 import { getFileContents } from "src/infrastructure/disk";
 import { parseMoonReaderExport } from "src/data/import/moonreader";
-import { type BookMetadataSections, type Heading, isChapter } from "../AnnotationsNote";
+import type { BookMetadataSections, Heading } from "../sections/types";
+import { isChapter } from "../sections/guards";
 
-export class MoonReaderStrategy implements ISourceStrategy {
+export class MoonReaderStrategy implements FlashcardSourceStrategy {
   constructor(private moonReaderPath: string) {}
 
   async sync(sinceId?: string): Promise<annotation[]> {

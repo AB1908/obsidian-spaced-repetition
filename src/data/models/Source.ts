@@ -1,11 +1,11 @@
 import { type annotation } from "./annotations";
-import { ISourceStrategy } from "./ISourceStrategy";
+import type { FlashcardSourceStrategy } from "./FlashcardSourceStrategy";
 
-export class Source {
+export class FlashcardSource {
   constructor(
     public path: string,
     public type: 'markdown' | 'moonreader',
-    private strategy: ISourceStrategy
+    private strategy: FlashcardSourceStrategy
   ) {}
 
   getAnnotationsNotePath(): string {
@@ -24,3 +24,6 @@ export class Source {
     return this.strategy.extract();
   }
 }
+
+// Backward compatibility while migrating to FlashcardSource naming.
+export class Source extends FlashcardSource {}

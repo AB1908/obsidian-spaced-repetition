@@ -10,6 +10,7 @@ export * from "./paragraphs";
 export * from "./parsedCard";
 export * from "./AnnotationsNote";
 export * from "./Source";
+export * from "./FlashcardSourceStrategy";
 export * from "./ISourceStrategy";
 export * from "./sourceCapabilities";
 export * from "./strategies/MoonReaderStrategy";

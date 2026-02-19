@@ -1,10 +1,11 @@
 import { type annotation } from "../annotations";
-import { ISourceStrategy } from "../ISourceStrategy";
+import type { FlashcardSourceStrategy } from "../FlashcardSourceStrategy";
 import { getFileContents, getMetadataForFile } from "src/infrastructure/disk";
 import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
-import { type BookMetadataSections, type Heading, isHeading } from "../AnnotationsNote";
+import type { BookMetadataSections, Heading } from "../sections/types";
+import { isHeading } from "../sections/guards";
 
-export class MarkdownSourceStrategy implements ISourceStrategy {
+export class MarkdownSourceStrategy implements FlashcardSourceStrategy {
     constructor(private filePath: string) {}
 
     async extract(): Promise<annotation[]> {
