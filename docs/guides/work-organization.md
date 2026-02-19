@@ -229,6 +229,7 @@ scripts/delegate-codex-task.sh \
   --scope-file docs/plans/BUG-007-delegation-scope.md \
   --execute
 ```
+
 ## Session Start Workflow
 
 Claude scans at session start:
