@@ -117,6 +117,7 @@ Claude scans at session start:
 1. **What's in progress?** — `grep -l "Status: In Progress" docs/stories/*`
 2. **Dependency check** — read `Depends on:` fields, flag blockers
 3. **Propose work order** — topological sort of ready items
+4. **Execution discipline reminder** — for multi-commit work, run at least one mid-run plan divergence check; before merge, confirm session note + story status + changelog updates.
 
 ### Story File Prefixes
 

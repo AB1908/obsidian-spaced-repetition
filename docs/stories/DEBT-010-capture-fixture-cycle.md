@@ -1,7 +1,13 @@
 # DEBT-010: Capture-to-Fixture Development Cycle
 
 ## Status
-Ready
+In Progress
+
+## Branch
+chore/polish-usable-version-2026-02-17
+
+## Plan
+See [DEBT-010-plan.md](DEBT-010-plan.md) for implementation details.
 
 ## Description
 The project uses fixture-based mocking (`createDiskMockFromFixtures`) to test against Obsidian API outputs. Fixtures were originally generated using `captureProxy.ts` which wraps module exports and writes call data to JSON files via `fs`.
@@ -33,9 +39,21 @@ The current cycle has friction points worth documenting for future improvement.
 - Should captureProxy be wired into disk.ts permanently (with a flag) or remain ad-hoc?
 - Would a `npm run capture` script that toggles capture mode and rebuilds be worth the setup?
 
+### Adoption Trigger
+- Apply a rule-of-3 to avoid premature tooling investment:
+  - implement full vault artifact + capture workflow only if the same fixture-realism regression class repeats 2-3 more times.
+
 ## Impact
 Low — current approach works. This becomes important when fixture creation is frequent or when bugs like BUG-003 reveal gaps between fixtures and reality.
 
+## Session Notes
+- [2026-02-16](../sessions/2026-02-16-DEBT-010.md)
+- [2026-02-17](../sessions/2026-02-17-DEBT-010.md)
+
 ## Related
 - [BUG-003](BUG-003-filetags-string-tags-crash.md) — discovered via ad-hoc capture
+- [BUG-010](BUG-010-capture-proxy-getter-only-exports.md) — getter-only CJS exports bug found during implementation
+- [BUG-011](BUG-011-capture-proxy-non-configurable-exports.md) — non-configurable exports bug
+- [SPIKE-009](SPIKE-009-mcp-devtools-feedback-loop.md) — idea for automated error feedback
 - [DEBT-009](DEBT-009-clippings-test-approach.md) — testing approach evaluation
+- Guide: [docs/guides/capture-fixtures.md](../guides/capture-fixtures.md)

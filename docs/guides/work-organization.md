@@ -238,25 +238,39 @@ Claude scans at session start:
 3. **Propose work order** — topological sort of ready items
 4. **User approves or adjusts**
 
+## Deterministic Execution Contract
+
+For non-trivial work, follow manual contract gates in:
+- `docs/guides/execution-contract-manual-v0.md`
+
+Default order is strict:
+1. test contract (human-approved)
+2. plan contract (human-approved)
+3. implementation commits (human-reviewed per commit)
+4. closeout summary (human-approved)
+
 ## Commit Convention
 
 ```
-<type>(<scope>): <what> [<STORY-ID>]
+<type>(<scope>): <what changed in 5-10 words>
 
-<why — one line linking to user need>
+<why — one line linking to user need> [<STORY-ID>]
 ```
+
+**Subject line:** No story IDs. Keep under 72 chars. Concise description of what changed.
+**Body:** Story ID goes here, along with the "why" context.
 
 Examples:
 ```
-feat(fingerprint): add content hash for drift detection [STORY-010a]
+feat(fingerprint): add content hash for drift detection
 
-Enable detecting when source text changes after flashcard creation.
+Enable detecting when source text changes after flashcard creation. [STORY-010a]
 ```
 
 ```
-fix(parser): handle metadata without fingerprint segment [STORY-010a]
+fix(parser): handle metadata without fingerprint segment
 
-Backward compatibility for flashcards created before fingerprinting.
+Backward compatibility for flashcards created before fingerprinting. [STORY-010a]
 ```
 
 ## Grouping: Epics and Branches
