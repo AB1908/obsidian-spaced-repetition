@@ -1,5 +1,7 @@
 {
   "method": "getFileContents",
-  "input": ["Attachments/Gatsby.mrexpt"],
-  "output": "#\n123\nTitle\nPath\nLPath\nChapter\n0\n0\n0\n0\n0\nHighlight Text\nNote Text"
+  "input": [
+    "Attachments/Gatsby.mrexpt"
+  ],
+  "output": "#Lorem Ipsum Heading 1\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum.\nExcepteur sint occaecat cupidatat non proident, sunt in culpa.\nCurabitur blandit tempus porttitor, posuere nonummy inceptos.\nInteger posuere erat a ante venenatis dapibus posuere velit aliquet.\nEtiam porta sem malesuada magna mollis euismod.\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris.\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum."
 }

@@ -1,0 +1,30 @@
+{
+  "method": "getTFileForPath",
+  "capturedAt": "2026-02-17T08:06:18.894Z",
+  "capturedFrom": "Learning/Learning.md",
+  "input": "Learning/Learning.md",
+  "output": {
+    "parent": {
+      "parent": {
+        "parent": null,
+        "deleted": false,
+        "path": "/",
+        "name": ""
+      },
+      "deleted": false,
+      "path": "Learning",
+      "name": "Learning"
+    },
+    "deleted": false,
+    "path": "Learning/Learning.md",
+    "name": "Learning.md",
+    "basename": "Learning",
+    "extension": "md",
+    "saving": false,
+    "stat": {
+      "ctime": 1694265307562,
+      "mtime": 1694272589152,
+      "size": 466
+    }
+  }
+}

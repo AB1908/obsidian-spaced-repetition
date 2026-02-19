@@ -1,5 +1,5 @@
 {
   "method": "getFileContents",
   "input": "constitution.md",
-  "output": "---\ntitle: \"Claude's Constitution\"\ntags:\n  - \"clippings\"\n---\n\n## Overview\n\nClaude’s constitution is a detailed description of Anthropic’s intentions.\n\nTraining models is a difficult task, and behavior might not always reflect ideals."
+  "output": "---\ntitle: \"Dummy title 1\"\ntags:\n  - \"review/dummy\"\n---\n\n## Lorem Ipsum Heading 1\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua."
 }

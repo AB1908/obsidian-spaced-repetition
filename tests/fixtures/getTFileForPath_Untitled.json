@@ -1,5 +1,25 @@
 {
   "method": "getTFileForPath",
+  "capturedAt": "2026-02-17T08:06:18.955Z",
+  "capturedFrom": "Untitled.md",
   "input": "Untitled.md",
-  "output": { "basename": "Untitled", "parent": { "name": "" } }
+  "output": {
+    "parent": {
+      "parent": null,
+      "deleted": false,
+      "path": "/",
+      "name": ""
+    },
+    "deleted": false,
+    "path": "Untitled.md",
+    "name": "Untitled.md",
+    "basename": "Untitled",
+    "extension": "md",
+    "saving": false,
+    "stat": {
+      "ctime": 1691688935686,
+      "mtime": 1771178570174,
+      "size": 403
+    }
+  }
 }

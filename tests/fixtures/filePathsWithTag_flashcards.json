@@ -1,0 +1,12 @@
+{
+  "method": "filePathsWithTag",
+  "capturedAt": "2026-02-17T08:06:18.763Z",
+  "capturedFrom": "flashcards",
+  "input": "flashcards",
+  "output": [
+    "Atomic Habits/Flashcards.md",
+    "Clippings/Claude's Constitution/Flashcards.md",
+    "Memory - A Very Short Introduction/Flashcards.md",
+    "Untitled - Flashcards.md"
+  ]
+}

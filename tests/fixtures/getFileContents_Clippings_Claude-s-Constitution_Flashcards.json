@@ -1,0 +1,7 @@
+{
+  "method": "getFileContents",
+  "capturedAt": "2026-02-17T08:06:18.787Z",
+  "capturedFrom": "Clippings/Claude's Constitution/Flashcards.md",
+  "input": "Clippings/Claude's Constitution/Flashcards.md",
+  "output": "---\nannotations: \"Dummy annotations 1\"\ntags:\n  - \"review/dummy\"\n---\n\n"
+}
