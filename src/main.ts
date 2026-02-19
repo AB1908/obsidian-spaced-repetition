@@ -7,7 +7,7 @@ import { FlashcardIndex } from "src/data/models/flashcard";
 import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
-import { setApp } from "src/infrastructure/obsidian-facade";
+import { ObsidianNotice, setApp } from "src/infrastructure/obsidian-facade";
 import { Index } from "src/data/models";
 import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 
@@ -83,6 +83,7 @@ export default class SRPlugin extends Plugin implements AnnotationsNoteDependenc
 
         this.addSettingTab(new SRSettingTab(this.app, this));
 
+        new ObsidianNotice(t("PLUGIN_RELOADED"));
         console.log("SRS Plugin loaded");
     }
 

@@ -299,6 +299,10 @@ export class AnnotationsNote implements frontbook {
     updatePath(newPath: string) {
         this.path = newPath;
         this.name = getTFileForPath(newPath).basename;
+        const bookFrontmatter = this.getBookFrontmatter();
+        if (bookFrontmatter?.title) {
+            this.name = bookFrontmatter.title;
+        }
         this.strategy = this.resolveStrategy();
     }
 
@@ -319,6 +323,10 @@ export class AnnotationsNote implements frontbook {
         this.detectDrift();
 
         this.name = getTFileForPath(this.path).basename;
+        const bookFrontmatter = this.getBookFrontmatter();
+        if (bookFrontmatter?.title) {
+            this.name = bookFrontmatter.title;
+        }
 
         if (this.plugin.fileTagsMap.has(this.path)) {
             // @ts-ignore
