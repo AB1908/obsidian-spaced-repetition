@@ -65,6 +65,7 @@ This story formalizes that sequence:
 ## Sessions
 - [2026-02-18: Domain Model Architecture Refinement](../sessions/2026-02-18-domain-model-architecture-refinement.md)
 - [2026-02-18: Domain Modeling Context Handoff](../sessions/2026-02-18-domain-modeling-context-handoff.md)
+- [Execution: 2026-02-19 DEBT-031 History Curation](../executions/EXEC-2026-02-19-DEBT-031-history-curation.md)
 
 ## Related
 - [DEBT-022](DEBT-022-api-module-decomposition-for-verifiability.md)

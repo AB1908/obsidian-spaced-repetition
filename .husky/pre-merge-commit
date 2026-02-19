@@ -1,0 +1,12 @@
+#!/bin/sh
+set -e
+
+MERGE_HEAD_PATH="$(git rev-parse --git-path MERGE_HEAD)"
+if [ ! -f "${MERGE_HEAD_PATH}" ]; then
+  exit 0
+fi
+
+MERGE_REF="$(cat "${MERGE_HEAD_PATH}")"
+MERGE_NAME="$(git name-rev --name-only "${MERGE_REF}" 2>/dev/null || echo "${MERGE_REF}")"
+
+scripts/require-history-curation.sh main "${MERGE_REF}" "${MERGE_NAME}"
