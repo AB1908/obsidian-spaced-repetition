@@ -23,12 +23,15 @@ Define and prototype lightweight wrappers that are:
 - `squash-lane` - deterministic branch squash pattern with backup/stash safeguards
 - `merge-lane` - ordered merge helper with rebase + ff-only checks
 - `release-preflight` - version/tag consistency + required checks before release prep
+- `contract-kickoff` - creates/updates intent + test contract + commit plan stubs for approval-first flow
+- `trust-report` - summarizes recent trust metrics and delegation guidance per workflow domain
 
 ## Acceptance Criteria
 - [ ] Define wrapper contract per command (inputs, outputs, side effects, failure modes)
 - [ ] Propose one implementation strategy usable by all agents (script + prompt templates)
 - [ ] Include rollback/recovery guidance per wrapper
 - [ ] Validate wrappers on one pilot branch flow
+- [ ] At least one wrapper emits structured metrics compatible with `trust_metrics.json` from SPIKE-005
 
 ## Non-Goals
 - No large orchestration framework in v0

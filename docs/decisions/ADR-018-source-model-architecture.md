@@ -1,7 +1,7 @@
 # ADR-018: A Generic Source Model with a Strategy Pattern
 
 ## Status
-Proposed
+Superseded by [ADR-022: FlashcardSource Composition](ADR-022-flashcardsource-composition.md)
 
 ## Context
 The existing `SourceNote` model has become a bottleneck. It is overloaded with responsibilities, representing both the origin of information (like a `.mrexpt` file) and the processed, studyable annotation note. This makes it difficult to reason about and, more importantly, extremely difficult to extend to new source types like plain Markdown files or Kindle exports without significant "model pollution."

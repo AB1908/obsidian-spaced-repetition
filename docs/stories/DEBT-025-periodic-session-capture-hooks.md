@@ -34,7 +34,6 @@ Add lightweight time-based capture hooks for session notes without forcing full 
 ## Delivered
 - `scripts/session-checkpoint.sh` appends timestamped checkpoints with a stable schema.
 - `docs/guides/work-organization.md` now documents cadence, schema, and command usage.
-
 ## Related
 - [DEBT-017](DEBT-017-session-notes-location.md)
 - [DEBT-018](DEBT-018-plan-storage-linking.md)

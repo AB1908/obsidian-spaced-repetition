@@ -1,7 +1,7 @@
 # STORY-014: PR-Gated Automated Release Pipeline
 
 ## Status
-In Progress
+Done
 
 ## Epic
 None

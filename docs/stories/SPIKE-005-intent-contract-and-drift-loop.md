@@ -25,6 +25,7 @@ Design a minimal control loop for:
 3. commit-plan approval
 4. execution evidence capture
 5. drift analysis and learning for future runs
+6. trust/delegation metrics to guide where autonomy should increase or decrease
 
 ## Proposed Artifact Model (v0)
 - `intent.json` - goal, constraints, allowed files, risk level
@@ -32,6 +33,21 @@ Design a minimal control loop for:
 - `commit_plan.json` - planned commit units and dependencies
 - `run_report.json` - actual commits/tests/artifacts/deviations
 - `lessons.jsonl` - normalized plan-vs-actual records for iterative improvement
+- `trust_metrics.json` - review quality and delegation confidence indicators by workflow area
+
+## Trust/Review Metrics (v0)
+Track per run and aggregate by workflow domain (for example: deps, release, refactor, UI):
+- `plan_drift_rate`: touched files or commits outside approved plan
+- `review_churn_rate`: number of human-requested rework cycles per commit
+- `post_merge_defect_rate`: issues discovered after merge that escaped review/test gates
+- `test_gate_failure_rate`: % of runs failing required gates before approval
+- `approval_latency_minutes`: time from proposed commit to human approval
+- `rollback_or_revert_count`: reversals after merge as confidence signal
+
+Use these to classify delegation level:
+- `high-trust`: low drift/churn/defects over recent runs
+- `medium-trust`: occasional drift requiring moderate oversight
+- `low-trust`: high drift/churn/defects, require stricter human gates
 
 ## Execution Plan
 
@@ -47,17 +63,21 @@ Design a minimal control loop for:
   - files touched outside allowed scope
   - planned vs actual commits
   - planned vs executed tests
+- Emit run-level trust metrics into `trust_metrics.json`.
 
 ### Phase 3: Retrospective and Learning
 - Generate a human-readable end-of-run drift summary.
 - Record accepted deviations and rationale.
 - Append structured lessons to `lessons.jsonl`.
+- Update delegation recommendations per workflow domain from trust metric trends.
 
 ## Acceptance Criteria
 - [ ] A run can be started only after intent/test/plan artifacts are approved.
 - [ ] End-of-run report clearly shows planned vs actual deltas.
 - [ ] At least one pilot run demonstrates useful drift findings.
 - [ ] The process stays lightweight enough for solo usage (no mandatory infra).
+- [ ] Trust metrics are produced and understandable without a telemetry backend.
+- [ ] At least one domain gets a delegation recommendation from measured metrics.
 
 ## Non-Goals (for v0)
 - No Kubernetes/job scheduler integration.

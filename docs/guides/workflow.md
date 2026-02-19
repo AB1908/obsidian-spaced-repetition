@@ -183,6 +183,15 @@ git add docs/ CHANGELOG.md
 git commit -m "docs: finalize navigation system [STORY-015]"
 ```
 
+### 4.1 Pre-Merge Discipline Checklist (Manual Gate)
+
+Before merging, explicitly verify:
+
+- `CHANGELOG.md` updated for user-facing changes.
+- Story status is `Done` in `docs/stories/<ITEM>.md`.
+- A session note exists for the latest execution in `docs/sessions/YYYY-MM-DD-<ITEM>.md`.
+- If implementation diverged from the approved plan, the plan is updated and re-approved before final merge.
+
 ### 5. Merge to Main
 
 **Choose your merge strategy based on what you want in history:**
