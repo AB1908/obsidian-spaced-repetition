@@ -16,6 +16,7 @@ project-root/
 │   ├── decisions/          # Architecture Decision Records (ADRs)
 │   ├── architecture/       # System design docs
 │   ├── stories/           # ALL work items: features, bugs, debt, ideas
+│   ├── executions/        # Run-time execution logs: topology, approvals, integration
 │   ├── guides/            # Reference material: testing, workflow, learnings
 │   └── archive/           # Completed or stale context
 ├── CHANGELOG.md           # User-facing changes
@@ -191,6 +192,28 @@ Before merging, explicitly verify:
 - Story status is `Done` in `docs/stories/<ITEM>.md`.
 - A session note exists for the latest execution in `docs/sessions/YYYY-MM-DD-<ITEM>.md`.
 - If implementation diverged from the approved plan, the plan is updated and re-approved before final merge.
+
+### 4.2 Deterministic History-Curation Gate
+
+When a branch has more than 6 commits over `main`, do not merge directly.
+
+Required:
+- Add topology snapshots to an execution log file in `docs/executions/`:
+  - `## Planned Commit Topology`
+  - `## Actual Commit Topology`
+  - `## Final Curated Topology`
+- Record explicit approval line: `History Curation Approved: yes`
+- Curate history before merge (squash/rebase/cherry-pick strategy)
+
+Automation:
+- `scripts/require-history-curation.sh` enforces the `>6` commit policy.
+- Script checks `docs/executions/` first; story/plan are compatibility fallback.
+- `scripts/safe-merge.sh <source-branch> [base-branch]` runs the gate then performs `--ff-only` merge.
+- `.husky/pre-merge-commit` runs the same gate for non-fast-forward merges.
+
+Important:
+- Git hooks cannot fully gate fast-forward merges unless you use a wrapper command.
+- Use `scripts/safe-merge.sh` as the default local merge entrypoint.
 
 ### 5. Merge to Main
 
