@@ -1,5 +1,6 @@
 import esbuild from "esbuild";
 import process from "process";
+import path from "path";
 import builtins from "builtin-modules";
 import "dotenv/config";
 
@@ -14,6 +15,23 @@ const prod = process.argv[2] === "production";
 const pluginDir = process.env.OBSIDIAN_PLUGIN_DIR || ".";
 const outfile = `${pluginDir}/main.js`;
 
+// Fixture capture: set CAPTURE_FIXTURES_DIR to enable (e.g. npm run capture)
+const captureDir = process.env.CAPTURE_FIXTURES_DIR || '';
+
+// When capture mode is on, redirect disk imports to the capture-proxy wrapper.
+// This avoids runtime patching of non-configurable CJS exports (BUG-010, BUG-011).
+const captureDiskPlugin = {
+    name: 'capture-disk-proxy',
+    setup(build) {
+        if (!captureDir) return;
+
+        build.onResolve({ filter: /infrastructure\/disk/ }, (args) => {
+            // Don't redirect captureProxy.ts's own import of the real disk module
+            if (args.importer.includes('captureProxy')) return null;
+            return { path: path.resolve('src/utils/captureProxy.ts') };
+        });
+    },
+};
 
 esbuild
     .build({
@@ -31,5 +49,10 @@ esbuild
         sourcesContent: !prod,
         treeShaking: true,
         outfile,
+        plugins: [captureDiskPlugin],
+        define: {
+            '__CAPTURE_MODE__': JSON.stringify(!!captureDir),
+            '__CAPTURE_FIXTURES_DIR__': JSON.stringify(captureDir),
+        },
     })
     .catch(() => process.exit(1));

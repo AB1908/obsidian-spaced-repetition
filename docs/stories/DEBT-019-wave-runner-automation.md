@@ -1,6 +1,6 @@
 # DEBT-019: Wave Runner — Parallel PR Automation
 
-**Status:** Backlog
+**Status:** Done
 **Priority:** Low
 **Depends on:** DEBT-018 (plan storage)
 
@@ -38,10 +38,10 @@ A CLI tool or Claude Code skill (`/wave-run`) that reads a plan file and orchest
 
 ## Acceptance Criteria
 
-- [ ] At minimum: shell script that creates worktrees from a plan file and prints per-track agent prompts
-- [ ] Gate checks run automatically after merge
-- [ ] Plan file format documented (what fields the tool expects)
-- [ ] Human approval gates before merges (reviewing diffs, handling surprises, approving wave transitions)
+- [x] At minimum: shell script that creates worktrees from a plan file and prints per-track agent prompts
+- [x] Gate checks run automatically after merge
+- [x] Plan file format documented (what fields the tool expects)
+- [x] Human approval gates before merges (reviewing diffs, handling surprises, approving wave transitions)
 
 ## Notes
 
