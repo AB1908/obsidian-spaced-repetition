@@ -4,7 +4,7 @@ import { appIcon } from "src/icons/appicon";
 import { t } from "src/lang/helpers";
 import { DEFAULT_SETTINGS, SRSettings, SRSettingTab } from "src/settings";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
+import { AnnotationsNoteIndex } from "src/data/models/annotations-note/AnnotationsNoteIndex";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
 import { ObsidianNotice, setApp } from "src/infrastructure/obsidian-facade";

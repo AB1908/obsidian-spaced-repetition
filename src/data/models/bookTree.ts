@@ -1,4 +1,6 @@
-import { BookMetadataSections, findPreviousHeaderForHeading, type Heading, isHeading } from "src/data/models/AnnotationsNote";
+import { isHeading } from "src/data/models/sections/guards";
+import { findPreviousHeaderForHeading } from "src/data/models/sections/heading-graph";
+import { BookMetadataSections, type Heading } from "src/data/models/sections/types";
 
 // KILL: switch to DFS/BFS?
 // Need this to be able to call countAnnotations

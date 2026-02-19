@@ -1,9 +1,4 @@
-import { type annotation } from "./annotations";
-import type { BookMetadataSections, Heading } from "./AnnotationsNote";
+import type { FlashcardSourceStrategy } from "./FlashcardSourceStrategy";
 
-export interface ISourceStrategy {
-  // Define contract for source-specific operations
-  sync?(sinceId?: string): Promise<annotation[]>;
-  extract?(): Promise<annotation[]>;
-  getNavigableSections(sections: BookMetadataSections): Heading[];
-}
+// Backward-compatible alias while code migrates to FlashcardSourceStrategy naming.
+export interface ISourceStrategy extends FlashcardSourceStrategy {}

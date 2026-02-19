@@ -1,6 +1,6 @@
 import { TagCache, TFile } from "obsidian";
 import { vault, fileManager, metadataCache } from "src/infrastructure/obsidian-facade";
-import { ANNOTATIONS_YAML_KEY } from "src/data/models/AnnotationsNote";
+import { ANNOTATIONS_YAML_KEY } from "src/data/models/annotations-note/constants";
 
 export async function writeCardToDisk(path: string, text: string) {
     await vault.append(getTFileForPath(path), text);
