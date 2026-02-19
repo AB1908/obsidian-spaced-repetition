@@ -29,6 +29,13 @@ export class MarkdownSourceStrategy implements ISourceStrategy {
     }
 
     getNavigableSections(sections: BookMetadataSections): Heading[] {
-        return sections.filter((section): section is Heading => isHeading(section));
+        const headings = sections.filter((section): section is Heading => isHeading(section));
+        const h1Headings = headings.filter((heading) => heading.level === 1);
+
+        if (h1Headings.length > 0) {
+            return h1Headings;
+        }
+
+        return headings.filter((heading) => heading.level === 2);
     }
 }

@@ -5,6 +5,10 @@ import { getFilteredAnnotations } from "src/utils/annotation-filters";
 import { integerToRGBA } from "src/utils/utils";
 import { CategoryFilter } from "src/ui/components/category-filter";
 import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
+import {
+    AnnotationListViewPolicy,
+    AnnotationMainFilter,
+} from "src/data/models/sourceCapabilities";
 
 interface AnnotationListItemProps {
     annotation: annotation;
@@ -60,24 +64,34 @@ import { ColorFilter } from "src/ui/components/ColorFilter";
 interface AnnotationDisplayListProps {
     chapterData: SectionAnnotations;
     baseLinkPath: string;
-    filter: 'unprocessed' | 'processed' | 'all';
-    setFilter: (filter: 'unprocessed' | 'processed' | 'all') => void;
+    filter: AnnotationMainFilter;
+    setFilter: (filter: AnnotationMainFilter) => void;
     activeColorFilter: string | null;
     setActiveColorFilter: (color: string | null) => void;
+    viewPolicy: AnnotationListViewPolicy;
 }
 
 const NAVIGATION_FILTER_SESSION_KEY = "annotationNavigationFilter";
 
 export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
-    const { chapterData, baseLinkPath, filter, setFilter, activeColorFilter, setActiveColorFilter } = props;
+    const {
+        chapterData,
+        baseLinkPath,
+        filter,
+        setFilter,
+        activeColorFilter,
+        setActiveColorFilter,
+        viewPolicy,
+    } = props;
+    const effectiveFilter = viewPolicy.enforcedMainFilter ?? filter;
     const [activeCategoryFilter, setActiveCategoryFilter] = useState<number | null>(null);
 
     // todo: why do we use useMemo here? Seems unnecessary especially when we have a direct API and things are all local.
     // we don't need to cache anything, so consider removing
     // check what tradeoffs this incurs in terms of development as well as for user experience at scale
     const displayedAnnotations = useMemo(() => {
-        return getFilteredAnnotations(chapterData.annotations, filter, activeCategoryFilter, activeColorFilter);
-    }, [filter, activeCategoryFilter, activeColorFilter, chapterData.annotations]);
+        return getFilteredAnnotations(chapterData.annotations, effectiveFilter, activeCategoryFilter, activeColorFilter);
+    }, [effectiveFilter, activeCategoryFilter, activeColorFilter, chapterData.annotations]);
 
     //todo: don't use direct DOM manipulation one day
     useEffect(() => {
@@ -99,18 +113,18 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
     useEffect(() => {
         setActiveCategoryFilter(null);
         setActiveColorFilter(null);
-    }, [filter]);
+    }, [effectiveFilter]);
 
     useEffect(() => {
         sessionStorage.setItem(
             NAVIGATION_FILTER_SESSION_KEY,
             JSON.stringify({
-                mainFilter: filter,
+                mainFilter: effectiveFilter,
                 categoryFilter: activeCategoryFilter,
                 colorFilter: activeColorFilter
             })
         );
-    }, [filter, activeCategoryFilter, activeColorFilter]);
+    }, [effectiveFilter, activeCategoryFilter, activeColorFilter]);
 
     return (
         <>
@@ -118,42 +132,46 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
                 {chapterData.title}
             </h3>
 
-            <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
-                <button
-                    className={`mod-cta ${filter === 'unprocessed' ? '' : 'mod-muted'}`}
-                    onClick={() => setFilter('unprocessed')}
-                >
-                    Unprocessed
-                </button>
-                <button
-                    className={`mod-cta ${filter === 'processed' ? '' : 'mod-muted'}`}
-                    onClick={() => setFilter('processed')}
-                >
-                    Processed
-                </button>
-                <button
-                    className={`mod-cta ${filter === 'all' ? '' : 'mod-muted'}`}
-                    onClick={() => setFilter('all')}
-                >
-                    All
-                </button>
-            </div>
+            {viewPolicy.showMainFilterButtons && (
+                <div style={{ marginBottom: '1rem', display: 'flex', gap: '0.5rem' }}>
+                    <button
+                        className={`mod-cta ${filter === 'unprocessed' ? '' : 'mod-muted'}`}
+                        onClick={() => setFilter('unprocessed')}
+                    >
+                        Unprocessed
+                    </button>
+                    <button
+                        className={`mod-cta ${filter === 'processed' ? '' : 'mod-muted'}`}
+                        onClick={() => setFilter('processed')}
+                    >
+                        Processed
+                    </button>
+                    <button
+                        className={`mod-cta ${filter === 'all' ? '' : 'mod-muted'}`}
+                        onClick={() => setFilter('all')}
+                    >
+                        All
+                    </button>
+                </div>
+            )}
 
-            <div style={{ marginBottom: '1rem' }}>
-                {filter === 'processed' && (
-                    <CategoryFilter
-                        selectedCategory={activeCategoryFilter}
-                        onCategorySelect={setActiveCategoryFilter}
-                    />
-                )}
-                {filter === 'unprocessed' && (
-                    <ColorFilter
-                        annotations={chapterData.annotations}
-                        selectedColor={activeColorFilter}
-                        onColorSelect={setActiveColorFilter}
-                    />
-                )}
-            </div>
+            {(viewPolicy.showCategoryFilter || viewPolicy.showColorFilter) && (
+                <div style={{ marginBottom: '1rem' }}>
+                    {viewPolicy.showCategoryFilter && effectiveFilter === 'processed' && (
+                        <CategoryFilter
+                            selectedCategory={activeCategoryFilter}
+                            onCategorySelect={setActiveCategoryFilter}
+                        />
+                    )}
+                    {viewPolicy.showColorFilter && effectiveFilter === 'unprocessed' && (
+                        <ColorFilter
+                            annotations={chapterData.annotations}
+                            selectedColor={activeColorFilter}
+                            onColorSelect={setActiveColorFilter}
+                        />
+                    )}
+                </div>
+            )}
 
             <ul className={"sr-highlight-tree"}>
                 {displayedAnnotations.map((annotation: annotation) => (

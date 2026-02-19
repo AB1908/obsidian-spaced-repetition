@@ -3,7 +3,11 @@ import { useLoaderData, useLocation } from "react-router-dom";
 import { AnnotationDisplayList } from "src/ui/components/annotation-display-list";
 import { SectionAnnotations } from "src/data/models/annotations";
 import { USE_JSON_MOCK } from "src/ui/routes/books/review";
-import { getAnnotationsForSection } from "src/api";
+import { getAnnotationsForSection, getSourceCapabilities } from "src/api";
+import {
+    AnnotationMainFilter,
+    getAnnotationListViewPolicy,
+} from "src/data/models/sourceCapabilities";
 
 export interface AnnotationsLoaderParams {
     bookId: string;
@@ -11,9 +15,14 @@ export interface AnnotationsLoaderParams {
 }
 
 export function annotationsLoader({params}: {params: AnnotationsLoaderParams}) {
-    if (!USE_JSON_MOCK)
-        return getAnnotationsForSection(params.sectionId, params.bookId);
-    else
+    if (!USE_JSON_MOCK) {
+        const sectionData = getAnnotationsForSection(params.sectionId, params.bookId);
+        if (!sectionData) return sectionData;
+        return {
+            ...sectionData,
+            sourceCapabilities: getSourceCapabilities(params.bookId),
+        };
+    } else
         return fetch(`http://localhost:3000/annotations?chapterId=${params.sectionId}`);
 }
 
@@ -39,10 +48,28 @@ export function HeaderWithCounts(props: { withoutCount: number, withCount: numbe
 export function AnnotationListPage() {
     const chapterData = useLoaderData() as SectionAnnotations;
     const location = useLocation();
-    
+
     const isImportFlow = location.pathname.includes("/import/");
-    const [filter, setFilter] = React.useState<'unprocessed' | 'processed' | 'all'>(isImportFlow ? 'unprocessed' : 'processed');
+    const fallbackSourceType = isImportFlow ? "moonreader" : "direct-markdown";
+    const sourceCapabilities = chapterData.sourceCapabilities ?? {
+        sourceType: fallbackSourceType,
+        cardCreationMode: fallbackSourceType === "moonreader" ? "processed-category" : "all-no-processing",
+        showCategoryFilter: fallbackSourceType === "moonreader",
+        showColorFilter: fallbackSourceType === "moonreader",
+        supportsProcessingFlow: fallbackSourceType === "moonreader",
+        requiresMutationConfirmation: false,
+    };
+    const viewPolicy = getAnnotationListViewPolicy(
+        sourceCapabilities,
+        isImportFlow ? "import" : "card-creation"
+    );
+
+    const [filter, setFilter] = React.useState<AnnotationMainFilter>(viewPolicy.defaultMainFilter);
     const [activeColorFilter, setActiveColorFilter] = React.useState<string | null>(null);
+
+    React.useEffect(() => {
+        setFilter(viewPolicy.defaultMainFilter);
+    }, [viewPolicy.defaultMainFilter]);
 
     const baseLinkPath = isImportFlow ? "personal-note" : "flashcards";
 
@@ -54,6 +81,7 @@ export function AnnotationListPage() {
             setFilter={setFilter}
             activeColorFilter={activeColorFilter}
             setActiveColorFilter={setActiveColorFilter}
+            viewPolicy={viewPolicy}
         />
     );
 }

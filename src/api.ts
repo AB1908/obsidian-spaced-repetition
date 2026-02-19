@@ -33,7 +33,9 @@ import { paragraph, addBlockIdToParagraph } from "src/data/models/paragraphs";
 import { ImportedBook } from "./ui/routes/import/import-export";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
 import { ObsidianNotice } from "src/infrastructure/obsidian-facade";
-import { getSourceType, hasTag, type SourceType } from "src/data/source-discovery";
+import { type SourceType } from "src/data/source-discovery";
+import { SourceCapabilities } from "src/data/models/sourceCapabilities";
+import { AnnotationFilter, matchesAnnotationFilter } from "src/utils/annotation-filters";
 
 let plugin: SRPlugin;
 export function setPlugin(p: SRPlugin) {
@@ -262,22 +264,23 @@ export interface NotesWithoutBooks {
     requiresSourceMutationConfirmation: boolean;
 }
 
-function requiresSourceMutationConfirmation(tags: string[] = [], hasMoonReaderFrontmatter: boolean): boolean {
-    return hasTag(tags, "clippings") && !hasMoonReaderFrontmatter;
+export function getSourceCapabilities(bookId: string): SourceCapabilities {
+    const book = plugin.annotationsNoteIndex.getBook(bookId);
+    return book.getSourceCapabilities();
 }
 
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
 export function getSourcesAvailableForDeckCreation(): NotesWithoutBooks[] {
     return plugin.annotationsNoteIndex.getSourcesWithoutFlashcards().map(sourceNote => {
-        const hasMoonReaderFrontmatter = !!sourceNote.getBookFrontmatter();
+        const capabilities = sourceNote.getSourceCapabilities();
         const tags = sourceNote.tags || [];
         return {
             id: sourceNote.id,
             name: sourceNote.name,
             tags,
-            sourceType: getSourceType(tags, hasMoonReaderFrontmatter),
-            requiresSourceMutationConfirmation: requiresSourceMutationConfirmation(tags, hasMoonReaderFrontmatter),
+            sourceType: capabilities.sourceType,
+            requiresSourceMutationConfirmation: capabilities.requiresMutationConfirmation,
         };
     });
 }
@@ -322,8 +325,7 @@ async function ensureDirectMarkdownSourceInOwnFolder(sourcePath: string): Promis
 
 export async function createFlashcardNoteForAnnotationsNote(bookId: string, opts?: { confirmedSourceMutation?: boolean }) {
     const book = plugin.annotationsNoteIndex.getBook(bookId);
-    const hasMoonReaderFrontmatter = !!book.getBookFrontmatter();
-    const sourceRequiresMutationConfirmation = requiresSourceMutationConfirmation(book.tags || [], hasMoonReaderFrontmatter);
+    const sourceRequiresMutationConfirmation = book.requiresSourceMutationConfirmation();
 
     if (sourceRequiresMutationConfirmation) {
         if (!opts?.confirmedSourceMutation) {
@@ -434,37 +436,7 @@ export async function updateBookAnnotationsAndFrontmatter(
 
 
 
-export interface NavigationFilter {
-    mainFilter?: "all" | "processed" | "unprocessed";
-    categoryFilter?: number | null;
-    colorFilter?: string | null;
-}
-
-function matchesNavigationFilter(ann: annotation | paragraph, filter?: NavigationFilter) {
-    if (ann.deleted) return false;
-    if (!filter) return true;
-
-    const mainFilter = filter.mainFilter ?? "all";
-    const category = ann.category;
-    const isProcessed = category !== undefined && category !== null;
-
-    if (mainFilter === "processed") {
-        if (filter.categoryFilter !== undefined && filter.categoryFilter !== null) {
-            return category === filter.categoryFilter;
-        }
-        return isProcessed;
-    }
-
-    if (mainFilter === "unprocessed") {
-        if (isProcessed) return false;
-        if (filter.colorFilter) {
-            return ann.originalColor === filter.colorFilter;
-        }
-        return true;
-    }
-
-    return true;
-}
+export type NavigationFilter = AnnotationFilter;
 
 export function getPreviousAnnotationId(
     bookId: string,
@@ -484,7 +456,7 @@ export function getPreviousAnnotationId(
         }
         if (isAnnotationOrParagraph(item)) {
             const ann = item as (annotation | paragraph);
-            if (!matchesNavigationFilter(ann, filter)) continue;
+            if (!matchesAnnotationFilter(ann, filter)) continue;
             return ann.id;
         }
     }
@@ -509,7 +481,7 @@ export function getNextAnnotationId(
         }
         if (isAnnotationOrParagraph(item)) {
             const ann = item as (annotation | paragraph);
-            if (!matchesNavigationFilter(ann, filter)) continue;
+            if (!matchesAnnotationFilter(ann, filter)) continue;
             return ann.id;
         }
     }
