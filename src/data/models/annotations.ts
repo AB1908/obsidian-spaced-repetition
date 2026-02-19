@@ -1,4 +1,5 @@
 import { deserializeMetadata } from "../utils/metadataSerializer";
+import type { SourceCapabilities } from "./sourceCapabilities";
 
 export interface annotation {
     type:           'annotation';
@@ -22,6 +23,7 @@ export interface SectionAnnotations {
     id:          string;
     annotations: annotation[];
     title:       string;
+    sourceCapabilities?: SourceCapabilities;
 }
 
 // TODO: Consider a feature where people can use their own regex for parsing

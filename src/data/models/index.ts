@@ -11,6 +11,7 @@ export * from "./parsedCard";
 export * from "./AnnotationsNote";
 export * from "./Source";
 export * from "./ISourceStrategy";
+export * from "./sourceCapabilities";
 export * from "./strategies/MoonReaderStrategy";
 export * from "./strategies/MarkdownSourceStrategy";
 

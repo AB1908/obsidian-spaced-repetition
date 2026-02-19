@@ -21,6 +21,10 @@ import { getSourceType, selectEligibleSourcePaths } from "src/data/source-discov
 import { ISourceStrategy } from "./ISourceStrategy";
 import { MarkdownSourceStrategy } from "./strategies/MarkdownSourceStrategy";
 import { MoonReaderStrategy } from "./strategies/MoonReaderStrategy";
+import {
+    SourceCapabilities,
+    getSourceCapabilities as buildSourceCapabilities,
+} from "./sourceCapabilities";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
@@ -335,6 +339,21 @@ export class AnnotationsNote implements frontbook {
 
     getNavigableSections(): Heading[] {
         return this.strategy.getNavigableSections(this.bookSections);
+    }
+
+    getSourceType() {
+        return getSourceType(this.tags, !!this.getBookFrontmatter());
+    }
+
+    requiresSourceMutationConfirmation(): boolean {
+        return this.getSourceType() === "direct-markdown";
+    }
+
+    getSourceCapabilities(): SourceCapabilities {
+        return buildSourceCapabilities(
+            this.getSourceType(),
+            this.requiresSourceMutationConfirmation()
+        );
     }
 
     private resolveStrategy(): ISourceStrategy {

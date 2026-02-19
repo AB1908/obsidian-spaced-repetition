@@ -57,13 +57,14 @@ import {
     getBookChapters,
     getNotesWithoutReview,
     getSourcesAvailableForDeckCreation,
+    getSourceCapabilities,
     createFlashcardNoteForAnnotationsNote,
     getNextAnnotationId,
     getPreviousAnnotationId,
 } from "src/api";
 import { Index } from "src/data/models";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { fileTags } from "src/infrastructure/disk";
+import { fileTags, getMetadataForFile } from "src/infrastructure/disk";
 import { ReviewResponse } from "src/types/CardType";
 import { getFilteredAnnotations } from "src/utils/annotation-filters";
 
@@ -542,6 +543,35 @@ describe("getSourcesAvailableForDeckCreation", () => {
     });
 });
 
+describe("getSourceCapabilities [DEBT-030]", () => {
+    beforeEach(async () => {
+        await newFunction();
+    });
+
+    test("maps MoonReader source to processed-category capabilities", () => {
+        expect(getSourceCapabilities("t0000010")).toEqual({
+            sourceType: "moonreader",
+            cardCreationMode: "processed-category",
+            showCategoryFilter: true,
+            showColorFilter: true,
+            supportsProcessingFlow: true,
+            requiresMutationConfirmation: false,
+        });
+    });
+
+    test("maps direct-markdown source to all/no-processing capabilities", () => {
+        const directMarkdownSource = getSourcesAvailableForDeckCreation()[0];
+        expect(getSourceCapabilities(directMarkdownSource.id)).toEqual({
+            sourceType: "direct-markdown",
+            cardCreationMode: "all-no-processing",
+            showCategoryFilter: false,
+            showColorFilter: false,
+            supportsProcessingFlow: false,
+            requiresMutationConfirmation: true,
+        });
+    });
+});
+
 describe("DEBT-021 contract snapshots", () => {
     beforeEach(async () => {
         await newFunction();
@@ -568,6 +598,90 @@ describe("DEBT-021 contract snapshots", () => {
               },
             ]
         `);
+    });
+});
+
+describe("BUG-007 heading level strategy", () => {
+    const getMetadataForFileMock = getMetadataForFile as jest.MockedFunction<typeof getMetadataForFile>;
+    const baseGetMetadataForFileImpl = getMetadataForFileMock.getMockImplementation();
+
+    afterEach(() => {
+        getMetadataForFileMock.mockImplementation(baseGetMetadataForFileImpl);
+    });
+
+    function applyConstitutionHeadingsForTest(levels: number[]) {
+        getMetadataForFileMock.mockImplementation((path: string) => {
+            if (path === "constitution.md") {
+                const headings = levels.map((level, index) => ({
+                    heading: `Heading L${level}-${index + 1}`,
+                    level,
+                    position: {
+                        start: { line: index + 1, col: 0, offset: index * 10 },
+                        end: { line: index + 1, col: 10, offset: index * 10 + 10 },
+                    },
+                }));
+
+                return {
+                    headings,
+                    sections: [
+                        {
+                            type: "yaml",
+                            position: {
+                                start: { line: 0, col: 0, offset: 0 },
+                                end: { line: 0, col: 3, offset: 3 },
+                            },
+                        },
+                        ...headings.map((heading) => ({
+                            type: "heading",
+                            position: heading.position,
+                        })),
+                    ],
+                    frontmatter: {
+                        title: "Claude's Constitution",
+                        tags: ["clippings"],
+                    },
+                };
+            }
+
+            return baseGetMetadataForFileImpl(path);
+        });
+    }
+
+    function getConstitutionBookId() {
+        const constitution = getSourcesAvailableForDeckCreation().find((source) => source.name === "constitution");
+        if (!constitution) throw new Error("constitution source not found");
+        return constitution.id;
+    }
+
+    test("mixed H1/H2/H3 headings returns only H1", async () => {
+        applyConstitutionHeadingsForTest([1, 1, 2, 3]);
+        await newFunction();
+
+        const constitutionId = getConstitutionBookId();
+        expect(getBookChapters(constitutionId).map((chapter) => chapter.level)).toEqual([1, 1]);
+    });
+
+    test("only H2/H3 headings returns only H2", async () => {
+        applyConstitutionHeadingsForTest([2, 2, 3]);
+        await newFunction();
+
+        const constitutionId = getConstitutionBookId();
+        expect(getBookChapters(constitutionId).map((chapter) => chapter.level)).toEqual([2, 2]);
+    });
+
+    test("no headings returns an empty list", async () => {
+        applyConstitutionHeadingsForTest([]);
+        await newFunction();
+
+        const constitutionId = getConstitutionBookId();
+        expect(getBookChapters(constitutionId)).toEqual([]);
+    });
+
+    test("MoonReader chapter behavior remains unchanged", async () => {
+        applyConstitutionHeadingsForTest([1, 2, 3]);
+        await newFunction();
+
+        expect(getBookChapters("t0000010").map((chapter) => chapter.level)).toEqual([1]);
     });
 });
 // createFlashcardNoteForAnnotationsNote
@@ -833,6 +947,51 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
         setupFilterNavigationFixture();
     });
 
+    function getSectionAnnotations() {
+        return [
+            {
+                type: "annotation" as const,
+                id: "ann-1",
+                highlight: "A1",
+                note: "",
+                category: null,
+                originalColor: "1",
+                deleted: false,
+                calloutType: "",
+            },
+            {
+                type: "annotation" as const,
+                id: "ann-2",
+                highlight: "A2",
+                note: "",
+                category: 1,
+                originalColor: "2",
+                deleted: false,
+                calloutType: "",
+            },
+            {
+                type: "annotation" as const,
+                id: "ann-3",
+                highlight: "A3",
+                note: "",
+                category: null,
+                originalColor: "2",
+                deleted: false,
+                calloutType: "",
+            },
+            {
+                type: "annotation" as const,
+                id: "ann-4",
+                highlight: "A4",
+                note: "",
+                category: 2,
+                originalColor: "3",
+                deleted: false,
+                calloutType: "",
+            },
+        ];
+    }
+
     test("getNextAnnotationId respects processed filter", () => {
         const nextId = getNextAnnotationId(bookId, "ann-1", sectionId, { mainFilter: "processed" });
         expect(nextId).toBe("ann-2");
@@ -871,6 +1030,41 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
             colorFilter: "1",
         });
         expect(noPreviousColor1).toBe("ann-1");
+    });
+
+    test("DEBT-030 parity: list and navigation filters share the same inclusion policy", () => {
+        const sectionAnnotations = getSectionAnnotations();
+        const filters = [
+            { mainFilter: "all" as const },
+            { mainFilter: "processed" as const },
+            { mainFilter: "processed" as const, categoryFilter: 2 },
+            { mainFilter: "unprocessed" as const },
+            { mainFilter: "unprocessed" as const, colorFilter: "2" },
+        ];
+
+        for (const filter of filters) {
+            const filteredIds = getFilteredAnnotations(
+                sectionAnnotations,
+                filter.mainFilter,
+                filter.categoryFilter ?? null,
+                filter.colorFilter ?? null
+            ).map((ann) => ann.id);
+
+            if (filteredIds.length > 0) {
+                expect(
+                    getPreviousAnnotationId(bookId, filteredIds[0], sectionId, filter)
+                ).toBeNull();
+                expect(
+                    getNextAnnotationId(bookId, filteredIds[filteredIds.length - 1], sectionId, filter)
+                ).toBeNull();
+            }
+
+            for (let i = 0; i < filteredIds.length - 1; i++) {
+                expect(
+                    getNextAnnotationId(bookId, filteredIds[i], sectionId, filter)
+                ).toBe(filteredIds[i + 1]);
+            }
+        }
     });
 });
 
