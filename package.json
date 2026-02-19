@@ -14,7 +14,8 @@
         "release": "echo \"Use PR-gated release automation or npm run release:prepare -- <version>.\" && exit 1",
         "release:next-version": "scripts/compute-next-release-version.sh",
         "release:prepare": "scripts/prepare-release.sh",
-        "mock-server": "json-server --watch db.json"
+        "mock-server": "json-server --watch db.json",
+        "capture": "CAPTURE_FIXTURES_DIR=$(wslpath -w $(pwd)/tests/fixtures) node esbuild.config.mjs"
     },
     "author": "AB1908 and Stephen Mwangi",
     "license": "MIT",

@@ -18,6 +18,7 @@ build
 # coverage
 coverage
 .aider*
+.env
 .env.worktrees/
 .worktrees/
 

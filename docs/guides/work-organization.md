@@ -147,6 +147,88 @@ What we set out to accomplish this session.
 - What remains
 ```
 
+### Periodic checkpoint hook (optional)
+
+Recommended cadence for non-trivial execution sessions: every 30-45 minutes append a checkpoint.
+
+Use:
+```bash
+scripts/session-checkpoint.sh <FOCUS> \
+  --story <STORY-ID-or-path> \
+  --plan <plan-path> \
+  --decision "..." \
+  --assumption "..." \
+  --question "..." \
+  --next "..." \
+  --print-path
+```
+
+Checkpoint schema appended to `docs/sessions/YYYY-MM-DD-<focus>.md`:
+- `Checkpoint HH:MM`
+- `Active Links` (story/plan when provided)
+- `Decisions`
+- `Assumptions`
+- `Open Questions`
+- `Next Actions`
+
+This is intentionally optional for exploratory sessions. Use it when decision traceability matters.
+
+## Wave runner (Level 2 shell)
+
+Use `scripts/wave-runner.sh` to orchestrate multi-branch plans that define wave tables.
+
+Plan format expected per wave:
+
+```markdown
+### Wave 1 (parallel)
+
+| Track | Branch | PR | Scope |
+|---|---|---|---|
+| A | `branch/name` | PR 1 | scope summary |
+```
+
+Supported modes:
+
+```bash
+# list waves/tracks
+scripts/wave-runner.sh docs/plans/DEBT-011-source-model-seam-repair.md --list
+
+# create worktree commands (safe preview)
+scripts/wave-runner.sh docs/plans/DEBT-011-source-model-seam-repair.md --prepare-wave 1 --dry-run
+
+# merge gate simulation (safe preview)
+scripts/wave-runner.sh docs/plans/DEBT-011-source-model-seam-repair.md --merge-wave 1 --dry-run
+```
+
+Operational behavior:
+- `--prepare-wave` creates/attaches worktrees for each branch and prints per-track implementation prompts.
+- `--merge-wave` enforces explicit per-branch approval and runs `npm test -- --runInBand` after each approved merge.
+- `--dry-run` prints intended actions without writing or merging.
+
+## Codex delegation runner
+
+Use `scripts/delegate-codex-task.sh` when you want one branch/task delegated to a non-interactive Codex run from its own worktree.
+
+Required input is a scope file that already includes:
+- plan scope,
+- test plan,
+- execution steps.
+
+Example:
+
+```bash
+# preview only
+scripts/delegate-codex-task.sh \
+  --branch fix/heading-level-strategy \
+  --scope-file docs/plans/BUG-007-delegation-scope.md \
+  --dry-run
+
+# execute autonomous run with full permissions in worktree
+scripts/delegate-codex-task.sh \
+  --branch fix/heading-level-strategy \
+  --scope-file docs/plans/BUG-007-delegation-scope.md \
+  --execute
+```
 ## Session Start Workflow
 
 Claude scans at session start:
