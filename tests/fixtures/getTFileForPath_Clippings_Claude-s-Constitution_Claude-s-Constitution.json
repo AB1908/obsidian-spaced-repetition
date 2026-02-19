@@ -1,0 +1,35 @@
+{
+  "method": "getTFileForPath",
+  "capturedAt": "2026-02-17T08:06:18.867Z",
+  "capturedFrom": "Clippings/Claude's Constitution/Claude's Constitution.md",
+  "input": "Clippings/Claude's Constitution/Claude's Constitution.md",
+  "output": {
+    "parent": {
+      "parent": {
+        "parent": {
+          "parent": null,
+          "deleted": false,
+          "path": "/",
+          "name": ""
+        },
+        "deleted": false,
+        "path": "Clippings",
+        "name": "Clippings"
+      },
+      "deleted": false,
+      "path": "Clippings/Claude's Constitution",
+      "name": "Claude's Constitution"
+    },
+    "deleted": false,
+    "path": "Clippings/Claude's Constitution/Claude's Constitution.md",
+    "name": "Claude's Constitution.md",
+    "basename": "Claude's Constitution",
+    "extension": "md",
+    "saving": false,
+    "stat": {
+      "ctime": 1769292053319,
+      "mtime": 1771186890909,
+      "size": 152276
+    }
+  }
+}

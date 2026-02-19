@@ -1,0 +1,7 @@
+{
+  "method": "getFileContents",
+  "capturedAt": "2026-02-17T08:06:18.818Z",
+  "capturedFrom": "Untitled - Flashcards.md",
+  "input": "Untitled - Flashcards.md",
+  "output": "---\nannotations: \"Dummy annotations 1\"\ntags:\n  - \"review/dummy\"\n---\n\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n?\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n<!--SR:hjhjhlka!L,2024-10-16,4,270-->\n\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris.\n?\nDuis aute irure dolor in reprehenderit in voluptate velit esse cillum.\n<!--SR:hjhjhlka!L,2025-07-06,266,250-->\n\nExcepteur sint occaecat cupidatat non proident, sunt in culpa.\n?\nCurabitur blandit tempus porttitor, posuere nonummy inceptos.\n<!--SR:hjhjhlka!L,2024-10-16,4,270-->\n\nInteger posuere erat a ante venenatis dapibus posuere velit aliquet.\n?\nEtiam porta sem malesuada magna mollis euismod.\n<!--SR:hjhjhlka!L,2024-10-21,1,210-->\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\n?\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n<!--SR:tmi3ktJd-->\n"
+}

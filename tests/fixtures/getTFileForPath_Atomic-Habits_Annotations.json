@@ -1,0 +1,30 @@
+{
+  "method": "getTFileForPath",
+  "capturedAt": "2026-02-17T08:06:18.834Z",
+  "capturedFrom": "Atomic Habits/Annotations.md",
+  "input": "Atomic Habits/Annotations.md",
+  "output": {
+    "parent": {
+      "parent": {
+        "parent": null,
+        "deleted": false,
+        "path": "/",
+        "name": ""
+      },
+      "deleted": false,
+      "path": "Atomic Habits",
+      "name": "Atomic Habits"
+    },
+    "deleted": false,
+    "path": "Atomic Habits/Annotations.md",
+    "name": "Annotations.md",
+    "basename": "Annotations",
+    "extension": "md",
+    "saving": false,
+    "stat": {
+      "ctime": 1767315314049,
+      "mtime": 1767315314049,
+      "size": 9054
+    }
+  }
+}

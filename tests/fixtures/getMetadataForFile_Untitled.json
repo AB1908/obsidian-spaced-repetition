@@ -1,0 +1,303 @@
+{
+  "method": "getMetadataForFile",
+  "capturedAt": "2026-02-17T08:06:18.958Z",
+  "capturedFrom": "Untitled.md",
+  "input": "Untitled.md",
+  "output": {
+    "links": [
+      {
+        "link": "Claude's Constitution#^f25ba2",
+        "original": "[[Claude's Constitution#^f25ba2]]",
+        "displayText": "Claude's Constitution > ^f25ba2",
+        "position": {
+          "start": {
+            "line": 17,
+            "col": 0,
+            "offset": 263
+          },
+          "end": {
+            "line": 17,
+            "col": 33,
+            "offset": 296
+          }
+        }
+      },
+      {
+        "link": "Claude's Constitution#^VlTR8k0w",
+        "original": "[[Claude's Constitution#^VlTR8k0w]]",
+        "displayText": "Claude's Constitution > ^VlTR8k0w",
+        "position": {
+          "start": {
+            "line": 19,
+            "col": 0,
+            "offset": 298
+          },
+          "end": {
+            "line": 19,
+            "col": 35,
+            "offset": 333
+          }
+        }
+      },
+      {
+        "link": "Claude's Constitution#^bac213",
+        "original": "[[Claude's Constitution#^bac213]]",
+        "displayText": "Claude's Constitution > ^bac213",
+        "position": {
+          "start": {
+            "line": 21,
+            "col": 0,
+            "offset": 335
+          },
+          "end": {
+            "line": 21,
+            "col": 33,
+            "offset": 368
+          }
+        }
+      },
+      {
+        "link": "Claude's Constitution#^bac213",
+        "original": "[[Claude's Constitution#^bac213]]",
+        "displayText": "Claude's Constitution > ^bac213",
+        "position": {
+          "start": {
+            "line": 23,
+            "col": 0,
+            "offset": 370
+          },
+          "end": {
+            "line": 23,
+            "col": 33,
+            "offset": 403
+          }
+        }
+      }
+    ],
+    "headings": [
+      {
+        "heading": "Chapter 3: Pulling the rabbit out of the hat",
+        "level": 1,
+        "position": {
+          "start": {
+            "line": 6,
+            "col": 0,
+            "offset": 52
+          },
+          "end": {
+            "line": 6,
+            "col": 46,
+            "offset": 98
+          }
+        }
+      },
+      {
+        "heading": "Relating study and test",
+        "level": 2,
+        "position": {
+          "start": {
+            "line": 8,
+            "col": 0,
+            "offset": 100
+          },
+          "end": {
+            "line": 8,
+            "col": 26,
+            "offset": 126
+          }
+        }
+      }
+    ],
+    "sections": [
+      {
+        "type": "yaml",
+        "position": {
+          "start": {
+            "line": 0,
+            "col": 0,
+            "offset": 0
+          },
+          "end": {
+            "line": 4,
+            "col": 3,
+            "offset": 50
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 6,
+            "col": 0,
+            "offset": 52
+          },
+          "end": {
+            "line": 6,
+            "col": 46,
+            "offset": 98
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 8,
+            "col": 0,
+            "offset": 100
+          },
+          "end": {
+            "line": 8,
+            "col": 26,
+            "offset": 126
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "id": "hjhjhlka",
+        "position": {
+          "start": {
+            "line": 10,
+            "col": 0,
+            "offset": 128
+          },
+          "end": {
+            "line": 11,
+            "col": 22,
+            "offset": 175
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "id": "tmi3ktJd",
+        "position": {
+          "start": {
+            "line": 13,
+            "col": 0,
+            "offset": 177
+          },
+          "end": {
+            "line": 15,
+            "col": 33,
+            "offset": 261
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 17,
+            "col": 0,
+            "offset": 263
+          },
+          "end": {
+            "line": 17,
+            "col": 33,
+            "offset": 296
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 19,
+            "col": 0,
+            "offset": 298
+          },
+          "end": {
+            "line": 19,
+            "col": 35,
+            "offset": 333
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 21,
+            "col": 0,
+            "offset": 335
+          },
+          "end": {
+            "line": 21,
+            "col": 33,
+            "offset": 368
+          }
+        }
+      },
+      {
+        "type": "paragraph",
+        "position": {
+          "start": {
+            "line": 23,
+            "col": 0,
+            "offset": 370
+          },
+          "end": {
+            "line": 23,
+            "col": 33,
+            "offset": 403
+          }
+        }
+      }
+    ],
+    "blocks": {
+      "hjhjhlka": {
+        "id": "hjhjhlka",
+        "position": {
+          "start": {
+            "line": 10,
+            "col": 0,
+            "offset": 128
+          },
+          "end": {
+            "line": 11,
+            "col": 22,
+            "offset": 175
+          }
+        }
+      },
+      "tmi3ktjd": {
+        "id": "tmi3ktJd",
+        "position": {
+          "start": {
+            "line": 13,
+            "col": 0,
+            "offset": 177
+          },
+          "end": {
+            "line": 15,
+            "col": 33,
+            "offset": 261
+          }
+        }
+      }
+    },
+    "frontmatter": {
+      "tags": [
+        "review/book",
+        "review/note"
+      ]
+    },
+    "frontmatterLinks": [],
+    "v": 1,
+    "frontmatterPosition": {
+      "start": {
+        "line": 0,
+        "col": 0,
+        "offset": 0
+      },
+      "end": {
+        "line": 4,
+        "col": 3,
+        "offset": 50
+      }
+    }
+  }
+}

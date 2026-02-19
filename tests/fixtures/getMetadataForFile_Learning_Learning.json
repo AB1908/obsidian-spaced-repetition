@@ -1,0 +1,126 @@
+{
+  "method": "getMetadataForFile",
+  "capturedAt": "2026-02-17T08:06:18.899Z",
+  "capturedFrom": "Learning/Learning.md",
+  "input": "Learning/Learning.md",
+  "output": {
+    "headings": [
+      {
+        "heading": "Chapter 7 : Surely there is more to learning than that?",
+        "level": 1,
+        "position": {
+          "start": {
+            "line": 9,
+            "col": 0,
+            "offset": 224
+          },
+          "end": {
+            "line": 9,
+            "col": 57,
+            "offset": 281
+          }
+        }
+      },
+      {
+        "heading": "Follow the instructions",
+        "level": 2,
+        "position": {
+          "start": {
+            "line": 11,
+            "col": 0,
+            "offset": 283
+          },
+          "end": {
+            "line": 11,
+            "col": 26,
+            "offset": 309
+          }
+        }
+      }
+    ],
+    "sections": [
+      {
+        "type": "yaml",
+        "position": {
+          "start": {
+            "line": 0,
+            "col": 0,
+            "offset": 0
+          },
+          "end": {
+            "line": 7,
+            "col": 3,
+            "offset": 222
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 9,
+            "col": 0,
+            "offset": 224
+          },
+          "end": {
+            "line": 9,
+            "col": 57,
+            "offset": 281
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 11,
+            "col": 0,
+            "offset": 283
+          },
+          "end": {
+            "line": 11,
+            "col": 26,
+            "offset": 309
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 13,
+            "col": 0,
+            "offset": 311
+          },
+          "end": {
+            "line": 16,
+            "col": 2,
+            "offset": 464
+          }
+        }
+      }
+    ],
+    "frontmatter": {
+      "path": "Book Exports/Learning A Very Short Introduction by Mark Haselgrove.mrexpt",
+      "title": "Learning: A Very Short Introduction",
+      "author": null,
+      "lastExportedTimestamp": 1669301184303,
+      "lastExportedID": 13294,
+      "tags": "review/book"
+    },
+    "frontmatterLinks": [],
+    "v": 1,
+    "frontmatterPosition": {
+      "start": {
+        "line": 0,
+        "col": 0,
+        "offset": 0
+      },
+      "end": {
+        "line": 7,
+        "col": 3,
+        "offset": 222
+      }
+    }
+  }
+}

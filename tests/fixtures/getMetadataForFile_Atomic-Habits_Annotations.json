@@ -1,0 +1,641 @@
+{
+  "method": "getMetadataForFile",
+  "capturedAt": "2026-02-17T08:06:18.839Z",
+  "capturedFrom": "Atomic Habits/Annotations.md",
+  "input": "Atomic Habits/Annotations.md",
+  "output": {
+    "tags": [
+      {
+        "tag": "#meaningful",
+        "position": {
+          "start": {
+            "line": 213,
+            "col": 2,
+            "offset": 5962
+          },
+          "end": {
+            "line": 213,
+            "col": 13,
+            "offset": 5973
+          }
+        }
+      },
+      {
+        "tag": "#research",
+        "position": {
+          "start": {
+            "line": 256,
+            "col": 2,
+            "offset": 6992
+          },
+          "end": {
+            "line": 256,
+            "col": 11,
+            "offset": 7001
+          }
+        }
+      }
+    ],
+    "headings": [
+      {
+        "heading": "2: How Your Habits Shape Your Identity (and Vice Versa)",
+        "level": 1,
+        "position": {
+          "start": {
+            "line": 9,
+            "col": 0,
+            "offset": 294
+          },
+          "end": {
+            "line": 9,
+            "col": 57,
+            "offset": 351
+          }
+        }
+      },
+      {
+        "heading": "4",
+        "level": 1,
+        "position": {
+          "start": {
+            "line": 22,
+            "col": 0,
+            "offset": 519
+          },
+          "end": {
+            "line": 22,
+            "col": 3,
+            "offset": 522
+          }
+        }
+      },
+      {
+        "heading": "6",
+        "level": 1,
+        "position": {
+          "start": {
+            "line": 131,
+            "col": 0,
+            "offset": 3525
+          },
+          "end": {
+            "line": 131,
+            "col": 3,
+            "offset": 3528
+          }
+        }
+      }
+    ],
+    "sections": [
+      {
+        "type": "yaml",
+        "position": {
+          "start": {
+            "line": 0,
+            "col": 0,
+            "offset": 0
+          },
+          "end": {
+            "line": 8,
+            "col": 3,
+            "offset": 293
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 9,
+            "col": 0,
+            "offset": 294
+          },
+          "end": {
+            "line": 9,
+            "col": 57,
+            "offset": 351
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 11,
+            "col": 0,
+            "offset": 353
+          },
+          "end": {
+            "line": 20,
+            "col": 4,
+            "offset": 517
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 22,
+            "col": 0,
+            "offset": 519
+          },
+          "end": {
+            "line": 22,
+            "col": 3,
+            "offset": 522
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 24,
+            "col": 0,
+            "offset": 524
+          },
+          "end": {
+            "line": 33,
+            "col": 4,
+            "offset": 750
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 35,
+            "col": 0,
+            "offset": 752
+          },
+          "end": {
+            "line": 44,
+            "col": 4,
+            "offset": 959
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 46,
+            "col": 0,
+            "offset": 961
+          },
+          "end": {
+            "line": 55,
+            "col": 4,
+            "offset": 1162
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 57,
+            "col": 0,
+            "offset": 1164
+          },
+          "end": {
+            "line": 66,
+            "col": 4,
+            "offset": 1524
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 68,
+            "col": 0,
+            "offset": 1526
+          },
+          "end": {
+            "line": 77,
+            "col": 4,
+            "offset": 1894
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 79,
+            "col": 0,
+            "offset": 1896
+          },
+          "end": {
+            "line": 87,
+            "col": 4,
+            "offset": 2138
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 89,
+            "col": 0,
+            "offset": 2140
+          },
+          "end": {
+            "line": 97,
+            "col": 4,
+            "offset": 2430
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 99,
+            "col": 0,
+            "offset": 2432
+          },
+          "end": {
+            "line": 107,
+            "col": 4,
+            "offset": 2853
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 109,
+            "col": 0,
+            "offset": 2855
+          },
+          "end": {
+            "line": 118,
+            "col": 4,
+            "offset": 3153
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 120,
+            "col": 0,
+            "offset": 3155
+          },
+          "end": {
+            "line": 129,
+            "col": 4,
+            "offset": 3523
+          }
+        }
+      },
+      {
+        "type": "heading",
+        "position": {
+          "start": {
+            "line": 131,
+            "col": 0,
+            "offset": 3525
+          },
+          "end": {
+            "line": 131,
+            "col": 3,
+            "offset": 3528
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 133,
+            "col": 0,
+            "offset": 3530
+          },
+          "end": {
+            "line": 142,
+            "col": 4,
+            "offset": 3996
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 144,
+            "col": 0,
+            "offset": 3998
+          },
+          "end": {
+            "line": 153,
+            "col": 4,
+            "offset": 4342
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 155,
+            "col": 0,
+            "offset": 4344
+          },
+          "end": {
+            "line": 164,
+            "col": 4,
+            "offset": 4728
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 166,
+            "col": 0,
+            "offset": 4730
+          },
+          "end": {
+            "line": 175,
+            "col": 4,
+            "offset": 5292
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 177,
+            "col": 0,
+            "offset": 5294
+          },
+          "end": {
+            "line": 186,
+            "col": 4,
+            "offset": 5446
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 188,
+            "col": 0,
+            "offset": 5448
+          },
+          "end": {
+            "line": 197,
+            "col": 4,
+            "offset": 5619
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 199,
+            "col": 0,
+            "offset": 5621
+          },
+          "end": {
+            "line": 208,
+            "col": 4,
+            "offset": 5881
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 210,
+            "col": 0,
+            "offset": 5883
+          },
+          "end": {
+            "line": 219,
+            "col": 4,
+            "offset": 6078
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 221,
+            "col": 0,
+            "offset": 6080
+          },
+          "end": {
+            "line": 229,
+            "col": 4,
+            "offset": 6364
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 231,
+            "col": 0,
+            "offset": 6366
+          },
+          "end": {
+            "line": 240,
+            "col": 4,
+            "offset": 6531
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 242,
+            "col": 0,
+            "offset": 6533
+          },
+          "end": {
+            "line": 251,
+            "col": 4,
+            "offset": 6711
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 253,
+            "col": 0,
+            "offset": 6713
+          },
+          "end": {
+            "line": 262,
+            "col": 4,
+            "offset": 7105
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 264,
+            "col": 0,
+            "offset": 7107
+          },
+          "end": {
+            "line": 273,
+            "col": 4,
+            "offset": 7394
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 275,
+            "col": 0,
+            "offset": 7396
+          },
+          "end": {
+            "line": 284,
+            "col": 4,
+            "offset": 7622
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 286,
+            "col": 0,
+            "offset": 7624
+          },
+          "end": {
+            "line": 294,
+            "col": 4,
+            "offset": 7804
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 296,
+            "col": 0,
+            "offset": 7806
+          },
+          "end": {
+            "line": 304,
+            "col": 4,
+            "offset": 7991
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 306,
+            "col": 0,
+            "offset": 7993
+          },
+          "end": {
+            "line": 314,
+            "col": 4,
+            "offset": 8164
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 316,
+            "col": 0,
+            "offset": 8166
+          },
+          "end": {
+            "line": 325,
+            "col": 4,
+            "offset": 8509
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 327,
+            "col": 0,
+            "offset": 8511
+          },
+          "end": {
+            "line": 336,
+            "col": 4,
+            "offset": 8670
+          }
+        }
+      },
+      {
+        "type": "callout",
+        "position": {
+          "start": {
+            "line": 338,
+            "col": 0,
+            "offset": 8672
+          },
+          "end": {
+            "line": 347,
+            "col": 4,
+            "offset": 9006
+          }
+        }
+      }
+    ],
+    "frontmatter": {
+      "path": "Atomic Habits/Clear, James - Atomic habits_ an easy & proven way to build good habits & break bad ones (2018, Penguin Publishing Group_Avery) - libgen.li.mrexpt",
+      "title": "Atomic Habits",
+      "author": "",
+      "lastExportedTimestamp": 1767315314046,
+      "lastExportedID": 15566,
+      "tags": [
+        "review/book"
+      ]
+    },
+    "frontmatterLinks": [],
+    "v": 1,
+    "frontmatterPosition": {
+      "start": {
+        "line": 0,
+        "col": 0,
+        "offset": 0
+      },
+      "end": {
+        "line": 8,
+        "col": 3,
+        "offset": 293
+      }
+    }
+  }
+}

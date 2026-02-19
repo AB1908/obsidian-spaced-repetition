@@ -2,5 +2,5 @@
   "method": "getFileContents",
   "capturedAt": "2025-12-07T19:37:22.045Z",
   "input": "Untitled.md",
-  "output": "---\ntags: \n  - \"review/book\"\n  - \"review/note\"\n---\n\n# Chapter 3: Pulling the rabbit out of the hat\n\n## Relating study and test\n\nWhat is episodic memory?\nNO one knows ^tekXLAu8\n\nI have some other text here.\nThis has no block id.\nLet's see what happens. ^tWxSv_No"
+  "output": "---\ntags: \n  - \"review/dummy\"\n  - \"review/dummy\"\n---\n\n# Lorem Ipsum Heading 1\n\n## Placeholder Section 2\n\nLorem ipsum dolor sit amet, consectetur adipiscing elit.\ndummy-note-alpha ^tekXLAu8\n\nSed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\nUt enim ad minim veniam, quis nostrud exercitation ullamco laboris.\ndummy-note-bravo ^tWxSv_No"
 }

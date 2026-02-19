@@ -127,7 +127,7 @@ describe("getFlashcardById", () => {
         // TODO: Implement test logic
         expect(getFlashcardById("t0000008", "t0000010")).toMatchInlineSnapshot(`
             {
-              "answerText": "b",
+              "answerText": "Etiam porta sem malesuada magna mollis euismod.",
               "cardType": 2,
               "context": null,
               "delayBeforeReview": 0,
@@ -139,7 +139,7 @@ describe("getFlashcardById", () => {
               "interval": 1,
               "parentId": "tekXLAu8",
               "parsedCardId": "t0000003",
-              "questionText": "a",
+              "questionText": "Integer posuere erat a ante venenatis dapibus posuere velit aliquet.",
               "siblings": [],
             }
         `);
@@ -162,7 +162,7 @@ describe("getNextCard", () => {
     test("should get next card", () => {
         expect(getNextCard("t0000010")).toMatchInlineSnapshot(`
             Flashcard {
-              "answerText": "homie",
+              "answerText": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
               "cardType": 2,
               "context": null,
               "dueDate": "2024-10-16",
@@ -173,7 +173,7 @@ describe("getNextCard", () => {
               "interval": 4,
               "parentId": "tekXLAu8",
               "parsedCardId": "t0000000",
-              "questionText": "ryder",
+              "questionText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
               "siblings": [],
             }
         `);
@@ -211,7 +211,7 @@ describe("getCurrentCard", () => {
     test("should get current card", () => {
         expect(getCurrentCard("t0000010")).toMatchInlineSnapshot(`
             Flashcard {
-              "answerText": "homie",
+              "answerText": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
               "cardType": 2,
               "context": null,
               "dueDate": "2024-10-16",
@@ -222,7 +222,7 @@ describe("getCurrentCard", () => {
               "interval": 4,
               "parentId": "tekXLAu8",
               "parsedCardId": "t0000000",
-              "questionText": "ryder",
+              "questionText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
               "siblings": [],
             }
         `);
@@ -374,7 +374,7 @@ describe("getFlashcardsForAnnotation", () => {
         expect(getFlashcardsForAnnotation("tWxSv_No", "t0000010")).toMatchInlineSnapshot(`
             [
               Flashcard {
-                "answerText": "fixture answer",
+                "answerText": "Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
                 "cardType": 2,
                 "context": null,
                 "dueDate": null,
@@ -385,7 +385,7 @@ describe("getFlashcardsForAnnotation", () => {
                 "interval": null,
                 "parentId": "tWxSv_No",
                 "parsedCardId": "t0000004",
-                "questionText": "this is a fixture question",
+                "questionText": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
                 "siblings": [],
               },
             ]
@@ -515,6 +515,59 @@ describe("getSourcesAvailableForDeckCreation", () => {
 
     test("deprecated alias getNotesWithoutReview returns the same results", () => {
         expect(getNotesWithoutReview()).toEqual(getSourcesAvailableForDeckCreation());
+    });
+
+    test("DEBT-021 contract: source labels and listing shape are explicit", () => {
+        const contract = getSourcesAvailableForDeckCreation().map((source) => ({
+            id: source.id,
+            name: source.name,
+            sourceType: source.sourceType,
+            requiresSourceMutationConfirmation: source.requiresSourceMutationConfirmation,
+            tags: source.tags,
+        }));
+
+        expect(contract).toMatchInlineSnapshot(`
+            [
+              {
+                "id": "t0000011",
+                "name": "constitution",
+                "requiresSourceMutationConfirmation": true,
+                "sourceType": "direct-markdown",
+                "tags": [
+                  "clippings",
+                ],
+              },
+            ]
+        `);
+    });
+});
+
+describe("DEBT-021 contract snapshots", () => {
+    beforeEach(async () => {
+        await newFunction();
+    });
+
+    test("navigable section strategy for review source remains stable", () => {
+        const contract = getBookChapters("t0000010").map((chapter) => ({
+            id: chapter.id,
+            name: chapter.name,
+            level: chapter.level,
+            counts: chapter.counts,
+        }));
+
+        expect(contract).toMatchInlineSnapshot(`
+            [
+              {
+                "counts": {
+                  "with": 2,
+                  "without": 0,
+                },
+                "id": "t0000012",
+                "level": 1,
+                "name": "Chapter 3: Pulling the rabbit out of the hat",
+              },
+            ]
+        `);
     });
 });
 // createFlashcardNoteForAnnotationsNote

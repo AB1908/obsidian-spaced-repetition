@@ -1,0 +1,7 @@
+{
+  "method": "getFileContents",
+  "capturedAt": "2026-02-17T08:06:18.890Z",
+  "capturedFrom": "Learning/Learning.md",
+  "input": "Learning/Learning.md",
+  "output": "---\npath: \"Dummy/Placeholder-Source.mrexpt\"\ntitle: \"Dummy title 2\"\nauthor: \nlastExportedTimestamp: 1669301184303\nlastExportedID: 13294\ntags: \"review/dummy\"\n---\n\n# Lorem Ipsum Heading 1\n\n## Placeholder Section 2\n\n> [!notes] 13277\n> Lorem ipsum dolor sit amet, consectetur adipiscing elit.\n> ***\n> Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.\n\n"
+}

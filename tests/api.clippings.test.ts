@@ -48,6 +48,30 @@ describe("clippings deck creation flow [STORY-013]", () => {
         `);
     });
 
+    test("DEBT-021 contract: clipping source label and mutation contract are explicit", () => {
+        const contract = getSourcesAvailableForDeckCreation().map((source) => ({
+            id: source.id,
+            name: source.name,
+            sourceType: source.sourceType,
+            requiresSourceMutationConfirmation: source.requiresSourceMutationConfirmation,
+            tags: source.tags,
+        }));
+
+        expect(contract).toMatchInlineSnapshot(`
+            [
+              {
+                "id": "t0000000",
+                "name": "constitution",
+                "requiresSourceMutationConfirmation": true,
+                "sourceType": "direct-markdown",
+                "tags": [
+                  "clippings",
+                ],
+              },
+            ]
+        `);
+    });
+
     test("createFlashcardNoteForAnnotationsNote blocks clipping source when confirmation is missing", async () => {
         const bookId = getSourcesAvailableForDeckCreation()[0].id;
         await expect(createFlashcardNoteForAnnotationsNote(bookId))
