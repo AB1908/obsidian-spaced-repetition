@@ -1,11 +1,10 @@
-import type { CachedMetadata, HeadingCache, SectionCache } from "obsidian";
 import { nanoid } from "nanoid";
 import {
     createFlashcardsFileForBook, generateFlashcardsFileNameAndPath, getFileContents,
     getMetadataForFile,
     updateCardOnDisk, getTFileForPath, updateFrontmatter
 } from "src/infrastructure/disk";
-import { type annotation, parseAnnotations } from "src/data/models/annotations";
+import { type annotation } from "src/data/models/annotations";
 import { Flashcard, FlashcardNote, schedulingMetadataForResponse, maturityCounts } from "src/data/models/flashcard";
 import type { ParsedCard } from "src/data/models/parsedCard";
 import { generateCardAsStorageFormat, metadataTextGenerator, SchedulingMetadata } from "src/data/utils/TextGenerator";
@@ -15,8 +14,7 @@ import { CardType } from "src/types/CardType";
 import {parseMetadata} from "src/data/parser";
 import { AnnotationsNoteDependencies } from "src/data/utils/dependencies";
 import { generateMarkdownWithHeaders } from "src/data/utils/annotationGenerator";
-import { generateFingerprint, hasContentDrifted } from "src/data/utils/fingerprint";
-import { extractParagraphFromSection } from "src/data/utils/sectionExtractor";
+import { hasContentDrifted } from "src/data/utils/fingerprint";
 import { getSourceType, selectEligibleSourcePaths } from "src/data/source-discovery";
 import { ISourceStrategy } from "./ISourceStrategy";
 import { MarkdownSourceStrategy } from "./strategies/MarkdownSourceStrategy";
@@ -25,12 +23,42 @@ import {
     SourceCapabilities,
     getSourceCapabilities as buildSourceCapabilities,
 } from "./sourceCapabilities";
+import {
+    type BookMetadataSection,
+    type BookMetadataSections,
+    type Count,
+    Heading,
+    type RawBookSection,
+} from "./sections/types";
+import {
+    isAnnotation,
+    isAnnotationOrParagraph,
+    isChapter,
+    isHeading,
+    isParagraph,
+} from "./sections/guards";
+import {
+    findNextHeader,
+    findPreviousHeaderForHeading,
+    findPreviousHeaderForSection,
+    generateHeaderCounts,
+    updateHeaders,
+} from "./sections/heading-graph";
+import { bookSections } from "./sections/book-sections";
 
 
 export const ANNOTATIONS_YAML_KEY = "annotations";
-export type RawBookSection = (SectionCache | HeadingCache);
-export type BookMetadataSection = Heading | annotation | paragraph;
-export type BookMetadataSections = BookMetadataSection[];
+export type { RawBookSection, BookMetadataSection, BookMetadataSections, Count } from "./sections/types";
+export { Heading } from "./sections/types";
+export { isAnnotation, isAnnotationOrParagraph, isChapter, isHeading, isParagraph } from "./sections/guards";
+export {
+    findNextHeader,
+    findPreviousHeaderForHeading,
+    findPreviousHeaderForSection,
+    generateHeaderCounts,
+    updateHeaders,
+} from "./sections/heading-graph";
+export { bookSections } from "./sections/book-sections";
 
 export interface BookFrontmatter {
     id: string; // The ID of the AnnotationsNote object (nanoid generated)
@@ -51,31 +79,6 @@ export interface book {
     counts: Count;
 }
 
-export interface Count {
-    with: number;
-    without: number;
-}
-
-export function isHeading(section: BookMetadataSection): section is Heading {
-    return section.type === 'heading';
-}
-
-export function isChapter(section: BookMetadataSection): section is Heading {
-    return section.type === 'heading' && section.level === 1;
-}
-
-export function isAnnotation(section: BookMetadataSection): section is annotation {
-    return section.type === 'annotation';
-}
-
-export function isParagraph(section: BookMetadataSection): section is paragraph {
-    return section.type === 'paragraph';
-}
-
-export function isAnnotationOrParagraph(section: BookMetadataSection): section is (annotation|paragraph) {
-    return section.type === 'annotation' || section.type === 'paragraph';
-}
-
 function transform(p: paragraph|annotation): annotation {
     if (isAnnotation(p)) {
         return p;
@@ -89,164 +92,6 @@ function transform(p: paragraph|annotation): annotation {
             hasFlashcards: p.hasFlashcards
         };
     }
-}
-
-// todo: should this be part of the Book class??
-export function bookSections(metadata: CachedMetadata | null | undefined, fileText: string, flashcards: Flashcard[], plugin: AnnotationsNoteDependencies) {
-    if (metadata == null) throw new Error("bookSections: metadata cannot be null/undefined");
-    let output: BookMetadataSections = [];
-    let headingIndex = 0;
-    const fileTextArray = fileText.split("\n");
-    const blocksWithFlashcards = new Set(flashcards.map(t => t.parentId));
-    if (metadata.sections == null) throw new Error("bookSections: file has no sections");
-    for (const cacheItem of metadata.sections) {
-        // todo: consider parameterizing this
-        if (cacheItem.type === "callout") {
-            try {
-                const annotation = parseAnnotations(fileTextArray.slice(cacheItem.position.start.line, cacheItem.position.end.line + 1).join("\n"));
-                // todo: I think I've fucked up the ordering for assignment with spread
-                let item = { ...annotation, hasFlashcards: blocksWithFlashcards.has(annotation.id) };
-                output.push(item);
-                plugin.index.addToAnnotationIndex(item);
-            } catch (e) {
-                console.warn(`bookSections: skipping non-annotation callout at line ${cacheItem.position.start.line}: ${e.message}`);
-            }
-        } else if (cacheItem.type === "heading") {
-            const headings = metadata?.headings;
-            // todo: again, this is another case of an interesting type problem like in paragraphs.ts
-            // todo: figure out a way to remove this error handling logic
-            if (headings === undefined) throw new Error("bookSections: no headings in file");
-            output.push(new Heading(headings[headingIndex]));
-            headingIndex++;
-        } else if (cacheItem.type == "paragraph") {
-                const extracted = extractParagraphFromSection(cacheItem, fileTextArray);
-                const paragraph = {
-                    type: 'paragraph' as const,
-                    ...extracted,
-                    fingerprint: generateFingerprint(extracted.text),
-                }
-            let item = {
-                ...paragraph,
-                hasFlashcards: blocksWithFlashcards.has(paragraph.id),
-            };
-            plugin.index.addToAnnotationIndex(item);
-            output.push(item)
-            // TODO: Any edge cases?
-        }
-    }
-    // todo: use method chaining instead?
-    output = generateHeaderCounts(output);
-    return output;
-}
-
-export class Heading {
-    readonly type = 'heading' as const;
-    id: string;
-    level: number;
-    name: string;
-    children: Heading[];
-    counts: Count;
-
-    constructor(heading: HeadingCache) {
-        // might be too clever
-        ({ heading: this.name, level: this.level } = heading);
-        this.id = nanoid(8);
-        this.children = [];
-        this.counts = { with: 0, without: 0 };
-    }
-
-}
-
-export function findPreviousHeaderForSection(section: annotation|paragraph, sections: (RawBookSection|BookMetadataSection)[]) {
-    let index = sections.indexOf(section);
-    while (index >= 0) {
-        const currentSection: (RawBookSection|BookMetadataSection) = sections[index];
-        if (section == currentSection) {
-            // we are on the same item lol
-            // decrement and continue
-            index--;
-            continue;
-        }
-        if ("level" in currentSection)
-            return index;
-        index--;
-    }
-    return -1;
-}
-
-export function findPreviousHeaderForHeading(section: Heading, sections: (RawBookSection|BookMetadataSection)[]) {
-    let index = sections.indexOf(section);
-    const sectionIsHeading = "level" in section;
-    // top level headers don't have a parent
-    if (sectionIsHeading && section.level == 1) return -1;
-    while (index >= 0) {
-        const currentSection: (RawBookSection|BookMetadataSection) = sections[index];
-        if (section == currentSection) {
-            index--;
-            continue;
-        }
-        if ("level" in currentSection) {
-            if (sectionIsHeading && currentSection.level == section.level) {
-                index--;
-                continue;
-            }
-            if (sectionIsHeading && currentSection.level + 1 == section.level)
-                return index;
-            else if (!sectionIsHeading)
-                return index;
-        }
-        index--;
-    }
-    return -1;
-}
-
-export function findNextHeader(section: RawBookSection | BookMetadataSection, sections: Array<typeof section>) {
-    let index = sections.indexOf(section) + 1;
-    // top level headers don't have a parent
-    // TODO: consider changing this to -1 so we have a consistent return type
-    // if (('level' in section) && ((section as HeadingCache).level == 1)) return null;
-    while (index < sections.length) {
-        const currentSection = sections[index];
-        // if (section == sectionStart) {
-        //     // we are on the same item lol
-        //     // increment and continue
-        //     index++;
-        //     continue;
-        // }
-        if ("level" in currentSection) {
-            if (currentSection.level <= (section as HeadingCache).level) {
-                return index;
-            }
-        }
-        index++;
-    }
-    return -1;
-}
-
-export function updateHeaders(cacheItem: annotation | paragraph, sections: BookMetadataSections, key: keyof Count) {
-    const previousHeadingIndex = findPreviousHeaderForSection(cacheItem, sections);
-    let previousHeading = sections[previousHeadingIndex] as Heading;
-    while (previousHeading != null) {
-        previousHeading.counts[key]++;
-        previousHeading = sections[findPreviousHeaderForHeading(previousHeading, sections)] as Heading;
-    }
-}
-
-export function generateHeaderCounts(sections: BookMetadataSections) {
-    let i = 0;
-    const out = sections;
-    while (i < out.length) {
-        const cacheItem = out[i];
-        if (isHeading(cacheItem)) { /* empty */
-        } else {
-            if (cacheItem.hasFlashcards)
-                updateHeaders(cacheItem, out, "with");
-            else
-                updateHeaders(cacheItem, out, "without");
-        }
-        i++;
-    }
-    return out;
 }
 
 import { renderAnnotation } from "../utils/annotationGenerator";
