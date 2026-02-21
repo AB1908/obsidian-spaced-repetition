@@ -10,5 +10,5 @@ Obsidian's `[[file#^blockId]]` syntax works for paragraphs we add block IDs to d
 No strong user requirements currently. Worth revisiting when rethinking the domain model for non-book sources (see DEBT-011).
 
 ## Related
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md) — domain model rethink for clippings
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) — domain model rethink for clippings
 - [Guide: Obsidian API Notes](../guides/obsidian-api-notes.md) — block reference behavior documented

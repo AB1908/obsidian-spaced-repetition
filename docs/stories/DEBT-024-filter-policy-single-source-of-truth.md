@@ -27,5 +27,5 @@ Duplicated policy invites drift and makes verification harder. This already caus
 - `tests/routes_books_api.test.ts`
 
 ## Related
-- [BUG-001](BUG-001-navigation-ignores-filters.md)
+- [BUG-001](../archive/stories/BUG-001-navigation-ignores-filters.md)
 - ADR: [ADR-019](../decisions/ADR-019-navigation-filter-contract.md)

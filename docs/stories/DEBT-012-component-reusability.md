@@ -25,4 +25,4 @@ Several UI components reuse CSS classes and structural patterns in semantically 
 - [ ] Consider Obsidian modal for mutation confirmation
 
 ## Related
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md) — domain model drives component design
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) — domain model drives component design

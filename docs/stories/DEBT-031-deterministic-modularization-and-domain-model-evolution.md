@@ -54,7 +54,7 @@ This story formalizes that sequence:
 
 ## Plans
 - [Domain Model Realignment Plan (v2)](../plans/DEBT-031-domain-model-realignment.md) — current
-- [Deterministic Modularization + Domain Model Evolution Plan](../plans/DEBT-031-deterministic-modularization-and-domain-model-evolution-plan.md) — original Phase A plan
+- [Deterministic Modularization + Domain Model Evolution Plan](../archive/DEBT-031-deterministic-modularization-and-domain-model-evolution-plan.md) — original Phase A plan (archived)
 
 ## Architecture Decisions
 - [ADR-021: StudyNote Unified Content Type](../decisions/ADR-021-studynote-unified-content-type.md)
@@ -70,6 +70,6 @@ This story formalizes that sequence:
 ## Related
 - [DEBT-022](DEBT-022-api-module-decomposition-for-verifiability.md)
 - [DEBT-013](DEBT-013-source-polymorphism.md)
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md)
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md)
 - [DEBT-001](DEBT-001-inconsistent-data-models.md)
-- [DEBT-030](DEBT-030-complete-markdown-source-migration.md)
+- [DEBT-030](../archive/stories/DEBT-030-complete-markdown-source-migration.md)

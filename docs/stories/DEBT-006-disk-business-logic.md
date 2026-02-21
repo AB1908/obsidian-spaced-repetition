@@ -42,5 +42,5 @@ No functional overlap, but the naming makes `updateCardOnDisk` seem card-specifi
 - [ ] Extraction plan accounts for test impact
 
 ## Related
-- [DEBT-005](DEBT-005-source-discovery-policy-boundary.md) — established the principle that disk.ts should be infrastructure-only
+- [DEBT-005](../archive/stories/DEBT-005-source-discovery-policy-boundary.md) — established the principle that disk.ts should be infrastructure-only
 - [DEBT-007](DEBT-007-flashcard-persistence-pattern.md) — related refactor of the targeted-write pattern

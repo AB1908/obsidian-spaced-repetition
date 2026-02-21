@@ -1,4 +1,4 @@
-# STORY-015: Dedicated Test Vault for Fixture Consistency
+# STORY-018: Dedicated Test Vault for Fixture Consistency
 
 ## Status
 Backlog
@@ -18,5 +18,5 @@ Current fixture coverage has improved, but metadata and path-related fixture con
 
 ## Related
 - [DEBT-010](DEBT-010-capture-fixture-cycle.md)
-- [DEBT-026](DEBT-026-sanitize-fixture-content.md)
+- [DEBT-026](../archive/stories/DEBT-026-sanitize-fixture-content.md)
 - Guide: `docs/guides/capture-fixtures.md`

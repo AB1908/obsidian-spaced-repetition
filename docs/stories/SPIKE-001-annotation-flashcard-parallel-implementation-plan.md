@@ -4,17 +4,17 @@
 Ready
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Branch
 feat/markdown-source-strategy
 
 ## Depends on
-- [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md) — deck creation entrypoint and clipping mutation flow are in place
-- [STORY-010c](STORY-010c-drift-detection.md) — fingerprint/drift core exists
+- [STORY-013](../archive/stories/STORY-013-markdown-deck-creation-source-chooser.md) — deck creation entrypoint and clipping mutation flow are in place
+- [STORY-010c](../archive/stories/STORY-010c-drift-detection.md) — fingerprint/drift core exists
 
 ## Blocks
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md) — this plan is the execution strategy for resolving the clippings end-to-end break
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) — this plan is the execution strategy for resolving the clippings end-to-end break
 
 ## User Story
 As a user creating decks from markdown/clippings sources, I want to navigate source content and create flashcards reliably after deck creation, so that the flow is usable end-to-end.
@@ -198,8 +198,8 @@ Conflict note:
 - [ ] Parallel streams merged without file-level conflict churn.
 
 ## Related
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md)
-- [BUG-001](BUG-001-navigation-ignores-filters.md)
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md)
+- [BUG-001](../archive/stories/BUG-001-navigation-ignores-filters.md)
 - [DEBT-008](DEBT-008-notes-without-review-naming.md)
 - [DEBT-010](DEBT-010-capture-fixture-cycle.md)
 - [DEBT-012](DEBT-012-component-reusability.md)

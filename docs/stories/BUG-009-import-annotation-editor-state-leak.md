@@ -4,7 +4,7 @@
 Ready
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## User Story
 As a user processing annotations, when I move to the next annotation, the editor should load that annotation's state instead of retaining stale textbox/category state from the previous one.

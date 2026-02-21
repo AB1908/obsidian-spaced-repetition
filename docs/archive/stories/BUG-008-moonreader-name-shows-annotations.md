@@ -1,7 +1,7 @@
 # BUG-008: MoonReader Book Name Shows "Annotations" Instead of Book Title
 
 ## Status
-Ready
+Done
 
 ## Severity
 High
@@ -44,11 +44,14 @@ Make name derivation source-type-aware using existing infrastructure:
 This uses the MoonReader frontmatter title as the authoritative name for MoonReader sources, while clippings/markdown sources (which have no MoonReader frontmatter) keep the basename.
 
 ## Acceptance Criteria
-- [ ] MoonReader books show `frontmatter.title` as deck name (not "Annotations")
-- [ ] Clippings/markdown sources still show file basename
-- [ ] `updatePath()` uses same name derivation logic
-- [ ] Test coverage for both source types with correct names
-- [ ] Existing tests pass without changes
+- [x] MoonReader books show `frontmatter.title` as deck name (not "Annotations")
+- [x] Clippings/markdown sources still show file basename
+- [x] `updatePath()` uses same name derivation logic
+- [x] Test coverage for both source types with correct names
+- [x] Existing tests pass without changes
+
+## Session Notes
+- 2026-02-20: Status reconciled after audit. Fix is in `55c619d`; regression contract validated by `tests/bug008.source-naming.test.ts`.
 
 ## Key Files
 - `src/data/models/AnnotationsNote.ts:317` — primary fix (`this.name = ...`)

@@ -1,13 +1,19 @@
-# BUG-008: Source Name Strategy Regression (MoonReader vs Direct Markdown)
+# Archived (Duplicate): BUG-008 Source Name Strategy Regression (MoonReader vs Direct Markdown)
+
+This story was superseded by `docs/stories/BUG-008-moonreader-name-shows-annotations.md`.
+The implementation and TDD coverage live in:
+- `docs/plans/BUG-008-moonreader-name-regression.md`
+- `docs/plans/BUG-008-test-contract.md`
+- `tests/bug008.source-naming.test.ts`
 
 ## Status
-Ready
+Archived
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+`docs/stories/STORY-010-markdown-engagement.md`
 
 ## Depends on
-- [BUG-006](BUG-006-source-chooser-label-uses-folder-name.md)
+- `docs/stories/BUG-006-source-chooser-label-uses-folder-name.md`
 
 ## User Story
 As a user, I want source names to follow source-specific rules, so MoonReader books and direct-markdown notes both display meaningful labels.

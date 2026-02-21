@@ -7,7 +7,7 @@ In Progress
 chore/polish-usable-version-2026-02-17
 
 ## Plan
-See [DEBT-010-plan.md](DEBT-010-plan.md) for implementation details.
+See `docs/plans/DEBT-010-capture-fixture-cycle.md`.
 
 ## Description
 The project uses fixture-based mocking (`createDiskMockFromFixtures`) to test against Obsidian API outputs. Fixtures were originally generated using `captureProxy.ts` which wraps module exports and writes call data to JSON files via `fs`.
@@ -51,9 +51,9 @@ Low — current approach works. This becomes important when fixture creation is 
 - [2026-02-17](../sessions/2026-02-17-DEBT-010.md)
 
 ## Related
-- [BUG-003](BUG-003-filetags-string-tags-crash.md) — discovered via ad-hoc capture
-- [BUG-010](BUG-010-capture-proxy-getter-only-exports.md) — getter-only CJS exports bug found during implementation
-- [BUG-011](BUG-011-capture-proxy-non-configurable-exports.md) — non-configurable exports bug
-- [SPIKE-009](SPIKE-009-mcp-devtools-feedback-loop.md) — idea for automated error feedback
+- [BUG-003](../archive/stories/BUG-003-filetags-string-tags-crash.md) — discovered via ad-hoc capture
+- [BUG-010](../archive/stories/BUG-010-capture-proxy-getter-only-exports.md) — getter-only CJS exports bug found during implementation
+- [BUG-011](../archive/stories/BUG-011-capture-proxy-non-configurable-exports.md) — non-configurable exports bug
+- [SPIKE-009](../archive/stories/SPIKE-009-mcp-devtools-feedback-loop.md) — idea for automated error feedback
 - [DEBT-009](DEBT-009-clippings-test-approach.md) — testing approach evaluation
 - Guide: [docs/guides/capture-fixtures.md](../guides/capture-fixtures.md)

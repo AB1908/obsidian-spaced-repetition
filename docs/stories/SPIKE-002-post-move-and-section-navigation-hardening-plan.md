@@ -4,15 +4,15 @@
 Ready
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
 - [SPIKE-001](SPIKE-001-annotation-flashcard-parallel-implementation-plan.md) - active parallel execution lanes already in progress
 
 ## Blocks
 - [BUG-005](BUG-005-source-path-stale-after-file-move.md)
-- [BUG-006](BUG-006-source-chooser-label-uses-folder-name.md)
-- [BUG-007](BUG-007-section-list-flattens-heading-levels.md)
+- [BUG-006](../archive/stories/BUG-006-source-chooser-label-uses-folder-name.md)
+- [BUG-007](../archive/stories/BUG-007-section-list-flattens-heading-levels.md)
 
 ## User Story
 As a user working with markdown/clippings sources, I want source selection and navigation to stay correct after file moves and to present meaningful sections, so that deck creation and card authoring remain reliable.
@@ -60,6 +60,6 @@ Plan and sequence three follow-up issues found during manual validation:
 
 ## Related
 - [BUG-005](BUG-005-source-path-stale-after-file-move.md)
-- [BUG-006](BUG-006-source-chooser-label-uses-folder-name.md)
-- [BUG-007](BUG-007-section-list-flattens-heading-levels.md)
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md)
+- [BUG-006](../archive/stories/BUG-006-source-chooser-label-uses-folder-name.md)
+- [BUG-007](../archive/stories/BUG-007-section-list-flattens-heading-levels.md)
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md)

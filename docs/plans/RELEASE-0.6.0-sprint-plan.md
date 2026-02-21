@@ -24,7 +24,7 @@
 - [STORY-013](../stories/STORY-013-markdown-deck-creation-source-chooser.md) (source chooser flow baseline)
 
 ## New Stories Added for 0.6.0
-- [BUG-008](../stories/BUG-008-source-name-strategy-regression.md)
+- [BUG-008](../stories/BUG-008-moonreader-name-shows-annotations.md)
 - [BUG-009](../stories/BUG-009-import-annotation-editor-state-leak.md)
 - [STORY-015](../stories/STORY-015-annotation-processing-workspace-ux.md)
 - [STORY-016](../stories/STORY-016-customizable-annotation-categories.md)

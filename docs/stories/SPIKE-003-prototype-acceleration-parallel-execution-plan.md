@@ -7,10 +7,10 @@ Ready
 None
 
 ## Depends on
-- [DEBT-015](DEBT-015-dependabot-vulnerability-remediation.md) - security and dependency remediation scope
-- [STORY-014](STORY-014-pr-gated-release-automation.md) - PR-gated release automation target
-- [DEBT-016](DEBT-016-stale-documentation.md) - docs workflow correctness
-- [DEBT-017](DEBT-017-session-notes-location.md) - session log hygiene
+- [DEBT-015](../archive/stories/DEBT-015-dependabot-vulnerability-remediation.md) - security and dependency remediation scope
+- [STORY-014](../archive/stories/STORY-014-pr-gated-release-automation.md) - PR-gated release automation target
+- [DEBT-016](../archive/stories/DEBT-016-stale-documentation.md) - docs workflow correctness
+- [DEBT-017](../archive/stories/DEBT-017-session-notes-location.md) - session log hygiene
 
 ## User Story
 As a maintainer shipping a prototype under tight deadlines, I want a parallelized execution plan for security, dependencies, delivery workflow, and repo hygiene so that we can move faster without losing release safety.
@@ -277,11 +277,11 @@ Execution contract:
 - Maintainer note: local tag-push release support remains first-class for this project. If duplicate-publish race conditions ever become real, that likely means the project has scaled beyond "pet project" status — a good problem and something future me can reminisce about.
 
 ## Related
-- [DEBT-015](DEBT-015-dependabot-vulnerability-remediation.md)
-- [STORY-014](STORY-014-pr-gated-release-automation.md)
-- [DEBT-016](DEBT-016-stale-documentation.md)
-- [DEBT-017](DEBT-017-session-notes-location.md)
-- [DEBT-019](DEBT-019-wave-runner-automation.md)
-- [SPIKE-005](SPIKE-005-intent-contract-and-drift-loop.md)
+- [DEBT-015](../archive/stories/DEBT-015-dependabot-vulnerability-remediation.md)
+- [STORY-014](../archive/stories/STORY-014-pr-gated-release-automation.md)
+- [DEBT-016](../archive/stories/DEBT-016-stale-documentation.md)
+- [DEBT-017](../archive/stories/DEBT-017-session-notes-location.md)
+- [DEBT-019](../archive/stories/DEBT-019-wave-runner-automation.md)
+- [SPIKE-005](../archive/stories/SPIKE-005-intent-contract-and-drift-loop.md)
 - Guide: [release-playbook](../guides/release-playbook.md)
 - Guide: [github-execution-and-beta-release-workflow](../guides/github-execution-and-beta-release-workflow.md)

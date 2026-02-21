@@ -75,6 +75,15 @@ else
 fi
 
 # Check 3: Run tests (all branches)
+echo "→ Linting docs..." >&2
+if ! scripts/lint-docs.sh; then
+  echo "" >&2
+  echo "❌ ERROR: Docs lint failed. Fix docs taxonomy issues before committing." >&2
+  echo "To bypass (emergencies only): git commit --no-verify" >&2
+  exit 1
+fi
+echo "✓ Docs lint passed"
+
 echo "→ Running tests..." >&2
 if ! npm test --silent 2>&1; then
   echo "" >&2

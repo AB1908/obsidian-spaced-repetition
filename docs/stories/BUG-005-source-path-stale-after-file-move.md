@@ -4,10 +4,10 @@
 Ready
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md) - same clippings navigation surface
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) - same clippings navigation surface
 
 ## User Story
 As a user, I want deck/source navigation to keep working after moving source files or folders, so that my decks do not break when I reorganize notes.
@@ -31,5 +31,5 @@ This suggests index/model state keeps an old path after user-driven vault moves/
 - targeted tests in `tests/api.test.ts` and/or `tests/models/annotations.test.ts`
 
 ## Related
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md)
-- [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md)
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md)
+- [STORY-013](../archive/stories/STORY-013-markdown-deck-creation-source-chooser.md)

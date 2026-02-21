@@ -1,5 +1,7 @@
 # BUG-006 Implementation Plan: Move name derivation into domain model
 
+**Story:** `docs/stories/BUG-006-source-chooser-label-uses-folder-name.md`
+
 ## Problem
 
 `getParentOrFilename` in `disk.ts` bakes domain logic ("prefer parent folder name") into the infrastructure layer. The model should own name derivation. Additionally, `api.ts:347-348` directly mutates `book.path` and `book.name` — that state transition belongs in the domain model.

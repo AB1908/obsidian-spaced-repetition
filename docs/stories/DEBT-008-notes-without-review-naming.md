@@ -26,6 +26,6 @@ The function fetches sources via `annotationsNoteIndex.getSourcesWithoutFlashcar
 - [ ] Consider whether sourceType computation belongs here or in source-discovery module
 
 ## Related
-- [DEBT-005](DEBT-005-source-discovery-policy-boundary.md) — source discovery policy boundary
-- [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md) — introduced this function
+- [DEBT-005](../archive/stories/DEBT-005-source-discovery-policy-boundary.md) — source discovery policy boundary
+- [STORY-013](../archive/stories/STORY-013-markdown-deck-creation-source-chooser.md) — introduced this function
 - [DEBT-014](DEBT-014-source-listing-dto-typing.md) — follow-up for source-listing DTO naming/typing cleanup

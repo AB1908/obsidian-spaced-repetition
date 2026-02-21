@@ -1,5 +1,7 @@
 # Execution Contract (Manual v0)
 
+> **Note:** Will be superseded by `docs/guides/execution-runbook.md` when DEBT-033 ships. Kept for reference until then.
+
 ## Purpose
 Prevent execution drift by enforcing a deterministic sequence:
 tests contract first, then plan, then implementation, each with explicit human approval before commit and before moving to the next phase.

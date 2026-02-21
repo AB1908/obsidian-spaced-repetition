@@ -22,6 +22,6 @@ The `isParagraph()` / `isAnnotation()` type guards use duck-typing (`wasIdPresen
 
 ## Related
 - Tech debt item #4 from legacy `technical_debt.md`
-- [DEBT-004](DEBT-004-strategy-coupling.md) — section type handling duplication
+- [DEBT-004](../archive/stories/DEBT-004-strategy-coupling.md) — section type handling duplication
 - [STORY-012](STORY-012-drift-detection-ux.md) — drift traversal depends on isParagraph
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md) — parent plan for source model repair
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) — parent plan for source model repair

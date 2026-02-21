@@ -52,6 +52,6 @@ How to confirm the changes work end-to-end.
 
 ## Related
 
-- [DEBT-016](DEBT-016-stale-documentation.md) — stale docs cleanup
-- [DEBT-017](DEBT-017-session-notes-location.md) — session notes (similar separation concern)
+- [DEBT-016](../archive/stories/DEBT-016-stale-documentation.md) — stale docs cleanup
+- [DEBT-017](../archive/stories/DEBT-017-session-notes-location.md) — session notes (similar separation concern)
 - First plan already created: `docs/plans/DEBT-011-source-model-seam-repair.md`

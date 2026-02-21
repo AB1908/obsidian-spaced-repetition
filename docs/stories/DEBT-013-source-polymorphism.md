@@ -47,8 +47,8 @@ No strong recommendation yet. Needs tradeoff analysis with concrete examples fro
 [Source Model Seam Repair](../plans/DEBT-011-source-model-seam-repair.md) — PRs 2-4 address this story's concerns
 
 ## Related
-- [DEBT-011](DEBT-011-book-metaphor-clippings.md) — UI/route side of the book metaphor problem
+- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) — UI/route side of the book metaphor problem
 - [DEBT-001](DEBT-001-inconsistent-data-models.md) — discriminated union (PR 1 prerequisite)
 - [DEBT-006](DEBT-006-disk-business-logic.md) — disk.ts boundary (related extraction targets)
-- [BUG-004](BUG-004-block-id-format.md) — block ID generation, currently homeless in api.ts
-- [STORY-013](STORY-013-markdown-deck-creation-source-chooser.md) — introduced the markdown source path
+- [BUG-004](../archive/stories/BUG-004-block-id-format.md) — block ID generation, currently homeless in api.ts
+- [STORY-013](../archive/stories/STORY-013-markdown-deck-creation-source-chooser.md) — introduced the markdown source path
