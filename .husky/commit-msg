@@ -10,6 +10,7 @@ LINE_COUNT=$(echo "$MESSAGE" | wc -l)
 # Get subject line (first non-comment line)
 SUBJECT_LINE=$(echo "$MESSAGE" | head -n1)
 SUBJECT_LENGTH=${#SUBJECT_LINE}
+SHORTCODE_PATTERN='(\[)?(BUG|DEBT|STORY|SPIKE|IDEA)-[0-9]+[a-z]?(\])?'
 
 # Check conventional commit format (optional, just for info)
 CONVENTIONAL_PATTERN='^(feat|fix|docs|style|refactor|test|chore|perf|ci|build|revert)(\(.+\))?: .+'
@@ -46,6 +47,20 @@ if [ "$BRANCH" = "main" ]; then
     echo "" >&2
   fi
 
+  if echo "$SUBJECT_LINE" | grep -Eq "$SHORTCODE_PATTERN"; then
+    echo "" >&2
+    echo "❌ ERROR: Story short-codes are not allowed in commit subject lines" >&2
+    echo "" >&2
+    echo "Found in subject: $SUBJECT_LINE" >&2
+    echo "Use a clean WHAT-style subject; keep BUG/STORY/DEBT IDs in docs or commit body." >&2
+    echo "" >&2
+    echo "Example:" >&2
+    echo "  fix(nav): respect section boundary when finding next annotation" >&2
+    echo "" >&2
+    echo "To bypass (emergencies only): git commit --no-verify" >&2
+    exit 1
+  fi
+
   echo "✓ Commit message validated (main branch)"
 
 else
@@ -79,6 +94,17 @@ else
 
   if [ "$SUBJECT_LENGTH" -gt 72 ]; then
     echo "⚠️  INFO: Subject line is $SUBJECT_LENGTH chars (recommended: <72)" >&2
+  fi
+
+  if echo "$SUBJECT_LINE" | grep -Eq "$SHORTCODE_PATTERN"; then
+    echo "" >&2
+    echo "❌ ERROR: Story short-codes are not allowed in commit subject lines" >&2
+    echo "" >&2
+    echo "Found in subject: $SUBJECT_LINE" >&2
+    echo "Use a clean WHAT-style subject; keep BUG/STORY/DEBT IDs in docs or commit body." >&2
+    echo "" >&2
+    echo "To bypass (emergencies only): git commit --no-verify" >&2
+    exit 1
   fi
 
   echo "✓ Commit message accepted (feature branch)"

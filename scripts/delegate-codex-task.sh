@@ -12,8 +12,11 @@ Required:
 
 Options:
   --worktree <path>         Worktree path (default: .worktrees/<branch-with-dashes>)
-  --base <branch>           Base branch for new worktree branch (default: main)
+  --base <branch>           Base branch/ref for new worktree branch (default: current branch or main)
   --model <model>           Codex model override (optional)
+  --test-contract <path>    Test contract file to verify after delegated run (optional)
+  --log-file <path>         Capture full codex terminal transcript to this file (optional)
+  --semantic-log <path>     Write compact semantic execution log markdown (optional)
   --dry-run                 Print commands and generated prompt only
   --execute                 Run codex exec (non-interactive)
 
@@ -27,8 +30,12 @@ USAGE
 BRANCH=""
 SCOPE_FILE=""
 WORKTREE=""
-BASE_BRANCH="main"
+BASE_BRANCH=""
+BASE_EXPLICIT=0
 MODEL=""
+TEST_CONTRACT=""
+LOG_FILE=""
+SEMANTIC_LOG=""
 DRY_RUN=0
 EXECUTE=0
 
@@ -49,10 +56,23 @@ while [ $# -gt 0 ]; do
     --base)
       shift
       BASE_BRANCH="${1:-}"
+      BASE_EXPLICIT=1
       ;;
     --model)
       shift
       MODEL="${1:-}"
+      ;;
+    --test-contract)
+      shift
+      TEST_CONTRACT="${1:-}"
+      ;;
+    --log-file)
+      shift
+      LOG_FILE="${1:-}"
+      ;;
+    --semantic-log)
+      shift
+      SEMANTIC_LOG="${1:-}"
       ;;
     --dry-run)
       DRY_RUN=1
@@ -83,8 +103,20 @@ if [ ! -f "$SCOPE_FILE" ]; then
   exit 1
 fi
 
+if [ -n "$TEST_CONTRACT" ] && [ ! -f "$TEST_CONTRACT" ]; then
+  echo "Error: test contract file not found: $TEST_CONTRACT"
+  exit 1
+fi
+
 if [ -z "$WORKTREE" ]; then
   WORKTREE=".worktrees/${BRANCH//\//-}"
+fi
+
+if [ -z "$BASE_BRANCH" ]; then
+  BASE_BRANCH="$(git branch --show-current 2>/dev/null || true)"
+  if [ -z "$BASE_BRANCH" ]; then
+    BASE_BRANCH="main"
+  fi
 fi
 
 if [ "$EXECUTE" -eq 1 ] && [ "$DRY_RUN" -eq 1 ]; then
@@ -100,6 +132,7 @@ Execution contract:
 - Work only on branch: $BRANCH
 - Worktree path: $WORKTREE
 - Follow the scope document exactly: $SCOPE_FILE
+- Follow the test contract exactly: ${TEST_CONTRACT:-"(not provided)"}
 - Use strict TDD: make tests fail first, then implement, then verify green.
 - Run required verification commands listed in the scope document.
 - Commit only when acceptance criteria are met.
@@ -108,7 +141,49 @@ Execution contract:
 
 Scope document contents:
 $(cat "$SCOPE_FILE")
+
+$(if [ -n "$TEST_CONTRACT" ]; then
+    echo ""
+    echo "Test contract contents:"
+    cat "$TEST_CONTRACT"
+  fi)
 PROMPT
+
+require_path_in_ref() {
+  local ref="$1"
+  local path="$2"
+  local label="$3"
+  if ! git cat-file -e "${ref}:${path}" 2>/dev/null; then
+    echo "Error: ${label} '${path}' does not exist in ref '${ref}'."
+    echo "Hint: pass --base <branch-with-plan-files> or merge planning/tooling branch first."
+    exit 1
+  fi
+}
+
+target_ref_for_scope="$BASE_BRANCH"
+if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  target_ref_for_scope="$BRANCH"
+fi
+
+require_path_in_ref "$target_ref_for_scope" "$SCOPE_FILE" "scope file"
+if [ -n "$TEST_CONTRACT" ]; then
+  require_path_in_ref "$target_ref_for_scope" "$TEST_CONTRACT" "test contract file"
+fi
+
+# Ensure base branch is fresh before creating worktree
+if ! git show-ref --verify --quiet "refs/heads/$BRANCH"; then
+  echo "[delegate] Fetching origin/${BASE_BRANCH} to ensure worktree starts from latest..."
+  git fetch origin "$BASE_BRANCH" 2>/dev/null || true
+  if git show-ref --verify --quiet "refs/remotes/origin/$BASE_BRANCH"; then
+    local_sha="$(git rev-parse "$BASE_BRANCH" 2>/dev/null || echo "")"
+    remote_sha="$(git rev-parse "origin/$BASE_BRANCH" 2>/dev/null || echo "")"
+    if [ -n "$local_sha" ] && [ -n "$remote_sha" ] && [ "$local_sha" != "$remote_sha" ]; then
+      echo "[delegate] WARNING: local $BASE_BRANCH ($local_sha) differs from origin/$BASE_BRANCH ($remote_sha)"
+      echo "[delegate] Using origin/$BASE_BRANCH as base to avoid stale worktree."
+      BASE_BRANCH="origin/$BASE_BRANCH"
+    fi
+  fi
+fi
 
 if git show-ref --verify --quiet "refs/heads/$BRANCH"; then
   WORKTREE_CMD=(git worktree add "$WORKTREE" "$BRANCH")
@@ -124,6 +199,19 @@ CODEX_CMD+=("$(cat "$PROMPT_FILE")")
 
 echo "[delegate] branch: $BRANCH"
 echo "[delegate] worktree: $WORKTREE"
+echo "[delegate] base: $BASE_BRANCH"
+if [ "$BASE_EXPLICIT" -eq 0 ]; then
+  echo "[delegate] note: --base not provided, inferred from current branch."
+fi
+if [ -n "$TEST_CONTRACT" ]; then
+  echo "[delegate] test contract: $TEST_CONTRACT"
+fi
+if [ -n "$LOG_FILE" ]; then
+  echo "[delegate] log file: $LOG_FILE"
+fi
+if [ -n "$SEMANTIC_LOG" ]; then
+  echo "[delegate] semantic log: $SEMANTIC_LOG"
+fi
 
 if [ "$DRY_RUN" -eq 1 ]; then
   echo "[dry-run] worktree command: $(printf '%q ' "${WORKTREE_CMD[@]}")"
@@ -135,7 +223,62 @@ fi
 "${WORKTREE_CMD[@]}"
 
 if [ "$EXECUTE" -eq 1 ]; then
-  "${CODEX_CMD[@]}"
+  run_status="passed"
+  contract_status="skipped"
+
+  if [ -n "$LOG_FILE" ]; then
+    mkdir -p "$(dirname "$LOG_FILE")"
+    if command -v script >/dev/null 2>&1; then
+      CODEX_SHELL_CMD="$(printf '%q ' "${CODEX_CMD[@]}")"
+      if ! script -qefc "$CODEX_SHELL_CMD" "$LOG_FILE"; then
+        run_status="failed"
+      fi
+    else
+      if ! "${CODEX_CMD[@]}" 2>&1 | tee "$LOG_FILE"; then
+        run_status="failed"
+      fi
+    fi
+  else
+    if ! "${CODEX_CMD[@]}"; then
+      run_status="failed"
+    fi
+  fi
+
+  if [ "$run_status" = "passed" ] && [ -n "$TEST_CONTRACT" ]; then
+    if scripts/verify-test-contract.sh "$TEST_CONTRACT" --repo-root "$WORKTREE" --run-required-commands; then
+      contract_status="passed"
+    else
+      contract_status="failed"
+      run_status="failed"
+    fi
+  fi
+
+  if [ "$run_status" = "failed" ] && [ "$contract_status" = "skipped" ] && [ -n "$TEST_CONTRACT" ]; then
+    contract_status="not-run-due-to-run-failure"
+  fi
+
+  if [ -z "$SEMANTIC_LOG" ]; then
+    timestamp="$(date +%Y-%m-%d-%H%M%S)"
+    SEMANTIC_LOG="docs/executions/semantic/${timestamp}-${BRANCH//\//-}.md"
+  fi
+
+  if [ -x scripts/semantic-exec-log.sh ]; then
+    scripts/semantic-exec-log.sh \
+      --branch "$BRANCH" \
+      --worktree "$WORKTREE" \
+      --base "$BASE_BRANCH" \
+      --scope-file "$SCOPE_FILE" \
+      --status "$run_status" \
+      --contract-status "$contract_status" \
+      --test-contract "${TEST_CONTRACT:-}" \
+      --raw-log "${LOG_FILE:-}" \
+      --output "$SEMANTIC_LOG"
+  fi
+
+  if [ "$run_status" = "failed" ]; then
+    echo "[delegate] run failed"
+    exit 1
+  fi
 else
   echo "Prepared worktree. Re-run with --execute to launch Codex."
   echo "Prompt file: $PROMPT_FILE"
