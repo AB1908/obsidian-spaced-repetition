@@ -3,6 +3,7 @@ import React from "react";
 
 import type SRPlugin from "src/main";
 import { t } from "src/lang/helpers";
+import { CategoryConfig, DEFAULT_ANNOTATION_CATEGORIES } from "src/config/annotation-categories";
 
 export interface SRSettings {
     // flashcards
@@ -41,6 +42,7 @@ export interface SRSettings {
     maxLinkFactor: number;
     // logging
     showDebugMessages: boolean;
+    annotationCategories: CategoryConfig[];
 }
 
 export const DEFAULT_SETTINGS: SRSettings = {
@@ -79,7 +81,8 @@ export const DEFAULT_SETTINGS: SRSettings = {
     maximumInterval: 36525,
     maxLinkFactor: 1.0,
     // logging
-    showDebugMessages: false
+    showDebugMessages: false,
+    annotationCategories: [...DEFAULT_ANNOTATION_CATEGORIES],
 };
 
 // https://github.com/mgmeyers/obsidian-kanban/blob/main/src/Settings.ts

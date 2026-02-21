@@ -1,55 +1,55 @@
 import React, { useEffect, useRef } from "react";
 import { setIcon } from "src/infrastructure/obsidian-facade";
-import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
-import { Icon } from "src/types/obsidian-icons";
+import type { CategoryConfig } from "src/config/annotation-categories";
 
 interface CategoryFilterProps {
-    selectedCategory: number | null;
-    onCategorySelect: (category: number | null) => void;
+    categories: CategoryConfig[];
+    selectedCategory: string | null;
+    onCategorySelect: (category: string | null) => void;
 }
 
-export function CategoryFilter({ categories, selectedCategory, onCategorySelect }: Props) {
-    const iconRefs = ANNOTATION_CATEGORY_ICONS.map(() => useRef<HTMLDivElement>(null));
-    // const clearFilterRef = useRef<HTMLDivElement>(null); // No longer needed
+export function CategoryFilter({
+    categories,
+    selectedCategory,
+    onCategorySelect,
+}: CategoryFilterProps) {
+    const iconRefs = useRef<Array<HTMLDivElement | null>>([]);
 
     useEffect(() => {
-        ANNOTATION_CATEGORY_ICONS.forEach((iconName, i) => {
-            if (iconRefs[i].current) {
-                setIcon(iconRefs[i].current, iconName);
+        categories.forEach((category, i) => {
+            const iconRef = iconRefs.current[i];
+            if (iconRef) {
+                setIcon(iconRef, category.icon);
             }
         });
-        // if (clearFilterRef.current) { // No longer needed
-        //     setIcon(clearFilterRef.current, "circle-slash"); // Icon for clearing the filter
-        // }
-    }, []);
+    }, [categories]);
 
-    const handleCategoryClick = (categoryIndex: number) => {
-        if (selectedCategory === categoryIndex) {
+    const handleCategoryClick = (categoryName: string) => {
+        if (selectedCategory === categoryName) {
             onCategorySelect(null);
         } else {
-            onCategorySelect(categoryIndex);
+            onCategorySelect(categoryName);
         }
     };
 
     return (
         <div className="sr-category-buttons" style={{ display: "flex", gap: "0.5rem" }}>
-            {ANNOTATION_CATEGORY_ICONS.map((_, i) => (
+            {categories.map((category, i) => (
                 <div
-                    key={i}
-                    className={`sr-category-button is-clickable ${selectedCategory === i ? "is-active" : ""}`}
-                    onClick={() => handleCategoryClick(i)}
+                    key={category.name}
+                    className={`sr-category-button is-clickable ${selectedCategory === category.name ? "is-active" : ""}`}
+                    onClick={() => handleCategoryClick(category.name)}
                     style={{
                         padding: "8px",
                         border: "1px solid",
-                        borderColor: selectedCategory === i ? "var(--interactive-accent)" : "var(--background-modifier-border)",
+                        borderColor: selectedCategory === category.name ? "var(--interactive-accent)" : "var(--background-modifier-border)",
                         borderRadius: "4px",
-                        backgroundColor: selectedCategory === i ? "var(--background-modifier-hover)" : "transparent"
+                        backgroundColor: selectedCategory === category.name ? "var(--background-modifier-hover)" : "transparent"
                     }}
                 >
-                    <div ref={iconRefs[i]} />
+                    <div ref={(element) => { iconRefs.current[i] = element; }} />
                 </div>
             ))}
-            {/* The clear category button is removed as per the new toggle behavior */}
         </div>
     );
 }

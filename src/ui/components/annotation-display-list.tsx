@@ -4,11 +4,12 @@ import { annotation, SectionAnnotations } from "src/data/models/annotations";
 import { getFilteredAnnotations } from "src/utils/annotation-filters";
 import { integerToRGBA } from "src/utils/utils";
 import { CategoryFilter } from "src/ui/components/category-filter";
-import { ANNOTATION_CATEGORY_ICONS } from "src/config/annotation-categories";
+import { resolveAnnotationCategories } from "src/config/annotation-categories";
 import {
     AnnotationListViewPolicy,
     AnnotationMainFilter,
 } from "src/data/models/sourceCapabilities";
+import { getPluginContext } from "src/application/plugin-context";
 
 interface AnnotationListItemProps {
     annotation: annotation;
@@ -84,7 +85,9 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
         viewPolicy,
     } = props;
     const effectiveFilter = viewPolicy.enforcedMainFilter ?? filter;
-    const [activeCategoryFilter, setActiveCategoryFilter] = useState<number | null>(null);
+    const [activeCategoryFilter, setActiveCategoryFilter] = useState<string | null>(null);
+    const plugin = getPluginContext() as any;
+    const categories = resolveAnnotationCategories(plugin?.data?.settings?.annotationCategories);
 
     // todo: why do we use useMemo here? Seems unnecessary especially when we have a direct API and things are all local.
     // we don't need to cache anything, so consider removing
@@ -159,6 +162,7 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
                 <div style={{ marginBottom: '1rem' }}>
                     {viewPolicy.showCategoryFilter && effectiveFilter === 'processed' && (
                         <CategoryFilter
+                            categories={categories}
                             selectedCategory={activeCategoryFilter}
                             onCategorySelect={setActiveCategoryFilter}
                         />

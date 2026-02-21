@@ -8,13 +8,13 @@ interface Annotation {
     highlight: string;
     note: string;
     personalNote?: string;
-    category?: number | null;
+    category?: string | null;
     originalColor?: number;
 }
 
 export function useAnnotationEditor(initialAnnotation: Annotation, bookId: string) {
     const [personalNote, setPersonalNote] = useState(initialAnnotation.personalNote || "");
-    const [selectedCategory, setSelectedCategory] = useState<number | null>(
+    const [selectedCategory, setSelectedCategory] = useState<string | null>(
         initialAnnotation.category !== undefined ? initialAnnotation.category : null
     );
     const navigate = useNavigate();
@@ -26,8 +26,8 @@ export function useAnnotationEditor(initialAnnotation: Annotation, bookId: strin
         return null;
     }, [initialAnnotation.originalColor]);
 
-    const handleCategoryClick = (index: number) => {
-        setSelectedCategory(selectedCategory === index ? null : index);
+    const handleCategoryClick = (categoryName: string) => {
+        setSelectedCategory(selectedCategory === categoryName ? null : categoryName);
     };
 
     const save = async () => {
