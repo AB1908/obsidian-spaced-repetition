@@ -4,11 +4,11 @@
 Proposed
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
 - [BUG-009](BUG-009-import-annotation-editor-state-leak.md)
-- [BUG-001](BUG-001-navigation-ignores-filters.md)
+- [BUG-001](../archive/stories/BUG-001-navigation-ignores-filters.md)
 
 ## User Story
 As a user, I want one coherent processing workspace showing progress and current context, so I can process annotations quickly without toggling disjoint controls.

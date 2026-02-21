@@ -1,4 +1,4 @@
-# STORY-016: Remove Processed/Unprocessed Filter from Flashcard Creation Flow
+# STORY-019: Remove Processed/Unprocessed Filter from Flashcard Creation Flow
 
 ## Status
 Done

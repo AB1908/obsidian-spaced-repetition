@@ -4,7 +4,7 @@
 Backlog
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Branch
 TBD
@@ -45,6 +45,6 @@ Current placement in `AnnotationsNote.initialize()` is pragmatic for upfront det
 - [ ] "Re-anchor" or "Update fingerprint" action
 
 ## Related
-- [STORY-010c](STORY-010c-drift-detection.md) — drift detection implementation
+- [STORY-010c](../archive/stories/STORY-010c-drift-detection.md) — drift detection implementation
 - [DEBT-001](DEBT-001-inconsistent-data-models.md) — union type issues affect drift traversal
 - ADR: [ADR-020](../decisions/ADR-020-markdown-source-strategy.md)

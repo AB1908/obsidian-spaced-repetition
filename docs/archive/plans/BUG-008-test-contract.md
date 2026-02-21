@@ -1,6 +1,6 @@
 # Test Contract: BUG-008 Source Naming Policy
 
-**Story:** `docs/stories/BUG-008-source-name-strategy-regression.md`  
+**Story:** `docs/stories/BUG-008-moonreader-name-shows-annotations.md`  
 **Implementation Plan:** `docs/plans/BUG-008-moonreader-name-regression.md`  
 **Style:** TDD-first
 

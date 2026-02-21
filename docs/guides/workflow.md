@@ -5,24 +5,14 @@
 **Commits tell WHAT changed. Documentation tells WHY.**
 
 - Keep commit messages concise (1-2 lines)
+- Do not include story short-codes in commit subjects (`BUG-###`, `STORY-###`, `DEBT-###`, etc.)
 - Put context, decisions, and rationale in markdown files
 - Markdown is searchable, linkable, and easier to read than git history
 - Future you (and contributors) will search docs, not git log
 
 ## Project Structure
-```
-project-root/
-├── docs/
-│   ├── decisions/          # Architecture Decision Records (ADRs)
-│   ├── architecture/       # System design docs
-│   ├── stories/           # ALL work items: features, bugs, debt, ideas
-│   ├── executions/        # Run-time execution logs: topology, approvals, integration
-│   ├── guides/            # Reference material: testing, workflow, learnings
-│   └── archive/           # Completed or stale context
-├── CHANGELOG.md           # User-facing changes
-├── DEVELOPMENT.md         # Developer guide
-└── README.md             # Project overview
-```
+
+See [Work Organization Guide](work-organization.md) for full directory layout, story conventions, and templates.
 
 ## Daily Workflow
 
@@ -58,7 +48,7 @@ See docs/decisions/ADR-XXX-navigation-routing.md
 EOF
 
 git add docs/stories/
-git commit -m "docs: start navigation system work [STORY-015]"
+git commit -m "docs: start navigation system work"
 ```
 
 ### 2. Working on the Feature
@@ -181,7 +171,7 @@ EOF
 
 # Commit documentation updates
 git add docs/ CHANGELOG.md
-git commit -m "docs: finalize navigation system [STORY-015]"
+git commit -m "docs: finalize navigation system"
 ```
 
 ### 4.1 Pre-Merge Discipline Checklist (Manual Gate)
@@ -214,6 +204,10 @@ Automation:
 Important:
 - Git hooks cannot fully gate fast-forward merges unless you use a wrapper command.
 - Use `scripts/safe-merge.sh` as the default local merge entrypoint.
+
+Delegated execution note:
+- For delegated worktree runs, pass `--base` explicitly.
+- Keep `docs/executions/raw/` as forensic logs and prefer `docs/executions/semantic/` for reviewable summaries.
 
 ### 5. Merge to Main
 
@@ -251,7 +245,7 @@ Use this when you want to preserve the branch boundary and group related commits
 
 ```bash
 git checkout main
-git merge feature/navigation-system --no-ff -m "feat: add navigation system [STORY-015]
+git merge feature/navigation-system --no-ff -m "feat: add navigation system
 
 Implements direction-aware navigation for annotations.
 See CHANGELOG.md and docs/stories/STORY-015-navigation-system.md for details."
@@ -295,111 +289,4 @@ git push --force-with-lease origin main
 
 ## Documentation Templates
 
-See [Work Organization Guide](work-organization.md) for Story, Bug, Debt, and Idea templates.
-
-### Architecture Decision Record (ADR)
-
-**Template:** `docs/decisions/ADR-NNN-title.md`
-```markdown
-# ADR-NNN: [Title]
-
-## Status
-[Proposed | Accepted | Deprecated | Superseded]
-
-## Context
-What is the issue we're trying to solve? What constraints do we have?
-
-## Decision
-What did we decide to do?
-
-## Consequences
-
-**Positive:**
-- Benefit 1
-- Benefit 2
-
-**Negative:**
-- Drawback 1
-- Drawback 2
-
-**Neutral:**
-- Trade-off 1
-
-## Alternatives Considered
-- Option A - rejected because X
-- Option B - rejected because Y
-
-## References
-- Related ADRs: ADR-XXX
-- Issues: #42, #56
-- External resources: [links]
-
-## Implementation Notes
-Brief technical details if helpful
-
-## Review Date
-[Optional: when to reconsider this decision]
-```
-
-## When to Document What
-
-| Event | Document Where | Commit Message |
-|-------|---------------|----------------|
-| Start feature | `docs/stories/STORY-N.md` | `docs: start [feature] [STORY-N]` |
-| Make decision | `docs/decisions/ADR-XXX.md` | `docs: document [decision] [STORY-N]` |
-| Complete feature | Update `docs/stories/STORY-N.md` | `docs: finalize [feature] [STORY-N]` |
-| Find tech debt | `docs/stories/DEBT-N.md` | Include in feature commit |
-| User-facing change | `CHANGELOG.md` | Include before merge |
-| Durable knowledge | `docs/guides/topic.md` | `docs: update [topic] guide` |
-
----
-
-## Advanced Workflow: Parallel Development with `ccmanager`
-
-For complex projects, it's often necessary to work on multiple features in parallel. To prevent interference between these tasks, we use a "Dual-Level" workflow facilitated by `ccmanager`, which manages separate `git worktree` environments for each task.
-
-### The "Dual-Level" Concept
-
-1.  **Level 1: The "Project Director" Session**
-    *   **Location:** The project's root directory.
-    *   **Purpose:** High-level strategic planning. This is where you analyze requirements, review user stories, define task boundaries, and manage the lifecycle of implementation workspaces.
-    *   **Tools:** A `gemini` session for planning, and `ccm` commands for workspace management.
-
-2.  **Level 2: The "Feature Implementer" Session**
-    *   **Location:** Inside a dedicated, isolated worktree directory (e.g., `.worktrees/<feature-name>`).
-    *   **Purpose:** Deep, focused work on a single feature. This includes writing code, running tests, and committing changes to the feature branch.
-    *   **Tools:** A dedicated `gemini` session for implementation.
-
-### Example Step-by-Step Workflow
-
-1.  **Start at Level 1 (Project Root)**
-    *   Open your terminal in the project root.
-    *   Start a `gemini` session to plan your work.
-    *   **Prompt:** "Let's review our user stories and decide on the next feature to implement."
-    *   After deciding on a task (e.g., "Implement new export format"), exit the `gemini` session.
-
-2.  **Delegate to Level 2**
-    *   In the same terminal, use `ccmanager` to create a new workspace for the task:
-        ```bash
-        ccm start feature/new-export-format
-        ```
-    *   `ccmanager` will create a new branch and a corresponding worktree in `./.worktrees/`.
-
-3.  **Work at Level 2 (New Terminal)**
-    *   Open a **new terminal window or tab**.
-    *   Navigate into the newly created worktree:
-        ```bash
-        cd .worktrees/feature-new-export-format
-        ```
-    *   Start a new, dedicated `gemini` session for implementation.
-    *   **Prompt:** "We're implementing the new export format. Let's begin by..."
-    *   Proceed with coding, testing, and committing your work on the feature branch. This session's context is entirely isolated to this task.
-
-4.  **Return to Level 1 to Integrate**
-    *   Once the feature is complete and all changes are committed, close the Level 2 terminal.
-    *   Return to your **original Level 1 terminal**.
-    *   Use `ccmanager` to merge the completed work and clean up the workspace:
-        ```bash
-        ccm close feature/new-export-format --merge
-        ```
-    *   This merges the feature branch into `main` and removes the worktree and branch. You are now ready to plan the next task from your "Project Director" context.
+See [Work Organization Guide](work-organization.md) for story templates, ADR templates, and documentation conventions.

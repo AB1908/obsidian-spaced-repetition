@@ -1,7 +1,7 @@
 # STORY-010: Direct Markdown Engagement
 
 ## Status
-In Progress
+Done
 
 ## Epic
 None (this is the epic)

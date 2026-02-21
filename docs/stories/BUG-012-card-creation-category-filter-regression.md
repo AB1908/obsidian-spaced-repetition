@@ -4,10 +4,10 @@
 Ready
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
-- [STORY-016](STORY-016-remove-filter-buttons-card-creation.md)
+- [STORY-019](../archive/stories/STORY-019-remove-filter-buttons-card-creation.md)
 - [DEBT-024](DEBT-024-filter-policy-single-source-of-truth.md)
 
 ## User Story
@@ -32,6 +32,6 @@ This does **not** apply to direct-markdown strategy sources where processed/unpr
 - `tests/routes/books/book/annotation/AnnotationListPage.test.tsx`
 
 ## Related
-- [BUG-001](BUG-001-navigation-ignores-filters.md)
-- [BUG-007](BUG-007-section-list-flattens-heading-levels.md)
+- [BUG-001](../archive/stories/BUG-001-navigation-ignores-filters.md)
+- [BUG-007](../archive/stories/BUG-007-section-list-flattens-heading-levels.md)
 - [DEBT-013](DEBT-013-source-polymorphism.md)

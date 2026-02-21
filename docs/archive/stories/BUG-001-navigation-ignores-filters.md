@@ -1,7 +1,7 @@
 # BUG-001: Navigation Ignores UI Filters
 
 ## Status
-Ready
+Done
 
 ## Epic
 None

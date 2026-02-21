@@ -34,6 +34,29 @@ Prefixes:
 - `SPIKE` — time-boxed research / exploration
 - `IDEA` — enhancement ideas, not yet actionable (lightweight, no acceptance criteria required)
 
+### Story Intake (Script-First)
+
+Do not allocate story numbers manually.
+
+Use:
+
+```bash
+# live catalog in terminal (ephemeral index, not committed)
+scripts/story-catalog.sh list
+
+# find potential existing matches before creating a new story
+scripts/story-catalog.sh suggest "moonreader naming"
+
+# create a new story with deterministic ID allocation
+scripts/new-story.sh BUG moonreader-naming-regression --title "MoonReader naming regression"
+```
+
+Rules:
+- `scripts/new-story.sh` is the default path for new stories.
+- Suffix IDs like `STORY-010a` are reserved for true continuations only.
+- Unrelated work must get a new numeric ID.
+- `scripts/lint-docs.sh` (and pre-commit) enforce story key consistency from live files.
+
 ### Template
 
 ```markdown
@@ -226,9 +249,25 @@ scripts/delegate-codex-task.sh \
 # execute autonomous run with full permissions in worktree
 scripts/delegate-codex-task.sh \
   --branch fix/heading-level-strategy \
+  --base chore/docs-hygiene \
   --scope-file docs/plans/BUG-007-delegation-scope.md \
   --execute
+
+# execute with deterministic test-contract verification + raw and semantic logs
+scripts/delegate-codex-task.sh \
+  --branch feat/story-016-named-categories \
+  --base chore/docs-hygiene \
+  --scope-file docs/plans/STORY-016-named-categories-settings-config.md \
+  --test-contract docs/plans/STORY-016-test-contract.md \
+  --log-file docs/executions/raw/2026-02-20-story-016-codex.log \
+  --semantic-log docs/executions/semantic/2026-02-20-story-016.md \
+  --execute
 ```
+
+Guardrails:
+- Always pass `--base` explicitly for deterministic scope/tooling context.
+- Delegation script now fails fast if scope/contract files are missing in the selected base ref.
+- Raw transcript logs are optional forensic artifacts; use semantic logs for routine review.
 
 ## Session Start Workflow
 
@@ -293,7 +332,7 @@ Backlog → Ready → In Progress → Done
 - **In Progress**: Actively being worked (branch exists)
 - **Done**: Merged, acceptance criteria met
 
-When a story reaches Done, it stays in `docs/stories/`. It's now documentation of what was done and why.
+When a story reaches Done, move it to `docs/archive/stories/`. Update any relative links in active stories to point to the archive path. The archive preserves context of what was done and why.
 
 ## Migration from Old Structure
 

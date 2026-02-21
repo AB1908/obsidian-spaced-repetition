@@ -103,7 +103,7 @@ When implementing this refactor, pilot the integration-test approach: write test
 
 ## Related
 - [DEBT-006](DEBT-006-disk-business-logic.md) — `updateCardOnDisk` naming and infrastructure boundary
-- [DEBT-003](DEBT-003-parsed-card-api-clarity.md) — createParsedCard API issues
+- [DEBT-003](../archive/stories/DEBT-003-parsed-card-api-clarity.md) — createParsedCard API issues
 - [DEBT-002](DEBT-002-flashcard-metadata-redundancy.md) — flashcard creation chain
 - STORY-010a (content fingerprinting) — will need centralized write-time hook
 - STORY-010c (drift detection) — will need stored vs current state comparison

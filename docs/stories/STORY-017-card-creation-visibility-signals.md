@@ -4,10 +4,10 @@
 Ready
 
 ## Epic
-[STORY-010](STORY-010-markdown-engagement.md)
+[STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
-- [DEBT-030](DEBT-030-complete-markdown-source-migration.md)
+- [DEBT-030](../archive/stories/DEBT-030-complete-markdown-source-migration.md)
 
 ## User Story
 As a user creating flashcards, I want to immediately see coverage and category distribution so I can find the right annotations without guesswork.

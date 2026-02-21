@@ -4,7 +4,7 @@
 
 We need to capture real Obsidian API output for the "Atomic Habits" book folder into JSON test fixtures. Currently `captureProxy.ts` exists but is unwired (`FIXTURES_DIR = 'placeholder'`). DEBT-010 documents this gap. The immediate goal is Atomic Habits fixtures + tests in `api.test.ts`. The broader goal is making this repeatable so future captures don't require re-inventing the workflow.
 
-**Story:** [DEBT-010](DEBT-010-capture-fixture-cycle.md) — Capture-to-Fixture Development Cycle
+**Story:** [DEBT-010](../stories/DEBT-010-capture-fixture-cycle.md) — Capture-to-Fixture Development Cycle
 
 ---
 

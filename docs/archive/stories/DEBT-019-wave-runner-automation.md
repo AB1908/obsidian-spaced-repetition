@@ -1,6 +1,8 @@
 # DEBT-019: Wave Runner — Parallel PR Automation
 
-**Status:** Done
+## Status
+Done
+
 **Priority:** Low
 **Depends on:** DEBT-018 (plan storage)
 
