@@ -1,13 +1,17 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
-import { type Icon } from "src/types/obsidian-icons";
 import { useAnnotationEditor } from "src/ui/routes/import/useAnnotationEditor";
 import { getAnnotationById } from "src/api";
 import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from "src/ui/routes/books/api";
 import NavigationControl from "src/ui/components/NavigationControl";
 import { pathGenerator } from "src/utils/path-generators";
+import {
+    type CategoryConfig,
+    resolveAnnotationCategories,
+} from "src/config/annotation-categories";
+import { getPluginContext } from "src/application/plugin-context";
 
 export async function personalNoteLoader({ params }: any) {
     const { bookId, annotationId } = params;
@@ -32,15 +36,15 @@ export function PersonalNotePage() {
         navigateBack,
     } = useAnnotationEditor(annotation, bookId);
 
+    const plugin = getPluginContext() as any;
+    const [categories, setCategories] = useState<CategoryConfig[]>(() =>
+        resolveAnnotationCategories(plugin?.data?.settings?.annotationCategories)
+    );
+    const [newCategoryName, setNewCategoryName] = useState("");
+    const [newCategoryError, setNewCategoryError] = useState("");
+
     const deleteButtonRef = useRef<HTMLDivElement>(null);
-    const iconRefs = [
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-        useRef<HTMLDivElement>(null),
-    ];
+    const iconRefs = useRef<Array<HTMLDivElement | null>>([]);
 
     const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, params.sectionId, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(bookId, params.sectionId, annotation.id);
@@ -55,16 +59,41 @@ export function PersonalNotePage() {
 
 
     useEffect(() => {
-        const icons: Icon[] = ["lightbulb", "quote", "whole-word", "sticky-note", "star", "asterisk"];
-        iconRefs.forEach((ref, i) => {
-            if (ref.current) {
-                setIcon(ref.current, icons[i]);
+        categories.forEach((category, i) => {
+            const iconRef = iconRefs.current[i];
+            if (iconRef) {
+                setIcon(iconRef, category.icon);
             }
         });
         if (deleteButtonRef.current) {
             setIcon(deleteButtonRef.current, "trash");
         }
-    }, []);
+    }, [categories]);
+
+    const handleAddCategory = async () => {
+        const trimmed = newCategoryName.trim();
+        if (!trimmed) {
+            setNewCategoryError("Category name is required.");
+            return;
+        }
+        if (categories.some((category) => category.name.toLowerCase() === trimmed.toLowerCase())) {
+            setNewCategoryError("Category already exists.");
+            return;
+        }
+
+        const createdCategory = { name: trimmed, icon: "asterisk" as const };
+        const nextCategories = [...categories, createdCategory];
+        setCategories(nextCategories);
+        setNewCategoryName("");
+        setNewCategoryError("");
+
+        if (plugin?.data?.settings) {
+            plugin.data.settings.annotationCategories = nextCategories;
+            if (typeof plugin.savePluginData === "function") {
+                await plugin.savePluginData();
+            }
+        }
+    };
 
     return (
         <div className="sr-personal-note-page">
@@ -120,23 +149,36 @@ export function PersonalNotePage() {
             </div>
 
             <div className="sr-category-buttons" style={{ display: "flex", justifyContent: "space-around", marginTop: "20px" }}>
-                {iconRefs.map((ref, i) => (
+                {categories.map((category, i) => (
                     <div
-                        key={i}
-                        className={`sr-category-button is-clickable ${selectedCategory === i ? "is-active" : ""}`}
-                        onClick={() => handleCategoryClick(i)}
+                        key={category.name}
+                        className={`sr-category-button is-clickable ${selectedCategory === category.name ? "is-active" : ""}`}
+                        onClick={() => handleCategoryClick(category.name)}
                         style={{
                             padding: "10px",
                             border: "2px solid",
-                            borderColor: selectedCategory === i ? "var(--interactive-accent)" : "var(--background-modifier-border)",
+                            borderColor: selectedCategory === category.name ? "var(--interactive-accent)" : "var(--background-modifier-border)",
                             borderRadius: "4px",
-                            backgroundColor: selectedCategory === i ? "var(--background-modifier-hover)" : "transparent"
+                            backgroundColor: selectedCategory === category.name ? "var(--background-modifier-hover)" : "transparent"
                         }}
                     >
-                        <div ref={ref} />
+                        <div ref={(element) => { iconRefs.current[i] = element; }} />
                     </div>
                 ))}
             </div>
+
+            <div style={{ marginTop: "12px", display: "flex", gap: "8px", alignItems: "center" }}>
+                <input
+                    type="text"
+                    placeholder="New category name"
+                    value={newCategoryName}
+                    onChange={(event) => setNewCategoryName(event.target.value)}
+                />
+                <button onClick={handleAddCategory}>Add category</button>
+            </div>
+            {newCategoryError && (
+                <div style={{ marginTop: "8px", color: "var(--text-error)" }}>{newCategoryError}</div>
+            )}
 
             <div style={{ marginTop: "20px", display: "flex", gap: "10px" }}>
                 <button className="mod-cta" onClick={handleSave}>Save</button>

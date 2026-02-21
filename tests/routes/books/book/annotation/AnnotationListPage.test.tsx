@@ -34,7 +34,7 @@ const chapterData: SectionAnnotations = {
             calloutType: "text",
             highlight: "Processed highlight",
             note: "",
-            category: 2,
+            category: "quote",
         },
     ],
 };
@@ -122,6 +122,28 @@ describe("AnnotationListPage route context behavior", () => {
         });
     });
 
+    test("MoonReader card creation category filter uses string categories", async () => {
+        useLocationMock.mockReturnValue({ pathname: "/books/1/chapters/2/annotations" });
+        useLoaderDataMock.mockReturnValue({ ...chapterData, sourceCapabilities: moonreaderCapabilities });
+
+        const { container } = render(
+            <MemoryRouter>
+                <AnnotationListPage />
+            </MemoryRouter>
+        );
+
+        const firstCategoryButton = container.querySelector(".sr-category-button") as HTMLElement;
+        fireEvent.click(firstCategoryButton);
+
+        await waitFor(() => {
+            expect(getNavigationFilter()).toEqual({
+                mainFilter: "processed",
+                categoryFilter: "insight",
+                colorFilter: null,
+            });
+        });
+    });
+
     test("direct-markdown card creation remains all/no-processing", async () => {
         useLocationMock.mockReturnValue({ pathname: "/books/1/chapters/2/annotations" });
         useLoaderDataMock.mockReturnValue({ ...chapterData, sourceCapabilities: markdownCapabilities });
@@ -179,7 +201,7 @@ describe("AnnotationListPage route context behavior", () => {
         await waitFor(() => {
             expect(getNavigationFilter()).toEqual({
                 mainFilter: "processed",
-                categoryFilter: 0,
+                categoryFilter: "insight",
                 colorFilter: null,
             });
         });

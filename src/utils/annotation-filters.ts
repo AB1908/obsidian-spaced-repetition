@@ -4,12 +4,12 @@ export type AnnotationMainFilter = "unprocessed" | "processed" | "all";
 
 export interface AnnotationFilter {
     mainFilter?: AnnotationMainFilter;
-    categoryFilter?: number | null;
+    categoryFilter?: string | null;
     colorFilter?: string | null;
 }
 
 export interface FilterableAnnotation {
-    category?: number | null;
+    category?: string | null;
     deleted?: boolean;
     originalColor?: string;
 }
@@ -43,7 +43,7 @@ export function matchesAnnotationFilter(ann: FilterableAnnotation, filter?: Anno
 export function getFilteredAnnotations(
     annotations: annotation[],
     mainFilter: AnnotationMainFilter,
-    categoryFilter: number | null,
+    categoryFilter: string | null,
     colorFilter: string | null
 ): annotation[] {
     return annotations.filter((ann) =>

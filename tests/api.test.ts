@@ -897,7 +897,7 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
                                 id: "ann-2",
                                 highlight: "A2",
                                 note: "",
-                                category: 1,
+                                category: "insight",
                                 originalColor: "2",
                                 deleted: false,
                             },
@@ -915,7 +915,7 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
                                 id: "ann-4",
                                 highlight: "A4",
                                 note: "",
-                                category: 2,
+                                category: "quote",
                                 originalColor: "3",
                                 deleted: false,
                             },
@@ -932,7 +932,7 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
                                 id: "ann-5",
                                 highlight: "A5",
                                 note: "",
-                                category: 2,
+                                category: "quote",
                                 originalColor: "3",
                                 deleted: false,
                             },
@@ -964,7 +964,7 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
                 id: "ann-2",
                 highlight: "A2",
                 note: "",
-                category: 1,
+                category: "insight",
                 originalColor: "2",
                 deleted: false,
                 calloutType: "",
@@ -984,7 +984,7 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
                 id: "ann-4",
                 highlight: "A4",
                 note: "",
-                category: 2,
+                category: "quote",
                 originalColor: "3",
                 deleted: false,
                 calloutType: "",
@@ -1007,13 +1007,13 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
     test("category filter narrows processed navigation and stops at section boundary", () => {
         const nextCategory2 = getNextAnnotationId(bookId, "ann-2", sectionId, {
             mainFilter: "processed",
-            categoryFilter: 2,
+            categoryFilter: "quote",
         });
         expect(nextCategory2).toBe("ann-4");
 
         const noNextInSection = getNextAnnotationId(bookId, "ann-4", sectionId, {
             mainFilter: "processed",
-            categoryFilter: 2,
+            categoryFilter: "quote",
         });
         expect(noNextInSection).toBeNull();
     });
@@ -1037,7 +1037,7 @@ describe("Navigation Filter Bug: getNextAnnotationId / getPreviousAnnotationId i
         const filters = [
             { mainFilter: "all" as const },
             { mainFilter: "processed" as const },
-            { mainFilter: "processed" as const, categoryFilter: 2 },
+            { mainFilter: "processed" as const, categoryFilter: "quote" },
             { mainFilter: "unprocessed" as const },
             { mainFilter: "unprocessed" as const, colorFilter: "2" },
         ];

@@ -10,7 +10,7 @@ export interface annotation {
     hasFlashcards?: boolean;
     flashcardCount?: number;
     // Metadata fields
-    category?:      number;
+    category?:      string;
     deleted?:       boolean;
     personalNote?:  string;
     origin?:        string;

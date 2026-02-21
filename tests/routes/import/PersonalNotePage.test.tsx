@@ -73,7 +73,10 @@ jest.mock("src/ui/routes/books/api", () => ({
     getNextAnnotationIdForSection: jest.fn(),
 }));
 
-import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from "src/ui/routes/books/api";
+import {
+    getNextAnnotationIdForSection,
+    getPreviousAnnotationIdForSection,
+} from "src/ui/routes/books/api";
 
 // Mock Obsidian setIcon
 jest.mock("src/infrastructure/obsidian-facade", () => ({
@@ -93,11 +96,12 @@ describe("PersonalNotePage Component", () => {
     const mockNavigate = jest.fn();
     let mockBookId: string;
     let mockAnnotationId: string;
+    let mockPlugin: any;
     let confirmSpy: jest.SpyInstance;
 
     beforeEach(async () => {
-        const plugin = await initializePlugin();
-        const book = plugin.annotationsNoteIndex.getAllAnnotationsNotes()[0];
+        mockPlugin = await initializePlugin();
+        const book = mockPlugin.annotationsNoteIndex.getAllAnnotationsNotes()[0];
         mockBookId = book.id;
         mockAnnotationId = book.annotations()[0].id;
 
@@ -219,7 +223,7 @@ describe("PersonalNotePage Component", () => {
             highlight: "This is a test highlight.",
             note: "This is a test note.",
             personalNote: "My personal thoughts on this highlight.",
-            category: 2,
+            category: "vocabulary",
             originalColor: 16711680, // Red color
         };
         useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
@@ -348,6 +352,18 @@ describe("PersonalNotePage Component", () => {
                   >
                     <div />
                   </div>
+                </div>
+                <div
+                  style="margin-top: 12px; display: flex; gap: 8px; align-items: center;"
+                >
+                  <input
+                    placeholder="New category name"
+                    type="text"
+                    value=""
+                  />
+                  <button>
+                    Add category
+                  </button>
                 </div>
                 <div
                   style="margin-top: 20px; display: flex; gap: 10px;"
@@ -495,6 +511,18 @@ describe("PersonalNotePage Component", () => {
                   </div>
                 </div>
                 <div
+                  style="margin-top: 12px; display: flex; gap: 8px; align-items: center;"
+                >
+                  <input
+                    placeholder="New category name"
+                    type="text"
+                    value=""
+                  />
+                  <button>
+                    Add category
+                  </button>
+                </div>
+                <div
                   style="margin-top: 20px; display: flex; gap: 10px;"
                 >
                   <button
@@ -509,6 +537,31 @@ describe("PersonalNotePage Component", () => {
               </div>
             </div>
         `);
+    });
+
+    it("category buttons render from configured settings categories", async () => {
+        mockPlugin.data.settings.annotationCategories = [
+            { name: "insight", icon: "lightbulb" },
+            { name: "quote", icon: "quote" },
+            { name: "memory", icon: "star" },
+        ];
+        const mockAnnotation = {
+            id: mockAnnotationId,
+            highlight: "Highlight",
+            note: "Note",
+            personalNote: "",
+            category: undefined,
+            originalColor: undefined,
+        };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        expect(container.querySelectorAll(".sr-category-button")).toHaveLength(3);
     });
 
     it("should handle category click and update state", async () => {
@@ -541,13 +594,17 @@ describe("PersonalNotePage Component", () => {
         });
     });
 
-    it("should call updateAnnotationMetadata and navigate on save", async () => {
+    it("selecting category saves category name string", async () => {
+        mockPlugin.data.settings.annotationCategories = [
+            { name: "insight", icon: "lightbulb" },
+            { name: "quote", icon: "quote" },
+        ];
         const mockAnnotation = {
             id: mockAnnotationId,
             highlight: "Highlight",
             note: "Note",
             personalNote: "Initial note",
-            category: 1,
+            category: "quote",
             originalColor: undefined,
         };
         useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
@@ -571,7 +628,7 @@ describe("PersonalNotePage Component", () => {
             expect(updateAnnotationMetadataMock).toHaveBeenCalledWith(
                 mockBookId,
                 mockAnnotationId,
-                { personalNote: "New note", category: 0 }
+                { personalNote: "New note", category: "insight" }
             );
             expect(mockNavigate).toHaveBeenCalledWith(-1);
         });

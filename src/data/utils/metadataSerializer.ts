@@ -2,7 +2,7 @@ export interface AnnotationMetadata {
     original_color?: string;
     location?: string;
     timestamp?: string;
-    category?: number;
+    category?: string;
     deleted?: boolean;
     personal_note?: string;
     origin?: string;
@@ -47,7 +47,9 @@ export function deserializeMetadata(text: string): AnnotationMetadata {
                 metadata.timestamp = value;
                 break;
             case "category":
-                metadata.category = parseInt(value, 10);
+                if (!/^-?\d+$/.test(value)) {
+                    metadata.category = value;
+                }
                 break;
             case "deleted":
                 metadata.deleted = value === "true";
