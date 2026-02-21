@@ -113,11 +113,12 @@ Plus `docs/archive/` for completed or stale context.
 
 ### Session Start Workflow
 
-Claude scans at session start:
-1. **What's in progress?** — `grep -l "Status: In Progress" docs/stories/*`
-2. **Dependency check** — read `Depends on:` fields, flag blockers
-3. **Propose work order** — topological sort of ready items
-4. **Execution discipline reminder** — for multi-commit work, run at least one mid-run plan divergence check; before merge, confirm session note + story status + changelog updates.
+Run `./scripts/project-status.sh --release` for a single-read project state summary. This replaces per-file grepping and minimizes token usage on session start.
+
+For deeper investigation:
+1. **Dependency check** — read `Depends on:` fields in relevant stories, flag blockers
+2. **Propose work order** — topological sort of ready items
+3. **Execution discipline reminder** — for multi-commit work, run at least one mid-run plan divergence check; before merge, confirm session note + story status + changelog updates.
 
 ### Story File Prefixes
 
@@ -203,6 +204,8 @@ Refer to `docs/decisions/` for full ADRs. Recent important decisions:
 
    Optional 2nd line: Where to find details
    ```
+   - Do not include story short-codes in the subject (`BUG-###`, `STORY-###`, `DEBT-###`).
+   - Put those IDs in docs or commit body when needed.
 
 2. **Create Approval File**
    ```bash
