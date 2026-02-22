@@ -300,14 +300,14 @@ describe("updateAnnotationMetadata", () => {
     beforeEach(async () => {
         await newFunction();
     });
-    test.skip("should update annotation metadata on disk", async () => {
-        const result = await updateAnnotationMetadata("t0000010", "tWxSv_No", {
-            category: 3,
+    test.skip("should update annotation metadata on disk with string category names", async () => {
+        const result = await updateAnnotationMetadata("t0000010", "tekXLAu8", {
+            category: "insight",
             personalNote: "Updated note",
         });
         expect(result).toBe(true);
-        const annotation = getAnnotationById("tWxSv_No", "t0000010");
-        expect(annotation.category).toBe(3);
+        const annotation = getAnnotationById("tekXLAu8", "t0000010");
+        expect(annotation.category).toBe("insight");
         expect(annotation.personalNote).toBe("Updated note");
     });
 });
