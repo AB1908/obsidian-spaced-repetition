@@ -8,7 +8,7 @@ describe("isAnnotationProcessed", () => {
             calloutType: "note",
             highlight: "hi",
             note: "",
-            category: 1,
+            category: "insight",
         };
         expect(isAnnotationProcessed(annotation)).toBe(true);
     });

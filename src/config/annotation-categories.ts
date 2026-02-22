@@ -14,10 +14,6 @@ export const DEFAULT_ANNOTATION_CATEGORIES: CategoryConfig[] = [
     { name: "other", icon: "asterisk" },
 ];
 
-export const ANNOTATION_CATEGORY_ICONS: Icon[] = DEFAULT_ANNOTATION_CATEGORIES.map(
-    (category) => category.icon
-);
-
 export function resolveAnnotationCategories(
     categories?: CategoryConfig[] | null
 ): CategoryConfig[] {
