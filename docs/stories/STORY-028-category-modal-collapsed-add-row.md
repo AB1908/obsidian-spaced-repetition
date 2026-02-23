@@ -1,7 +1,7 @@
 # STORY-028: Collapse Add Row in CategoryEditorModal Until Triggered
 
 ## Status
-Ready
+Done
 
 ## Epic
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
@@ -30,11 +30,11 @@ This matches the edit-row pattern already in place and keeps the modal surface m
 on first open.
 
 ## Acceptance Criteria
-- [ ] On modal open, the add form is not visible — only a trigger button
-- [ ] Clicking the trigger expands the inline add form
-- [ ] Confirming or cancelling collapses the form back to the trigger button
-- [ ] Existing add behaviour (validation, onSave callback) unchanged
-- [ ] Tests updated to reflect the trigger-first interaction
+- [x] On modal open, the add form is not visible — only a trigger button
+- [x] Clicking the trigger expands the inline add form
+- [x] Confirming or cancelling collapses the form back to the trigger button
+- [x] Existing add behaviour (validation, onSave callback) unchanged
+- [x] Tests updated to reflect the trigger-first interaction
 
 ## Likely Touchpoints
 - `src/ui/modals/CategoryEditorModal.ts`

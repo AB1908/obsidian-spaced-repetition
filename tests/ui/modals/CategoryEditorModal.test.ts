@@ -55,8 +55,76 @@ describe("CategoryEditorModal", () => {
         return { modal, onSave, getOrphanCount };
     }
 
+    it("CategoryEditorModal shows trigger button on open, not add form", () => {
+        const { modal } = createModal();
+
+        expect(
+            modal.contentEl.querySelector('button[data-role="add-category-trigger"]')
+        ).toBeTruthy();
+        expect(
+            modal.contentEl.querySelector('input[data-role="add-category-name"]')
+        ).toBeNull();
+        expect(
+            modal.contentEl.querySelector('button[data-role="add-category-submit"]')
+        ).toBeNull();
+    });
+
+    it("CategoryEditorModal shows add form after trigger click", () => {
+        const { modal } = createModal();
+
+        (
+            modal.contentEl.querySelector(
+                'button[data-role="add-category-trigger"]'
+            ) as HTMLButtonElement
+        ).click();
+
+        expect(
+            modal.contentEl.querySelector('input[data-role="add-category-name"]')
+        ).toBeTruthy();
+        expect(
+            modal.contentEl.querySelector('button[data-role="add-category-submit"]')
+        ).toBeTruthy();
+        expect(
+            modal.contentEl.querySelector('button[data-role="cancel-add-category"]')
+        ).toBeTruthy();
+    });
+
+    it("CategoryEditorModal collapses add form on cancel", () => {
+        const { modal } = createModal();
+
+        (
+            modal.contentEl.querySelector(
+                'button[data-role="add-category-trigger"]'
+            ) as HTMLButtonElement
+        ).click();
+
+        const nameInput = modal.contentEl.querySelector(
+            'input[data-role="add-category-name"]'
+        ) as HTMLInputElement;
+        nameInput.value = "stale";
+        nameInput.dispatchEvent(new Event("input", { bubbles: true }));
+
+        (
+            modal.contentEl.querySelector(
+                'button[data-role="cancel-add-category"]'
+            ) as HTMLButtonElement
+        ).click();
+
+        expect(
+            modal.contentEl.querySelector('button[data-role="add-category-trigger"]')
+        ).toBeTruthy();
+        expect(
+            modal.contentEl.querySelector('input[data-role="add-category-name"]')
+        ).toBeNull();
+    });
+
     it("CategoryEditorModal calls onSave with updated list after add", async () => {
         const { modal, onSave } = createModal();
+        (
+            modal.contentEl.querySelector(
+                'button[data-role="add-category-trigger"]'
+            ) as HTMLButtonElement
+        ).click();
         const nameInput = modal.contentEl.querySelector(
             'input[data-role="add-category-name"]'
         ) as HTMLInputElement;
