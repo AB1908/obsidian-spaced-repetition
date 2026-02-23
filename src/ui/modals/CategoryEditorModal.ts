@@ -47,6 +47,7 @@ export class CategoryEditorModal extends ModalBase {
 
     onOpen(): void {
         let categories = [...this.initialCategories];
+        let addFormOpen = false;
         let addNameDraft = "";
         let addIconDraft = CURATED_CATEGORY_ICONS[0];
         let editingName: string | null = null;
@@ -289,51 +290,84 @@ export class CategoryEditorModal extends ModalBase {
 
             this.contentEl.appendChild(list);
 
-            const addRow = document.createElement("div");
-            addRow.className = "add-row";
-            addRow.dataset.role = "add-row";
-            addRow.style.marginTop = "12px";
-            addRow.style.paddingTop = "12px";
-            addRow.style.borderTop = "1px solid var(--background-modifier-border)";
+            const addSection = document.createElement("div");
+            addSection.className = "add-row";
+            addSection.dataset.role = "add-row";
+            addSection.style.marginTop = "12px";
+            addSection.style.paddingTop = "12px";
+            addSection.style.borderTop = "1px solid var(--background-modifier-border)";
 
-            const addInput = document.createElement("input");
-            addInput.type = "text";
-            addInput.value = addNameDraft;
-            addInput.placeholder = "Category name";
-            addInput.dataset.role = "add-category-name";
-            addInput.setAttribute("aria-label", "New category name");
-            addInput.addEventListener("input", (event) => {
-                addNameDraft = (event.target as HTMLInputElement).value;
-            });
-            addRow.appendChild(addInput);
-
-            addRow.appendChild(
-                buildIconGrid(addIconDraft, (icon) => {
-                    addIconDraft = icon;
+            if (!addFormOpen) {
+                const triggerButton = document.createElement("button");
+                triggerButton.type = "button";
+                triggerButton.textContent = "+ Add category";
+                triggerButton.dataset.role = "add-category-trigger";
+                triggerButton.addEventListener("click", () => {
+                    addFormOpen = true;
                     render();
-                }, "add")
-            );
-
-            const addButton = document.createElement("button");
-            addButton.type = "button";
-            addButton.textContent = "Add";
-            addButton.dataset.role = "add-category-submit";
-            addButton.style.marginTop = "8px";
-            addButton.addEventListener("click", async () => {
-                const result = addCategoryToList(categories, {
-                    name: addNameDraft,
-                    icon: addIconDraft,
                 });
-                if ("error" in result) {
-                    setErrorAndRender(result.error);
-                    return;
-                }
-                addNameDraft = "";
-                await persistAndRender(result);
-            });
-            addRow.appendChild(addButton);
+                addSection.appendChild(triggerButton);
+            } else {
+                const addInput = document.createElement("input");
+                addInput.type = "text";
+                addInput.value = addNameDraft;
+                addInput.placeholder = "Category name";
+                addInput.dataset.role = "add-category-name";
+                addInput.setAttribute("aria-label", "New category name");
+                addInput.addEventListener("input", (event) => {
+                    addNameDraft = (event.target as HTMLInputElement).value;
+                });
+                addSection.appendChild(addInput);
 
-            this.contentEl.appendChild(addRow);
+                addSection.appendChild(
+                    buildIconGrid(addIconDraft, (icon) => {
+                        addIconDraft = icon;
+                        render();
+                    }, "add")
+                );
+
+                const actions = document.createElement("div");
+                actions.style.display = "flex";
+                actions.style.gap = "8px";
+                actions.style.marginTop = "8px";
+
+                const addButton = document.createElement("button");
+                addButton.type = "button";
+                addButton.textContent = "Add";
+                addButton.dataset.role = "add-category-submit";
+                addButton.addEventListener("click", async () => {
+                    const result = addCategoryToList(categories, {
+                        name: addNameDraft,
+                        icon: addIconDraft,
+                    });
+                    if ("error" in result) {
+                        setErrorAndRender(result.error);
+                        return;
+                    }
+                    addFormOpen = false;
+                    addNameDraft = "";
+                    addIconDraft = CURATED_CATEGORY_ICONS[0];
+                    await persistAndRender(result);
+                });
+                actions.appendChild(addButton);
+
+                const cancelAdd = document.createElement("button");
+                cancelAdd.type = "button";
+                cancelAdd.textContent = "Cancel";
+                cancelAdd.dataset.role = "cancel-add-category";
+                cancelAdd.addEventListener("click", () => {
+                    addFormOpen = false;
+                    addNameDraft = "";
+                    addIconDraft = CURATED_CATEGORY_ICONS[0];
+                    errorMessage = "";
+                    render();
+                });
+                actions.appendChild(cancelAdd);
+
+                addSection.appendChild(actions);
+            }
+
+            this.contentEl.appendChild(addSection);
         };
 
         render();
