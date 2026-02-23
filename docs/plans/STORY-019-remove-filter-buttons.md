@@ -1,4 +1,4 @@
-# Plan: STORY-016 — Remove Filter Buttons from Flashcard Creation Flow
+# Plan: STORY-019 — Remove Filter Buttons from Flashcard Creation Flow
 
 **Story:** [STORY-019](../stories/STORY-019-remove-filter-buttons-card-creation.md)
 **Agent:** Codex 5.3

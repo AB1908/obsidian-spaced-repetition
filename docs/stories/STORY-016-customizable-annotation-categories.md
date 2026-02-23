@@ -1,7 +1,7 @@
 # STORY-016: Named Categories with Settings Config
 
 ## Status
-Ready
+Done
 
 ## Epic
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
@@ -53,16 +53,16 @@ Old numeric values won't match any category name → annotation falls back to un
 - Icon defaults to `tag` (future story for icon picker)
 
 ## Acceptance Criteria
-- [ ] `CategoryConfig` interface exists with `name` (string) and `icon` (Icon)
-- [ ] Plugin settings store `categories: CategoryConfig[]` with 6 defaults
-- [ ] `serializeMetadata` writes `category: <name>` (string)
-- [ ] `deserializeMetadata` reads string category, returns `undefined` for unknown/numeric values
-- [ ] PersonalNotePage renders category buttons from settings (not hardcoded array)
-- [ ] "+" button opens modal with validated one-word input, creates new category in settings
-- [ ] `category-filter.tsx` renders from settings-based categories (string names, not numeric indices)
-- [ ] `annotation-filters.ts` filter comparison uses string equality on category name
-- [ ] `ANNOTATION_CATEGORY_ICONS` constant removed (replaced by settings)
-- [ ] Existing tests updated for string categories
+- [x] `CategoryConfig` interface exists with `name` (string) and `icon` (Icon)
+- [x] Plugin settings store `categories: CategoryConfig[]` with 6 defaults
+- [x] `serializeMetadata` writes `category: <name>` (string)
+- [x] `deserializeMetadata` reads string category, returns `undefined` for unknown/numeric values
+- [x] PersonalNotePage renders category buttons from settings (not hardcoded array)
+- [x] Inline "add category" form persists new category to settings (modal deferred → STORY-025)
+- [x] `category-filter.tsx` renders from settings-based categories (string names, not numeric indices)
+- [x] `annotation-filters.ts` filter comparison uses string equality on category name
+- [x] `ANNOTATION_CATEGORY_ICONS` constant removed (replaced by settings)
+- [x] Existing tests updated for string categories
 
 ## Likely Touchpoints
 - `src/config/annotation-categories.ts` — remove or replace with `CategoryConfig` type + defaults
