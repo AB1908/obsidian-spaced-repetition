@@ -217,6 +217,148 @@ describe("PersonalNotePage Component", () => {
         });
     });
 
+    it("resets personalNote when navigating to a new annotation", async () => {
+        const firstAnnotation = {
+            id: "1",
+            highlight: "First highlight",
+            note: "First note",
+            personalNote: "First saved note",
+            category: undefined,
+        };
+        const secondAnnotation = {
+            id: "2",
+            highlight: "Second highlight",
+            note: "Second note",
+            personalNote: "Second saved note",
+            category: undefined,
+        };
+
+        useLoaderDataMock.mockReturnValue({ annotation: firstAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+
+        const { rerender } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        fireEvent.change(screen.getByPlaceholderText("Enter your own note here..."), {
+            target: { value: "Unsaved local edit" },
+        });
+        expect(screen.getByDisplayValue("Unsaved local edit")).toBeInTheDocument();
+
+        useLoaderDataMock.mockReturnValue({ annotation: secondAnnotation, bookId: mockBookId });
+        useParamsMock.mockReturnValue({
+            bookId: mockBookId,
+            annotationId: secondAnnotation.id,
+            sectionId: "mock-section-id",
+        });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue("1");
+        getNextAnnotationIdForSectionMock.mockReturnValue(null);
+
+        rerender(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        expect(screen.getByDisplayValue("Second saved note")).toBeInTheDocument();
+        expect(screen.queryByDisplayValue("Unsaved local edit")).not.toBeInTheDocument();
+    });
+
+    it("resets selectedCategory when navigating to a new annotation", async () => {
+        mockPlugin.data.settings.annotationCategories = [
+            { name: "insight", icon: "lightbulb" },
+            { name: "quote", icon: "quote" },
+        ];
+        const firstAnnotation = {
+            id: "1",
+            highlight: "First highlight",
+            note: "First note",
+            personalNote: "",
+            category: "quote",
+        };
+        const secondAnnotation = {
+            id: "2",
+            highlight: "Second highlight",
+            note: "Second note",
+            personalNote: "",
+            category: "insight",
+        };
+
+        useLoaderDataMock.mockReturnValue({ annotation: firstAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+
+        const { container, rerender } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const initialButtons = container.querySelectorAll(".sr-category-button");
+        fireEvent.click(initialButtons[0]); // local unsaved toggle to insight
+        await waitFor(() => expect(initialButtons[0]).toHaveClass("is-active"));
+
+        useLoaderDataMock.mockReturnValue({ annotation: secondAnnotation, bookId: mockBookId });
+        useParamsMock.mockReturnValue({
+            bookId: mockBookId,
+            annotationId: secondAnnotation.id,
+            sectionId: "mock-section-id",
+        });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue("1");
+        getNextAnnotationIdForSectionMock.mockReturnValue(null);
+
+        rerender(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const rerenderedButtons = container.querySelectorAll(".sr-category-button");
+        expect(rerenderedButtons[0]).toHaveClass("is-active");
+        expect(rerenderedButtons[1]).not.toHaveClass("is-active");
+    });
+
+    it("saves current annotation before navigating to next", async () => {
+        const mockAnnotation = {
+            id: "1",
+            highlight: "H",
+            note: "N",
+            personalNote: "Initial",
+            category: undefined,
+        };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+        const updateAnnotationMetadataMock = jest.spyOn(api, "updateAnnotationMetadata");
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        fireEvent.change(screen.getByPlaceholderText("Enter your own note here..."), {
+            target: { value: "Changed before next" },
+        });
+
+        const nextButton = container.querySelectorAll(".annotation-nav.is-clickable")[0];
+        fireEvent.click(nextButton);
+
+        await waitFor(() => {
+            expect(updateAnnotationMetadataMock).toHaveBeenCalled();
+            expect(mockNavigate).toHaveBeenCalledWith(expect.stringContaining("2/personal-note"), {
+                replace: true,
+            });
+        });
+
+        expect(updateAnnotationMetadataMock.mock.invocationCallOrder[0]).toBeLessThan(
+            mockNavigate.mock.invocationCallOrder[0]
+        );
+    });
+
     it("should render correctly with a personal note, category, and highlight color and match snapshot", () => {
         const mockAnnotation = {
             id: mockAnnotationId,
@@ -313,56 +455,58 @@ describe("PersonalNotePage Component", () => {
                   </textarea>
                 </div>
                 <div
-                  class="sr-category-buttons"
-                  style="display: flex; justify-content: space-around; margin-top: 20px;"
+                  style="margin-top: 20px;"
                 >
                   <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
+                    class="sr-category-buttons"
+                    style="display: flex; gap: 0.5rem;"
                   >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable is-active"
-                    style="padding: 10px; border: 2px solid; border-radius: 4px;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable is-active"
+                      style="padding: 8px; border: 1px solid; border-radius: 4px;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
                   </div>
                 </div>
                 <div
-                  style="margin-top: 12px; display: flex; gap: 8px; align-items: center;"
+                  style="margin-top: 12px;"
                 >
-                  <input
-                    placeholder="New category name"
-                    type="text"
-                    value=""
-                  />
-                  <button>
-                    Add category
+                  <button
+                    disabled=""
+                    type="button"
+                  >
+                    Manage categories (coming soon)
                   </button>
                 </div>
                 <div
@@ -470,56 +614,58 @@ describe("PersonalNotePage Component", () => {
                   />
                 </div>
                 <div
-                  class="sr-category-buttons"
-                  style="display: flex; justify-content: space-around; margin-top: 20px;"
+                  style="margin-top: 20px;"
                 >
                   <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
+                    class="sr-category-buttons"
+                    style="display: flex; gap: 0.5rem;"
                   >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
-                  </div>
-                  <div
-                    class="sr-category-button is-clickable "
-                    style="padding: 10px; border: 2px solid; border-radius: 4px; background-color: transparent;"
-                  >
-                    <div />
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
+                    <div
+                      class="sr-category-button is-clickable "
+                      style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                    >
+                      <div />
+                    </div>
                   </div>
                 </div>
                 <div
-                  style="margin-top: 12px; display: flex; gap: 8px; align-items: center;"
+                  style="margin-top: 12px;"
                 >
-                  <input
-                    placeholder="New category name"
-                    type="text"
-                    value=""
-                  />
-                  <button>
-                    Add category
+                  <button
+                    disabled=""
+                    type="button"
+                  >
+                    Manage categories (coming soon)
                   </button>
                 </div>
                 <div
