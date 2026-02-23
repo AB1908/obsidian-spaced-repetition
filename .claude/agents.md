@@ -134,7 +134,11 @@ After a delegation completes:
 2. Check for reported deviations — these signal either scope drift or a real problem
 3. Run `scripts/verify-test-contract.sh` locally if the contract check failed due to tooling
 4. Review snapshot diffs explicitly before approving merge
-5. For cherry-picks: confirm the commit message follows the project convention before landing
+5. Cherry-pick the feat commit(s), then **amend** to include:
+   - Story closure files (status → Done, acceptance criteria checked)
+   - Semantic log file
+   - A one-line body note: `Closes: STORY-NNN. Semantic log: docs/executions/semantic/<slug>.md`
+   This keeps history to 2 commits per story (plan + feat+closure) rather than 3.
 
 ---
 
