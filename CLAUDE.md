@@ -311,6 +311,7 @@ import { X } from "src/data/models/AnnotationsNote"
 - **Changelog:** `CHANGELOG.md` - Version history and changes
 - **System Overview:** `docs/guides/architecture/system_overview.md`
 - **Testing Guide:** `docs/guides/testing.md`
+- **Agent Workflow:** `.claude/agents.md` — delegation decisions, plan quality standards, pre-delegation checklist
 - **Git Workflow:** `docs/guides/workflow.md`
 - **Work Organization:** `docs/guides/work-organization.md`
 - **Obsidian API Notes:** `docs/guides/obsidian-api-notes.md`

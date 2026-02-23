@@ -7,8 +7,8 @@ Ready
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
-- [STORY-016](STORY-016-customizable-annotation-categories.md) (category data model must be finalized)
 - [BUG-009](BUG-009-import-annotation-editor-state-leak.md) (state reset must work)
+- [STORY-025](STORY-025-category-editor-modal.md) (category management UX must be settled before wiring immediate save)
 
 ## User Story
 As a user editing annotations, I want my changes to save automatically so I don't need to think about when to click Save and can focus on processing annotations.
