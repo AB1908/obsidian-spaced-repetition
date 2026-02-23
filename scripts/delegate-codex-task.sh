@@ -155,6 +155,8 @@ Execution contract:
 - Commit only when acceptance criteria are met.
 - Do not push, do not open PR, do not perform destructive git operations.
 - Final output must include: changed files, tests run, and any deviations from scope.
+${BASE_DIVERGENCE_NOTE:+
+$BASE_DIVERGENCE_NOTE}
 
 Scope document contents:
 $(cat "$SCOPE_FILE")
@@ -187,17 +189,18 @@ if [ -n "$TEST_CONTRACT" ]; then
   require_path_in_ref "$target_ref_for_scope" "$TEST_CONTRACT" "test contract file"
 fi
 
-# Ensure base branch is fresh before creating worktree
+# Check if base is behind origin — warn but do not override.
+# The parent session controls what base the worktree starts from.
+BASE_DIVERGENCE_NOTE=""
 if ! git show-ref --verify --quiet "refs/heads/$BRANCH"; then
-  echo "[delegate] Fetching origin/${BASE_BRANCH} to ensure worktree starts from latest..."
   git fetch origin "$BASE_BRANCH" 2>/dev/null || true
   if git show-ref --verify --quiet "refs/remotes/origin/$BASE_BRANCH"; then
     local_sha="$(git rev-parse "$BASE_BRANCH" 2>/dev/null || echo "")"
     remote_sha="$(git rev-parse "origin/$BASE_BRANCH" 2>/dev/null || echo "")"
     if [ -n "$local_sha" ] && [ -n "$remote_sha" ] && [ "$local_sha" != "$remote_sha" ]; then
-      echo "[delegate] WARNING: local $BASE_BRANCH ($local_sha) differs from origin/$BASE_BRANCH ($remote_sha)"
-      echo "[delegate] Using origin/$BASE_BRANCH as base to avoid stale worktree."
-      BASE_BRANCH="origin/$BASE_BRANCH"
+      echo "[delegate] NOTE: local $BASE_BRANCH ($local_sha) differs from origin/$BASE_BRANCH ($remote_sha)"
+      echo "[delegate] Using local $BASE_BRANCH as base (parent session controls the base)."
+      BASE_DIVERGENCE_NOTE="NOTE: The base branch ($BASE_BRANCH) differs from origin/$BASE_BRANCH. Local commits not yet pushed are intentionally included. Flag any unexpected state."
     fi
   fi
 fi
