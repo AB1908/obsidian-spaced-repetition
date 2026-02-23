@@ -96,6 +96,18 @@ Chosen: Option B because ...
 
 ## Verification gates
 ...
+
+## Delegation
+```bash
+scripts/delegate-codex-task.sh \
+  --branch <branch-name> \
+  --base main \
+  --scope-file docs/plans/<this-file>.md \
+  --test-contract docs/plans/<this-file>-test-contract.md \
+  --log-file docs/executions/logs/<branch-name>.log \
+  --semantic-log docs/executions/semantic/<branch-name>.md \
+  --execute
+```
 ```
 
 ---
@@ -131,7 +143,10 @@ After a delegation completes:
 - **Batch doc changes before delegating** — uncommitted plans are the most common
   reason a delegation produces incorrect output
 - **Background delegation** — use `run_in_background: true` when the Codex task is
-  independent of the planning work happening in the main session
+  independent of the planning work happening in the main session. **Never add `&` to
+  the command** — the Bash tool already backgrounds it. Adding `&` double-backgrounds
+  the process, drops the post-run steps (contract check, semantic log), and the task
+  reports exit 0 from the wrong process.
 - **Phase sequencing** — if a story has phases where phase B depends on phase A,
   delegate phase A, review, merge, then delegate phase B. Don't delegate both at once
   unless using worktrees with explicit sequencing (wave-runner)

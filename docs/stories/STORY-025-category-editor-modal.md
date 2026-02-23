@@ -1,7 +1,7 @@
 # STORY-025: CategoryEditorModal
 
 ## Status
-Ready
+Done
 
 ## Epic
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
