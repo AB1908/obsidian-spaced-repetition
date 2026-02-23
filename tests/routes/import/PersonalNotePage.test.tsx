@@ -13,6 +13,25 @@ import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
 
+jest.mock("src/ui/modals/CategoryEditorModal", () => {
+    const openMock = jest.fn();
+    const constructorMock = jest.fn().mockImplementation(function () {
+        this.open = openMock;
+    });
+
+    return {
+        CategoryEditorModal: constructorMock,
+        __mocks: {
+            openMock,
+            constructorMock,
+        },
+    };
+});
+
+const categoryEditorModalModule = jest.requireMock("src/ui/modals/CategoryEditorModal");
+const categoryEditorModalOpenMock = categoryEditorModalModule.__mocks.openMock as jest.Mock;
+const CategoryEditorModalMock = categoryEditorModalModule.__mocks.constructorMock as jest.Mock;
+
 setupNanoidMock();
 
 async function initializePlugin() {
@@ -101,6 +120,7 @@ describe("PersonalNotePage Component", () => {
 
     beforeEach(async () => {
         mockPlugin = await initializePlugin();
+        mockPlugin.savePluginData = jest.fn().mockResolvedValue(undefined);
         const book = mockPlugin.annotationsNoteIndex.getAllAnnotationsNotes()[0];
         mockBookId = book.id;
         mockAnnotationId = book.annotations()[0].id;
@@ -111,6 +131,8 @@ describe("PersonalNotePage Component", () => {
         useLocationMock.mockClear();
         setIconMock.mockClear();
         mockNavigate.mockClear();
+        CategoryEditorModalMock.mockClear();
+        categoryEditorModalOpenMock.mockClear();
         getPreviousAnnotationIdForSectionMock.mockReset();
         getNextAnnotationIdForSectionMock.mockReset();
         jest.spyOn(api, "updateAnnotationMetadata").mockResolvedValue(true);
@@ -462,38 +484,50 @@ describe("PersonalNotePage Component", () => {
                     style="display: flex; gap: 0.5rem;"
                   >
                     <div
+                      aria-label="Category: insight"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="insight"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: quote"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="quote"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: vocabulary"
                       class="sr-category-button is-clickable is-active"
                       style="padding: 8px; border: 1px solid; border-radius: 4px;"
+                      title="vocabulary"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: note"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="note"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: important"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="important"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: other"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="other"
                     >
                       <div />
                     </div>
@@ -503,10 +537,9 @@ describe("PersonalNotePage Component", () => {
                   style="margin-top: 12px;"
                 >
                   <button
-                    disabled=""
                     type="button"
                   >
-                    Manage categories (coming soon)
+                    Manage categories
                   </button>
                 </div>
                 <div
@@ -621,38 +654,50 @@ describe("PersonalNotePage Component", () => {
                     style="display: flex; gap: 0.5rem;"
                   >
                     <div
+                      aria-label="Category: insight"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="insight"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: quote"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="quote"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: vocabulary"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="vocabulary"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: note"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="note"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: important"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="important"
                     >
                       <div />
                     </div>
                     <div
+                      aria-label="Category: other"
                       class="sr-category-button is-clickable "
                       style="padding: 8px; border: 1px solid; border-radius: 4px; background-color: transparent;"
+                      title="other"
                     >
                       <div />
                     </div>
@@ -662,10 +707,9 @@ describe("PersonalNotePage Component", () => {
                   style="margin-top: 12px;"
                 >
                   <button
-                    disabled=""
                     type="button"
                   >
-                    Manage categories (coming soon)
+                    Manage categories
                   </button>
                 </div>
                 <div
@@ -708,6 +752,81 @@ describe("PersonalNotePage Component", () => {
         );
 
         expect(container.querySelectorAll(".sr-category-button")).toHaveLength(3);
+    });
+
+    it("PersonalNotePage opens CategoryEditorModal when Manage categories button clicked", async () => {
+        const mockAnnotation = {
+            id: mockAnnotationId,
+            highlight: "Highlight",
+            note: "Note",
+            personalNote: "",
+            category: undefined,
+            originalColor: undefined,
+        };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+
+        render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        fireEvent.click(screen.getByRole("button", { name: "Manage categories" }));
+
+        expect(CategoryEditorModalMock).toHaveBeenCalledTimes(1);
+        expect(categoryEditorModalOpenMock).toHaveBeenCalledTimes(1);
+    });
+
+    it("CategoryFilter buttons have aria-label with category name", async () => {
+        mockPlugin.data.settings.annotationCategories = [
+            { name: "insight", icon: "lightbulb" },
+            { name: "quote", icon: "quote" },
+        ];
+        const mockAnnotation = {
+            id: mockAnnotationId,
+            highlight: "Highlight",
+            note: "Note",
+            personalNote: "",
+            category: undefined,
+            originalColor: undefined,
+        };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const buttons = container.querySelectorAll(".sr-category-button");
+        expect(buttons[0]).toHaveAttribute("aria-label", expect.stringContaining("insight"));
+        expect(buttons[1]).toHaveAttribute("aria-label", expect.stringContaining("quote"));
+    });
+
+    it("CategoryFilter buttons have title with category name", async () => {
+        mockPlugin.data.settings.annotationCategories = [
+            { name: "insight", icon: "lightbulb" },
+            { name: "quote", icon: "quote" },
+        ];
+        const mockAnnotation = {
+            id: mockAnnotationId,
+            highlight: "Highlight",
+            note: "Note",
+            personalNote: "",
+            category: undefined,
+            originalColor: undefined,
+        };
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+
+        const { container } = render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        const buttons = container.querySelectorAll(".sr-category-button");
+        expect(buttons[0]).toHaveAttribute("title", "insight");
+        expect(buttons[1]).toHaveAttribute("title", "quote");
     });
 
     it("should handle category click and update state", async () => {

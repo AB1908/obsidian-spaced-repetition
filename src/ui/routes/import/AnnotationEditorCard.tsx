@@ -1,12 +1,13 @@
 import React, { useEffect } from "react";
 import { CategoryFilter } from "src/ui/components/category-filter";
-import { getPluginContext } from "src/application/plugin-context";
-import { resolveAnnotationCategories } from "src/config/annotation-categories";
+import type { CategoryConfig } from "src/config/annotation-categories";
 import { useAnnotationEditor, type Annotation } from "src/ui/routes/import/useAnnotationEditor";
 
 interface AnnotationEditorCardProps {
     annotation: Annotation;
     bookId: string;
+    categories: CategoryConfig[];
+    onManageCategories?: () => void;
     previousAnnotationId: string | null;
     nextAnnotationId: string | null;
     onSaveReady?: (saveFn: () => Promise<void>) => void;
@@ -15,6 +16,8 @@ interface AnnotationEditorCardProps {
 export function AnnotationEditorCard({
     annotation,
     bookId,
+    categories,
+    onManageCategories,
     previousAnnotationId,
     nextAnnotationId,
     onSaveReady,
@@ -30,9 +33,6 @@ export function AnnotationEditorCard({
     } = useAnnotationEditor(annotation, bookId);
     void previousAnnotationId;
     void nextAnnotationId;
-
-    const plugin = getPluginContext() as any;
-    const categories = resolveAnnotationCategories(plugin?.data?.settings?.annotationCategories);
 
     useEffect(() => {
         onSaveReady?.(save);
@@ -58,8 +58,8 @@ export function AnnotationEditorCard({
             </div>
 
             <div style={{ marginTop: "12px" }}>
-                <button type="button" disabled>
-                    Manage categories (coming soon)
+                <button type="button" onClick={onManageCategories}>
+                    Manage categories
                 </button>
             </div>
 

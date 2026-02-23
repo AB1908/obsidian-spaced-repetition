@@ -12,7 +12,23 @@ import { Modal, setIcon } from "src/infrastructure/obsidian-facade";
 type SaveCategories = (updated: CategoryConfig[]) => Promise<void>;
 type GetOrphanCount = (categoryName: string) => number;
 
-export class CategoryEditorModal extends Modal {
+const ModalBase = ((Modal as unknown) || class {
+    app: App;
+    contentEl: HTMLDivElement;
+    modalEl: HTMLDivElement;
+
+    constructor(app: App) {
+        this.app = app;
+        this.contentEl = document.createElement("div");
+        this.modalEl = document.createElement("div");
+    }
+
+    open() {
+        (this as any).onOpen?.();
+    }
+}) as any;
+
+export class CategoryEditorModal extends ModalBase {
     private readonly initialCategories: CategoryConfig[];
     private readonly onSaveCategories: SaveCategories;
     private readonly getOrphanCount: GetOrphanCount;
