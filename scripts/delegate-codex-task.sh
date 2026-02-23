@@ -108,6 +108,23 @@ if [ -n "$TEST_CONTRACT" ] && [ ! -f "$TEST_CONTRACT" ]; then
   exit 1
 fi
 
+# Block if uncommitted changes exist in planning directories.
+# Worktrees branch from HEAD — uncommitted docs/plans/stories will be absent,
+# causing Codex to operate with stale or missing context.
+dirty_docs=""
+for dir in docs/plans docs/stories docs/decisions .claude/skills; do
+  if git status --porcelain "$dir" 2>/dev/null | grep -q .; then
+    dirty_docs="$dirty_docs\n  $dir"
+  fi
+done
+if [ -n "$dirty_docs" ]; then
+  printf "[delegate] ERROR: Uncommitted changes in planning directories:%b\n" "$dirty_docs"
+  echo "[delegate] These files will not be present in the worktree."
+  echo "[delegate] Commit them before delegating."
+  git status --short docs/plans/ docs/stories/ docs/decisions/ .claude/skills/ 2>/dev/null
+  exit 1
+fi
+
 if [ -z "$WORKTREE" ]; then
   WORKTREE=".worktrees/${BRANCH//\//-}"
 fi
