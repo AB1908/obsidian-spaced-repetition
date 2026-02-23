@@ -25,3 +25,6 @@ coverage
 # commit approval workflow
 .commit-approval
 .ccmanager.json
+
+# codex execution raw logs (large, not useful in history)
+docs/executions/logs/
