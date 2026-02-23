@@ -1,5 +1,7 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useLoaderData, useLocation, useNavigate, useParams } from "react-router-dom";
+import { getPluginContext } from "src/application/plugin-context";
+import { resolveAnnotationCategories } from "src/config/annotation-categories";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
 import { getAnnotationById, softDeleteAnnotation } from "src/api";
@@ -8,6 +10,7 @@ import NavigationControl from "src/ui/components/NavigationControl";
 import { pathGenerator } from "src/utils/path-generators";
 import { integerToRGBA } from "src/utils/utils";
 import { AnnotationEditorCard } from "src/ui/routes/import/AnnotationEditorCard";
+import { CategoryEditorModal } from "src/ui/modals/CategoryEditorModal";
 import type { Annotation } from "src/ui/routes/import/useAnnotationEditor";
 
 export async function personalNoteLoader({ params }: any) {
@@ -18,12 +21,16 @@ export async function personalNoteLoader({ params }: any) {
 
 export function PersonalNotePage() {
     const { annotation, bookId } = useLoaderData() as { annotation: Annotation, bookId: string };
+    const plugin = getPluginContext() as any;
     const navigate = useNavigate();
     const location = useLocation();
     const params = useParams();
     const deleteButtonRef = useRef<HTMLDivElement>(null);
     const currentSaveRef = useRef<() => Promise<void>>(async () => {});
     const highlightColor = annotation.originalColor ? integerToRGBA(annotation.originalColor) : null;
+    const [categories, setCategories] = useState(() =>
+        resolveAnnotationCategories(plugin?.data?.settings?.annotationCategories)
+    );
 
     const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, params.sectionId, annotation.id);
     const nextAnnotationId = getNextAnnotationIdForSection(bookId, params.sectionId, annotation.id);
@@ -48,6 +55,32 @@ export function PersonalNotePage() {
             setIcon(deleteButtonRef.current, "trash");
         }
     }, []);
+
+    const handleOpenCategoryEditor = () => {
+        const getOrphanCount = (categoryName: string): number => {
+            const books = plugin?.annotationsNoteIndex?.getAllAnnotationsNotes?.() ?? [];
+            return books.reduce((count: number, book: any) => {
+                const annotations = typeof book?.annotations === "function" ? book.annotations() : [];
+                return count + annotations.filter((item: any) => item?.category === categoryName).length;
+            }, 0);
+        };
+
+        const modal = new CategoryEditorModal(
+            plugin?.app,
+            categories,
+            async (updatedCategories) => {
+                if (plugin?.data?.settings) {
+                    plugin.data.settings.annotationCategories = updatedCategories;
+                }
+                if (typeof plugin?.savePluginData === "function") {
+                    await plugin.savePluginData();
+                }
+                setCategories(updatedCategories);
+            },
+            getOrphanCount
+        );
+        modal.open();
+    };
 
     return (
         <div className="sr-personal-note-page">
@@ -97,6 +130,8 @@ export function PersonalNotePage() {
                 key={annotation.id}
                 annotation={annotation}
                 bookId={bookId}
+                categories={categories}
+                onManageCategories={handleOpenCategoryEditor}
                 previousAnnotationId={previousAnnotationId}
                 nextAnnotationId={nextAnnotationId}
                 onSaveReady={(saveFn) => {

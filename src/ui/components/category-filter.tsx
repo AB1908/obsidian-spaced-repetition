@@ -39,6 +39,8 @@ export function CategoryFilter({
                     key={category.name}
                     className={`sr-category-button is-clickable ${selectedCategory === category.name ? "is-active" : ""}`}
                     onClick={() => handleCategoryClick(category.name)}
+                    aria-label={`Category: ${category.name}`}
+                    title={category.name}
                     style={{
                         padding: "8px",
                         border: "1px solid",
