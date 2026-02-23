@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { updateAnnotationMetadata, softDeleteAnnotation } from "src/api";
 import { integerToRGBA } from "src/utils/utils";
 
-interface Annotation {
+export interface Annotation {
     id: string;
     highlight: string;
     note: string;
@@ -53,6 +53,7 @@ export function useAnnotationEditor(initialAnnotation: Annotation, bookId: strin
         personalNote,
         setPersonalNote,
         selectedCategory,
+        setSelectedCategory,
         handleCategoryClick,
         highlightColor,
         handleSave,
