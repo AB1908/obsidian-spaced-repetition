@@ -2,6 +2,9 @@ import React from "react";
 import { fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { AnnotationListPage } from "src/ui/routes/books/book/annotation/AnnotationListPage";
+import { ProcessedAnnotationRow } from "src/ui/components/ProcessedAnnotationRow";
+import { setIcon } from "src/infrastructure/obsidian-facade";
+import { DEFAULT_ANNOTATION_CATEGORIES } from "src/config/annotation-categories";
 import type { SectionAnnotations } from "src/data/models/annotations";
 import type { SourceCapabilities } from "src/data/models/sourceCapabilities";
 
@@ -66,6 +69,7 @@ describe("AnnotationListPage route context behavior", () => {
     beforeEach(() => {
         sessionStorage.clear();
         jest.clearAllMocks();
+        (setIcon as jest.Mock).mockClear();
         useLoaderDataMock.mockReturnValue({ ...chapterData, sourceCapabilities: moonreaderCapabilities });
     });
 
@@ -120,6 +124,149 @@ describe("AnnotationListPage route context behavior", () => {
                 colorFilter: null,
             });
         });
+    });
+
+    test("processed annotation row renders category icon, not color swatch", () => {
+        useLocationMock.mockReturnValue({ pathname: "/books/1/chapters/2/annotations" });
+        useLoaderDataMock.mockReturnValue({
+            ...chapterData,
+            sourceCapabilities: moonreaderCapabilities,
+            annotations: [
+                {
+                    type: "annotation",
+                    id: "processed-1",
+                    calloutType: "text",
+                    highlight: "Processed quote row",
+                    note: "",
+                    category: "quote",
+                    originalColor: "16711680",
+                },
+            ],
+        });
+
+        render(
+            <MemoryRouter>
+                <AnnotationListPage />
+            </MemoryRouter>
+        );
+
+        const row = screen.getByText("Processed quote row").closest("li");
+        expect(row).toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-category-icon"]')).toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-color-swatch"]')).not.toBeInTheDocument();
+        expect(setIcon).toHaveBeenCalledWith(expect.any(HTMLDivElement), "quote");
+    });
+
+    test("processed annotation row renders neutral placeholder when annotation is uncategorized", () => {
+        render(
+            <MemoryRouter>
+                <ProcessedAnnotationRow
+                    annotation={{
+                        type: "annotation",
+                        id: "processed-uncategorized",
+                        calloutType: "text",
+                        highlight: "Processed uncategorized row",
+                        note: "",
+                    }}
+                    baseLinkPath="cards"
+                    categories={DEFAULT_ANNOTATION_CATEGORIES}
+                />
+            </MemoryRouter>
+        );
+
+        const row = screen.getByText("Processed uncategorized row").closest("li");
+        expect(row).toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-category-placeholder"]')).toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-color-swatch"]')).not.toBeInTheDocument();
+        expect(setIcon).not.toHaveBeenCalled();
+    });
+
+    test("processed annotation row renders flashcard count", () => {
+        useLocationMock.mockReturnValue({ pathname: "/books/1/chapters/2/annotations" });
+        useLoaderDataMock.mockReturnValue({
+            ...chapterData,
+            sourceCapabilities: moonreaderCapabilities,
+            annotations: [
+                {
+                    type: "annotation",
+                    id: "processed-count",
+                    calloutType: "text",
+                    highlight: "Processed counted row",
+                    note: "",
+                    category: "quote",
+                    flashcardCount: 3,
+                },
+            ],
+        });
+
+        render(
+            <MemoryRouter>
+                <AnnotationListPage />
+            </MemoryRouter>
+        );
+
+        const row = screen.getByText("Processed counted row").closest("li");
+        expect(row).toBeInTheDocument();
+        expect(row?.querySelector(".sr-test-counts")).toHaveTextContent("3");
+    });
+
+    test("unprocessed annotation row renders color swatch", () => {
+        useLocationMock.mockReturnValue({ pathname: "/import/books/1/chapters/2/annotations" });
+        useLoaderDataMock.mockReturnValue({
+            ...chapterData,
+            sourceCapabilities: moonreaderCapabilities,
+            annotations: [
+                {
+                    type: "annotation",
+                    id: "unprocessed-swatch",
+                    calloutType: "text",
+                    highlight: "Unprocessed swatch row",
+                    note: "",
+                    originalColor: "16711680",
+                },
+            ],
+        });
+
+        render(
+            <MemoryRouter>
+                <AnnotationListPage />
+            </MemoryRouter>
+        );
+
+        const row = screen.getByText("Unprocessed swatch row").closest("li");
+        expect(row).toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-color-swatch"]')).toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-category-icon"]')).not.toBeInTheDocument();
+        expect(row?.querySelector('[data-testid="annotation-category-placeholder"]')).not.toBeInTheDocument();
+    });
+
+    test("unprocessed annotation row does not render flashcard count", () => {
+        useLocationMock.mockReturnValue({ pathname: "/import/books/1/chapters/2/annotations" });
+        useLoaderDataMock.mockReturnValue({
+            ...chapterData,
+            sourceCapabilities: moonreaderCapabilities,
+            annotations: [
+                {
+                    type: "annotation",
+                    id: "unprocessed-no-count",
+                    calloutType: "text",
+                    highlight: "Unprocessed no count row",
+                    note: "",
+                    originalColor: "16711680",
+                    flashcardCount: 5,
+                },
+            ],
+        });
+
+        render(
+            <MemoryRouter>
+                <AnnotationListPage />
+            </MemoryRouter>
+        );
+
+        const row = screen.getByText("Unprocessed no count row").closest("li");
+        expect(row).toBeInTheDocument();
+        expect(row?.querySelector(".sr-test-counts")).not.toBeInTheDocument();
     });
 
     test("MoonReader card creation category filter uses string categories", async () => {
