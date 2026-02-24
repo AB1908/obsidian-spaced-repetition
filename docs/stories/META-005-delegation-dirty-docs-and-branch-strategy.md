@@ -36,7 +36,7 @@ These are separable:
   delegate script, agents.md, and session habits.
 
 ## Acceptance Criteria
-- [ ] `delegate-codex-task.sh` dirty-docs check is scoped to `--scope-file` and
+- [x] `delegate-codex-task.sh` dirty-docs check is scoped to `--scope-file` and
       `--test-contract` only, not all of `docs/plans/`
 - [ ] Decision documented on story branch strategy (adopt or defer)
 - [ ] If adopted: delegate script and agents.md updated to reflect branch-based flow
