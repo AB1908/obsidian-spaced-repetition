@@ -1,7 +1,7 @@
 # STORY-027: Processed Annotation List Row UI Cleanup
 
 ## Status
-Backlog
+Done
 
 ## Epic
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
@@ -40,13 +40,13 @@ Color swatch removal is scoped to the **processed view only**. The import/proces
 may still benefit from color swatches as a processing signal (annotation origin).
 
 ## Acceptance Criteria
-- [ ] Processed annotation list rows do not render color swatches
-- [ ] Each processed row shows the annotation's category icon (if categorized), or a neutral
+- [x] Processed annotation list rows do not render color swatches
+- [x] Each processed row shows the annotation's category icon (if categorized), or a neutral
       placeholder icon if uncategorized
-- [ ] A product decision is documented on annotation numbers (keep/remove/de-emphasize)
-- [ ] Annotation number decision is implemented
-- [ ] No regression in import/processing view (color swatch remains there if still useful)
-- [ ] Tests cover processed vs. unprocessed row rendering differences
+- [x] A product decision is documented on annotation numbers (keep/remove/de-emphasize)
+- [x] Annotation number decision is implemented
+- [x] No regression in import/processing view (color swatch remains there if still useful)
+- [x] Tests cover processed vs. unprocessed row rendering differences
 
 ## Likely Touchpoints
 - `src/ui/routes/books/book/annotation/AnnotationListPage.tsx`

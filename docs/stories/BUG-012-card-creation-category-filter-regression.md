@@ -1,7 +1,7 @@
 # BUG-012: Card Creation List Shows Color Filtering Instead of Category Filtering
 
 ## Status
-Ready
+Done
 
 ## Epic
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)

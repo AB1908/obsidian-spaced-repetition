@@ -4,6 +4,7 @@ import { annotation, SectionAnnotations } from "src/data/models/annotations";
 import { getFilteredAnnotations } from "src/utils/annotation-filters";
 import { integerToRGBA } from "src/utils/utils";
 import { CategoryFilter } from "src/ui/components/category-filter";
+import { ProcessedAnnotationRow } from "src/ui/components/ProcessedAnnotationRow";
 import { resolveAnnotationCategories } from "src/config/annotation-categories";
 import {
     AnnotationListViewPolicy,
@@ -16,7 +17,7 @@ interface AnnotationListItemProps {
     baseLinkPath: string;
 }
 
-function AnnotationListItem(props: AnnotationListItemProps) {
+function UnprocessedAnnotationRow(props: AnnotationListItemProps) {
     const highlightColor = useMemo(() => {
         if (props.annotation.originalColor) {
             return integerToRGBA(props.annotation.originalColor);
@@ -34,6 +35,7 @@ function AnnotationListItem(props: AnnotationListItemProps) {
                 <li className={"sr-highlight tree-item-self is-clickable"} style={{ display: "flex", alignItems: "center", gap: "8px" }}>
                     {highlightColor && (
                         <div
+                            data-testid="annotation-color-swatch"
                             style={{
                                 width: "12px",
                                 height: "12px",
@@ -47,13 +49,6 @@ function AnnotationListItem(props: AnnotationListItemProps) {
                     <span className={"sr-annotation-text"} style={{ flexGrow: 1 }}>
                         {props.annotation.highlight}
                     </span>
-                    {props.annotation.flashcardCount &&
-                        <span>
-                            <span className={"no-tests tree-item-flair sr-test-counts"}>
-                                {props.annotation.flashcardCount}
-                            </span>
-                        </span>
-                    }
                 </li>
             </Link>
         </div>
@@ -178,9 +173,22 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
             )}
 
             <ul className={"sr-highlight-tree"}>
-                {displayedAnnotations.map((annotation: annotation) => (
-                    <AnnotationListItem key={annotation.id} annotation={annotation} baseLinkPath={baseLinkPath} />
-                ))}
+                {displayedAnnotations.map((annotation: annotation) =>
+                    effectiveFilter === "processed" ? (
+                        <ProcessedAnnotationRow
+                            key={annotation.id}
+                            annotation={annotation}
+                            baseLinkPath={baseLinkPath}
+                            categories={categories}
+                        />
+                    ) : (
+                        <UnprocessedAnnotationRow
+                            key={annotation.id}
+                            annotation={annotation}
+                            baseLinkPath={baseLinkPath}
+                        />
+                    )
+                )}
             </ul>
         </>
     );
