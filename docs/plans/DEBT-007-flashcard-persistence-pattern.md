@@ -21,32 +21,30 @@ Research confirmed:
   (Option B) has no second consumer and would be premature.
 - Dirty-tracking (Option C) introduces crash-before-flush data loss — unacceptable for a
   study tool.
-- Option A adds one file, ~30 lines, zero test changes, zero breaking changes. It creates
-  the natural insertion point for STORY-010 fingerprint hooks.
+- Option A adds one file, ~30 lines, zero test changes, zero breaking changes. It
+  centralizes disk write calls; fingerprinting and drift detection are already fully
+  implemented and integrated.
 
 ---
 
 ### 2. Error handling on write failure
 
-**Options:**
-- **A — Throw on failure**: caller gets a visible error; no silent divergence
-- **B — Return boolean and let caller decide**: more flexible, shifts burden to callers
+**Out of scope for this refactor.**
 
-**Chosen: A — throw on failure.**
-
-`deleteCard` and `updateCardContents` currently have no error path at all (unconditional
-state sync regardless of disk outcome). Introducing throws is a strict improvement.
-`updateCardSchedule` already uses conditional sync — align by making failure explicit
-everywhere. Upper layers (API, UI) can catch and surface errors.
+Error handling behavior (silent fail vs throw vs user-visible notice) is a separate
+concern tracked in DEBT-040. This refactor touches only code structure — immutable
+copies, module extraction. No changes to return values or throw behavior are made.
+`parsedCardStorage` helpers have internal signatures; no public error contract is
+established here.
 
 ---
 
 ### 3. `createParsedCard` disk write
 
 `createParsedCard` in `parsedCard.ts` calls `writeCardToDisk` directly (mixed concern).
-DEBT-003 tracks the full decoupling. In this refactor: update to call `appendCardToDisk`
-from `parsedCardStorage.ts` for vocabulary consistency, but do not restructure the
-function signature or responsibility boundary.
+This is a residual mixing issue; updating to call `appendCardToDisk` from
+`parsedCardStorage.ts` is a vocabulary alignment only — no signature or responsibility
+boundary changes.
 
 ---
 
@@ -59,30 +57,20 @@ import { generateCardAsStorageFormat } from "src/data/utils/TextGenerator";
 import { updateCardOnDisk, deleteCardOnDisk, writeCardToDisk } from "src/infrastructure/disk";
 import type { ParsedCard } from "src/data/models/parsedCard";
 
-/**
- * Targeted find-and-replace for an existing card on disk.
- * Throws if the file is not found or the write fails.
- */
-export async function replaceCardOnDisk(original: ParsedCard, updated: ParsedCard): Promise<void> {
+/** Targeted find-and-replace for an existing card on disk. */
+export async function replaceCardOnDisk(original: ParsedCard, updated: ParsedCard): Promise<boolean> {
     const originalText = generateCardAsStorageFormat(original);
     const updatedText = generateCardAsStorageFormat(updated);
-    const ok = await updateCardOnDisk(original.notePath, originalText, updatedText);
-    if (!ok) throw new Error(`replaceCardOnDisk: file not found: ${original.notePath}`);
+    return updateCardOnDisk(original.notePath, originalText, updatedText);
 }
 
-/**
- * Targeted removal of a card from disk.
- * Throws if the file is not found.
- */
-export async function removeCardFromDisk(card: ParsedCard): Promise<void> {
+/** Targeted removal of a card from disk. */
+export async function removeCardFromDisk(card: ParsedCard): Promise<boolean> {
     const text = generateCardAsStorageFormat(card);
-    const ok = await deleteCardOnDisk(card.notePath, text);
-    if (!ok) throw new Error(`removeCardFromDisk: file not found: ${card.notePath}`);
+    return deleteCardOnDisk(card.notePath, text);
 }
 
-/**
- * Append a new card to the end of a file on disk.
- */
+/** Append a new card to the end of a file on disk. */
 export async function appendCardToDisk(card: ParsedCard): Promise<void> {
     const text = generateCardAsStorageFormat(card);
     await writeCardToDisk(card.notePath, text);
@@ -96,12 +84,12 @@ export async function appendCardToDisk(card: ParsedCard): Promise<void> {
 ```typescript
 // Before
 const text = generateCardAsStorageFormat(parsedCard);
-await deleteCardOnDisk(this.path, text);
+await deleteCardOnDisk(this.path, text);  // boolean return ignored
 this.flashcards = this.flashcards.filter(...);
 this.parsedCards = this.parsedCards.filter(...);
 
-// After
-await removeCardFromDisk(parsedCard);  // throws on failure
+// After (same behavior, cleaner call site)
+await removeCardFromDisk(parsedCard);
 this.flashcards = this.flashcards.filter(...);
 this.parsedCards = this.parsedCards.filter(...);
 ```
@@ -118,10 +106,10 @@ await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, upd
 flashcard.questionText = question;
 flashcard.answerText = answer;
 
-// After: immutable + throws on failure
+// After: immutable copy, cleaner call site (same error behavior as before)
 const originalParsedCard = this.parsedCards.find(...);
 const updatedParsedCard = { ...originalParsedCard, cardText: cardTextGenerator(question, answer, cardType) };
-await replaceCardOnDisk(originalParsedCard, updatedParsedCard);  // throws on failure
+await replaceCardOnDisk(originalParsedCard, updatedParsedCard);
 const parsedIndex = this.parsedCards.findIndex(t => t.id === originalParsedCard.id);
 if (parsedIndex !== -1) this.parsedCards[parsedIndex] = updatedParsedCard;
 flashcard.questionText = question;
@@ -138,18 +126,13 @@ Already has the correct pattern (immutable spread, conditional sync). Update to 
 const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalText, updatedText);
 if (writeSuccessful) { ... }
 
-// After
-await replaceCardOnDisk(parsedCardCopy, updatedParsedCard);  // throws on failure
-// state sync is unconditional here since throw = no sync
-const parsedIndex = ...
-this.parsedCards[parsedIndex] = updatedParsedCard;
-flashcard.dueDate = ...
+// After: same boolean-check pattern, cleaner call site
+const writeSuccessful = await replaceCardOnDisk(parsedCardCopy, updatedParsedCard);
+if (writeSuccessful) {
+    this.parsedCards[parsedIndex] = updatedParsedCard;
+    flashcard.dueDate = ...
+}
 ```
-
-Note: `updateCardSchedule` currently uses `if (writeSuccessful)` with a boolean return.
-After migration to `replaceCardOnDisk` (which throws), the conditional becomes a
-try/catch at the call site if needed, or the throw propagates naturally. Align with
-the throw pattern to be consistent.
 
 ### Changes to `src/data/models/parsedCard.ts`
 
