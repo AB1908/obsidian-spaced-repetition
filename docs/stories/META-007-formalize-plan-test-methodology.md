@@ -1,12 +1,17 @@
-# DEBT-029: Formalize Test Methodology Requirements in Implementation Plans
+# META-007: Formalize Test Methodology Requirements in Implementation Plans
 
 ## Status
 Ready
 
 ## Description
-Implementation plans currently have inconsistent test coverage sections. Some plans (BUG-005) include a test coverage audit and snapshot-first strategy, while others (BUG-007, BUG-008) list test scenarios but don't audit existing coverage or specify test methodology.
+
+Implementation plans currently have inconsistent test coverage sections. Some plans
+(BUG-005) include a test coverage audit and snapshot-first strategy, while others
+(BUG-007, BUG-008) list test scenarios but don't audit existing coverage or specify
+test methodology.
 
 ### Problem
+
 Without a standard, agents receiving plans may:
 - Skip writing tests entirely
 - Write tests that duplicate existing coverage
@@ -14,6 +19,7 @@ Without a standard, agents receiving plans may:
 - Not know whether to use integration tests, unit tests, or snapshots
 
 ### Proposed Standard
+
 Every implementation plan in `docs/plans/` should include a **Test Section** with:
 
 1. **Coverage Audit** — What tests already exist for the affected code paths? List test files, fixture files, and what scenarios they cover.
@@ -27,9 +33,7 @@ Every implementation plan in `docs/plans/` should include a **Test Section** wit
 - [ ] Backfill existing plans in `docs/plans/` with the standard sections (or mark as exempt with rationale)
 - [ ] Add a checklist item to CLAUDE.md plan workflow: "Verify plan includes test methodology section"
 
-## Impact
-Medium — improves plan quality and agent output consistency. Prevents test gaps from slipping through delegation.
-
 ## Related
-- [DEBT-009](DEBT-009-testing-approach-evaluation.md) — diskSummary pattern evaluation
-- `docs/guides/testing.md` — existing testing conventions
+- [META-006](META-006-planning-traceability-and-doc-hygiene.md)
+- [DEBT-009](DEBT-009-testing-approach-evaluation.md)
+- `docs/guides/testing.md`

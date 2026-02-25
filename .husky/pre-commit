@@ -74,7 +74,17 @@ else
   fi
 fi
 
-# Check 3: Run tests (all branches)
+# Check 3: Validate commit message early (before slow test run)
+# .git/COMMIT_EDITMSG is available for -m commits at pre-commit time.
+if [ -f ".git/COMMIT_EDITMSG" ]; then
+  ENFORCEMENT="soft"
+  [ "$BRANCH" = "main" ] && ENFORCEMENT="hard"
+  if ! scripts/validate-commit-msg.sh ".git/COMMIT_EDITMSG" "$BRANCH" "$ENFORCEMENT"; then
+    exit 1
+  fi
+fi
+
+# Check 4: Lint docs
 echo "→ Linting docs..." >&2
 if ! scripts/lint-docs.sh; then
   echo "" >&2
@@ -84,6 +94,7 @@ if ! scripts/lint-docs.sh; then
 fi
 echo "✓ Docs lint passed"
 
+# Check 5: Run tests
 echo "→ Running tests..." >&2
 if ! npm test --silent 2>&1; then
   echo "" >&2
