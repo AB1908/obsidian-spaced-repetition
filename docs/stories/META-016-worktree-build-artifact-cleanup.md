@@ -1,4 +1,4 @@
-# DEBT-037: Worktree Build Artifact Cleanup and Build Gate Without Output
+# META-016: Worktree Build Artifact Cleanup and Build Gate Without Output
 
 ## Status
 Backlog

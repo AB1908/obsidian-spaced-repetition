@@ -1,4 +1,4 @@
-# DEBT-020: NPM Migration Standardization (Remove Yarn Drift)
+# META-011: NPM Migration Standardization (Remove Yarn Drift)
 
 ## Status
 Backlog

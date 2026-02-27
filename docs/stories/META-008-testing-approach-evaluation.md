@@ -1,4 +1,4 @@
-# DEBT-009: api.clippings.test.ts Testing Approach Evaluation
+# META-008: api.clippings.test.ts Testing Approach Evaluation
 
 ## Status
 Ready
