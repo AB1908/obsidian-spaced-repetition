@@ -1,0 +1,11 @@
+{
+  "tagPrefix": "",
+  "bumpFiles": [
+    { "filename": "package.json", "type": "json" },
+    { "filename": "manifest.json", "type": "json" }
+  ],
+  "skip": {
+    "tag": true,
+    "commit": true
+  }
+}

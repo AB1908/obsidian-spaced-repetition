@@ -79,9 +79,13 @@ fi
 echo "Running build with local output override..."
 OBSIDIAN_PLUGIN_DIR=. npm run build
 
+echo "Generating changelog..."
+# .versionrc.json configures tagPrefix="" and skips tag/commit; standard-version bumps package.json + manifest.json
+npx standard-version --release-as "$VERSION" 2>/dev/null
+
 echo "Release files prepared for $VERSION"
 echo "Next steps:"
-echo "  git add manifest.json versions.json"
+echo "  git add manifest.json versions.json package.json CHANGELOG.md"
 echo "  git commit -m \"chore(release): $VERSION\""
 echo "  git tag -a $VERSION -m \"$VERSION\""
 echo "  git push origin main"
