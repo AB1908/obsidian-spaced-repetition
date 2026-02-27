@@ -8,7 +8,6 @@ import { children } from "src/ui/routes/routes";
 import ErrorPage from "src/ui/routes/errorPage";
 import { AnnotationsNoteIndex} from "src/data/models/annotations-note/AnnotationsNoteIndex";
 import { FlashcardIndex } from "src/data/models/flashcard";
-import { ModalTitleProvider } from "src/ui/modals/ModalTitleContext";
 
 /*
 books by title or id?
@@ -37,9 +36,7 @@ export class FlashcardModal extends Modal {
         {
             path: "",
             element: (
-                <ModalTitleProvider>
-                    <Root handleCloseButton={() => this.close()} />
-                </ModalTitleProvider>
+                <Root handleCloseButton={() => this.close()} />
             ),
             errorElement: <ErrorPage />,
             children: children

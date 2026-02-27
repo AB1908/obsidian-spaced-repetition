@@ -1,14 +1,41 @@
 import React, { useEffect, useRef } from "react";
-import { Outlet, useLocation, useNavigate } from "react-router-dom";
+import { Outlet, UIMatch, useLocation, useMatches, useNavigate } from "react-router-dom";
 import { Icon } from "src/types/obsidian-icons";
 import { setIcon } from "src/infrastructure/obsidian-facade";
-import { useModalTitle } from "src/ui/modals/ModalTitleContext";
+
+const DEFAULT_MODAL_TITLE = "Card Coverage";
+
+type ModalTitleHandle = {
+    title?: (match: UIMatch) => string | undefined;
+}
+
+function resolveTitle(matches: UIMatch[]): string {
+    for (let index = matches.length - 1; index >= 0; index--) {
+        const match = matches[index];
+        const handle = match.handle as ModalTitleHandle | undefined;
+        if (typeof handle?.title !== "function") {
+            continue;
+        }
+
+        try {
+            const title = handle.title(match);
+            if (typeof title === "string" && title.length > 0) {
+                return title;
+            }
+        } catch {
+            // Ignore malformed route handle titles and continue up the match chain.
+        }
+    }
+
+    return DEFAULT_MODAL_TITLE;
+}
 
 export function Root({ handleCloseButton }: { handleCloseButton: () => void }) {
     const backButton = useRef<HTMLDivElement>(null);
     const location = useLocation();
     const navigate = useNavigate();
-    const { modalTitle } = useModalTitle();
+    const matches = useMatches();
+    const modalTitle = resolveTitle(matches);
 
     useEffect(() => {
         const back: Icon = "arrow-left";

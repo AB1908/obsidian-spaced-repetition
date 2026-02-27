@@ -2,37 +2,28 @@ import React from "react";
 import { render, screen } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { Root } from "src/ui/routes/root";
-import { ModalTitleProvider } from "src/ui/modals/ModalTitleContext";
 
-// Mock react-router-dom hooks
+const mockUseMatches = jest.fn(() => []);
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
-    useLocation: () => ({ pathname: "/books" }), // Mock initial path
+    useLocation: () => ({ pathname: "/books" }),
     useNavigate: () => jest.fn(),
-    useParams: () => ({ bookId: "mockBook", sectionId: "mockSection" }),
-}));
-
-// Mock getBreadcrumbData from api
-jest.mock("src/api", () => ({
-    getBreadcrumbData: jest.fn(() => ({ bookName: "Mock Book", sectionName: "Mock Section" })),
+    useMatches: () => mockUseMatches(),
 }));
 
 describe("Root Component", () => {
-    test("renders successfully within ModalTitleProvider and displays title", () => {
+    beforeEach(() => {
+        mockUseMatches.mockReturnValue([]);
+    });
+
+    test("renders with default title without route params", () => {
         render(
             <MemoryRouter>
-                <ModalTitleProvider>
-                    <Root handleCloseButton={jest.fn()} />
-                </ModalTitleProvider>
+                <Root handleCloseButton={jest.fn()} />
             </MemoryRouter>
         );
 
-        // Assert that the component renders and displays the expected title
-        expect(screen.getByText("Mock Book / Mock Section")).toBeInTheDocument();
-        // Negative assertion using queryByText
-        expect(screen.queryByText("Edit Personal Note")).not.toBeInTheDocument();
-        
-        // Assert that setIcon was called
+        expect(screen.getByText("Card Coverage")).toBeInTheDocument();
         const { setIcon } = require("src/infrastructure/obsidian-facade");
         expect(setIcon).toHaveBeenCalledWith(
             expect.any(HTMLDivElement),
@@ -40,18 +31,26 @@ describe("Root Component", () => {
         );
     });
 
-    test("renders with default title if no bookId is present", () => {
-        const rr = require("react-router-dom");
-        jest.spyOn(rr, 'useParams').mockReturnValue({});
-        
+    test("renders title from deepest matched route handle", () => {
+        mockUseMatches.mockReturnValue([
+            {},
+            {
+                handle: {
+                    title: () => "Mock Book / Mock Section"
+                },
+                data: {
+                    bookName: "Mock Book",
+                    sectionName: "Mock Section",
+                }
+            }
+        ]);
+
         render(
             <MemoryRouter>
-                <ModalTitleProvider>
-                    <Root handleCloseButton={jest.fn()} />
-                </ModalTitleProvider>
+                <Root handleCloseButton={jest.fn()} />
             </MemoryRouter>
         );
 
-        expect(screen.getByText("Card Coverage")).toBeInTheDocument();
+        expect(screen.getByText("Mock Book / Mock Section")).toBeInTheDocument();
     });
 });

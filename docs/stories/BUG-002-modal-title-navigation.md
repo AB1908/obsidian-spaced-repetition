@@ -1,7 +1,7 @@
 # BUG-002: Modal Title Doesn't Update During Navigation
 
 ## Status
-Ready
+Done
 
 ## Severity
 Medium

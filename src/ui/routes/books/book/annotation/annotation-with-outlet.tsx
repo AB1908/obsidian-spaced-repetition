@@ -2,7 +2,7 @@ import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "reac
 import React, { useEffect } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_JSON_MOCK } from "src/ui/routes/books/review";
-import { getAnnotationById, type NavigationFilter } from "src/api";
+import { getAnnotationById, getBreadcrumbData, type NavigationFilter } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { pathGenerator } from "src/utils/path-generators";
 import {
@@ -29,13 +29,41 @@ export async function annotationLoader({ params }: {
     params: AnnotationLoaderParams
 }) {
     if (!USE_JSON_MOCK) {
-        return getAnnotationById(params.annotationId, params.bookId);
+        const { bookName, sectionName } = getBreadcrumbData(params.bookId, params.sectionId);
+        return {
+            annotation: getAnnotationById(params.annotationId, params.bookId),
+            bookName,
+            sectionName,
+        };
     } else
         return fetch(`http://localhost:3000/annotations/${params.annotationId}`);
 }
 
+interface TitleMatchData {
+    bookName?: string;
+    sectionName?: string;
+}
+
+interface AnnotationTitleMatch {
+    data?: TitleMatchData;
+}
+
+export function annotationBreadcrumbTitle(match: AnnotationTitleMatch): string | undefined {
+    const bookName = match?.data?.bookName;
+    const sectionName = match?.data?.sectionName;
+    if (!bookName) {
+        return undefined;
+    }
+    if (!sectionName) {
+        return bookName;
+    }
+    return `${bookName} / ${sectionName}`;
+}
+
 export function AnnotationWithOutlet() {
-    const annotation = useLoaderData() as annotation;
+    const loaderData = useLoaderData() as annotation | { annotation: annotation };
+    const annotationData = loaderData as { annotation?: annotation };
+    const annotation = annotationData.annotation ?? (loaderData as annotation);
     const params = useParams<keyof AnnotationLoaderParams>();
     const location = useLocation();
     const navigate = useNavigate();
