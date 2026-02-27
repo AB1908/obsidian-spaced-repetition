@@ -8,7 +8,11 @@ import { ReviewDeck, reviewLoader } from "src/ui/routes/books/review";
 import { cardLoader, UpsertCard } from "src/ui/routes/books/card/upsert-card";
 import { EditCard, editCardAction } from "src/ui/routes/books/card/edit-card";
 import { AnnotationListPage, annotationsLoader as flashcardAnnotationsLoader } from "src/ui/routes/books/book/annotation/AnnotationListPage";
-import { annotationLoader, AnnotationWithOutlet } from "src/ui/routes/books/book/annotation/annotation-with-outlet";
+import {
+    annotationBreadcrumbTitle,
+    annotationLoader,
+    AnnotationWithOutlet
+} from "src/ui/routes/books/book/annotation/annotation-with-outlet";
 import {
     deleteFlashcardAction,
     highlightLoader,
@@ -20,6 +24,27 @@ import { BookDetailsPage, bookDetailsLoader } from "src/ui/routes/import/index";
 import { BookCreator, bookCreatorLoader } from "src/ui/components/book-list";
 import { personalNoteLoader, PersonalNotePage } from "./import/personal-note";
 import { ChapterList, chapterLoader } from "src/ui/components/ChapterList";
+import { truncate } from "src/utils/text-helpers";
+
+function defaultTitle() {
+    return "Card Coverage";
+}
+
+function bookTitle(match: any): string | undefined {
+    const bookName = match?.data?.name ?? match?.data?.bookDetails?.name;
+    if (typeof bookName !== "string" || bookName.length === 0) {
+        return undefined;
+    }
+    return bookName;
+}
+
+function cardEditingTitle(match: any): string {
+    const questionText = match?.data?.questionText;
+    if (typeof questionText !== "string" || questionText.length === 0) {
+        return "Creating New Flashcard";
+    }
+    return `Editing: ${truncate(questionText, 50)}`;
+}
 
 export const children: RouteObject[] = [
     {
@@ -28,17 +53,26 @@ export const children: RouteObject[] = [
         children: [
             {
                 path: "/tags",
-                element: <Tags />
+                element: <Tags />,
+                handle: {
+                    title: defaultTitle
+                }
             },
             {
                 path: "/books",
                 element: <Notes />,
-                loader: notesLoader
+                loader: notesLoader,
+                handle: {
+                    title: defaultTitle
+                }
             },
             {
                 path: "/import",
                 element: <ImportDashboard />,
-                loader: importDashboardLoader
+                loader: importDashboardLoader,
+                handle: {
+                    title: defaultTitle
+                }
             }
         ]
     },
@@ -46,11 +80,17 @@ export const children: RouteObject[] = [
         path: "/books/create",
         element: <BookCreator />,
         loader: bookCreatorLoader,
+        handle: {
+            title: defaultTitle
+        }
     },
     {
         path: "/books/:bookId",
         element: <DeckLandingPage />,
         loader: deckLoader,
+        handle: {
+            title: bookTitle
+        },
         children: [
             {
                 path: "",
@@ -71,22 +111,38 @@ export const children: RouteObject[] = [
                 path: "details",
                 element: <BookDetailsPage />,
                 loader: bookDetailsLoader,
+                handle: {
+                    title: bookTitle
+                }
             },
             {
                 path: "chapters/:sectionId/annotations",
+                loader: flashcardAnnotationsLoader,
+                handle: {
+                    title: annotationBreadcrumbTitle
+                },
                 children: [
                     {
                         path: "",
                         element: <AnnotationListPage />,
                         loader: flashcardAnnotationsLoader,
+                        handle: {
+                            title: annotationBreadcrumbTitle
+                        }
                     },
                     {
                         path: ":annotationId",
+                        handle: {
+                            title: annotationBreadcrumbTitle
+                        },
                         children: [
                             {
                                 path: "personal-note",
                                 element: <PersonalNotePage />,
                                 loader: personalNoteLoader,
+                                handle: {
+                                    title: annotationBreadcrumbTitle
+                                }
                             }
                         ]
                     }
@@ -110,23 +166,35 @@ export const children: RouteObject[] = [
         path: "/books/:bookId/flashcards/:flashcardId/edit",
         element: <EditCard />,
         action: editCardAction,
-        loader: cardLoader
+        loader: cardLoader,
+        handle: {
+            title: cardEditingTitle
+        }
     },
     {
         path: "/books/:bookId/chapters/:sectionId/annotations",
         //todo: conditional logic for intermediate page where we display existing flashcards
         loader: flashcardAnnotationsLoader,
         id: "annotationsList",
+        handle: {
+            title: annotationBreadcrumbTitle
+        },
         children: [
             {
                 path: "",
                 element: <AnnotationListPage />,
                 loader: flashcardAnnotationsLoader,
+                handle: {
+                    title: annotationBreadcrumbTitle
+                }
             },
             {
                 path: ":annotationId",
                 element: <AnnotationWithOutlet />,
                 loader: annotationLoader,
+                handle: {
+                    title: annotationBreadcrumbTitle
+                },
                 children: [
                     {
                         path: "flashcards",
@@ -142,13 +210,19 @@ export const children: RouteObject[] = [
                         // TODO: this should be refactored into a single add with params for type of card
                         path: "flashcards/:flashcardId",
                         element: <UpsertCard />,
-                        loader: cardLoader
+                        loader: cardLoader,
+                        handle: {
+                            title: cardEditingTitle
+                        }
                     },
                     {
                         // TODO: this should be refactored into a single add with params for type of card
                         path: "flashcards/new/regular",
                         element: <UpsertCard />,
-                        loader: cardLoader
+                        loader: cardLoader,
+                        handle: {
+                            title: cardEditingTitle
+                        }
                     }
                 ]
             }

@@ -4,7 +4,7 @@ import { getPluginContext } from "src/application/plugin-context";
 import { resolveAnnotationCategories } from "src/config/annotation-categories";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { setIcon } from "src/infrastructure/obsidian-facade";
-import { getAnnotationById, softDeleteAnnotation } from "src/api";
+import { getAnnotationById, getBreadcrumbData, softDeleteAnnotation } from "src/api";
 import { getNextAnnotationIdForSection, getPreviousAnnotationIdForSection } from "src/ui/routes/books/api";
 import NavigationControl from "src/ui/components/NavigationControl";
 import { pathGenerator } from "src/utils/path-generators";
@@ -14,9 +14,10 @@ import { CategoryEditorModal } from "src/ui/modals/CategoryEditorModal";
 import type { Annotation } from "src/ui/routes/import/useAnnotationEditor";
 
 export async function personalNoteLoader({ params }: any) {
-    const { bookId, annotationId } = params;
+    const { bookId, sectionId, annotationId } = params;
     const annotation = await getAnnotationById(annotationId, bookId);
-    return { annotation, bookId };
+    const { bookName, sectionName } = getBreadcrumbData(bookId, sectionId);
+    return { annotation, bookId, bookName, sectionName };
 }
 
 export function PersonalNotePage() {

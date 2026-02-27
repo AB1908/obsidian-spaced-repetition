@@ -3,7 +3,7 @@ import { useLoaderData, useLocation } from "react-router-dom";
 import { AnnotationDisplayList } from "src/ui/components/annotation-display-list";
 import { SectionAnnotations } from "src/data/models/annotations";
 import { USE_JSON_MOCK } from "src/ui/routes/books/review";
-import { getAnnotationsForSection, getSourceCapabilities } from "src/api";
+import { getAnnotationsForSection, getBreadcrumbData, getSourceCapabilities } from "src/api";
 import {
     AnnotationMainFilter,
     getAnnotationListViewPolicy,
@@ -18,8 +18,11 @@ export function annotationsLoader({params}: {params: AnnotationsLoaderParams}) {
     if (!USE_JSON_MOCK) {
         const sectionData = getAnnotationsForSection(params.sectionId, params.bookId);
         if (!sectionData) return sectionData;
+        const { bookName, sectionName } = getBreadcrumbData(params.bookId, params.sectionId);
         return {
             ...sectionData,
+            bookName,
+            sectionName,
             sourceCapabilities: getSourceCapabilities(params.bookId),
         };
     } else

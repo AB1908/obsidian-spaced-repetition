@@ -23,6 +23,8 @@ export interface SectionAnnotations {
     id:          string;
     annotations: annotation[];
     title:       string;
+    bookName?:   string;
+    sectionName?: string;
     sourceCapabilities?: SourceCapabilities;
 }
 
