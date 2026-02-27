@@ -1,8 +1,8 @@
 import { CardType } from "src/types/CardType";
 import {nanoid} from "nanoid";
-import {writeCardToDisk} from "src/infrastructure/disk";
-import {cardTextGenerator, generateCardAsStorageFormat, metadataTextGenerator} from "src/data/utils/TextGenerator";
+import {cardTextGenerator, metadataTextGenerator} from "src/data/utils/TextGenerator";
 import {FLAG} from "src/data/parser";
+import { appendCardToDisk } from "src/data/utils/parsedCardStorage";
 
 export interface ParsedCard {
     id: string,
@@ -37,7 +37,7 @@ export async function createParsedCard(
         lineNo: -1,
         cardType: cardType,
     };
-    await writeCardToDisk(parsedCard.notePath, generateCardAsStorageFormat(parsedCard));
+    await appendCardToDisk(parsedCard);
     return parsedCard;
 }
 

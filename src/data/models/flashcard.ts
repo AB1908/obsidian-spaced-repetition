@@ -6,15 +6,15 @@ import { FLAG, FlashcardMetadata, parseCardText, parseFileText, parseMetadata } 
 import { moment, ObsidianNotice } from "src/infrastructure/obsidian-facade";
 import {
     cardTextGenerator,
-    generateCardAsStorageFormat,
     metadataTextGenerator,
     SchedulingMetadata
 } from "src/data/utils/TextGenerator";
 import { plugin } from "src/main";
 import { createParsedCard, ParsedCard } from "src/data/models/parsedCard";
-import { getAnnotationFilePath, updateCardOnDisk, deleteCardOnDisk } from "../../infrastructure/disk";
+import { getAnnotationFilePath } from "../../infrastructure/disk";
 import { filePathsWithTag } from "src/infrastructure/disk";
 import { calculateDelayBeforeReview } from "../utils/calculateDelayBeforeReview";
+import { removeCardFromDisk, replaceCardOnDisk } from "src/data/utils/parsedCardStorage";
 
 export interface AbstractFlashcard {
     id: string,
@@ -188,13 +188,12 @@ export class FlashcardNote {
     async deleteCard(flashcardId: string) {
         const flashcard = this.flashcards.find(t => t.id === flashcardId);
         if (!flashcard) throw new Error(`Flashcard not found: ${flashcardId}`);
-        
+
         const parsedCard = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
         if (!parsedCard) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
 
-        const text = generateCardAsStorageFormat(parsedCard);
-        await deleteCardOnDisk(this.path, text);
-        
+        const writeSuccessful = await removeCardFromDisk(parsedCard);
+        if (writeSuccessful === false) return;
         this.flashcards = this.flashcards.filter(t => t.id !== flashcardId);
         this.parsedCards = this.parsedCards.filter(t => t.id !== flashcard.parsedCardId);
     }
@@ -203,23 +202,23 @@ export class FlashcardNote {
         const flashcard = this.flashcards.find(t => t.id === flashcardId);
         if (!flashcard) throw new Error(`Flashcard not found: ${flashcardId}`);
 
-        const parsedCardCopy = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
-        if (!parsedCardCopy) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
+        const originalParsedCard = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
+        if (!originalParsedCard) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
 
-        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        parsedCardCopy.cardText = cardTextGenerator(question, answer, cardType);
+        const updatedParsedCard = {
+            ...originalParsedCard,
+            cardText: cardTextGenerator(question, answer, cardType),
+        };
 
-        const updatedCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-        await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        const writeSuccessful = await replaceCardOnDisk(originalParsedCard, updatedParsedCard);
+        if (writeSuccessful === false) return;
 
-        // Update in-memory state
-        // Object references might be tricky here, so we update explicitly
+        const parsedIndex = this.parsedCards.findIndex(t => t.id === originalParsedCard.id);
+        if (parsedIndex !== -1) {
+            this.parsedCards[parsedIndex] = updatedParsedCard;
+        }
         flashcard.questionText = question;
         flashcard.answerText = answer;
-        
-        // Since we modified parsedCardCopy in place (it's a reference found in the array), 
-        // the array is effectively updated, but let's be explicit if needed.
-        // JS/TS finds return references to objects in the array.
     }
 
     async updateCardSchedule(flashcardId: string, updatedSchedulingMetadata: SchedulingMetadata) {
@@ -229,8 +228,6 @@ export class FlashcardNote {
         const parsedCardCopy = this.parsedCards.find(t => t.id === flashcard.parsedCardId);
         if (!parsedCardCopy) throw new Error(`Parsed card not found for flashcard: ${flashcardId}`);
 
-        const originalCardAsStorageFormat = generateCardAsStorageFormat(parsedCardCopy);
-
         const updatedParsedCard = {
             ...parsedCardCopy,
             metadataText: metadataTextGenerator(
@@ -239,9 +236,7 @@ export class FlashcardNote {
                 flashcard.flag
             )
         };
-        const updatedCardAsStorageFormat = generateCardAsStorageFormat(updatedParsedCard);
-
-        const writeSuccessful = await updateCardOnDisk(parsedCardCopy.notePath, originalCardAsStorageFormat, updatedCardAsStorageFormat);
+        const writeSuccessful = await replaceCardOnDisk(parsedCardCopy, updatedParsedCard);
 
         if (writeSuccessful) {
             // Update parsed cards array
