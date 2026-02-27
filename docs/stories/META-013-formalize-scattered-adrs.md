@@ -1,4 +1,4 @@
-# DEBT-027: Formalize Scattered ADRs
+# META-013: Formalize Scattered ADRs
 
 ## Status
 Ready
