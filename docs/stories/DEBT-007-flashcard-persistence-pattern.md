@@ -1,7 +1,7 @@
 # DEBT-007: FlashcardNote Persistence Pattern Refactor
 
 ## Status
-Ready
+Done
 
 ## Epic
 None
