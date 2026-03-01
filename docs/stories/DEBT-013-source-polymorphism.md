@@ -5,50 +5,68 @@ Backlog
 
 ## Description
 
-The plugin now has two distinct source types that share the `AnnotationsNote` model:
+The plugin has two distinct source types that share the `AnnotationsNote` model. The strategy pattern has been partially implemented, but vocabulary and boundary issues remain.
 
-1. **MoonReader annotation exports** (`review/book` tag) — original use case. The file is a structured export with chapters and annotations. A separate flashcard note is created as a sidecar.
-2. **Direct markdown sources** (`clippings` tag) — new use case. The file is a regular markdown note with headings and paragraphs. Block IDs are injected, the file is moved to its own folder, and a flashcard note is created.
+### Current State
 
-These have different behaviors at multiple layers:
+Two source types exist:
+1. **MoonReader annotation exports** (`review/book` or `review/note` tag) — file is a structured Moon Reader export. A separate flashcard sidecar is created.
+2. **Direct markdown sources** (`clippings` tag) — file is a regular markdown note. Block IDs are injected, the file is moved to its own folder, and a flashcard sidecar is created.
 
-### Mutation at deck creation
-- MoonReader sources: no mutation needed, file structure is already stable
-- Markdown sources: `addBlockIdsToParagraphs` injects `^blockId` into paragraphs, `ensureDirectMarkdownSourceInOwnFolder` moves the file. Both of these live in `api.ts` as free functions — they have no home in the domain model.
+The **strategy pattern is now implemented** via `FlashcardSourceStrategy` (`src/data/models/FlashcardSourceStrategy.ts`), with concrete classes:
+- `MoonReaderStrategy` (`src/data/models/strategies/MoonReaderStrategy.ts`)
+- `MarkdownSourceStrategy` (`src/data/models/strategies/MarkdownSourceStrategy.ts`)
 
-### Block ID generation
-- `addBlockIdsToParagraphs` generates hex block IDs (`customAlphabet("0123456789abcdef", 6)`) for Obsidian reading mode compatibility. This is currently a module-level constant in `api.ts`. It should belong to whatever owns markdown source mutation.
+Strategy is resolved by `resolveSourceStrategy()` in `src/data/models/annotations-note/source-strategy.ts`, which delegates to `getSourceType()` in `src/data/source-discovery.ts`.
 
-### Model identity
-- `AnnotationsNote` serves both source types identically. It has `bookSections`, references "chapters" and "annotations" — vocabulary that fits MoonReader but not markdown.
-- `source-discovery.ts` distinguishes between source types (`direct-markdown` vs `review/book`) but `AnnotationsNote` doesn't — it's the same class either way.
-- The `frontbook` interface name leaks the book metaphor into the type system.
+`AnnotationsNote.getNavigableSections()` delegates to `this.strategy.getNavigableSections()`, which now returns chapters for MoonReader sources and appropriate headings for markdown sources.
 
-### Where things break
-- After creating a deck from a markdown source, the chapters/annotations navigation shows nothing (DEBT-011) — because the book-shaped API doesn't match the markdown-shaped content.
-- `addBlockIdsToParagraphs` reads raw file contents and metadata — it's doing markdown source mutation but lives in the orchestration layer.
+### Remaining Issues
 
-### The hard question
-Should there be a `Source` abstraction with markdown and annotation-export variants? Or should `AnnotationsNote` become more generic? The tradeoffs:
+**Vocabulary drift in `AnnotationsNote`:**
+- `bookSections`, `getBookFrontmatter()`, `book.id`, `getBook()` — still use book-metaphor naming
+- `AnnotationsNote` struct implements `frontbook` interface (in `annotations-note/types.ts`), which is annotated with `// TODO: this is not really a "book" per se`
+- `SourceRecord` type alias exists in `types.ts` but is not yet used in place of `frontbook`
+- `AnnotationsNoteIndex.getBook()` returns an `AnnotationsNote` — the method name is still book-flavoured
 
-- **Polymorphic Source**: Clean separation, each variant owns its mutation/parsing/navigation logic. Risk: over-engineering if the variants converge.
-- **Generic AnnotationsNote**: Less code, one model to maintain. Risk: grows into a god class with conditionals everywhere.
-- **Strategy pattern on AnnotationsNote**: Middle ground — same class, swappable behaviors for mutation, parsing, navigation. Risk: indirection without clarity.
+**Stub abstraction in `Source.ts`:**
+- `FlashcardSource` / `Source` class in `src/data/models/Source.ts` exists as a stub with a `getAnnotationsNotePath()` that returns `""` and is unused. `ISourceStrategy` in `src/data/models/ISourceStrategy.ts` is a backward-compat alias. Neither is consumed anywhere in the production code path.
 
-No strong recommendation yet. Needs tradeoff analysis with concrete examples from both code paths.
+**Deck creation mutation lives in application layer:**
+- `addBlockIdsToParagraphs` and `ensureDirectMarkdownSourceInOwnFolder` in `src/application/deck-creation-helpers.ts` operate on raw file contents and metadata — markdown-source-specific mutation logic that has no home in the strategy or model.
+
+**`frontbook` interface name** leaks the book metaphor into the type system. `SourceRecord` alias was added as a future replacement but is not yet used.
+
+### Where Behavior Still Diverges
+- After `createFlashcardNote()`, `AnnotationsNote.bookSections` may still be empty for markdown sources if the initialize cycle does not re-run after block ID injection and file move.
+- `getNavigableSections()` now delegates to the strategy, so this is improved. But `getAnnotation()` still calls `toAnnotationLike()` on paragraphs, which is a shim rather than proper polymorphism.
 
 ## Acceptance Criteria
 - [x] Analyse both source paths end-to-end (creation, parsing, navigation, flashcard generation) — see plan
-- [x] Document where behavior diverges and where it converges — see plan, behavior divergence inventory
-- [x] Propose model design with tradeoff analysis — composition/strategy (ADR-018 confirmed), 4-PR plan
+- [x] Document where behavior diverges and where it converges — strategy pattern implemented
+- [x] Propose model design with tradeoff analysis — composition/strategy (ADR-018 confirmed)
+- [ ] Remove or replace the `FlashcardSource`/`Source` stub in `src/data/models/Source.ts`
+- [ ] Replace `frontbook` / `getBook()` vocabulary with source-neutral names
+- [ ] Move markdown-source mutation helpers out of application layer into the strategy or a dedicated domain module
 - [ ] Consider migration path for existing vault data
 
 ## Plan
 [Source Model Seam Repair](../plans/DEBT-011-source-model-seam-repair.md) — PRs 2-4 address this story's concerns
 
+## Likely Touchpoints
+- `src/data/models/annotations-note/AnnotationsNote.ts` — `frontbook` impl, `getBookFrontmatter()`, book-metaphor methods
+- `src/data/models/annotations-note/types.ts` — `frontbook`, `SourceRecord`, `book` interfaces
+- `src/data/models/annotations-note/AnnotationsNoteIndex.ts` — `getBook()`, `sourceNotes`
+- `src/data/models/annotations-note/source-strategy.ts` — strategy resolution
+- `src/data/models/FlashcardSourceStrategy.ts` — strategy interface
+- `src/data/models/strategies/MarkdownSourceStrategy.ts` — markdown strategy implementation
+- `src/data/models/strategies/MoonReaderStrategy.ts` — MoonReader strategy implementation
+- `src/data/models/Source.ts` — stub `FlashcardSource`/`Source` class (unused, should be removed)
+- `src/data/models/ISourceStrategy.ts` — backward-compat alias (should be removed)
+- `src/application/deck-creation-helpers.ts` — `addBlockIdsToParagraphs`, `ensureDirectMarkdownSourceInOwnFolder`
+- `src/data/source-discovery.ts` — `SourceType`, `getSourceType()`
+
 ## Related
-- [DEBT-011](../archive/stories/DEBT-011-book-metaphor-clippings.md) — UI/route side of the book metaphor problem
 - [DEBT-001](DEBT-001-inconsistent-data-models.md) — discriminated union (PR 1 prerequisite)
 - [DEBT-006](DEBT-006-disk-business-logic.md) — disk.ts boundary (related extraction targets)
-- [BUG-004](../archive/stories/BUG-004-block-id-format.md) — block ID generation, currently homeless in api.ts
 - [STORY-013](../archive/stories/STORY-013-markdown-deck-creation-source-chooser.md) — introduced the markdown source path
