@@ -4,6 +4,12 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 
 ---
 
+2026-03-01: Test contract gotcha — absence checks need negation.
+- `grep -rn "foo" src/` exits 0 when it FINDS matches, 1 when it doesn't.
+- Contract script treats non-zero exit as failure, so bare grep passes only when the
+  symbol still exists — wrong for "confirm it's gone" checks.
+- Fix: use `bash -c '! grep -rn "foo" src/'` in TEST_CMD lines.
+
 2026-03-01: Token optimization opportunities identified:
 - delegate-codex-task.sh: Codex output IS captured by Claude (passes through token budget).
   A --quiet mode suppressing per-turn transcript, returning only final summary + contract

@@ -10,4 +10,4 @@ TEST_NAME: getSourcesAvailableForDeckCreation
 
 TEST_CMD: npm test -- --testPathPattern="api"
 TEST_CMD: npm run build
-TEST_CMD: grep -rn "getNotesWithoutReview" src/ tests/
+TEST_CMD: bash -c '! grep -rn "getNotesWithoutReview" src/ tests/'
