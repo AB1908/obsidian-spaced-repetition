@@ -4,6 +4,10 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 
 ---
 
+2026-03-01: DEBT-002, DEBT-006, DEBT-008, DEBT-012, DEBT-014 all need rewriting before
+delegation — repo structure has changed significantly since they were written. Touchpoints
+and problem descriptions are stale. Do NOT delegate without a freshness pass first.
+
 2026-02-26: `git merge --squash` vs cherry-pick — the delegate script currently cherry-picks the
 Codex commit by hash. `--squash` would be cleaner and more scriptable (no need to know the hash,
 works with N commits). BUT: original intent may have been to preserve multiple logical commits
