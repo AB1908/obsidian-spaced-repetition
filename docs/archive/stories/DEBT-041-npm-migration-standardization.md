@@ -1,7 +1,7 @@
 # DEBT-041: NPM Migration Standardization (Remove Yarn Drift)
 
 ## Status
-Backlog
+Done
 
 ## Epic
 None
