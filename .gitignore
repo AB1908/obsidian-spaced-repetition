@@ -30,3 +30,4 @@ coverage
 
 # codex execution raw logs (large, not useful in history)
 docs/executions/logs/
+docs/executions/*.log
