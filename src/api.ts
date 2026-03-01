@@ -16,7 +16,7 @@ export {
     updateFlashcardSchedulingMetadata,
 } from "src/application/review-api";
 
-export type { NotesWithoutBooks, frontEndBook } from "src/application/source-api";
+export type { SourceListingEntry, frontEndBook } from "src/application/source-api";
 export {
     getAnnotationsNoteById,
     getBookById,

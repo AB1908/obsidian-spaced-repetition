@@ -1,5 +1,5 @@
 import React from "react";
-import { createFlashcardNoteForAnnotationsNote, getSourcesAvailableForDeckCreation, NotesWithoutBooks } from "src/api";
+import { createFlashcardNoteForAnnotationsNote, getSourcesAvailableForDeckCreation, SourceListingEntry } from "src/api";
 import { useNavigate } from "react-router-dom";
 import { useLoaderData } from "react-router";
 
@@ -8,7 +8,7 @@ export function bookCreatorLoader() {
 }
 
 export function BookCreator() {
-    const bookList = useLoaderData() as NotesWithoutBooks[];
+    const bookList = useLoaderData() as SourceListingEntry[];
     const navigate = useNavigate();
 
     function confirmMutation() {
@@ -19,7 +19,7 @@ export function BookCreator() {
         }
     }
 
-    async function clickHandler(book: NotesWithoutBooks) {
+    async function clickHandler(book: SourceListingEntry) {
         if (book.requiresSourceMutationConfirmation) {
             const shouldProceed = confirmMutation();
             if (!shouldProceed) return;

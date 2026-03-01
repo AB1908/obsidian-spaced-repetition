@@ -21,7 +21,7 @@ export interface frontEndBook {
     canBeReviewed: boolean;
 }
 
-export interface NotesWithoutBooks {
+export interface SourceListingEntry {
     name: string;
     id: string;
     tags: string[];
@@ -99,7 +99,7 @@ export function getSourceCapabilities(bookId: string): SourceCapabilities {
 
 // todo: expand to also include other notes and not just books
 // todo: consider using the tag to fetch here??
-export function getSourcesAvailableForDeckCreation(): NotesWithoutBooks[] {
+export function getSourcesAvailableForDeckCreation(): SourceListingEntry[] {
     const plugin = getPluginContext();
     return plugin.annotationsNoteIndex.getSourcesWithoutFlashcards().map(sourceNote => {
         const capabilities = sourceNote.getSourceCapabilities();

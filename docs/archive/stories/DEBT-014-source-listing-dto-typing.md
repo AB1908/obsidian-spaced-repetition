@@ -1,7 +1,7 @@
 # DEBT-014: Source Listing DTO Naming and Typing Cleanup
 
 ## Status
-Backlog
+Done
 
 ## Epic
 None

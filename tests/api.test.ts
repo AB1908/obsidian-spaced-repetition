@@ -1,4 +1,5 @@
 import { createDiskMockFromFixtures } from "./helpers";
+import fs from "fs";
 jest.mock("src/infrastructure/disk", () => {
     const mock = createDiskMockFromFixtures([
         "createFlashcardsFileForBook.json",
@@ -535,6 +536,13 @@ describe("getSourcesAvailableForDeckCreation", () => {
               },
             ]
         `);
+    });
+
+    test("DEBT-014 contract: API uses SourceListingEntry type name", () => {
+        const apiModuleSource = fs.readFileSync("src/api.ts", "utf8");
+        const deprecatedTypeName = ["Notes", "Without", "Books"].join("");
+        expect(apiModuleSource).toContain("SourceListingEntry");
+        expect(apiModuleSource).not.toContain(deprecatedTypeName);
     });
 });
 
