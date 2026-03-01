@@ -55,7 +55,6 @@ import {
     resetBookReviewState,
     getSectionTreeForBook,
     getBookChapters,
-    getNotesWithoutReview,
     getSourcesAvailableForDeckCreation,
     getSourceCapabilities,
     createFlashcardNoteForAnnotationsNote,
@@ -512,10 +511,6 @@ describe("getSourcesAvailableForDeckCreation", () => {
               },
             ]
         `);
-    });
-
-    test("deprecated alias getNotesWithoutReview returns the same results", () => {
-        expect(getNotesWithoutReview()).toEqual(getSourcesAvailableForDeckCreation());
     });
 
     test("DEBT-021 contract: source labels and listing shape are explicit", () => {

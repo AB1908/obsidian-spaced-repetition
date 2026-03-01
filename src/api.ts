@@ -21,7 +21,6 @@ export {
     getAnnotationsNoteById,
     getBookById,
     getBookChapters,
-    getNotesWithoutReview,
     getSectionTreeForBook,
     getSourceCapabilities,
     getSourcesAvailableForDeckCreation,

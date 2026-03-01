@@ -1,7 +1,7 @@
 # DEBT-008: getNotesWithoutReview Naming and Complexity
 
 ## Status
-Ready
+Done
 
 ## Epic
 None

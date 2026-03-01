@@ -113,6 +113,3 @@ export function getSourcesAvailableForDeckCreation(): NotesWithoutBooks[] {
         };
     });
 }
-
-/** @deprecated Use getSourcesAvailableForDeckCreation instead. */
-export const getNotesWithoutReview = getSourcesAvailableForDeckCreation;
