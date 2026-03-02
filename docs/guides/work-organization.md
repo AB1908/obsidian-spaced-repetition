@@ -339,7 +339,27 @@ wf(hooks): optimize pre-commit for docs-only commits
 
 ## Grouping: Epics and Branches
 
-- **Epic** = logical grouping. Stories share `Epic: STORY-010`.
+### Epic convention
+
+Use Epic as a **release/milestone grouping** — one epic = one release milestone (e.g. `0.7.0`).
+Stories without a release target stay `None`. Cross-cutting stories pick the milestone they unblock.
+
+```
+## Epic
+0.7.0
+```
+
+Query stories by epic:
+```bash
+scripts/story-catalog.sh list --epic 0.7.0
+```
+
+This replaces the need for separate sprint plan files in `docs/plans/releases/`.
+Feature-theme grouping (e.g. "Annotation UX") is too cross-cutting to be useful — use tags in
+story descriptions instead.
+
+### Branch convention
+
 - **Branch** = physical grouping. Stories declare `Branch: feat/markdown-source-strategy`.
 - An epic story file lists sub-stories. Sub-stories reference the epic.
 - `grep -l "Epic: STORY-010" docs/stories/*` finds everything in the epic.

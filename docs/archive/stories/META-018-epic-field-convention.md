@@ -1,7 +1,7 @@
 # META-018: Define and Adopt Epic Field Convention
 
 ## Status
-Proposed
+Done
 
 ## Epic
 None

@@ -54,6 +54,15 @@ story_epic_from_file() {
 }
 
 list_cmd() {
+  local epic_filter=""
+  while [ "$#" -gt 0 ]; do
+    case "$1" in
+      --epic) shift; epic_filter="${1:-}" ;;
+      *) echo "story-catalog list: unknown option: $1" >&2; exit 2 ;;
+    esac
+    shift
+  done
+
   trap 'exit 0' PIPE
   shopt -s nullglob
   local files=("${STORIES_DIR}"/*.md)
@@ -69,6 +78,9 @@ list_cmd() {
     title="$(story_title_from_file "$file")"
     status="$(story_status_from_file "$file")"
     epic="$(story_epic_from_file "$file")"
+    if [ -n "$epic_filter" ] && [ "$epic" != "$epic_filter" ]; then
+      continue
+    fi
     printf "%s|%s|%s|%s|%s\n" "$key" "$status" "$title" "$file" "$epic" 2>/dev/null || return 0
   done
 }
