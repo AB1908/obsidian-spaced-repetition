@@ -7,5 +7,18 @@
   "skip": {
     "tag": true,
     "commit": true
-  }
+  },
+  "types": [
+    { "type": "feat",     "section": "Features" },
+    { "type": "fix",      "section": "Bug Fixes" },
+    { "type": "refactor", "section": "Refactors" },
+    { "type": "perf",     "section": "Performance", "hidden": true },
+    { "type": "chore",    "hidden": true },
+    { "type": "docs",     "hidden": true },
+    { "type": "style",    "hidden": true },
+    { "type": "test",     "hidden": true },
+    { "type": "plan",     "hidden": true },
+    { "type": "story",    "hidden": true },
+    { "type": "wf",       "hidden": true }
+  ]
 }

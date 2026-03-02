@@ -113,7 +113,7 @@ Plus `docs/archive/` for completed or stale context.
 
 ### Session Start Workflow
 
-Run `./scripts/project-status.sh --release` for a single-read project state summary. This replaces per-file grepping and minimizes token usage on session start.
+Run `./scripts/project-status.sh --brief` for a minimal session-start orientation (~8 lines). Use `--release` to include release plan items. These replace per-file grepping and minimize token usage on session start.
 
 For deeper investigation:
 1. **Dependency check** — read `Depends on:` fields in relevant stories, flag blockers
@@ -130,10 +130,19 @@ For deeper investigation:
 ### Commit Convention
 
 ```
-<type>(<scope>): <what> [<STORY-ID>]
-
-<why — one line linking to user need>
+<type>(<scope>): <what changed in 5-10 words>
 ```
+
+**Standard types** (appear in CHANGELOG): `feat`, `fix`, `refactor`
+
+**Infra types** (hidden from CHANGELOG): `chore`, `docs`, `test`, `style`, `perf`
+
+**LLM workflow types** (hidden from CHANGELOG):
+- `plan:` — scope files, test contracts, ADRs, session plans
+- `story:` — story lifecycle events (create, update, close, archive)
+- `wf:` — workflow tooling (hooks, scripts, skills, delegation infrastructure)
+
+`docs:` is for genuine reference documentation only (guides, README, CLAUDE.md).
 
 **Full details:** See `docs/guides/work-organization.md` and `docs/guides/workflow.md`
 

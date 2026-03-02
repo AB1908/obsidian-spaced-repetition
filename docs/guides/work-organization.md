@@ -300,7 +300,25 @@ Default order is strict:
 **Subject line:** No story IDs. Keep under 72 chars. Concise description of what changed.
 **Body:** Story ID goes here, along with the "why" context.
 
-Examples:
+### Type reference
+
+**Standard types** (appear in CHANGELOG):
+- `feat` — user-facing feature
+- `fix` — bug fix
+- `refactor` — code restructure with no behavior change
+
+**Infra types** (hidden from CHANGELOG):
+- `chore` — dependency updates, release prep, config
+- `docs` — reference documentation: guides, README, CLAUDE.md
+- `test` — test-only changes
+- `style` / `perf` — formatting, performance
+
+**LLM workflow types** (hidden from CHANGELOG):
+- `plan:` — scope files, test contracts, ADRs, session plans
+- `story:` — story lifecycle events (create, update, close, archive)
+- `wf:` — workflow tooling (hooks, scripts, skills, delegation infrastructure)
+
+### Examples
 ```
 feat(fingerprint): add content hash for drift detection
 
@@ -308,9 +326,15 @@ Enable detecting when source text changes after flashcard creation. [STORY-010a]
 ```
 
 ```
-fix(parser): handle metadata without fingerprint segment
+story: close and archive DEBT-014, DEBT-041
+```
 
-Backward compatibility for flashcards created before fingerprinting. [STORY-010a]
+```
+plan: add scope and contract for type rename
+```
+
+```
+wf(hooks): optimize pre-commit for docs-only commits
 ```
 
 ## Grouping: Epics and Branches

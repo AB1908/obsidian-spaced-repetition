@@ -2,14 +2,25 @@
 # project-status.sh — Single-read project state summary for session start.
 # Replaces per-file grepping that burns tokens on every new session.
 #
-# Usage: ./scripts/project-status.sh [--release]
-#   --release   Show only items in the active release plan
+# Usage: ./scripts/project-status.sh [--release] [--brief]
+#   --release   Include active release plan items
+#   --brief     Minimal output (~8 lines): git state + active/ready/proposed story counts + in-progress list
 
 set -euo pipefail
 
 STORIES_DIR="docs/stories"
 PLANS_DIR="docs/plans"
-CHANGELOG="CHANGELOG.md"
+
+SHOW_RELEASE=0
+BRIEF=0
+while [ $# -gt 0 ]; do
+  case "$1" in
+    --release) SHOW_RELEASE=1 ;;
+    --brief)   BRIEF=1 ;;
+    *) echo "Unknown option: $1" >&2; exit 1 ;;
+  esac
+  shift
+done
 
 # Colors (disabled if not terminal)
 if [ -t 1 ]; then
@@ -32,10 +43,8 @@ status_icon() {
   esac
 }
 
-# --- Current version ---
-current_version=$(node -p "require('./package.json').version" 2>/dev/null || echo "unknown")
-
 # --- Git state ---
+current_version=$(node -p "require('./package.json').version" 2>/dev/null || echo "unknown")
 branch=$(git branch --show-current 2>/dev/null || echo "unknown")
 commits_ahead=$(git rev-list --count origin/main..HEAD 2>/dev/null || echo "?")
 last_commit=$(git log --oneline -1 2>/dev/null || echo "unknown")
@@ -56,11 +65,18 @@ for f in "${STORIES_DIR}"/*.md; do
   total=$((total + 1))
 done
 
-echo -e "${BOLD}Stories (${total} total)${RESET}"
-for s in "Done" "In Progress" "Ready" "Backlog" "Proposed"; do
-  c=${counts["$s"]:-0}
-  [ "$c" -gt 0 ] && echo -e "  $(status_icon "$s") ${s}: ${c}"
-done
+if [ "$BRIEF" -eq 1 ]; then
+  ip=${counts["In Progress"]:-0}
+  ready=${counts["Ready"]:-0}
+  proposed=${counts["Proposed"]:-0}
+  echo -e "${BOLD}Stories:${RESET} ${ip} In Progress, ${ready} Ready, ${proposed} Proposed"
+else
+  echo -e "${BOLD}Stories (${total} total)${RESET}"
+  for s in "Done" "In Progress" "Ready" "Backlog" "Proposed"; do
+    c=${counts["$s"]:-0}
+    [ "$c" -gt 0 ] && echo -e "  $(status_icon "$s") ${s}: ${c}"
+  done
+fi
 echo ""
 
 # --- In Progress ---
@@ -79,10 +95,9 @@ if [ -n "$in_progress" ]; then
   echo ""
 fi
 
-# --- Release items (if --release or release plan exists) ---
-release_plan="${PLANS_DIR}/v0.6.0-release-plan.md"
-if [ "$1" = "--release" ] 2>/dev/null || [ -f "$release_plan" ]; then
-  echo -e "${BOLD}Release: 0.6.0${RESET}"
+# --- Release items (only with --release flag) ---
+if [ "$SHOW_RELEASE" -eq 1 ]; then
+  echo -e "${BOLD}Release: ${current_version}${RESET}"
 
   # Items from the release plan with their actual status
   release_items=(
@@ -130,10 +145,3 @@ if [ "$1" = "--release" ] 2>/dev/null || [ -f "$release_plan" ]; then
   echo ""
 fi
 
-# --- Test suite ---
-echo -e "${BOLD}Quick Health${RESET}"
-if command -v npm &>/dev/null; then
-  test_count=$(npm test -- --listTests 2>/dev/null | wc -l || echo "?")
-  echo -e "  Test suites: ${test_count}"
-fi
-echo -e "  Build: run ${DIM}npm run build${RESET} to verify"

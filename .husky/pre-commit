@@ -84,9 +84,9 @@ if [ -f ".git/COMMIT_EDITMSG" ]; then
   fi
 fi
 
-# Detect whether any source files are staged (skip tests/lint for docs-only commits)
-# Matches: .ts/.tsx/.js/.jsx/.mjs/.sh/.json files AND extensionless files in src/ or .husky/
-STAGED_SOURCE=$(git diff --cached --name-only | grep -vE '\.(md)$' | grep -E '\.(ts|tsx|js|jsx|mjs|sh|json)$|^(src|tests|scripts|\.husky)/' | head -1)
+# Detect whether any source files are staged (skip tests for script/doc/config-only commits)
+# Only TypeScript/JavaScript source and test files can break Jest tests.
+STAGED_SOURCE=$(git diff --cached --name-only | grep -E '^(src|tests)/.*\.(ts|tsx|js|jsx)$|^jest\.config\.(js|ts)$|^tsconfig.*\.json$' | head -1)
 
 # Check 4: Lint docs (skip if no docs staged)
 STAGED_DOCS=$(git diff --cached --name-only | grep -E '\.(md)$' | head -1)

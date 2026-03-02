@@ -17,6 +17,9 @@ Options:
   --test-contract <path>    Test contract file to verify after delegated run (optional)
   --log-file <path>         Capture full codex terminal transcript to this file (optional)
   --semantic-log <path>     Write compact semantic execution log markdown (optional)
+  --quiet                   Suppress per-turn Codex transcript; print only final summary
+                            block + contract result + semantic log path after run completes.
+                            Requires --log-file.
   --dry-run                 Print commands and generated prompt only
   --execute                 Run codex exec (non-interactive)
 
@@ -38,6 +41,7 @@ LOG_FILE=""
 SEMANTIC_LOG=""
 DRY_RUN=0
 EXECUTE=0
+QUIET=0
 
 while [ $# -gt 0 ]; do
   case "$1" in
@@ -79,6 +83,9 @@ while [ $# -gt 0 ]; do
       ;;
     --execute)
       EXECUTE=1
+      ;;
+    --quiet)
+      QUIET=1
       ;;
     -h|--help)
       usage
@@ -135,6 +142,11 @@ if [ -z "$BASE_BRANCH" ]; then
   if [ -z "$BASE_BRANCH" ]; then
     BASE_BRANCH="main"
   fi
+fi
+
+if [ "$QUIET" -eq 1 ] && [ -z "$LOG_FILE" ]; then
+  echo "Error: --quiet requires --log-file to capture transcript."
+  exit 1
 fi
 
 if [ "$EXECUTE" -eq 1 ] && [ "$DRY_RUN" -eq 1 ]; then
@@ -234,10 +246,25 @@ if [ -n "$SEMANTIC_LOG" ]; then
   echo "[delegate] semantic log: $SEMANTIC_LOG"
 fi
 
+extract_codex_summary() {
+  local log="$1"
+  [ -f "$log" ] || return
+  local start
+  start=$(grep -n -m1 \
+    -E "^(Changed files|Files changed|Deviations from scope|Deviations:|Tests run|Tests passed)" \
+    "$log" 2>/dev/null | tail -1 | cut -d: -f1)
+  if [ -n "$start" ]; then
+    tail -n "+${start}" "$log"
+  else
+    tail -60 "$log"
+  fi
+}
+
 if [ "$DRY_RUN" -eq 1 ]; then
   echo "[dry-run] worktree command: $(printf '%q ' "${WORKTREE_CMD[@]}")"
   echo "[dry-run] codex command: $(printf '%q ' "${CODEX_CMD[@]}")"
   echo "[dry-run] prompt file: $PROMPT_FILE"
+  [ "$QUIET" -eq 1 ] && echo "[dry-run] quiet mode: on (requires --log-file)"
   exit 0
 fi
 
@@ -251,12 +278,24 @@ if [ "$EXECUTE" -eq 1 ]; then
     mkdir -p "$(dirname "$LOG_FILE")"
     if command -v script >/dev/null 2>&1; then
       CODEX_SHELL_CMD="$(printf '%q ' "${CODEX_CMD[@]}")"
-      if ! script -qefc "$CODEX_SHELL_CMD" "$LOG_FILE"; then
-        run_status="failed"
+      if [ "$QUIET" -eq 1 ]; then
+        if ! script -qefc "$CODEX_SHELL_CMD" "$LOG_FILE" > /dev/null 2>&1; then
+          run_status="failed"
+        fi
+      else
+        if ! script -qefc "$CODEX_SHELL_CMD" "$LOG_FILE"; then
+          run_status="failed"
+        fi
       fi
     else
-      if ! "${CODEX_CMD[@]}" 2>&1 | tee "$LOG_FILE"; then
-        run_status="failed"
+      if [ "$QUIET" -eq 1 ]; then
+        if ! "${CODEX_CMD[@]}" > "$LOG_FILE" 2>&1; then
+          run_status="failed"
+        fi
+      else
+        if ! "${CODEX_CMD[@]}" 2>&1 | tee "$LOG_FILE"; then
+          run_status="failed"
+        fi
       fi
     fi
   else
@@ -294,6 +333,15 @@ if [ "$EXECUTE" -eq 1 ]; then
       --test-contract "${TEST_CONTRACT:-}" \
       --raw-log "${LOG_FILE:-}" \
       --output "$SEMANTIC_LOG"
+  fi
+
+  if [ "$QUIET" -eq 1 ] && [ -n "$LOG_FILE" ]; then
+    echo ""
+    echo "[delegate] === CODEX FINAL SUMMARY ==="
+    extract_codex_summary "$LOG_FILE"
+    echo ""
+    echo "[delegate] === CONTRACT RESULT: $contract_status ==="
+    echo "[delegate] === SEMANTIC LOG: $SEMANTIC_LOG ==="
   fi
 
   if [ "$run_status" = "failed" ]; then

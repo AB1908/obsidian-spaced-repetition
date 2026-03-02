@@ -106,9 +106,13 @@ scripts/delegate-codex-task.sh \
   --test-contract docs/plans/<this-file>-test-contract.md \
   --log-file docs/executions/logs/<branch-name>.log \
   --semantic-log docs/executions/semantic/<branch-name>.md \
+  --quiet \
   --execute
 ```
-```
+
+`--quiet` suppresses per-turn Codex transcript (reduces context cost ~80%); prints only the
+final summary block + contract result + semantic log path after the run completes.
+Requires `--log-file`. Omit `--quiet` only when debugging a delegation failure.
 
 ---
 
@@ -144,6 +148,8 @@ After a delegation completes:
 
 ## Optimization Tips
 
+- **Session start** — use `./scripts/project-status.sh --brief` for a minimal
+  orientation (~8 lines). Add `--release` for release plan items.
 - **Batch doc changes before delegating** — uncommitted plans are the most common
   reason a delegation produces incorrect output
 - **Background delegation** — use `run_in_background: true` when the Codex task is

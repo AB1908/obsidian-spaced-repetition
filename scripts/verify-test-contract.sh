@@ -62,22 +62,29 @@ if [ "${#TEST_FILES[@]}" -eq 0 ] && [ "${#TEST_NAMES[@]}" -eq 0 ] && [ "${#TEST_
 fi
 
 fail=0
+pass_count=0
+total_count=0
+ok_buffer=()
 
 echo "[contract] file: $CONTRACT_FILE"
 echo "[contract] repo-root: $REPO_ROOT"
 
 for f in "${TEST_FILES[@]}"; do
+  ((total_count++)) || true
   if [ ! -f "$REPO_ROOT/$f" ]; then
     echo "[contract][FAIL] missing test file: $f" >&2
     fail=1
   else
-    echo "[contract][OK] test file exists: $f"
+    ok_buffer+=("[contract][OK] test file exists: $f")
+    ((pass_count++)) || true
   fi
 done
 
 for name in "${TEST_NAMES[@]}"; do
+  ((total_count++)) || true
   if rg -n --fixed-strings --glob '*.test.ts' --glob '*.test.tsx' "$name" "$REPO_ROOT/tests" >/dev/null 2>&1; then
-    echo "[contract][OK] test name found: $name"
+    ok_buffer+=("[contract][OK] test name found: $name")
+    ((pass_count++)) || true
   else
     echo "[contract][FAIL] test name not found: $name" >&2
     fail=1
@@ -86,12 +93,14 @@ done
 
 if [ "$RUN_CMDS" -eq 1 ]; then
   for cmd in "${TEST_CMDS[@]}"; do
+    ((total_count++)) || true
     echo "[contract][RUN] $cmd"
     if ! (cd "$REPO_ROOT" && bash -lc "$cmd"); then
       echo "[contract][FAIL] command failed: $cmd" >&2
       fail=1
     else
-      echo "[contract][OK] command passed: $cmd"
+      ok_buffer+=("[contract][OK] command passed: $cmd")
+      ((pass_count++)) || true
     fi
   done
 else
@@ -101,9 +110,10 @@ else
 fi
 
 if [ "$fail" -ne 0 ]; then
+  [ "${#ok_buffer[@]}" -gt 0 ] && printf '%s\n' "${ok_buffer[@]}"
   echo "[contract] verification failed" >&2
   exit 1
 fi
 
-echo "[contract] verification passed"
+echo "✓ ${pass_count}/${total_count} contract checks passed"
 
