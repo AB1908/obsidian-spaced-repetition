@@ -11,6 +11,7 @@ Usage:
   scripts/story-catalog.sh next-id <PREFIX>
   scripts/story-catalog.sh suggest <query>
   scripts/story-catalog.sh closes-audit
+  scripts/story-catalog.sh list --unreviewed
 
 Notes:
   - This script reads stories directly from docs/stories (no committed index cache).
@@ -53,11 +54,18 @@ story_epic_from_file() {
   awk '/^## Epic$/{getline; print; found=1; exit} END{if (!found) print "None"}' "$file" | normalize_ws
 }
 
+story_reviewed_from_file() {
+  local file="$1"
+  awk '/^## Reviewed$/{getline; print; found=1; exit} END{if (!found) print "No"}' "$file" | normalize_ws
+}
+
 list_cmd() {
   local epic_filter=""
+  local unreviewed_only=0
   while [ "$#" -gt 0 ]; do
     case "$1" in
       --epic) shift; epic_filter="${1:-}" ;;
+      --unreviewed) unreviewed_only=1 ;;
       *) echo "story-catalog list: unknown option: $1" >&2; exit 2 ;;
     esac
     shift
@@ -79,6 +87,11 @@ list_cmd() {
     status="$(story_status_from_file "$file")"
     epic="$(story_epic_from_file "$file")"
     if [ -n "$epic_filter" ] && [ "$epic" != "$epic_filter" ]; then
+      continue
+    fi
+    local reviewed
+    reviewed="$(story_reviewed_from_file "$file")"
+    if [ "$unreviewed_only" -eq 1 ] && [ "$reviewed" = "Yes" ]; then
       continue
     fi
     printf "%s|%s|%s|%s|%s\n" "$key" "$status" "$title" "$file" "$epic" 2>/dev/null || return 0

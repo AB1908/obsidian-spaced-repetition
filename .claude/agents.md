@@ -121,6 +121,7 @@ Requires `--log-file`. Omit `--quiet` only when debugging a delegation failure.
 Before running `scripts/delegate-codex-task.sh`:
 
 - [ ] All plan and story files are committed (script now enforces this automatically)
+- [ ] Scope file has `## Reviewed: Approved` — do not delegate a `Draft` plan
 - [ ] `scripts/story-catalog.sh check` passes
 - [ ] Scope file exists and is complete
 - [ ] Test contract exists with concrete test names

@@ -228,6 +228,34 @@ Operational behavior:
 - `--merge-wave` enforces explicit per-branch approval and runs `npm test -- --runInBand` after each approved merge.
 - `--dry-run` prints intended actions without writing or merging.
 
+## Approval Tracking
+
+### Story files — `## Reviewed` field
+
+Every story has a `## Reviewed` field indicating whether a human has read and approved the scope:
+
+| Value | Meaning |
+|---|---|
+| `No` | Claude-authored, not yet carefully read by a human |
+| `Yes` | Human read and approved the scope |
+| `Delegated` | Sent to Codex (plan was approved; story scope implicitly reviewed) |
+
+List all unreviewed stories: `scripts/story-catalog.sh list --unreviewed`
+
+### Plan files — `## Reviewed` field
+
+Plan files in `docs/plans/` must include a `## Reviewed` field before delegation:
+
+| Value | Meaning |
+|---|---|
+| `Draft` | Claude-authored, not yet approved by human |
+| `Approved` | Human signed off — safe to delegate |
+
+A plan with `## Reviewed: Draft` **must not be delegated.** The pre-delegation checklist
+in `.claude/agents.md` enforces this as a manual gate.
+
+---
+
 ## Codex delegation runner
 
 Use `scripts/delegate-codex-task.sh` when you want one branch/task delegated to a non-interactive Codex run from its own worktree.

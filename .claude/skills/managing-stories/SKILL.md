@@ -28,6 +28,9 @@ description: Creates and validates story files (STORY, BUG, DEBT, SPIKE). Enforc
 ## Status
 <Proposed | Ready | In Progress | Done | Backlog>
 
+## Reviewed
+<No | Yes | Delegated>
+
 ## Epic
 <link or None>
 
