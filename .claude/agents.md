@@ -162,3 +162,31 @@ After a delegation completes:
   unless using worktrees with explicit sequencing (wave-runner)
 - **Dry-run first** — use `--dry-run` on the delegation script to verify the generated
   prompt before spending tokens on execution
+
+---
+
+## Operation Tiers
+
+Classify work by token cost before scheduling. Mixing tiers in the same session
+wastes context and blocks cheap work behind expensive work.
+
+**Tier 1 — cheap (background-safe, low token):**
+file reads, search, grep, doc/story updates, story catalog checks, project-status,
+commit/archive steps, guide updates
+
+**Tier 2 — moderate (foreground, bounded):**
+single-file code edits, targeted test runs (`npm test -- --testPathPattern`),
+contract verification, semantic log writes, worktree inspection
+
+**Tier 3 — expensive (foreground, high token, block other work):**
+Codex delegation, full test suite (`npm test`), large codebase scans,
+multi-file refactors, build verification
+
+**Scheduling rules:**
+- Tier 1 work can run in background or be batched freely
+- Tier 3 work should run alone — don't start a second delegation while one is active
+- Background delegation (`run_in_background: true`) is fine only when the main
+  session work is Tier 1 (doc updates, story management) — not while doing other
+  Tier 3 work in the foreground
+- At session start: do all Tier 1 orientation (project-status, story reads) before
+  committing to any Tier 3 delegation

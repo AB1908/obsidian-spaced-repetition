@@ -36,12 +36,6 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 - pre-commit hook: now skips tests + lint-docs for docs-only commits (no staged .ts/.tsx).
   lint-docs skip reasoning: source commits can't change docs state, so lint always passes.
 
-2026-03-01: META pattern — cheap vs expensive agent operations:
-- Cheap (low token, background-safe): file reads, search, doc/story updates, catalog checks
-- Expensive (high token, foreground): Codex delegation, full test runs, large codebase scans
-- Could classify stories/tasks by operation tier to guide scheduling and cost expectations
-- Related to META-019 (agentic refresh) — background agents should only use cheap ops
-
 2026-03-01: DEBT-002, DEBT-006, DEBT-008, DEBT-012, DEBT-014 all need rewriting before
 delegation — repo structure has changed significantly since they were written. Touchpoints
 and problem descriptions are stale. Do NOT delegate without a freshness pass first.
