@@ -11,6 +11,7 @@ LINE_COUNT=$(echo "$MESSAGE" | wc -l)
 SUBJECT_LINE=$(echo "$MESSAGE" | head -n1)
 SUBJECT_LENGTH=${#SUBJECT_LINE}
 SHORTCODE_PATTERN='(\[)?(BUG|DEBT|STORY|SPIKE|IDEA|META)-[0-9]+[a-z]?(\])?'
+TYPE_PATTERN='^(feat|fix|refactor|perf|chore|docs|test|style|plan|story|wf)(\([^)]+\))?!?:'
 
 if [ "$ENFORCEMENT" = "hard" ]; then
   echo "→ Validating commit message (main branch - hard enforcement)" >&2
@@ -28,6 +29,18 @@ if [ "$ENFORCEMENT" = "hard" ]; then
     echo "⚠️  WARNING: Subject line is $SUBJECT_LENGTH chars (recommended: <72)" >&2
     echo "Consider shortening: $SUBJECT_LINE" >&2
     echo "" >&2
+  fi
+
+  if ! echo "$SUBJECT_LINE" | grep -Eq "$TYPE_PATTERN"; then
+    echo "" >&2
+    echo "❌ ERROR: Commit subject must start with a valid type" >&2
+    echo "" >&2
+    echo "Found: $SUBJECT_LINE" >&2
+    echo "Valid types: feat fix refactor perf chore docs test style plan story wf" >&2
+    echo "Format:      <type>(<scope>): <description>" >&2
+    echo "" >&2
+    echo "To bypass (emergencies only): git commit --no-verify" >&2
+    exit 1
   fi
 
   if echo "$SUBJECT_LINE" | grep -Eq "$SHORTCODE_PATTERN"; then
