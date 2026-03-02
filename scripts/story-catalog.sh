@@ -10,6 +10,7 @@ Usage:
   scripts/story-catalog.sh check
   scripts/story-catalog.sh next-id <PREFIX>
   scripts/story-catalog.sh suggest <query>
+  scripts/story-catalog.sh closes-audit
 
 Notes:
   - This script reads stories directly from docs/stories (no committed index cache).
@@ -190,6 +191,48 @@ check_cmd() {
   fi
 }
 
+closes_audit_cmd() {
+  # Find all stories marked Done in docs/stories/ and docs/archive/stories/,
+  # check that at least one commit in git log references them via "Closes: <ID>".
+  # Flags Done stories with no matching commit as potentially unclosed.
+  local fail=0
+  local checked=0
+
+  for dir in "${STORIES_DIR}" docs/archive/stories; do
+    [ -d "$dir" ] || continue
+    for f in "$dir"/*.md; do
+      [ -f "$f" ] || continue
+      local status
+      status="$(story_status_from_file "$f")"
+      [ "$status" = "Done" ] || continue
+
+      local key
+      key="$(story_key_from_file "$f" || true)"
+      [ -n "$key" ] || continue
+
+      checked=$((checked + 1))
+      if ! git log --all --grep="Closes:.*${key}" --oneline 2>/dev/null | grep -q .; then
+        echo "⚠  No 'Closes: ${key}' found in git log: $(basename "$f")"
+        fail=1
+      fi
+    done
+  done
+
+  if [ "$checked" -eq 0 ]; then
+    echo "closes-audit: no Done stories found."
+    return
+  fi
+
+  if [ "$fail" -ne 0 ]; then
+    echo ""
+    echo "Done stories above have no matching 'Closes: <ID>' commit."
+    echo "Either add 'Closes: <ID>' to the relevant commit body, or these"
+    echo "stories were closed manually without a commit reference."
+  else
+    echo "✓ All ${checked} Done stories have a matching Closes: commit."
+  fi
+}
+
 cmd="${1:-}"
 case "$cmd" in
   list)
@@ -207,6 +250,10 @@ case "$cmd" in
   suggest)
     shift
     suggest_cmd "$@"
+    ;;
+  closes-audit)
+    shift
+    closes_audit_cmd "$@"
     ;;
   -h|--help|help|"")
     usage

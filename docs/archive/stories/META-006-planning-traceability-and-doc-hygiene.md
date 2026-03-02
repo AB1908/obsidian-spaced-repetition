@@ -1,7 +1,7 @@
 # META-006: Planning Traceability and Doc Hygiene
 
 ## Status
-Ready
+Done
 
 ## Description
 

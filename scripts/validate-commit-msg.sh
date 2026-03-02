@@ -44,6 +44,31 @@ if [ "$ENFORCEMENT" = "hard" ]; then
     exit 1
   fi
 
+  # Validate any Closes: references in the body
+  CLOSES_IDS=$(grep -oE 'Closes:[[:space:]]*(BUG|DEBT|STORY|SPIKE|META)-[0-9]+[a-z]?' "$COMMIT_MSG_FILE" \
+    | grep -oE '(BUG|DEBT|STORY|SPIKE|META)-[0-9]+[a-z]?' || true)
+  for id in $CLOSES_IDS; do
+    # Check story exists in docs/stories/ (not archive)
+    match=$(find docs/stories -maxdepth 1 -name "${id}-*.md" 2>/dev/null | head -1)
+    if [ -z "$match" ]; then
+      # Check if it's already archived
+      archived=$(find docs/archive/stories -maxdepth 1 -name "${id}-*.md" 2>/dev/null | head -1)
+      if [ -n "$archived" ]; then
+        echo "" >&2
+        echo "❌ ERROR: Closes: references already-archived story: $id" >&2
+        echo "  Found in archive: $archived" >&2
+        echo "  Remove the Closes: reference or use the correct story ID." >&2
+        echo "" >&2
+        echo "To bypass (emergencies only): git commit --no-verify" >&2
+        exit 1
+      else
+        echo "" >&2
+        echo "⚠️  WARNING: Closes: references unknown story: $id (no file found)" >&2
+        echo "" >&2
+      fi
+    fi
+  done
+
   echo "✓ Commit message validated (main branch)"
 
 else
