@@ -1,7 +1,7 @@
 # META-025: Delegation Workflow Hardening
 
 ## Status
-Proposed
+Done
 
 ## Epic
 None

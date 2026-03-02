@@ -287,6 +287,89 @@ git merge feature/navigation-system
 git push --force-with-lease origin main
 ```
 
+## Delegation Close-Out Workflow
+
+After a Codex delegation run completes and the contract passes, follow these steps
+in order. All steps should land in a single commit.
+
+### Step 1: Bring changes to main
+
+Use `git merge --squash <branch>` from main. This is preferred over cherry-pick:
+- No hash lookup needed
+- Works cleanly whether Codex made 1 or N commits
+- Produces a single logical commit per story on main
+
+```bash
+git merge --squash <worktree-branch>
+# stage and commit as normal — do not use git merge --squash && git commit directly
+# (it auto-generates a verbose message; draft your own instead)
+```
+
+Use cherry-pick only when you need to preserve multiple logical commits from a
+single Codex session (e.g. a test commit + impl commit as separate history entries).
+If in doubt, squash.
+
+### Step 2: Update story status
+
+In the story file: set `## Status` to `Done`, check all acceptance criteria boxes.
+
+```bash
+perl -i -0pe 's/## Status\nIn Progress/## Status\nDone/' docs/stories/<ID>-*.md
+```
+
+### Step 3: Archive the story
+
+Move the story file to `docs/archive/stories/` in the same commit.
+
+```bash
+git mv docs/stories/<ID>-*.md docs/archive/stories/
+```
+
+### Step 4: Include the semantic log
+
+Add the semantic log to the staging area.
+
+```bash
+git add docs/executions/semantic/<timestamp>-<branch>.md
+```
+
+### Step 5: Commit everything together
+
+One commit: squashed changes + story closure + archive + semantic log.
+
+```bash
+git add -p   # or stage specific files
+git commit -m "feat/fix/refactor(<scope>): <what changed>
+
+Closes: <STORY-ID>. Semantic log: docs/executions/semantic/<slug>.md"
+```
+
+Raw delegation logs (`docs/executions/logs/`) are gitignored — do not commit them.
+
+---
+
+### Recovery: Codex left changes staged but uncommitted
+
+When a delegation run exits non-zero but the contract "failed" on tooling rather
+than correctness, inspect the worktree before re-delegating:
+
+```bash
+git -C <worktree> status --short          # check staged/unstaged state
+git -C <worktree> diff --cached --stat    # see what's staged
+git -C <worktree> log --oneline -3        # check if any commits were made
+```
+
+If the changes are correct but uncommitted:
+```bash
+git -C <worktree> commit -m "fix: <description>"
+# then proceed with squash/cherry-pick as normal
+```
+
+Re-delegating when changes are already correct wastes the full token cost of
+another Codex run.
+
+---
+
 ## Documentation Templates
 
 See [Work Organization Guide](work-organization.md) for story templates, ADR templates, and documentation conventions.
