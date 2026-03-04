@@ -36,6 +36,13 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 - Natural fit after Phase B (facade-level mocking) since the capture seam would be explicit.
 - Promote to SPIKE when investing in Phase B.
 
+2026-03-03: Dangling link references in story files.
+- META-024 had a forward reference to META-025 which was later deleted.
+- No tooling catches broken cross-story links — we only find them via git blame.
+- Obsidian solves this natively with link graph and dead link detection.
+- Worth considering: a story-catalog.sh check for dangling [[links]] or .md refs.
+- Not a story yet — promote when we decide on a link convention.
+
 2026-03-01: DEBT items deferred to next session.
 - DEBT-012 (class misuse + window.confirm) — self-contained, needs freshness check first.
 - DEBT-024 (filter policy) — reasonably contained, check DEBT-022 dependency.

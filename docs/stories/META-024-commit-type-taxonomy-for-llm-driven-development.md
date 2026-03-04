@@ -85,4 +85,4 @@ wf(hooks): optimize pre-commit for docs-only commits
 
 ## Related
 
-- [META-025](META-025-delegation-workflow-hardening.md) — delegation workflow improvements
+- META-025 — session management tooling (sessions-index, summarize script, mobile picker)

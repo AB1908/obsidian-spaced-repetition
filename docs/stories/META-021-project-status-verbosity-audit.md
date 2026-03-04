@@ -1,7 +1,7 @@
 # META-021: project-status.sh Verbosity Audit
 
 ## Status
-Proposed
+Ready
 
 ## Epic
 None
@@ -184,4 +184,4 @@ The auto-trigger of the release section when the plan file exists (line 84: `|| 
 ## Related
 
 - [META-019](META-019-story-drift-and-agentic-refresh.md) — also proposes additions to `project-status.sh`
-- [META-006](META-006-planning-traceability-and-doc-hygiene.md)
+- META-027 — SessionStart hook calls `project-status.sh --brief`; implementing this story unblocks the hook being token-efficient

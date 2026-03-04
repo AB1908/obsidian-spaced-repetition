@@ -1,10 +1,12 @@
 #!/bin/bash
 
 # --- CONFIGURATION ---
-# Set CLAUDE_NTFY_TOPIC in your environment for push notifications via ntfy.sh
-NTFY_TOPIC="${CLAUDE_NTFY_TOPIC:-}"
 PROJECT_DIR="${1:-$(pwd)}"
-PROJ_KEY=$(echo "$PROJECT_DIR" | sed 's|^/||; s|/|-|g')
+# Load project .env if present (before reading env vars)
+[ -f "$PROJECT_DIR/.env" ] && set -a && source "$PROJECT_DIR/.env" && set +a
+# Set CLAUDE_NTFY_TOPIC in your environment or project .env for push notifications via ntfy.sh
+NTFY_TOPIC="${CLAUDE_NTFY_TOPIC:-}"
+PROJ_KEY=$(echo "$PROJECT_DIR" | sed 's|/|-|g')
 SESSION_STORE="$HOME/.claude/projects/$PROJ_KEY"
 
 # --- SESSION RESUME ---
@@ -12,14 +14,62 @@ last_session() {
     ls -t "$SESSION_STORE"/*.jsonl 2>/dev/null | head -1 | xargs -I{} basename {} .jsonl
 }
 
-LAST=$(last_session)
+pick_session() {
+    local index="$SESSION_STORE/sessions-index.md"
+    if [ ! -f "$index" ]; then
+        # Fallback: just offer the last session
+        local last
+        last=$(last_session)
+        [ -z "$last" ] && return
+        echo "Last session: ${last:0:8}..." >&2
+        printf "Resume? [y/N] " >&2
+        read -r ans < /dev/tty
+        [ "$ans" = "y" ] && echo "$last"
+        return
+    fi
+
+    # Parse table rows via Python to avoid shell quoting/regex issues
+    local parsed
+    parsed=$(python3 - "$index" <<'PYEOF'
+import sys, re
+with open(sys.argv[1]) as f:
+    for line in f:
+        m = re.match(r'^\| (\d{4}-\d{2}-\d{2}) \| `([0-9a-f-]+)` \| [^|]+ \| ([^|]+) \| ([^|]+) \|', line)
+        if m:
+            date, uuid, title, resume = m.group(1), m.group(2), m.group(3).strip(), m.group(4).strip()
+            print(f"{date}\t{uuid}\t{title}\t{resume}")
+PYEOF
+)
+
+    [ -z "$parsed" ] && return
+
+    local rows=()
+    local uuids=()
+    while IFS=$'\t' read -r date uuid title resume; do
+        rows+=("$date  $title [$resume]")
+        uuids+=("$uuid")
+    done <<< "$parsed"
+
+    echo "Sessions:" >&2
+    for i in "${!rows[@]}"; do
+        printf "  %2d) %s\n" "$((i+1))" "${rows[$i]}" >&2
+    done
+    echo "   0) New session" >&2
+    printf "Pick [0]: " >&2
+    read -r ans < /dev/tty
+    ans="${ans:-0}"
+
+    if [[ "$ans" =~ ^[0-9]+$ ]] && [ "$ans" -gt 0 ] && [ "$ans" -le "${#uuids[@]}" ]; then
+        local short_uuid="${uuids[$((ans-1))]}"
+        local full
+        full=$(ls "$SESSION_STORE"/${short_uuid}*.jsonl 2>/dev/null | head -1 | xargs -I{} basename {} .jsonl)
+        echo "$full"
+    fi
+}
+
 RESUME_FLAG=""
-if [ -n "$LAST" ]; then
-    echo "Last session: $LAST"
-    printf "Resume? [y/N] "
-    read -r ans
-    [ "$ans" = "y" ] && RESUME_FLAG="--resume $LAST"
-fi
+PICKED=$(pick_session)
+[ -n "$PICKED" ] && RESUME_FLAG="--resume $PICKED"
 
 # --- DISPLAY ---
 clear
@@ -32,7 +82,7 @@ if [ -n "$NTFY_TOPIC" ]; then
         qrencode -t ANSIUTF8 "https://ntfy.sh/$NTFY_TOPIC"
     fi
 fi
-[ -n "$LAST" ] && echo "Session: $LAST"
+[ -n "$PICKED" ] && echo "Session: ${PICKED:0:8}..."
 echo "──────────────────────────────────────"
 echo ""
 
