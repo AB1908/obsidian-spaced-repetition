@@ -201,79 +201,29 @@ Refer to `docs/decisions/` for full ADRs. Recent important decisions:
 
 ## Commit Approval Workflow (MANDATORY)
 
-**Problem:** Verbose commit messages violate "Commits tell WHAT, docs tell WHY" philosophy.
+**Use the `/commit` skill** — it enforces all rules below as primary context, preventing
+convention drift that occurs when committing mid-session.
 
-**Solution:** Deterministic approval process enforced by git hooks.
+### Rules (enforced by skill + hooks)
 
-### Before EVERY `git commit`:
+- **No short codes in subject.** `BUG-###`, `STORY-###`, `DEBT-###`, `META-###` etc. are banned.
+  Put them in docs or the commit body as `Closes: META-029`. Never in the subject.
+- **Subject ≤ 72 chars**, 1-2 lines max.
+- **Valid type prefix required:** `feat` | `fix` | `refactor` | `perf` | `chore` | `docs` | `test` | `style` | `plan` | `story` | `wf`
+- Details go in documentation, not commit messages.
 
-1. **Draft Message** (1-2 lines max)
-   ```
-   <type>(<scope>): <what changed in 5-10 words>
+### What the skill does
 
-   Optional 2nd line: Where to find details
-   ```
-   - Do not include story short-codes in the subject (`BUG-###`, `STORY-###`, `DEBT-###`).
-   - Put those IDs in docs or commit body when needed.
-
-2. **Create Approval File**
-   ```bash
-   cat > .commit-approval << EOF
-   APPROVED: $(date -Iseconds)
-
-   MESSAGE:
-   docs,test: add navigation filter contract documentation
-
-   See ADR-019 and docs/bugs.md for details.
-
-   FILES:
-   - docs/decisions/ADR-019-navigation-filter-contract.md
-   - docs/bugs.md
-   - docs/testing_guide.md
-   EOF
-   ```
-
-3. **Show to User**
-   - Display proposed message
-   - Display files to commit
-   - Ask: "Approve this commit message?"
-
-4. **Wait for Approval**
-   - User responds "yes" or provides edits
-   - If edits, update `.commit-approval` file
-
-5. **Execute Commit**
-   - Only after approval
-   - Pre-commit hook validates `.commit-approval` exists
-   - Hook auto-deletes file after successful commit
+1. Reads staged diff, drafts subject, self-validates against rules above
+2. Writes `.commit-approval` file
+3. Shows proposed message + files — waits for your approval
+4. Executes `git commit` after approval
 
 ### Hooks Enforce This
 
-- **Pre-commit hook:** Blocks if no `.commit-approval` file (< 5 min old)
-- **Commit-msg hook:** Blocks if message > 5 lines or subject > 72 chars
+- **Pre-commit hook:** Blocks if no `.commit-approval` file (< 5 min old); validates message from approval file
+- **Commit-msg hook:** Validates final message length and short-code rules
 - **Bypass:** Use `--no-verify` only for emergencies
-
-### Example Interaction
-
-```
-Claude: Ready to commit. Proposed message:
-
-  docs,test: add navigation filter contract documentation
-
-  See ADR-019 and docs/bugs.md for details.
-
-Files:
-  - docs/decisions/ADR-019-navigation-filter-contract.md
-  - docs/bugs.md
-  - docs/testing_guide.md
-
-Approve this message?
-
-User: yes
-
-Claude: [creates .commit-approval file]
-Claude: [executes git commit]
-```
 
 ## Important Constraints
 

@@ -75,13 +75,20 @@ else
 fi
 
 # Check 3: Validate commit message early (before slow test run)
-# .git/COMMIT_EDITMSG is available for -m commits at pre-commit time.
-if [ -f ".git/COMMIT_EDITMSG" ]; then
+# Read from .commit-approval MESSAGE field — the authoritative pre-commit source.
+# COMMIT_EDITMSG is NOT reliable here: git writes it after pre-commit for -m commits,
+# so any existing COMMIT_EDITMSG is a leftover from a prior failed attempt.
+if [ -f "$APPROVAL_FILE" ]; then
+  # Extract the MESSAGE block from the approval file into a temp file
+  APPROVAL_MSG_FILE=$(mktemp)
+  awk '/^MESSAGE:/{found=1; next} found && /^FILES:/{exit} found{print}' "$APPROVAL_FILE" > "$APPROVAL_MSG_FILE"
   ENFORCEMENT="soft"
   [ "$BRANCH" = "main" ] && ENFORCEMENT="hard"
-  if ! scripts/validate-commit-msg.sh ".git/COMMIT_EDITMSG" "$BRANCH" "$ENFORCEMENT"; then
+  if ! scripts/validate-commit-msg.sh "$APPROVAL_MSG_FILE" "$BRANCH" "$ENFORCEMENT"; then
+    rm -f "$APPROVAL_MSG_FILE"
     exit 1
   fi
+  rm -f "$APPROVAL_MSG_FILE"
 fi
 
 # Detect whether any source files are staged (skip tests for script/doc/config-only commits)
