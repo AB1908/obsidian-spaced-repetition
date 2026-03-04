@@ -2,6 +2,40 @@
 
 Captures real Obsidian API output as JSON fixture files for use in tests.
 
+## Test Vault
+
+`tests/vault/` is the canonical set of synthetic `.md` files used as the re-capture
+source. Load these files into Obsidian when running a capture session to produce
+consistent, reproducible fixtures.
+
+All fixtures — including `getFileContents` — are captured from real Obsidian. Nothing is
+synthesized from vault file content directly. This ensures `getFileContents` and
+`getMetadataForFile` fixtures always come from the same Obsidian session with the same
+file content, so byte offsets and content are guaranteed to be consistent.
+
+**Editing a test scenario:**
+```bash
+# 1. Edit the relevant vault file
+vim tests/vault/Some Book/Annotations.md
+
+# 2. Copy/symlink tests/vault/ into an Obsidian vault
+# 3. npm run capture → reload Obsidian → navigate to trigger disk calls
+# 4. Rename and curate new fixtures (see After Capture below)
+# 5. Verify sync
+npm run vault:check
+```
+
+**Drift check:**
+```bash
+npm run vault:check   # exits 1 if vault content diverged from captured fixtures
+                      # fix: re-capture from Obsidian (never edit fixtures manually)
+```
+
+**Bootstrap (one-time, already done):**
+```bash
+npm run vault:bootstrap   # extract vault .md files from getFileContents fixtures
+```
+
 ## Prerequisites
 
 - Desktop Obsidian (capture uses Node `fs` — not available on mobile)

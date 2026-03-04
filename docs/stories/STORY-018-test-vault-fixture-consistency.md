@@ -1,22 +1,27 @@
 # STORY-018: Dedicated Test Vault for Fixture Consistency
 
 ## Status
-Backlog
+Done
+
+## Reviewed
+No
 
 ## User Story
 As a maintainer, I want a dedicated synthetic test vault for fixture capture, so that fixture and metadata behavior stays consistent without exposing real user content.
 
 ## Acceptance Criteria
-- [ ] A separate test vault exists for capture flows (not personal vault content).
-- [ ] Vault seed content is synthetic and deterministic (no real annotations/quotes).
-- [ ] Capture workflow docs define how to refresh fixtures from this vault.
-- [ ] Metadata fixtures (`getMetadataForFile*`, related path/index fixtures) are validated for consistency against the test vault baseline.
-- [ ] A drift check or checklist exists to detect fixture/schema mismatches after capture updates.
+- [x] A separate test vault exists for capture flows (`tests/vault/`).
+- [x] Vault seed content is synthetic and deterministic (lorem ipsum, no real annotations/quotes).
+- [x] Capture workflow docs define how to refresh fixtures from this vault (`docs/guides/capture-fixtures.md` — Test Vault section).
+- [x] All fixtures (`getFileContents`, `getMetadataForFile`, etc.) are captured from real Obsidian using the vault as source — no synthesis. Ensures `getFileContents` and `getMetadataForFile` come from the same capture session, keeping byte offsets consistent.
+- [x] A drift check exists: `npm run vault:check` compares vault `.md` file content against captured `getFileContents` fixture output. Pre-commit hook enforces sync when vault files are staged.
 
 ## Context
-Current fixture coverage has improved, but metadata and path-related fixture consistency can still drift over time. A dedicated test vault should become the canonical capture source for reproducible tests and safer fixture maintenance.
+Phase A: vault as re-capture source only. All fixtures remain Obsidian-captured.
+
+Phase B (separate story): shift mock seam from `disk.ts` to `obsidian-facade.ts` so
+`disk.ts` is exercised in tests rather than bypassed entirely.
 
 ## Related
 - [DEBT-010](DEBT-010-capture-fixture-cycle.md)
-- [DEBT-026](../archive/stories/DEBT-026-sanitize-fixture-content.md)
 - Guide: `docs/guides/capture-fixtures.md`

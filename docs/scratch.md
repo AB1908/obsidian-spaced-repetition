@@ -28,6 +28,14 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 - STORY-031 mock data should come from the test vault via mock plugin, not db.json.
 - Resume STORY-031 planning after STORY-018 is implemented.
 
+2026-03-03: Playwright-driven Obsidian fixture capture (deferred spike).
+- Load tests/vault/ into Obsidian programmatically, navigate plugin UI, capture all fixtures.
+- Obsidian = Electron app; Playwright supports Electron via launch({executablePath}).
+- Value: fully automated fixture refresh — no manual Obsidian navigation.
+- Complexity: plugin loading, vault setup, navigation scripting, cross-platform Electron path.
+- Natural fit after Phase B (facade-level mocking) since the capture seam would be explicit.
+- Promote to SPIKE when investing in Phase B.
+
 2026-03-01: DEBT items deferred to next session.
 - DEBT-012 (class misuse + window.confirm) — self-contained, needs freshness check first.
 - DEBT-024 (filter policy) — reasonably contained, check DEBT-022 dependency.
