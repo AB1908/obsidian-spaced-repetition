@@ -101,7 +101,21 @@ if [ -n "$STAGED_DOCS" ]; then
   echo "✓ Docs lint passed"
 fi
 
-# Check 5: Run tests (skip if no source files staged)
+# Check 5: Vault/fixture sync (only when vault files are staged)
+STAGED_VAULT=$(git diff --cached --name-only | grep -E '^tests/vault/' | head -1)
+if [ -n "$STAGED_VAULT" ]; then
+  echo "→ Vault files staged; checking fixture sync..." >&2
+  if ! node scripts/gen-vault-fixtures.mjs --check; then
+    echo "" >&2
+    echo "❌ ERROR: tests/vault/ and getFileContents fixtures are out of sync." >&2
+    echo "Re-capture fixtures from Obsidian, then stage the updated fixture files." >&2
+    echo "To bypass (emergencies only): git commit --no-verify" >&2
+    exit 1
+  fi
+  echo "✓ Vault fixtures in sync"
+fi
+
+# Check 6: Run tests (skip if no source files staged)
 if [ -z "$STAGED_SOURCE" ]; then
   echo "→ No source files staged, skipping tests" >&2
 else
