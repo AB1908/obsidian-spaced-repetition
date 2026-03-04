@@ -15,7 +15,9 @@
     "release:next-version": "scripts/compute-next-release-version.sh",
     "release:prepare": "scripts/prepare-release.sh",
     "mock-server": "json-server --watch db.json",
-    "capture": "CAPTURE_FIXTURES_DIR=$(wslpath -w $(pwd)/tests/fixtures) node esbuild.config.mjs"
+    "capture": "CAPTURE_FIXTURES_DIR=$(wslpath -w $(pwd)/tests/fixtures) node esbuild.config.mjs",
+    "vault:bootstrap": "node scripts/gen-vault-fixtures.mjs --bootstrap",
+    "vault:check": "node scripts/gen-vault-fixtures.mjs --check"
   },
   "author": "AB1908 and Stephen Mwangi",
   "license": "MIT",
