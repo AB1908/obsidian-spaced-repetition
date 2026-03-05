@@ -270,9 +270,23 @@ fi
 
 "${WORKTREE_CMD[@]}"
 
+write_agent_status() {
+  local worktree="$1" status="$2" started="${3:-}"
+  local status_dir="$worktree/.agent-status"
+  mkdir -p "$status_dir"
+  local completed_field=""
+  [ "$status" != "running" ] && completed_field=", \"completed\": \"$(date -Iseconds)\""
+  printf '{"status": "%s", "branch": "%s", "project": "%s", "project_dir": "%s", "worktree": "%s", "started": "%s"%s}\n' \
+    "$status" "$BRANCH" "$(basename "$(pwd)")" "$(pwd)" "$worktree" \
+    "${started:-$(date -Iseconds)}" "$completed_field" \
+    > "$status_dir/current.json"
+}
+
 if [ "$EXECUTE" -eq 1 ]; then
   run_status="passed"
   contract_status="skipped"
+  AGENT_STARTED="$(date -Iseconds)"
+  write_agent_status "$WORKTREE" "running" "$AGENT_STARTED"
 
   if [ -n "$LOG_FILE" ]; then
     mkdir -p "$(dirname "$LOG_FILE")"
@@ -345,8 +359,11 @@ if [ "$EXECUTE" -eq 1 ]; then
   fi
 
   if [ "$run_status" = "failed" ]; then
+    write_agent_status "$WORKTREE" "failed" "$AGENT_STARTED"
     echo "[delegate] run failed"
     exit 1
+  else
+    write_agent_status "$WORKTREE" "complete" "$AGENT_STARTED"
   fi
 else
   echo "Prepared worktree. Re-run with --execute to launch Codex."

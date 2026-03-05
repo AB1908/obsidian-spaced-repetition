@@ -83,6 +83,10 @@ if [ -n "$NTFY_TOPIC" ]; then
     fi
 fi
 [ -n "$PICKED" ] && echo "Session: ${PICKED:0:8}..."
+if command -v agent-queue > /dev/null 2>&1; then
+    agent_status=$(agent-queue --count 2>/dev/null)
+    [ -n "$agent_status" ] && echo "Agents:  $agent_status"
+fi
 echo "──────────────────────────────────────"
 echo ""
 
