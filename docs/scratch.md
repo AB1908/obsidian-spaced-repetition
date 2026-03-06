@@ -43,6 +43,30 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 - Worth considering: a story-catalog.sh check for dangling [[links]] or .md refs.
 - Not a story yet — promote when we decide on a link convention.
 
+2026-03-05: Dependency graph planning — soft vs hard dependencies not tracked.
+- STORY-032 and DEBT-041 are safe to parallelize at the file level, but have a soft
+  sequencing risk: if DEBT-041 ships a vault stamp mechanism (Option B), STORY-032 must
+  update the stamp or the hook blocks. Neither story captures this dependency.
+- Current "Depends on:" field is binary (hard block) — no way to express "prefer after" or
+  "coordinate on shared artifact" without a full hard dependency.
+- We likely have a story for dependency graph / richer story organization — find and link.
+- Until then: document soft deps in a "Coordination" or "Sequencing Notes" section inside
+  each story when parallelism risk exists.
+
+2026-03-05: story-catalog.sh UX friction — enhance vs. replace?
+- Finding a story by vague description is painful: no sort-by-creation-date, unclear match
+  scoring, no filter composition (status AND epic AND keyword), output formatting is dense.
+- Root issues: grep-based matching with no ranking, no index, no structured query language.
+- Two paths forward:
+  1. Enhance script: add `--sort=created` (via git log --diff-filter=A), `--filter` flag
+     composition, `--format=compact|full` output modes. Low friction to adopt, stays in-repo.
+  2. Dedicated tooling: a small Node/TS CLI that parses story frontmatter into an in-memory
+     index and supports rich query + sort. More capable but adds a build step and maintenance.
+- Lean toward (1) first: add `--sort=created` and improve match output (show which field
+  matched, show status inline). Revisit (2) if query complexity keeps growing.
+- Immediate pain point: no way to find "the story I added last week about X" without grep.
+- Promote to META story if the script keeps growing beyond ~150 lines of query logic.
+
 2026-03-01: DEBT items deferred to next session.
 - DEBT-012 (class misuse + window.confirm) — self-contained, needs freshness check first.
 - DEBT-024 (filter policy) — reasonably contained, check DEBT-022 dependency.
