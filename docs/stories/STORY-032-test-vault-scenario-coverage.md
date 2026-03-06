@@ -50,7 +50,7 @@ See `docs/plans/STORY-032-vault-scenario-coverage.md`
 
 ## Related
 - [STORY-018](STORY-018-test-vault-fixture-consistency.md) — vault as re-capture source (Done, prerequisite)
-- [DEBT-041](DEBT-041-vault-check-incomplete-fixture-coverage.md) — vault:check only verifies getFileContents
+- [DEBT-047](DEBT-047-vault-check-incomplete-fixture-coverage.md) — vault:check only verifies getFileContents
 
 ## Depends on
 - STORY-018 (Done)

@@ -1,4 +1,4 @@
-# Test Contract: DEBT-041 — Remove Yarn Drift
+# Test Contract: DEBT-047 — Remove Yarn Drift
 
 ## Verification commands
 

@@ -10,22 +10,33 @@
  * vault files — they are always captured from real Obsidian.
  *
  * Modes:
- *   --bootstrap  One-time: extract vault .md files FROM existing getFileContents
- *                fixtures. Prefers the latest capturedAt when multiple fixtures
- *                map to the same vault path. Skips files that already exist.
+ *   --bootstrap     One-time: extract vault .md files FROM existing getFileContents
+ *                   fixtures. Prefers the latest capturedAt when multiple fixtures
+ *                   map to the same vault path. Skips files that already exist.
  *
- *   --check      Verify vault files and getFileContents fixtures are in sync.
- *                Compares vault file content against fixture output field.
- *                Exits 1 if any drift detected. Fix: re-capture from Obsidian.
+ *   --check         Verify vault files and getFileContents fixtures are in sync.
+ *                   Compares vault file content against fixture output field.
+ *                   Exits 1 if any drift detected. Fix: re-capture from Obsidian.
+ *
+ *   --stamp         Record current vault file hashes in .capture-session.
+ *                   Run after a full Obsidian capture session to mark all fixture
+ *                   types (not just getFileContents) as up-to-date.
+ *
+ *   --check-stamp   Verify vault files match the hashes in .capture-session.
+ *                   Exits 1 if any vault file has changed since last stamp.
+ *                   Warns (does not exit 1) if no .capture-session exists yet.
  *
  * Usage:
  *   node scripts/gen-vault-fixtures.mjs --bootstrap
  *   node scripts/gen-vault-fixtures.mjs --check
+ *   node scripts/gen-vault-fixtures.mjs --stamp
+ *   node scripts/gen-vault-fixtures.mjs --check-stamp
  *
  * Naming convention (matches captureProxy.ts inputSlug):
  *   "Atomic Habits/Annotations.md" -> getFileContents_Atomic-Habits_Annotations.json
  */
 
+import crypto from 'crypto';
 import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
@@ -167,6 +178,13 @@ function check() {
     for (const vaultPath of vaultFiles) {
         const fullVaultPath = path.join(VAULT_DIR, vaultPath);
         const vaultContent = fs.readFileSync(fullVaultPath, 'utf-8');
+
+        // Skip meta files (no frontmatter). Real vault source files always start with '---'.
+        if (!vaultContent.startsWith('---')) {
+            console.log(`  skip (no frontmatter): ${vaultPath}`);
+            continue;
+        }
+
         const slug = pathToSlug(vaultPath);
         const fixtureName = `getFileContents_${slug}.json`;
         const fixturePath = path.join(FIXTURES_DIR, fixtureName);
@@ -207,15 +225,74 @@ function check() {
     }
 }
 
+const SESSION_FILE = path.join(VAULT_DIR, '.capture-session');
+
+/**
+ * Stamp: record a SHA-256 hash of every vault .md file in .capture-session.
+ * Run after a full Obsidian capture session to mark all fixture types as current.
+ */
+function stamp() {
+    const vaultFiles = collectMarkdownFiles(VAULT_DIR);
+    const vaultHashes = {};
+    for (const vaultPath of vaultFiles) {
+        const content = fs.readFileSync(path.join(VAULT_DIR, vaultPath), 'utf-8');
+        if (!content.startsWith('---')) continue; // skip meta files
+        vaultHashes[vaultPath] = crypto.createHash('sha256').update(content).digest('hex').slice(0, 16);
+    }
+    const session = { stampedAt: new Date().toISOString(), vaultFiles: vaultHashes };
+    fs.writeFileSync(SESSION_FILE, JSON.stringify(session, null, 2) + '\n');
+    console.log(`✓ Stamped ${vaultFiles.length} vault file(s) at ${session.stampedAt}`);
+}
+
+/**
+ * Check-stamp: verify vault files match the hashes in .capture-session.
+ * Exits 1 if any vault file has changed since the last stamp.
+ * Warns (does not exit 1) if no .capture-session exists — first-time setup path.
+ */
+function checkStamp() {
+    if (!fs.existsSync(SESSION_FILE)) {
+        console.warn('⚠  No .capture-session found.');
+        console.warn('   After a full Obsidian capture, run: npm run vault:stamp');
+        return;
+    }
+    const session = JSON.parse(fs.readFileSync(SESSION_FILE, 'utf-8'));
+    const vaultFiles = collectMarkdownFiles(VAULT_DIR);
+    let failures = 0;
+    for (const vaultPath of vaultFiles) {
+        const content = fs.readFileSync(path.join(VAULT_DIR, vaultPath), 'utf-8');
+        const actual = crypto.createHash('sha256').update(content).digest('hex').slice(0, 16);
+        const stamped = session.vaultFiles[vaultPath];
+        if (!stamped) {
+            console.error(`✗ UNSTAMPED: ${vaultPath} — not in .capture-session`);
+            failures++;
+        } else if (actual !== stamped) {
+            console.error(`✗ STALE STAMP: ${vaultPath} — changed since last capture session`);
+            failures++;
+        }
+    }
+    if (failures > 0) {
+        console.error(`\n${failures} file(s) changed since last stamp.`);
+        console.error('Re-capture ALL fixture types from Obsidian, then run: npm run vault:stamp');
+        process.exit(1);
+    }
+    console.log(`✓ Vault stamp is current (${vaultFiles.length} files, stamped ${session.stampedAt})`);
+}
+
 // Main
 const args = process.argv.slice(2);
 if (args.includes('--bootstrap')) {
     bootstrap();
 } else if (args.includes('--check')) {
     check();
+} else if (args.includes('--stamp')) {
+    stamp();
+} else if (args.includes('--check-stamp')) {
+    checkStamp();
 } else {
     console.error('Usage:');
-    console.error('  node scripts/gen-vault-fixtures.mjs --bootstrap   # extract vault files from fixtures');
-    console.error('  node scripts/gen-vault-fixtures.mjs --check       # verify vault/fixture sync');
+    console.error('  node scripts/gen-vault-fixtures.mjs --bootstrap     # extract vault files from fixtures');
+    console.error('  node scripts/gen-vault-fixtures.mjs --check         # verify vault/fixture sync');
+    console.error('  node scripts/gen-vault-fixtures.mjs --stamp         # record vault state after Obsidian capture');
+    console.error('  node scripts/gen-vault-fixtures.mjs --check-stamp   # verify vault matches last stamp');
     process.exit(1);
 }

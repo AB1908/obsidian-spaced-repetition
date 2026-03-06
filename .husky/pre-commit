@@ -108,8 +108,8 @@ if [ -n "$STAGED_DOCS" ]; then
   echo "✓ Docs lint passed"
 fi
 
-# Check 5: Vault/fixture sync (only when vault files are staged)
-STAGED_VAULT=$(git diff --cached --name-only | grep -E '^tests/vault/' | head -1)
+# Check 5: Vault/fixture sync (only when vault .md files are staged)
+STAGED_VAULT=$(git diff --cached --name-only | grep -E '^tests/vault/' | grep -v '\.capture-session' | head -1)
 if [ -n "$STAGED_VAULT" ]; then
   echo "→ Vault files staged; checking fixture sync..." >&2
   if ! node scripts/gen-vault-fixtures.mjs --check; then
@@ -120,6 +120,17 @@ if [ -n "$STAGED_VAULT" ]; then
     exit 1
   fi
   echo "✓ Vault fixtures in sync"
+
+  if ! node scripts/gen-vault-fixtures.mjs --check-stamp; then
+    echo "" >&2
+    echo "❌ ERROR: Vault files changed since last capture session." >&2
+    echo "Re-capture ALL fixture types from Obsidian (not just getFileContents):" >&2
+    echo "  getMetadataForFile, getTFileForPath, fileTags, filePathsWithTag" >&2
+    echo "Then run: npm run vault:stamp" >&2
+    echo "To bypass (emergencies only): git commit --no-verify" >&2
+    exit 1
+  fi
+  echo "✓ Vault capture session stamp is current"
 fi
 
 # Check 6: Run tests (skip if no source files staged)

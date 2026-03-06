@@ -354,7 +354,7 @@ Enable detecting when source text changes after flashcard creation. [STORY-010a]
 ```
 
 ```
-story: close and archive DEBT-014, DEBT-041
+story: close and archive DEBT-014, DEBT-047
 ```
 
 ```

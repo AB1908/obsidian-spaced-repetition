@@ -7,7 +7,7 @@ files for scenarios that were missing from the original opportunistic captures.
 
 ## Sequencing
 
-STORY-032 must commit before DEBT-041. DEBT-041's stamp hashes all vault files — the stamp
+STORY-032 must commit before DEBT-047. DEBT-047's stamp hashes all vault files — the stamp
 must cover the final vault state, not an intermediate one.
 
 ## New vault files
@@ -49,4 +49,4 @@ Then: `npm run vault:check` must pass before committing.
 ## Commit
 
 After successful capture: vault files + fixtures + scenarios.md in one commit.
-Run `npm run vault:stamp` as part of DEBT-041 commit (not this one).
+Run `npm run vault:stamp` as part of DEBT-047 commit (not this one).

@@ -1,4 +1,4 @@
-# Plan: DEBT-041 — Remove Yarn Drift, Standardize npm
+# Plan: DEBT-047 — Remove Yarn Drift, Standardize npm
 
 ## Goal
 

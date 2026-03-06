@@ -1,4 +1,4 @@
-# Plan: DEBT-041 — Vault Session Stamp (Option B)
+# Plan: DEBT-047 — Vault Session Stamp (Option B)
 
 ## What we're doing
 
@@ -32,7 +32,7 @@ the final vault state including STORY-032's new scenario files.
 ### `tests/vault/.capture-session` (new file)
 - Created by first `npm run vault:stamp` run after STORY-032 is committed
 - JSON: `{ stampedAt, vaultFiles: { "<path>": "<16-char sha256>" } }`
-- Committed alongside the DEBT-041 script/hook changes
+- Committed alongside the DEBT-047 script/hook changes
 
 ## Stamp behavior
 

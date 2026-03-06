@@ -44,8 +44,8 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 - Not a story yet — promote when we decide on a link convention.
 
 2026-03-05: Dependency graph planning — soft vs hard dependencies not tracked.
-- STORY-032 and DEBT-041 are safe to parallelize at the file level, but have a soft
-  sequencing risk: if DEBT-041 ships a vault stamp mechanism (Option B), STORY-032 must
+- STORY-032 and DEBT-047 are safe to parallelize at the file level, but have a soft
+  sequencing risk: if DEBT-047 ships a vault stamp mechanism (Option B), STORY-032 must
   update the stamp or the hook blocks. Neither story captures this dependency.
 - Current "Depends on:" field is binary (hard block) — no way to express "prefer after" or
   "coordinate on shared artifact" without a full hard dependency.

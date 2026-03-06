@@ -1,4 +1,4 @@
-# DEBT-041: vault:check Only Verifies getFileContents Fixtures
+# DEBT-047: vault:check Only Verifies getFileContents Fixtures
 
 ## Status
 In Progress
@@ -47,7 +47,7 @@ Option A is low-effort and honest about limitations. Option B adds ceremony but 
 - `package.json` — `vault:stamp` script if Option B
 
 ## Plan
-See `docs/plans/DEBT-041-vault-stamp.md`
+See `docs/plans/DEBT-047-vault-stamp.md`
 
 ## Related
 - [STORY-018](STORY-018-test-vault-fixture-consistency.md) — vault:check introduced here
