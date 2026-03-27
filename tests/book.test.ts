@@ -15,6 +15,7 @@ import type { Flashcard } from "src/data/models/flashcard";
 jest.mock("../src/main", () => {
 });
 
+// SKIP: bookSections now requires a 4th plugin argument added during refactor; test not updated
 test.skip("bookSections", () => {
     const flashcards = [
         {

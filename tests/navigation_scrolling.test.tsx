@@ -54,6 +54,7 @@ describe("Scroll State Logic", () => {
         expect(sessionStorage.getItem('scrollToAnnotation')).toBe("123");
     });
 
+    // SKIP: component does not trigger scrollIntoView in JSDOM; needs UI snapshot approach
     test.skip("AnnotationList reads ID from sessionStorage and scrolls", () => {
         const mockData: SectionAnnotations = {
             id: "sec1",

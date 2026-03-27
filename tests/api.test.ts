@@ -103,6 +103,7 @@ describe("getAnnotationById", () => {
         await newFunction();
     });
 
+    // SKIP: inline snapshot contains stale fixture data; needs refresh after data model changes
     test.skip("should return a transformed annotation for a given blockId and bookId", () => {
         // TODO: Implement test logic
         expect(getAnnotationById("tWxSv_No", "t0000010")).toMatchInlineSnapshot(`
@@ -300,6 +301,7 @@ describe("updateAnnotationMetadata", () => {
     beforeEach(async () => {
         await newFunction();
     });
+    // SKIP: disk mock does not capture write results for metadata updates
     test.skip("should update annotation metadata on disk with string category names", async () => {
         const result = await updateAnnotationMetadata("t0000010", "tekXLAu8", {
             category: "insight",
@@ -316,6 +318,7 @@ describe("softDeleteAnnotation", () => {
     beforeEach(async () => {
         await newFunction();
     });
+    // SKIP: disk mock does not capture write results for soft-delete
     test.skip("should soft delete annotation and filter it from list", async () => {
         const bookId = "t0000010";
         const annotationId = "tWxSv_No";
@@ -336,6 +339,7 @@ describe("getAnnotationsForSection", () => {
     beforeEach(async () => {
         await newFunction();
     });
+    // SKIP: inline snapshot contains stale fixture data; needs refresh
     test.skip("should get annotations for section", () => {
         expect(getAnnotationsForSection("t0000012", "t0000010")).toMatchInlineSnapshot(`
             {

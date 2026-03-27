@@ -68,6 +68,7 @@ test("Test reviewing with default settings & delay", () => {
     });
 });
 
+// SKIP: load balancing is commented out in src/scheduler/scheduling.ts
 test.skip("Test load balancing, small interval (load balancing disabled)", () => {
     const dueDates = {
         0: 1,
@@ -89,6 +90,7 @@ test.skip("Test load balancing, small interval (load balancing disabled)", () =>
     });
 });
 
+// SKIP: load balancing is commented out in src/scheduler/scheduling.ts
 test.skip("Test load balancing", () => {
     // interval < 7
     let dueDates: Record<number, number> = {
