@@ -4,8 +4,8 @@
 Backlog
 
 ## Depends on
-- [STORY-025](../stories/STORY-025-category-editor-modal.md)
-- [STORY-028](../stories/STORY-028-category-modal-collapsed-add-row.md)
+- [STORY-025](../archive/stories/STORY-025-category-editor-modal.md)
+- [STORY-028](../archive/stories/STORY-028-category-modal-collapsed-add-row.md)
 
 ## Description
 

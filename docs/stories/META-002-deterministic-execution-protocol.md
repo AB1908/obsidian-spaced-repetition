@@ -4,7 +4,7 @@
 Ready
 
 ## Depends on
-- [DEBT-032](DEBT-032-task-organization-model-to-reduce-planning-duplication.md) (planning model)
+- [META-014](META-014-task-organization-model-to-reduce-planning-duplication.md) (planning model)
 
 ## Description
 Formalize the end-to-end development workflow into a deterministic, repeatable protocol that a Claude session can follow autonomously. The target is a single reference document (a "runbook") that governs every implementation session, with progressive enforcement via hooks and scripts.
@@ -68,6 +68,6 @@ Formalize the end-to-end development workflow into a deterministic, repeatable p
 - `CLAUDE.md`
 
 ## Related
-- [DEBT-032](DEBT-032-task-organization-model-to-reduce-planning-duplication.md)
+- [META-014](META-014-task-organization-model-to-reduce-planning-duplication.md)
 - [META-003](META-003-delegated-test-contract-enforcement.md)
 - [META-004](META-004-delegation-observability-and-guardrails.md)

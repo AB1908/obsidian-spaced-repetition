@@ -7,7 +7,7 @@ Proposed
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
-- [BUG-009](BUG-009-import-annotation-editor-state-leak.md)
+- [BUG-009](../archive/stories/BUG-009-import-annotation-editor-state-leak.md)
 - [BUG-001](../archive/stories/BUG-001-navigation-ignores-filters.md)
 
 ## User Story

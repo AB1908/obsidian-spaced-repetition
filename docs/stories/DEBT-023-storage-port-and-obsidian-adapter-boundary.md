@@ -35,5 +35,5 @@ To support future non-Obsidian runtimes (for example React Native), introduce an
 
 ## Related
 - [DEBT-006](DEBT-006-disk-business-logic.md)
-- [DEBT-007](DEBT-007-flashcard-persistence-pattern.md)
+- [DEBT-007](../archive/stories/DEBT-007-flashcard-persistence-pattern.md)
 - [DEBT-013](DEBT-013-source-polymorphism.md)

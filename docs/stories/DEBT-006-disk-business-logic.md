@@ -53,5 +53,5 @@ No functional overlap, but the naming makes `updateCardOnDisk` seem card-specifi
 - `src/application/deck-creation-helpers.ts` — calls `getMetadataForFile`, `getFileContents`, `overwriteFile`, `moveFile`, `ensureFolder`
 
 ## Related
-- [DEBT-007](DEBT-007-flashcard-persistence-pattern.md) — related refactor of the targeted-write pattern (now Done: see `src/data/utils/parsedCardStorage.ts`)
+- [DEBT-007](../archive/stories/DEBT-007-flashcard-persistence-pattern.md) — related refactor of the targeted-write pattern (now Done: see `src/data/utils/parsedCardStorage.ts`)
 - [DEBT-040](DEBT-040-flashcard-write-failure-error-handling.md) — error handling for disk write failures

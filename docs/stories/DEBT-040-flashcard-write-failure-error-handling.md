@@ -57,7 +57,7 @@ This story covers the error handling strategy only. Decisions to make:
 - [ ] Existing tests updated to cover write-failure paths
 
 ## Depends on
-- [DEBT-007](DEBT-007-flashcard-persistence-pattern.md) — `parsedCardStorage` module must exist before error handling can be cleanly centralized (now Done: see `src/data/utils/parsedCardStorage.ts`)
+- [DEBT-007](../archive/stories/DEBT-007-flashcard-persistence-pattern.md) — `parsedCardStorage` module must exist before error handling can be cleanly centralized (now Done: see `src/data/utils/parsedCardStorage.ts`)
 
 ## Likely Touchpoints
 - `src/data/models/flashcard.ts` — `deleteCard()`, `updateCardContents()`, `updateCardSchedule()` in `FlashcardNote`

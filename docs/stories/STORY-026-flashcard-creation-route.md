@@ -7,8 +7,8 @@ Backlog
 [STORY-010](../archive/stories/STORY-010-markdown-engagement.md)
 
 ## Depends on
-- [BUG-009](BUG-009-import-annotation-editor-state-leak.md) (state reset needed before adding new routes)
-- [STORY-025](STORY-025-category-editor-modal.md) (category management UX must be stable)
+- [BUG-009](../archive/stories/BUG-009-import-annotation-editor-state-leak.md) (state reset needed before adding new routes)
+- [STORY-025](../archive/stories/STORY-025-category-editor-modal.md) (category management UX must be stable)
 
 ## Description
 
@@ -69,5 +69,5 @@ From `AnnotationListPage` in card-creation mode: each annotation row links to
 
 ## Related
 - [STORY-015](STORY-015-annotation-processing-workspace-ux.md) — import/processing workspace (complementary)
-- [STORY-025](STORY-025-category-editor-modal.md) — category management must be settled first
+- [STORY-025](../archive/stories/STORY-025-category-editor-modal.md) — category management must be settled first
 - [ADR-019](../decisions/ADR-019-navigation-filter-contract.md) — filter contract this story builds on

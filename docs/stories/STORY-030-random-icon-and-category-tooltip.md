@@ -43,7 +43,7 @@ Drawn from Obsidian's Lucide icon set. Approximate list — exact names to be co
 
 ## Depends on
 
-- [STORY-016](STORY-016-annotation-categories.md) — annotation category infrastructure must exist
+- [STORY-016](../archive/stories/STORY-016-customizable-annotation-categories.md) — annotation category infrastructure must exist
 
 ## Related
 
