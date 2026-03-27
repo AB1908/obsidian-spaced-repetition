@@ -47,5 +47,5 @@ The PersonalNotePage has a Save button that saves both textarea content and cate
 - `tests/routes/import/PersonalNotePage.test.tsx` — update for auto-save behavior
 
 ## Related
-- [STORY-016](STORY-016-customizable-annotation-categories.md) — prerequisite (category model)
-- [BUG-009](BUG-009-import-annotation-editor-state-leak.md) — prerequisite (state reset)
+- [STORY-016](../archive/stories/STORY-016-customizable-annotation-categories.md) — prerequisite (category model)
+- [BUG-009](../archive/stories/BUG-009-import-annotation-editor-state-leak.md) — prerequisite (state reset)
