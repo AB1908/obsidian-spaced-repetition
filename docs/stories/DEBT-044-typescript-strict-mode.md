@@ -30,3 +30,4 @@ This is likely a multi-session effort. Recommended approach: enable strict, run 
 
 ## Depends on
 - [DEBT-043](DEBT-043-combined-check-command.md) — `tsc --noEmit` should be part of the check command before this is worth enforcing
+- [DEBT-048](DEBT-048-fix-existing-tsc-errors.md) — existing tsc errors must be clean before strict mode adds more
