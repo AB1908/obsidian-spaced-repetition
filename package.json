@@ -10,6 +10,8 @@
     "lint": "prettier --check .",
     "test": "jest",
     "prepare": "husky install",
+    "typecheck": "tsc --noEmit",
+    "check": "npm run lint && npm run typecheck && npm test",
     "watch": "jest --watch",
     "release": "echo \"Use PR-gated release automation or npm run release:prepare -- <version>.\" && exit 1",
     "release:next-version": "scripts/compute-next-release-version.sh",
