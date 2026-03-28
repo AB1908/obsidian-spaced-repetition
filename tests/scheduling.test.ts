@@ -68,29 +68,7 @@ test("Test reviewing with default settings & delay", () => {
     });
 });
 
-// SKIP: load balancing is commented out in src/scheduler/scheduling.ts
-test.skip("Test load balancing, small interval (load balancing disabled)", () => {
-    const dueDates = {
-        0: 1,
-        1: 1,
-        2: 1,
-        3: 4,
-    };
-    expect(
-        schedule(ReviewResponse.Good, 1, DEFAULT_SETTINGS.baseEase, 0)
-    ).toEqual({
-        ease: DEFAULT_SETTINGS.baseEase,
-        interval: 3,
-    });
-    expect(dueDates).toEqual({
-        0: 1,
-        1: 1,
-        2: 1,
-        3: 5,
-    });
-});
-
-// SKIP: load balancing is commented out in src/scheduler/scheduling.ts
+// SKIP: load balancing is commented out in src/scheduler/scheduling.ts; delete when feature is removed or restored
 test.skip("Test load balancing", () => {
     // interval < 7
     let dueDates: Record<number, number> = {

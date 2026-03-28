@@ -48,19 +48,6 @@ test("Test translation without interpolation in English", () => {
     });
 });
 
-// SKIP: Czech (cs) locale not in localeMap; only en is supported in this fork
-test.skip("Test translation without interpolation in čeština", () => {
-    jest.isolateModules(() => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { moment } = require("obsidian");
-        const mockLocale = moment.locale as jest.MockedFunction<() => string>;
-        mockLocale.mockImplementation(() => "cs");
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { t } = require("src/lang/helpers");
-        expect(t("DECKS")).toEqual("Balíčky");
-    });
-});
-
 test("Test translation with interpolation in English", () => {
     jest.isolateModules(() => {
         // eslint-disable-next-line @typescript-eslint/no-var-requires
@@ -75,17 +62,3 @@ test("Test translation with interpolation in English", () => {
     });
 });
 
-// SKIP: German (de) locale not in localeMap; only en is supported in this fork
-test.skip("Test translation with interpolation in German", () => {
-    jest.isolateModules(() => {
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { moment } = require("obsidian");
-        const mockLocale = moment.locale as jest.MockedFunction<() => string>;
-        mockLocale.mockImplementation(() => "de");
-        // eslint-disable-next-line @typescript-eslint/no-var-requires
-        const { t } = require("src/lang/helpers");
-        expect(t("STATUS_BAR", { dueNotesCount: 1, dueFlashcardsCount: 2 })).toEqual(
-            "Wiederholung: 1 Notiz(en), 2 Karte(n) anstehend"
-        );
-    });
-});
