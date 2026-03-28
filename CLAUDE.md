@@ -2,6 +2,8 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+> **All agents:** Read `AGENTS.md` first for shared orientation (build/test commands, architecture pointers, role-specific references). Then return here for Claude-specific workflow rules.
+
 ## Project Overview
 
 **Card Coverage** is an Obsidian plugin for spaced repetition learning that applies the concept of test coverage to reading. It creates flashcards from book annotations (primarily exported from Moon+ Reader) and tracks what percentage of your highlights you've memorized.
@@ -12,6 +14,14 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - Depends on Moon Reader plugin exports for annotation import
 - Files tagged with `review/book` are expected inside book-specific folders
 - Not backwards compatible with legacy Obsidian SRS plugin
+
+## First-Time Setup
+
+After cloning, run the setup script before anything else:
+
+```bash
+scripts/setup.sh         # Runs npm ci and validates the environment
+```
 
 ## Essential Commands
 
@@ -24,9 +34,13 @@ npm run build            # Production build
 npm test                 # Run full Jest suite
 npm run watch            # Jest in watch mode
 
+# Pre-commit verification (lint + typecheck + tests)
+npm run check            # Run all checks — must pass before committing
+
 # Code Quality
 npm run format           # Format with Prettier
-npm run lint             # Check formatting
+npm run lint             # Check formatting only
+npm run typecheck        # TypeScript type check (no emit)
 
 # Releases
 npm run release          # Standard-version for versioning
