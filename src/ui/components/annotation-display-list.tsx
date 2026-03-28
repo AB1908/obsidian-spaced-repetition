@@ -11,6 +11,7 @@ import {
     AnnotationMainFilter,
 } from "src/data/models/sourceCapabilities";
 import { getPluginContext } from "src/application/plugin-context";
+import { setNavigationFilterInSessionStorage } from "src/utils/navigation-filter-session";
 
 interface AnnotationListItemProps {
     annotation: annotation;
@@ -67,8 +68,6 @@ interface AnnotationDisplayListProps {
     viewPolicy: AnnotationListViewPolicy;
 }
 
-const NAVIGATION_FILTER_SESSION_KEY = "annotationNavigationFilter";
-
 export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
     const {
         chapterData,
@@ -114,14 +113,11 @@ export function AnnotationDisplayList(props: AnnotationDisplayListProps) {
     }, [effectiveFilter]);
 
     useEffect(() => {
-        sessionStorage.setItem(
-            NAVIGATION_FILTER_SESSION_KEY,
-            JSON.stringify({
-                mainFilter: effectiveFilter,
-                categoryFilter: activeCategoryFilter,
-                colorFilter: activeColorFilter
-            })
-        );
+        setNavigationFilterInSessionStorage({
+            mainFilter: effectiveFilter,
+            categoryFilter: activeCategoryFilter,
+            colorFilter: activeColorFilter
+        });
     }, [effectiveFilter, activeCategoryFilter, activeColorFilter]);
 
     return (

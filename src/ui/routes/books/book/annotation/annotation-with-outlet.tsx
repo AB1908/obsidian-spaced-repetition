@@ -2,7 +2,7 @@ import { Outlet, useLoaderData, useNavigate, useParams, useLocation } from "reac
 import React, { useEffect } from "react";
 import type { annotation } from "src/data/models/annotations";
 import { USE_JSON_MOCK } from "src/ui/routes/books/review";
-import { getAnnotationById, getBreadcrumbData, type NavigationFilter } from "src/api";
+import { getAnnotationById, getBreadcrumbData } from "src/api";
 import { HighlightBlock, NoteBlock } from "src/ui/components/display-blocks";
 import { pathGenerator } from "src/utils/path-generators";
 import {
@@ -11,19 +11,7 @@ import {
     getPreviousAnnotationIdForSection
 } from "src/ui/routes/books/api";
 import NavigationControl from "src/ui/components/NavigationControl";
-
-const NAVIGATION_FILTER_SESSION_KEY = "annotationNavigationFilter";
-
-function getNavigationFilterFromSessionStorage(): NavigationFilter | undefined {
-    const serializedFilter = sessionStorage.getItem(NAVIGATION_FILTER_SESSION_KEY);
-    if (!serializedFilter) return undefined;
-
-    try {
-        return JSON.parse(serializedFilter) as NavigationFilter;
-    } catch {
-        return undefined;
-    }
-}
+import { getNavigationFilterFromSessionStorage } from "src/utils/navigation-filter-session";
 
 export async function annotationLoader({ params }: {
     params: AnnotationLoaderParams

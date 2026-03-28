@@ -7,6 +7,7 @@ import { setIcon } from "src/infrastructure/obsidian-facade";
 import { DEFAULT_ANNOTATION_CATEGORIES } from "src/config/annotation-categories";
 import type { SectionAnnotations } from "src/data/models/annotations";
 import type { SourceCapabilities } from "src/data/models/sourceCapabilities";
+import { NAVIGATION_FILTER_SESSION_KEY } from "src/utils/navigation-filter-session";
 
 jest.mock("react-router-dom", () => ({
     ...jest.requireActual("react-router-dom"),
@@ -16,8 +17,6 @@ jest.mock("react-router-dom", () => ({
 
 const useLoaderDataMock = jest.requireMock("react-router-dom").useLoaderData as jest.Mock;
 const useLocationMock = jest.requireMock("react-router-dom").useLocation as jest.Mock;
-
-const NAVIGATION_FILTER_SESSION_KEY = "annotationNavigationFilter";
 
 const chapterData: SectionAnnotations = {
     id: "section-1",
