@@ -67,6 +67,21 @@ Append-only. Review at session start. Promote to story or delete when actioned.
 - Immediate pain point: no way to find "the story I added last week about X" without grep.
 - Promote to META story if the script keeps growing beyond ~150 lines of query logic.
 
+2026-03-27: Post-delegation merge flow is too noisy — automate in delegate script.
+- Current sequence: cherry-pick feat commits → amend last with story closure + semantic log + `Closes:` body.
+- This is multiple manual steps that require session attention. Should be encapsulated in
+  `delegate-codex-task.sh` as a `--merge` subcommand: detect the worktree branch, cherry-pick
+  onto main, amend with closure artifacts, delete the worktree branch. One command, no noise.
+- Also: the plan's delegation command block should include the merge command so it's self-contained.
+
+2026-03-27: Contract pre-flight checks need hardening before delegation.
+- Negative grep gates must use `bash -c '! grep ...'` not bare `grep` (grep exits 1 on no
+  matches, which is the success condition — bare `grep` inverted by verify script incorrectly).
+- Test names in `TEST_NAME:` lines must be grepped from the actual test files, not written from
+  memory. Approximations pass review but fail `verify-test-contract.sh` at delegation time.
+- Both are catchable with a `--dry-run` flag on the delegate script that runs preflight checks
+  (contract parse, test name grep, build) before writing the Codex prompt.
+
 2026-03-01: DEBT items deferred to next session.
 - DEBT-012 (class misuse + window.confirm) — self-contained, needs freshness check first.
 - DEBT-024 (filter policy) — reasonably contained, check DEBT-022 dependency.

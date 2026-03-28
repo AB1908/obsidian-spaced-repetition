@@ -1,7 +1,7 @@
 # DEBT-043: Add combined check command (lint + typecheck + tests)
 
 ## Status
-Proposed
+Done
 
 ## Reviewed
 No

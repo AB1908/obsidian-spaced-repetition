@@ -1,7 +1,7 @@
 # META-029: /commit Skill for Convention Enforcement at Draft Time
 
 ## Status
-Ready
+Done
 
 ## Reviewed
 No

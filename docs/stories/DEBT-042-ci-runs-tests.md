@@ -1,7 +1,7 @@
 # DEBT-042: CI should run tests on pull requests
 
 ## Status
-Proposed
+Done
 
 ## Reviewed
 No

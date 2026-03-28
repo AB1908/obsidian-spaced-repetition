@@ -1,7 +1,7 @@
 # DEBT-045: Annotate all test.skip entries with skip reasons
 
 ## Status
-Proposed
+Done
 
 ## Reviewed
 No

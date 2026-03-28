@@ -1,7 +1,7 @@
 # DEBT-046: Expand AGENTS.md as canonical agent orientation entry point
 
 ## Status
-Proposed
+Done
 
 ## Reviewed
 No

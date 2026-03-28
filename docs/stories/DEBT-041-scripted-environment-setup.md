@@ -1,7 +1,7 @@
 # DEBT-041: Add scripted environment setup
 
 ## Status
-Proposed
+Done
 
 ## Reviewed
 No
