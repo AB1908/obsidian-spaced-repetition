@@ -1,6 +1,6 @@
-Inspect tsc output and how clean it is and create roadmap task to slowly fix small bugs detected by tsc so it can be used as linter for future refactors
-
 # Gemini Workflow & Context
+
+> **All agents:** Read `AGENTS.md` first for shared orientation (build/test commands, architecture pointers, role-specific references). Then return here for Gemini-specific workflow rules.
 
 This document serves as the primary context for Gemini's interaction with this repository. It outlines operational principles to ensure smooth workflows and tracks the current development strategy.
 
