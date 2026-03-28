@@ -1,7 +1,7 @@
 # DEBT-024: Filter Policy Single Source of Truth (UI + Navigation)
 
 ## Status
-Ready
+Done
 
 ## Epic
 None
@@ -14,10 +14,10 @@ Filter semantics are duplicated:
 Duplicated policy invites drift and makes verification harder. This already caused historical navigation/filter mismatches.
 
 ## Acceptance Criteria
-- [ ] Define one shared filter policy module and type contract.
-- [ ] UI list filtering and next/previous navigation both consume the same policy.
-- [ ] Remove duplicate filter logic from `api.ts`.
-- [ ] Add integration tests asserting UI-visible list and navigation use identical inclusion rules.
+- [x] Define one shared filter policy module and type contract.
+- [x] UI list filtering and next/previous navigation both consume the same policy.
+- [x] Remove duplicate filter logic from `api.ts`.
+- [x] Add integration tests asserting UI-visible list and navigation use identical inclusion rules.
 
 ## Likely Touchpoints
 - `src/utils/annotation-filters.ts`

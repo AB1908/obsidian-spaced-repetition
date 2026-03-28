@@ -12,6 +12,7 @@ import { FlashcardIndex } from "src/data/models/flashcard";
 import { AnnotationsNoteIndex } from "src/data/models/AnnotationsNote";
 import { fileTags } from "src/infrastructure/disk";
 import { setPlugin } from "src/api";
+import { NAVIGATION_FILTER_SESSION_KEY } from "src/utils/navigation-filter-session";
 
 jest.mock("src/ui/modals/CategoryEditorModal", () => {
     const openMock = jest.fn();
@@ -119,6 +120,7 @@ describe("PersonalNotePage Component", () => {
     let confirmSpy: jest.SpyInstance;
 
     beforeEach(async () => {
+        sessionStorage.clear();
         mockPlugin = await initializePlugin();
         mockPlugin.savePluginData = jest.fn().mockResolvedValue(undefined);
         const book = mockPlugin.annotationsNoteIndex.getAllAnnotationsNotes()[0];
@@ -188,6 +190,65 @@ describe("PersonalNotePage Component", () => {
         const navControls = container.querySelectorAll(".annotation-nav");
         expect(navControls[0]).toHaveClass("is-clickable");
         expect(navControls[1]).toHaveClass("is-clickable");
+    });
+
+    it("navigation respects active filter from session storage", () => {
+        const mockAnnotation = { id: "1", highlight: "H", note: "N" };
+        const filter = {
+            mainFilter: "processed",
+            categoryFilter: null,
+            colorFilter: null,
+        };
+        sessionStorage.setItem(NAVIGATION_FILTER_SESSION_KEY, JSON.stringify(filter));
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+
+        render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        expect(getPreviousAnnotationIdForSectionMock).toHaveBeenCalledWith(
+            mockBookId,
+            "mock-section-id",
+            "1",
+            filter
+        );
+        expect(getNextAnnotationIdForSectionMock).toHaveBeenCalledWith(
+            mockBookId,
+            "mock-section-id",
+            "1",
+            filter
+        );
+    });
+
+    it("navigation works without filter in session storage", () => {
+        const mockAnnotation = { id: "1", highlight: "H", note: "N" };
+        sessionStorage.removeItem(NAVIGATION_FILTER_SESSION_KEY);
+        useLoaderDataMock.mockReturnValue({ annotation: mockAnnotation, bookId: mockBookId });
+        getPreviousAnnotationIdForSectionMock.mockReturnValue(null);
+        getNextAnnotationIdForSectionMock.mockReturnValue("2");
+
+        render(
+            <MemoryRouter>
+                <PersonalNotePage />
+            </MemoryRouter>
+        );
+
+        expect(getPreviousAnnotationIdForSectionMock).toHaveBeenCalledWith(
+            mockBookId,
+            "mock-section-id",
+            "1",
+            undefined
+        );
+        expect(getNextAnnotationIdForSectionMock).toHaveBeenCalledWith(
+            mockBookId,
+            "mock-section-id",
+            "1",
+            undefined
+        );
     });
 
     it("should render navigation correctly for the LAST annotation (only previous enabled)", () => {

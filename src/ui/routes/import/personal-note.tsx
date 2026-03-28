@@ -12,6 +12,7 @@ import { integerToRGBA } from "src/utils/utils";
 import { AnnotationEditorCard } from "src/ui/routes/import/AnnotationEditorCard";
 import { CategoryEditorModal } from "src/ui/modals/CategoryEditorModal";
 import type { Annotation } from "src/ui/routes/import/useAnnotationEditor";
+import { getNavigationFilterFromSessionStorage } from "src/utils/navigation-filter-session";
 
 export async function personalNoteLoader({ params }: any) {
     const { bookId, sectionId, annotationId } = params;
@@ -33,8 +34,9 @@ export function PersonalNotePage() {
         resolveAnnotationCategories(plugin?.data?.settings?.annotationCategories)
     );
 
-    const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, params.sectionId, annotation.id);
-    const nextAnnotationId = getNextAnnotationIdForSection(bookId, params.sectionId, annotation.id);
+    const navigationFilter = getNavigationFilterFromSessionStorage();
+    const previousAnnotationId = getPreviousAnnotationIdForSection(bookId, params.sectionId, annotation.id, navigationFilter);
+    const nextAnnotationId = getNextAnnotationIdForSection(bookId, params.sectionId, annotation.id, navigationFilter);
 
     const handleNavigate = async (targetAnnotationId: string | null) => {
         if (targetAnnotationId) {

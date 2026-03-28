@@ -5,10 +5,10 @@
 All existing tests must pass unchanged after extracting the shared module.
 
 TEST_FILE: tests/routes/books/book/annotation/AnnotationListPage.test.tsx
-TEST_NAME: filter state is written to sessionStorage
+TEST_NAME: BUG-001 contract: import flow updates navigation filter in session storage
 
 TEST_FILE: tests/routes/import/PersonalNotePage.test.tsx
-TEST_NAME: renders previous and next buttons when not at boundary
+TEST_NAME: should render navigation correctly for the FIRST annotation (only next enabled)
 
 ## Commit 2 — new tests
 
@@ -20,4 +20,4 @@ TEST_NAME: navigation works without filter in session storage
 
 TEST_CMD: npm test -- --testPathPattern="PersonalNotePage|AnnotationListPage"
 TEST_CMD: npm run build
-TEST_CMD: grep -r "NAVIGATION_FILTER_SESSION_KEY" src/ | grep -v navigation-filter-session
+TEST_CMD: bash -c '! grep -r "NAVIGATION_FILTER_SESSION_KEY" src/ | grep -v navigation-filter-session'
